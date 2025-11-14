@@ -28,22 +28,22 @@ class QacoFinalisationPhase(models.Model):
     
     # Review Process
     draft_prepared_by = fields.Many2one('hr.employee', string='Draft Prepared By',
-                                        domain="[('qaco_designation', 'in', ['Senior', 'Assistant Manager'])]")
+                                        domain="[('designation_id.name', 'in', ['Senior', 'Assistant Manager'])]")
     first_reviewer = fields.Many2one('hr.employee', string='First Reviewer (Manager)',
-                                     domain="[('qaco_designation', '=', 'Manager')]",
+                                     domain="[('designation_id.name', '=', 'Manager')]",
                                      tracking=True)
     first_review_date = fields.Date(string='First Review Date')
     first_review_completed = fields.Boolean(string='First Review Complete', tracking=True)
     
     second_reviewer = fields.Many2one('hr.employee', string='Second Reviewer (Partner)',
-                                      domain="[('qaco_designation', '=', 'Partner')]",
+                                      domain="[('designation_id.name', '=', 'Partner')]",
                                       tracking=True)
     second_review_date = fields.Date(string='Second Review Date')
     second_review_completed = fields.Boolean(string='Second Review Complete', tracking=True)
     
     # Quality Control
     quality_control_reviewer = fields.Many2one('hr.employee', string='Quality Control Reviewer',
-                                               domain="[('qaco_designation', 'in', ['Partner', 'Director'])]")
+                                               domain="[('designation_id.name', 'in', ['Partner', 'Director'])]")
     quality_control_date = fields.Date(string='QC Review Date')
     quality_control_completed = fields.Boolean(string='Quality Control Complete', tracking=True)
     quality_control_notes = fields.Html(string='QC Review Notes')
@@ -102,7 +102,7 @@ class QacoFinalisationPhase(models.Model):
     partner_signoff = fields.Boolean(string='Partner Sign-off', tracking=True)
     partner_signoff_date = fields.Date(string='Partner Sign-off Date')
     partner_signoff_name = fields.Many2one('hr.employee', string='Signing Partner',
-                                          domain="[('qaco_designation', '=', 'Partner')]")
+                                          domain="[('designation_id.name', '=', 'Partner')]")
     
     # File Completion
     audit_file_complete = fields.Boolean(string='Audit File Complete', tracking=True)

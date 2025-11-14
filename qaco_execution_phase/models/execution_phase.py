@@ -27,14 +27,14 @@ class QacoExecutionPhase(models.Model):
     
     # Team Assignment
     execution_lead = fields.Many2one('hr.employee', string='Execution Lead', 
-                                     domain="[('qaco_designation', '=', 'Manager')]",
+                                     domain="[('designation_id.name', '=', 'Manager')]",
                                      tracking=True)
     senior_auditors = fields.Many2many('hr.employee', 'execution_senior_rel', 
                                        string='Senior Auditors',
-                                       domain="[('qaco_designation', 'in', ['Senior', 'Assistant Manager'])]")
+                                       domain="[('designation_id.name', 'in', ['Senior', 'Assistant Manager'])]")
     audit_assistants = fields.Many2many('hr.employee', 'execution_assistant_rel',
                                         string='Audit Assistants',
-                                        domain="[('qaco_designation', 'in', ['Junior', 'Article'])]")
+                                        domain="[('designation_id.name', 'in', ['Junior', 'Article'])]")
     
     # Testing Categories and Procedures
     testing_category = fields.Many2one('execution.testing.category', string='Primary Testing Category')
@@ -91,7 +91,7 @@ class QacoExecutionPhase(models.Model):
     working_papers_complete = fields.Boolean(string='Working Papers Complete', tracking=True)
     working_papers_reviewed = fields.Boolean(string='Working Papers Reviewed', tracking=True)
     reviewer_id = fields.Many2one('hr.employee', string='Reviewed By',
-                                  domain="[('qaco_designation', 'in', ['Manager', 'Partner'])]")
+                                  domain="[('designation_id.name', 'in', ['Manager', 'Partner'])]")
     review_date = fields.Date(string='Review Date')
     review_notes = fields.Html(string='Review Notes')
     
