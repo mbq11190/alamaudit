@@ -92,15 +92,8 @@ class Qacoaudit(models.Model):
                                        string='Client Signature')
     file_attachments = fields.One2many('audit.attachment', 'audit_id', string='File Attachments')
     is_favourite = fields.Boolean("Favourite", help="Mark this task as a favorite to easily find it again", tracking=True)
-    tax_count = fields.Integer(compute='compute_tax_count')
-    wht_count = fields.Integer(compute='compute_wht_count')
-    misc_count = fields.Integer(compute='compute_misc_count')
-    salestax_count = fields.Integer(compute='compute_salestax_count')
-    eobi_count = fields.Integer(compute='compute_eobi_count')
-    litigation_count = fields.Integer(compute='compute_litigation_count')
-    corporate_count = fields.Integer(compute='compute_corporate_count')
+    # Smart button counts removed - only keeping fields for modules that exist
     audit_count = fields.Integer(compute='compute_audit_count')
-    asecp_count = fields.Integer(compute='compute_asecp_count')
 
 
     def _get_default_seq_code(self):
@@ -305,72 +298,6 @@ class Qacoaudit(models.Model):
             attachments.unlink()
 
     @api.depends('client_id')
-    def compute_tax_count(self):
-        for record in self:
-            tax_count_2024 = self.env['tax.tax2024'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)  # Exclude archived records
-            ])
-            tax_count_old = self.env['tax.tax'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-            record.tax_count = tax_count_2024 + tax_count_old
-
-    @api.depends('client_id')
-    def compute_wht_count(self):
-        for record in self:
-            wht_count_q = self.env['qaco.wht'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-            wht_count_m = self.env['qaco.mwht'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-            wht_count_a149 = self.env['qaco.awht149'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-            wht_count_a165 = self.env['qaco.awht165'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-            record.wht_count = wht_count_q + wht_count_m + wht_count_a149 + wht_count_a165
-
-    @api.depends('client_id')
-    def compute_misc_count(self):
-        for record in self:
-            record.misc_count = self.env['qaco.misc'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-
-    @api.depends('client_id')
-    def compute_asecp_count(self):
-        for record in self:
-            record.asecp_count = self.env['qaco.asecp'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-
-    @api.depends('client_id')
-    def compute_salestax_count(self):
-        for record in self:
-            record.salestax_count = self.env['qaco.salestax'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-
-    @api.depends('client_id')
-    def compute_eobi_count(self):
-        for record in self:
-            record.eobi_count = self.env['qaco.eobi'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-
-    @api.depends('client_id')
     def compute_audit_count(self):
         for record in self:
             record.audit_count = self.env['qaco.audit'].sudo().search_count([
@@ -378,57 +305,11 @@ class Qacoaudit(models.Model):
                 ('active', '=', True)
             ])
 
-    @api.depends('client_id')
-    def compute_corporate_count(self):
-        if self.env.registry.get('qaco.corporate'):
-            for record in self:
-                record.corporate_count = self.env['qaco.corporate'].sudo().search_count([
-                    ('client_id', '=', record.client_id.id),
-                    ('active', '=', True)
-                ])
-        else:
-            for record in self:
-                record.corporate_count = 0
-
-    @api.depends('client_id')
-    def compute_litigation_count(self):
-        for record in self:
-            record.litigation_count = self.env['litigation.litigation'].sudo().search_count([
-                ('client_id', '=', record.client_id.id),
-                ('active', '=', True)
-            ])
-
     # ==================
     # Action Methods
     # ==================
-    def get_tax(self):
-        return self._open_related_records('tax.tax2024', 'Tax')
-
-    def get_wht(self):
-        return self._open_related_records('qaco.wht', 'WHT')
-
-    def get_misc(self):
-        return self._open_related_records('qaco.misc', 'Misc')
-
-    def get_salestax(self):
-        return self._open_related_records('qaco.salestax', 'Sales Tax')
-
-    def get_eobi(self):
-        return self._open_related_records('qaco.eobi', 'EOBI')
-
-    def get_litigation(self):
-        return self._open_related_records('litigation.litigation', 'Litigation')
-
-    def get_corporate(self):
-        if not self.env.registry.get('qaco.corporate'):
-            return False
-        return self._open_related_records('qaco.corporate', 'Corporate')
-
     def get_audit(self):
         return self._open_related_records('qaco.audit', 'Audit')
-
-    def get_asecp(self):
-        return self._open_related_records('qaco.asecp', 'Annual SECP')
 
     # ==================
     # Helper Method

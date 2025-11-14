@@ -14,41 +14,9 @@
                     </header>
                     <sheet>
                         <div name="button_box" position="inside">
-                            <button class="oe_stat_button" type="object" name="get_tax"
-                                icon="fa-money">
-                                <field string="Income Tax" name="tax_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_wht"
-                                icon="fa-cube">
-                                <field string="WHT" name="wht_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_salestax"
-                                icon="fa-bolt">
-                                <field string="Sales Tax" name="salestax_count" widget="statinfo"/>
-                            </button>
                             <button class="oe_stat_button" type="object" name="get_audit"
                                 icon="fa-check-square-o">
                                 <field string="Audit" name="audit_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_asecp"
-                                icon="fa-calendar-check-o">
-                                <field string="Annual SECP" name="asecp_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_corporate"
-                                icon="fa-vcard-o">
-                                <field string="Corporate" name="corporate_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_litigation"
-                                icon="fa-linux">
-                                <field string="Litigation" name="litigation_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_misc"
-                                icon="fa-certificate">
-                                <field string="Misc" name="misc_count" widget="statinfo"/>
-                            </button>
-                            <button class="oe_stat_button" type="object" name="get_eobi"
-                                icon="fa-google-wallet">
-                                <field string="EOBI" name="eobi_count" widget="statinfo"/>
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
