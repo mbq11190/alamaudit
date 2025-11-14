@@ -94,8 +94,6 @@ class Qacoaudit(models.Model):
     is_favourite = fields.Boolean("Favourite", help="Mark this task as a favorite to easily find it again", tracking=True)
     # Smart button counts removed - only keeping fields for modules that exist
     audit_count = fields.Integer(compute='compute_audit_count')
-    # Planning Phase
-    planning_phase_ids = fields.One2many('qaco.planning.phase', 'audit_id', string='Planning Phase Records')
 
 
     def _get_default_seq_code(self):

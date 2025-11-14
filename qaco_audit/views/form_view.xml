@@ -67,34 +67,6 @@
                              <page name="description_page" string="Instructions">
                                 <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
                               </page>
-                             <page name="planning_phase" string="Planning Phase">
-                                <field name="planning_phase_ids" mode="tree,form" context="{'default_audit_id': active_id}">
-                                    <tree>
-                                        <field name="name"/>
-                                        <field name="industry_sector_id"/>
-                                        <field name="create_date"/>
-                                    </tree>
-                                    <form>
-                                        <sheet>
-                                            <group>
-                                                <group>
-                                                    <field name="name" readonly="1"/>
-                                                    <field name="audit_id" invisible="1"/>
-                                                    <field name="client_id"/>
-                                                </group>
-                                                <group>
-                                                    <field name="active" invisible="1"/>
-                                                </group>
-                                            </group>
-                                            <group>
-                                                <group string="Client Information">
-                                                    <field name="industry_sector_id" options="{'no_create': True}"/>
-                                                </group>
-                                            </group>
-                                        </sheet>
-                                    </form>
-                                </field>
-                              </page>
 <!--                              <page name="documents_checklist" string="Documents Checklist" >#invisible="stage_id in [1,2]">-->
 <!--                                <group col="2">-->
 <!--                                        <group>-->

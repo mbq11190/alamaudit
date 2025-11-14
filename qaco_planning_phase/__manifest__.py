@@ -18,10 +18,11 @@
         'data/industry_sector_data.xml',
         'views/industry_sector_views.xml',
         'views/planning_phase_views.xml',
+        'views/qaco_audit_form_extend.xml',
         'views/menu_view.xml',
     ],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'license': 'LGPL-3',
 }
