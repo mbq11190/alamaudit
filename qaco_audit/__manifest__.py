@@ -15,6 +15,8 @@
 
     'depends': ['base', 'mail', 'hr', 'project', 'web', 'qaco_employees'],
 
+    'pre_init_hook': 'pre_init_hook',
+
     'data': [
         'security/ir.model.access.csv',
         'security/security_groups.xml',
