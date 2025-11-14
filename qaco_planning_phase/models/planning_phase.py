@@ -17,7 +17,7 @@ class PlanningPhase(models.Model):
     # ==================
     industry_sector_id = fields.Many2one('planning.industry.sector', 
                                          string='Client Industry & Sector', 
-                                         required=True, tracking=True)
+                                         tracking=True)
     business_nature = fields.Text(string='Nature of Business', tracking=True)
     key_personnel = fields.Text(string='Key Client Personnel', tracking=True)
     
