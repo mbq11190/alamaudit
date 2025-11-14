@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_finalisation_phase_user,access.finalisation.phase.user,model_qaco_finalisation_phase,qaco_audit.group_audit_user,1,1,1,0
+access_finalisation_phase_trainee,access.finalisation.phase.trainee,model_qaco_finalisation_phase,qaco_audit.group_audit_trainee,1,1,1,0
+access_finalisation_phase_supervisor,access.finalisation.phase.supervisor,model_qaco_finalisation_phase,qaco_audit.group_audit_supervisor,1,1,1,0
 access_finalisation_phase_manager,access.finalisation.phase.manager,model_qaco_finalisation_phase,qaco_audit.group_audit_manager,1,1,1,1
-access_finalisation_report_type_user,access.finalisation.report.type.user,model_finalisation_report_type,qaco_audit.group_audit_user,1,0,0,0
+access_finalisation_report_type_trainee,access.finalisation.report.type.trainee,model_finalisation_report_type,qaco_audit.group_audit_trainee,1,0,0,0
 access_finalisation_report_type_manager,access.finalisation.report.type.manager,model_finalisation_report_type,qaco_audit.group_audit_manager,1,1,1,1
