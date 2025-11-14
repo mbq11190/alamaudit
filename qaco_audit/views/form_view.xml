@@ -36,31 +36,31 @@
                         <group col="3">
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="client_id" force_save="1" readonly="stage_id not in [1]"/>
+                                <field name="client_id" force_save="1"/>
                                 <field name="contact" widget="phone"/>
-                                <field name="audit_year" options="{'no_create': True}" readonly="stage_id not in [1]"  widget = "many2many_tags"/>
-                                <field name="audit_location_1" readonly="stage_id not in [1]"/>
-                                <field name="legal_entity" readonly="stage_id not in [3]" invisible="stage_id in [1,2]"/>
+                                <field name="audit_year" options="{'no_create': True}" widget = "many2many_tags"/>
+                                <field name="audit_location_1"/>
+                                <field name="legal_entity"/>
                             </group>
                             <group>
-<!--                                <field name="partner" readonly="stage_id not in [1]"/>-->
-                                <field name="qaco_assigning_partner" options="{'no_create': True}" string="Assigning Partner" readonly="stage_id not in [1]"/>
-                                <field name="firm_name" options="{'no_create': True, 'no_open': True}" readonly="stage_id not in [1]"/>
+<!--                                <field name="partner"/>-->
+                                <field name="qaco_assigning_partner" options="{'no_create': True}" string="Assigning Partner"/>
+                                <field name="firm_name" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="priority" widget="priority"/>
-<!--                                <field name="repeat" readonly="stage_id not in [1]"/>-->
+<!--                                <field name="repeat"/>-->
                                 <field name="audit_location_2" widget="CopyClipboardChar" invisible="audit_location_1 != 'Client Premises'"/>
-                                <field name="team_id" options="{'no_create': True}" readonly="stage_id not in [2]" invisible="stage_id in [1]" widget = "many2many_tags_avatar"/>
-                                <field name="qaco_audit_partner" options="{'no_create': True}" readonly="stage_id not in [3]" invisible="stage_id in [1,2]"/>
-<!--                                <field name="client_signature" string="Client Sign" readonly="stage_id not in [3]" invisible="stage_id in [1,2]"/>-->
+                                <field name="team_id" options="{'no_create': True}" widget = "many2many_tags_avatar"/>
+                                <field name="qaco_audit_partner" options="{'no_create': True}"/>
+<!--                                <field name="client_signature" string="Client Sign"/>-->
                             </group>
                             <group>
-                                <field name="referral" readonly="stage_id not in [1]"/>
+                                <field name="referral"/>
 <!--                                <field name="date_deadline"/>-->
-                                <field name="report_type" readonly="stage_id not in [1]"/>
-<!--                                <field name="no_of_persons" readonly="stage_id not in [1]"/>-->
-                                <field name="folder" widget="CopyClipboardChar" readonly="stage_id not in [3]" invisible="stage_id in [1,2]"/>
-                                <field name="employee_id" widget="many2one_avatar_employee" readonly="stage_id not in [2]" invisible="stage_id in [1]"/>
-                                <field name="udin_no" invisible="stage_id in [1,2]" readonly="stage_id not in [3]"/>
+                                <field name="report_type"/>
+<!--                                <field name="no_of_persons"/>-->
+                                <field name="folder" widget="CopyClipboardChar"/>
+                                <field name="employee_id" widget="many2one_avatar_employee"/>
+                                <field name="udin_no"/>
                             </group>
                         </group>
                         <notebook>

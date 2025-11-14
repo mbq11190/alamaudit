@@ -1,6 +1,6 @@
 <odoo>
-    <data noupdate="1">
-        <!-- Define stages for qaco.corporate -->
+    <data noupdate="0">
+        <!-- Define stages for qaco.audit -->
         <record id="audit_stage_new" model="audit.stages">
             <field name="name">New</field>
             <field name="sequence">1</field>
@@ -9,12 +9,16 @@
             <field name="name">Assign</field>
             <field name="sequence">2</field>
         </record>
-        <record id="audit_stage_in_progress" model="audit.stages">
-            <field name="name">In Progress</field>
+        <record id="audit_stage_planning_risk" model="audit.stages">
+            <field name="name">Planning &amp; Risk</field>
             <field name="sequence">3</field>
         </record>
-        <record id="Audit_stage_manager_review" model="audit.stages">
-            <field name="name">Manager Review</field>
+        <record id="audit_stage_execution" model="audit.stages">
+            <field name="name">Execution</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="audit_stage_finalisation" model="audit.stages">
+            <field name="name">Finalisation</field>
             <field name="sequence">5</field>
         </record>
         <record id="Audit_stage_done" model="audit.stages">
