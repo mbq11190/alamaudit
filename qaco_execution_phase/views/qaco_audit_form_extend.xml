@@ -5,10 +5,10 @@
         <record id="view_qaco_audit_form_execution_button" model="ir.ui.view">
             <field name="name">qaco.audit.form.execution.button</field>
             <field name="model">qaco.audit</field>
-            <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
+            <field name="inherit_id" ref="qaco_planning_phase.view_qaco_audit_form_planning_button"/>
             <field name="arch" type="xml">
-                <!-- Add Execution Phase Smart Button -->
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <!-- Add Execution Phase Smart Button after Planning -->
+                <xpath expr="//button[@name='action_open_planning_phase']" position="after">
                     <field name="execution_phase_id" invisible="1"/>
                     <field name="execution_state" invisible="1"/>
                     <button class="oe_stat_button" type="object" 

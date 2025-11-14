@@ -19,7 +19,7 @@
     """,
     'author': 'QACO',
     'website': 'https://www.qaco.com',
-    'depends': ['qaco_audit', 'hr'],
+    'depends': ['qaco_audit', 'qaco_planning_phase', 'hr'],
     'data': [
         'security/ir.model.access.csv',
         'data/testing_category_data.xml',
