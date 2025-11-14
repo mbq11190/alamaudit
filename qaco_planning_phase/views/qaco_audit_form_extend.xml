@@ -9,203 +9,25 @@
                 <xpath expr="//page[@name='description_page']" position="after">
                     <page name="planning_phase" string="Planning Phase">
                         <!-- No Planning Phase - Show Initialize Button -->
-                        <div class="alert alert-info text-center" role="alert" invisible="planning_phase_id">
-                            <h4>Planning Phase Not Started</h4>
+                        <div class="alert alert-info text-center" role="alert" invisible="planning_phase_id" style="margin: 50px;">
+                            <h4><i class="fa fa-clipboard"/> Planning Phase Not Started</h4>
                             <p>Click the button below to initialize the planning phase for this audit.</p>
                             <button name="action_create_planning_phase" 
                                     string="Initialize Planning Phase" 
                                     type="object" 
-                                    class="btn btn-primary btn-lg"/>
+                                    class="btn btn-primary btn-lg"
+                                    icon="fa-plus-circle"/>
                         </div>
                         
-                        <!-- Planning Phase Exists - Show Summary and Form -->
-                        <div invisible="not planning_phase_id">
-                            <!-- Planning Phase Header with Status -->
-                            <div class="o_planning_header mb-3">
-                                <field name="planning_phase_id" invisible="1"/>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h3 class="mb-0">
-                                            <i class="fa fa-clipboard"/> Planning Phase
-                                        </h3>
-                                    </div>
-                                    <div class="col-md-4 text-right">
-                                        <field name="planning_phase_id" 
-                                               widget="statinfo"
-                                               string="Status"
-                                               options="{'no_create': True, 'no_open': True}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <separator/>
-                            
-                            <!-- Planning Phase Summary Dashboard -->
-                            <group>
-                                <group name="planning_summary" string="Planning Summary" col="2">
-                                    <label for="planning_phase_id" string="Planning Status"/>
-                                    <div>
-                                        <field name="planning_phase_id" 
-                                               context="{'tree_view_ref': 'qaco_planning_phase.view_planning_phase_tree'}"
-                                               options="{'no_create': True}"
-                                               class="oe_inline"
-                                               readonly="1"/>
-                                    </div>
-                                </group>
-                            </group>
-                            
-                            <separator string="Planning Phase Details"/>
-                            
-                            <!-- Embedded Planning Phase Form -->
-                            <field name="planning_phase_id" mode="form" 
-                                   context="{'default_audit_id': active_id}"
-                                   options="{'no_create': True}">
-                                <form string="Planning Phase">
-                                    <header>
-                                        <button name="action_start_planning" string="Start Planning" 
-                                                type="object" class="btn-primary" 
-                                                invisible="state != 'draft'"/>
-                                        <button name="action_submit_review" string="Submit for Review" 
-                                                type="object" class="btn-primary" 
-                                                invisible="state != 'in_progress'"/>
-                                        <button name="action_approve" string="Approve" 
-                                                type="object" class="btn-success" 
-                                                invisible="state != 'review'"/>
-                                        <button name="action_reset_draft" string="Reset to Draft" 
-                                                type="object" 
-                                                invisible="state == 'draft'"/>
-                                        <field name="state" widget="statusbar" 
-                                               statusbar_visible="draft,in_progress,review,approved"/>
-                                    </header>
-                                    <sheet>
-                                        <div class="oe_button_box" name="button_box">
-                                            <button class="oe_stat_button" type="object" name="action_start_planning" icon="fa-check-square-o">
-                                                <div class="o_field_widget o_stat_info">
-                                                    <span class="o_stat_value">
-                                                        <field name="engagement_letter_signed" widget="boolean"/>
-                                                    </span>
-                                                    <span class="o_stat_text">Engagement Letter</span>
-                                                </div>
-                                            </button>
-                                            <button class="oe_stat_button" type="object" name="action_start_planning" icon="fa-shield">
-                                                <div class="o_field_widget o_stat_info">
-                                                    <span class="o_stat_value">
-                                                        <field name="independence_confirmed" widget="boolean"/>
-                                                    </span>
-                                                    <span class="o_stat_text">Independence</span>
-                                                </div>
-                                            </button>
-                                            <button class="oe_stat_button" type="object" name="action_start_planning" icon="fa-list-ul">
-                                                <div class="o_field_widget o_stat_info">
-                                                    <span class="o_stat_value">
-                                                        <field name="understanding_entity_obtained" widget="boolean"/>
-                                                    </span>
-                                                    <span class="o_stat_text">Entity Understanding</span>
-                                                </div>
-                                            </button>
-                                        </div>
-                                        
-                                        <group>
-                                            <field name="audit_id" invisible="1"/>
-                                            <field name="client_id" invisible="1"/>
-                                            <field name="currency_id" invisible="1"/>
-                                        </group>
-                                        
-                                        <notebook>
-                                            <!-- Client Information Tab -->
-                                            <page name="client_info" string="Client Information">
-                                                <group>
-                                                    <group string="Industry &amp; Business">
-                                                        <field name="industry_sector_id" options="{'no_create': True}"/>
-                                                        <field name="business_nature" placeholder="Describe the nature of client's business..."/>
-                                                    </group>
-                                                    <group string="Key Personnel">
-                                                        <field name="key_personnel" placeholder="List key client personnel and their roles..."/>
-                                                    </group>
-                                                </group>
-                                            </page>
-                                            
-                                            <!-- Engagement Details Tab -->
-                                            <page name="engagement" string="Engagement Details">
-                                                <group>
-                                                    <group string="Engagement Information">
-                                                        <field name="engagement_type"/>
-                                                        <field name="reporting_framework"/>
-                                                    </group>
-                                                    <group string="Timeline">
-                                                        <field name="planning_start_date"/>
-                                                        <field name="planning_end_date"/>
-                                                        <field name="fieldwork_start_date"/>
-                                                        <field name="fieldwork_end_date"/>
-                                                        <field name="estimated_hours"/>
-                                                    </group>
-                                                </group>
-                                                <group>
-                                                    <field name="audit_scope" placeholder="Define the scope and objectives of the audit..."/>
-                                                </group>
-                                            </page>
-                                            
-                                            <!-- Risk Assessment Tab -->
-                                            <page name="risk" string="Risk Assessment">
-                                                <group>
-                                                    <group string="Risk Levels">
-                                                        <field name="inherent_risk" widget="badge"/>
-                                                        <field name="control_risk" widget="badge"/>
-                                                        <field name="detection_risk" widget="badge"/>
-                                                    </group>
-                                                    <group string="Risk Analysis">
-                                                        <field name="key_risk_areas" placeholder="Identify key risk areas..."/>
-                                                        <field name="fraud_risk_assessment" placeholder="Document fraud risk assessment..."/>
-                                                    </group>
-                                                </group>
-                                            </page>
-                                            
-                                            <!-- Materiality Tab -->
-                                            <page name="materiality" string="Materiality">
-                                                <group>
-                                                    <group string="Materiality Calculations">
-                                                        <field name="materiality_basis"/>
-                                                        <field name="overall_materiality" widget="monetary"/>
-                                                        <field name="performance_materiality" widget="monetary"/>
-                                                        <field name="trivial_threshold" widget="monetary"/>
-                                                    </group>
-                                                </group>
-                                            </page>
-                                            
-                                            <!-- Checklists Tab -->
-                                            <page name="checklist" string="Planning Checklist">
-                                                <group>
-                                                    <group string="Engagement Setup">
-                                                        <field name="engagement_letter_signed" widget="boolean_toggle"/>
-                                                        <field name="independence_confirmed" widget="boolean_toggle"/>
-                                                        <field name="previous_auditor_communication" widget="boolean_toggle"/>
-                                                    </group>
-                                                    <group string="Planning Procedures">
-                                                        <field name="understanding_entity_obtained" widget="boolean_toggle"/>
-                                                        <field name="internal_controls_documented" widget="boolean_toggle"/>
-                                                        <field name="analytical_procedures_performed" widget="boolean_toggle"/>
-                                                    </group>
-                                                </group>
-                                            </page>
-                                            
-                                            <!-- Documents &amp; Notes Tab -->
-                                            <page name="documents" string="Documents &amp; Notes">
-                                                <group>
-                                                    <field name="planning_notes" placeholder="Enter planning notes and observations..."/>
-                                                </group>
-                                                <group string="Planning Documents">
-                                                    <field name="planning_attachments" widget="many2many_binary" nolabel="1"/>
-                                                </group>
-                                            </page>
-                                        </notebook>
-                                    </sheet>
-                                    <div class="oe_chatter">
-                                        <field name="message_follower_ids"/>
-                                        <field name="activity_ids"/>
-                                        <field name="message_ids"/>
-                                    </div>
-                                </form>
-                            </field>
+                        <!-- Planning Phase Exists - Show Form -->
+                        <group invisible="not planning_phase_id">
+                            <field name="planning_phase_id" 
+                                   invisible="1"/>
+                        </group>
+                        
+                        <div invisible="not planning_phase_id" class="o_planning_phase_container">
+                            <field name="planning_phase_id" 
+                                   context="{'default_audit_id': active_id, 'form_view_ref': 'qaco_planning_phase.view_planning_phase_form'}"/>
                         </div>
                     </page>
                 </xpath>
