@@ -11,14 +11,13 @@
     'website': "https://www.qaco.com.pk",
 
     'category': 'Uncategorized',
-    'version': '17.0.0.0.4',
+    'version': '17.0.0.0.5',
 
     'depends': ['base', 'mail', 'hr', 'project', 'web', 'qaco_employees'],
 
     'pre_init_hook': 'pre_init_hook',
 
     'data': [
-        'data/cleanup_firm_name.xml',
         'security/ir.model.access.csv',
         'security/security_groups.xml',
         'data/firm_name_data.xml',

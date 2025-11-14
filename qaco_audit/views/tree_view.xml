@@ -13,8 +13,7 @@
           <field name="employee_id" optional="show"/>
           <field name="contact" optional="show"/>
           <field name="stage_id" optional="show"/>
-          <!-- firm_name temporarily hidden for migration - will be restored in version 17.0.0.0.5 -->
-          <!-- <field name="firm_name" optional="show"/> -->
+          <field name="firm_name" optional="show"/>
           <field name="manager_review" optional="hide"/>
           <field name="state" optional="hide"/>
           <field name="qaco_assigning_partner" string="Assigning Partner" optional="hide"/>
