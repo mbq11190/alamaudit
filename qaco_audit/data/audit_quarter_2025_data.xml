@@ -1,0 +1,20 @@
+<odoo>
+    <data noupdate="1">
+        <record id="audit_quarter_2025_q1" model="audit.quarter">
+            <field name="name">2025-01-Jan-Mar</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="audit_quarter_2025_q2" model="audit.quarter">
+            <field name="name">2025-02-Apr-Jun</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="audit_quarter_2025_q3" model="audit.quarter">
+            <field name="name">2025-03-Jul-Sep</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="audit_quarter_2025_q4" model="audit.quarter">
+            <field name="name">2025-04-Oct-Dec</field>
+            <field name="sequence">4</field>
+        </record>
+    </data>
+</odoo>

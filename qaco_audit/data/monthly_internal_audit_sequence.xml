@@ -1,0 +1,14 @@
+<odoo>
+    <data noupdate="0">
+        <record id="sequence_monthly_internal_audit" model="ir.sequence">
+            <field name="name">Monthly Internal Audit Sequence</field>
+            <field name="code">monthly.internal.audit.sequence</field>
+            <field name="prefix">MIA/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

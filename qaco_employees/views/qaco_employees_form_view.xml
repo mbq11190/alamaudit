@@ -1,0 +1,157 @@
+<odoo>
+    <data>
+        <record id="inherited_hr_employees_form" model="ir.ui.view">
+            <field name="name">inherited.hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='work_phone']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='coach_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='category_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+<!--                <xpath expr="//field[@name='address_id']" position="attributes">-->
+<!--                    <attribute name="string">Deputation Address</attribute>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='work_location_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                </xpath>
+
+<!--                <xpath expr="//page[@name='received_badges']" position="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='private_street']" position="replace">-->
+<!--                    <field name="address_home_id" string="Home Address"/>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='private_email']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='private_phone']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_properties']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='lang']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+<!--                <xpath expr="/form[1]/sheet[1]/notebook[1]/page[4]/group[1]/group[2]" position="replace"/>-->
+<!--                <xpath expr="/form[1]/sheet[1]/notebook[1]/page[4]/group[1]/group[2]/separator[1]" position="replace"/>-->
+                <xpath expr="//field[@name='study_school']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='visa_no']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='permit_no']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='visa_expire']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='work_permit_expiration_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='has_work_permit']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='passport_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='place_of_birth']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='country_of_birth']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='identification_id']" position="replace">
+                    <field name="identification_id" string="CNIC No"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+<!--                <xpath expr="/form[1]/sheet[1]/notebook[1]/page[5]/group[1]/group[2]" position="replace"/>-->
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_title']" position="after">
+                    <field name="designation_id" options="{'no_create': True, 'no_open': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='job_title']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="date_of_articles_end"/>
+                    <field name="date_of_leaving"/>
+                    <field name="region_id" options="{'no_create': True}"/>
+<!--                    <field name="allocation_status"/>-->
+                    <field name="crn_no"/>
+                </xpath>
+                <xpath expr="//field[@name='work_email']" position="after">
+                    <field name="date_of_articles_registration"/>
+                    <field name="date_of_joining"/>
+                    <field name="reg_status"/>
+                    <field name="reg_firm_name"/>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='public']/div[1]/div[1]/group[1]" position="attributes">
+                    <attribute name="string">Official Info</attribute>
+                </xpath>
+                <xpath expr="//field[@name='address_id']" position="after">
+                    <field name="hiring_partner_id"/>
+                    <field name="referring_person_id"/>
+                    <field name="technical_supervisor_id"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="NOC">
+                        <group col="2">
+                            <group string="NOC Joining Case">
+                                <field name="previous_firm_id"/>
+                                <field name="joining_reason_noc"/>
+                                <field name="leaves_already_availed"/>
+                                <field name="date_of_noc_joining"/>
+                            </group>
+                            <group string="NOC Leaving Case">
+                                <field name="leaving_reason_noc"/>
+                                <field name="leaves_availed_in_qaco"/>
+                                <field name="date_of_noc_leaving"/>
+                                <field name="noc_approving_partner_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Family/Reference">
+                        <field name="family_reference_ids">
+                            <tree editable="bottom">
+                                <field name="relation"/>
+                                <field name="partner_id"/>
+                                <field name="occupation"/>
+                                <field name="designation"/>
+                                <field name="contact_no"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <!-- Latest Work Location Field -->
+                <xpath expr="//field[@name='work_email']" position="after">
+                    <field name="latest_deputation_client_id" string="Allocation"/>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="partner_id" widget="many2one_avatar_employee" string="Partner"/>
+                </xpath>
+
+
+            </field>
+        </record>
+    </data>
+</odoo>

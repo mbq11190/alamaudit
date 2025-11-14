@@ -1,0 +1,16 @@
+<odoo>
+    <data noupdate="1">
+        <record id="monthly_audit_stage_new" model="monthly.audit.stages">
+            <field name="name">New</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="monthly_audit_stage_working" model="monthly.audit.stages">
+            <field name="name">Working</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="monthly_audit_stage_done" model="monthly.audit.stages">
+            <field name="name">Done</field>
+            <field name="sequence">3</field>
+        </record>
+    </data>
+</odoo>

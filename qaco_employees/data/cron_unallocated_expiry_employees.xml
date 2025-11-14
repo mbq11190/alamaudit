@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ✅ Scheduled Job: Auto Set Employees as Unallocated -->
+        <record id="ir_cron_auto_unallocate_employees" model="ir.cron">
+            <field name="name">Auto Unallocate Employees (Deputation Expiry)</field>
+            <field name="model_id" ref="model_hr_employee_transfer"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_set_unallocated()</field>
+            <field name="user_id" ref="base.user_root"/>  <!-- Runs as Odoo Superadmin -->
+            <field name="interval_number">1</field>  <!-- Runs every 1 day -->
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>  <!-- Runs indefinitely -->
+            <field name="active" eval="True"/>  <!-- Job is active -->
+        </record>
+    </data>
+</odoo>

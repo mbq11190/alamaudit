@@ -1,0 +1,28 @@
+
+from . import qaco_employees
+from . import employee_designation
+from . import employee_family_reference
+from . import employee_docs
+from . import employee_experience
+from . import qaco_absence
+from . import qaco_region
+from . import hr_employee_transfer
+from . import unallocated_employee_notification
+from . import unallocated_employee_recipient
+from . import weekly_employee_report
+# from . import scheduled_employee_progress_report
+from . import daily_attendance_report
+from . import leave_summary
+from . import leave_allowance
+from . import leave_adjustment
+from . import leave_adjustment_approval
+from . import hr_public_holiday
+from . import hr_employee_public
+from . import transfer_cc_recipient
+from . import hr_leave
+from . import leave_condonation
+
+
+
+
+

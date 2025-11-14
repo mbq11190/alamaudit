@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+        <record id="audit_work_view_search" model="ir.ui.view">
+            <field name="name">qaco.audit.search</field>
+            <field name="model">qaco.audit</field>
+            <field name="arch" type="xml">
+                <search string="audit">
+                    <field name="client_id" string="Client" filter_domain="[('client_id.name','ilike',self)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('employee_id.user_id','=',uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('employee_id', '=', False)]"/>
+                    <filter string="Open Tasks" name="open_tasks" domain="[('stage_id','not in',(6,7,8))]"/>
+                    <filter string="Closed Tasks" name="closed_tasks" domain="[('stage_id','in',(6,7,8))]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="By Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="By Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                        <filter string="By State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="By Documents" name="documents" context="{'group_by': 'documents'}"/>
+                        <filter string="By Manager Review" name="manager_review" context="{'group_by': 'manager_review'}"/>
+                        <filter string="By Client Review" name="client_review" context="{'group_by': 'client_review'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

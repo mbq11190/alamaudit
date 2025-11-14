@@ -1,0 +1,25 @@
+<odoo>
+    <data noupdate="1">
+        <record id="audit_year_2019" model="audit.year">
+            <field name="name">2019</field>
+        </record>
+        <record id="audit_year_2020" model="audit.year">
+            <field name="name">2020</field>
+        </record>
+        <record id="audit_year_2021" model="audit.year">
+            <field name="name">2021</field>
+        </record>
+        <record id="audit_year_2022" model="audit.year">
+            <field name="name">2022</field>
+        </record>
+        <record id="audit_year_2023" model="audit.year">
+            <field name="name">2023</field>
+        </record>
+        <record id="audit_year_2024" model="audit.year">
+            <field name="name">2024</field>
+        </record>
+        <record id="audit_year_2025" model="audit.year">
+            <field name="name">2025</field>
+        </record>
+    </data>
+</odoo>

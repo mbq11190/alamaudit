@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="view_employee_tree_inherit_custom_status_cols" model="ir.ui.view">
+            <field name="name">hr.employee.tree.inherit.custom.status</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+
+                <!-- ❌ Remove fields by replacing them with nothing -->
+                <xpath expr="//field[@name='activity_ids'][@widget='list_activity']" position="replace"/>
+                <xpath expr="//field[@name='activity_date_deadline'][@widget='remaining_days']" position="replace"/>
+                <xpath expr="//field[@name='job_id']" position="replace"/>
+
+                <!-- ✅ Add custom status fields -->
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="on_leave_today" widget="boolean_toggle" string="On Leave Today"/>
+                    <field name="is_absent_today" widget="boolean_toggle" string="Is Absent Today"/>
+                    <field name="latest_deputation_client_id" string="Current Deputation"/>
+                    <field name="region_id" string="Region"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

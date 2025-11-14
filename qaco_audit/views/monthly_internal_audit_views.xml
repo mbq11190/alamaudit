@@ -1,0 +1,61 @@
+<odoo>
+    <data>
+        <record id="view_monthly_internal_audit_tree" model="ir.ui.view">
+            <field name="name">qaco.monthly.internal.audit.tree</field>
+            <field name="model">qaco.monthly.internal.audit</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="seq_code"/>
+                    <field name="client_id"/>
+                    <field name="month_id" string="Year-Month"/>
+                    <field name="stage_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_monthly_internal_audit_form" model="ir.ui.view">
+            <field name="name">qaco.monthly.internal.audit.form</field>
+            <field name="model">qaco.monthly.internal.audit</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="move_to_previous_stage" string="Previous Stage" type="object" class="oe_highlight"/>
+                        <button name="move_to_next_stage" string="Next Stage" type="object" class="oe_highlight"/>
+                        <button name="move_to_previous_month" string="Previous Month" type="object" class="oe_highlight"/>
+                        <button name="move_to_next_month" string="Next Month" type="object" class="oe_highlight"/>
+                        <field name="stage_id" widget="statusbar_duration" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
+                    </header>
+                    <sheet>
+                        <div name="button_box"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"/>
+                        <div>
+                            <div class="oe_title pe-0">
+                                <h1 class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex w-100">
+                                        <field name="client_id" options="{'line_breaks': False}" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Select The Client Name in Below Field" readonly="True"/>
+                                    </div>
+                                    <div class="d-flex justify-content-end o_state_container">
+                                    </div>
+                                </h1>
+                            </div>
+                        </div>
+                        <br/>
+                        <group col="3">
+                            <field name="seq_code" readonly="1"/>
+                            <field name="name"/>
+                            <field name="client_id"/>
+                            <field name="month_id" string="Year-Month"/>
+                        </group>
+                        <notebook>
+                            <page name="description_page" string="Instructions">
+                                <div class="o_form_label">Instructions</div>
+
+                            </page>
+                        </notebook>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

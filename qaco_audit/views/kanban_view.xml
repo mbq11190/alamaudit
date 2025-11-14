@@ -1,0 +1,113 @@
+
+<odoo>
+    <record id="view_qaco_audit_kanban" model="ir.ui.view">
+        <field name="name">qaco.audit.kanban</field>
+        <field name="model">qaco.audit</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" default_order="priority desc, sequence asc, state, id desc" records_draggable="0" >
+              <field name="color"/>
+              <field name="stage_id" options="{&quot;group_by_tooltip&quot;: {&quot;description&quot;: &quot;Description&quot;}} "/>
+              <field name="sequence"/>
+              <field name="priority"/>
+              <progressbar field="state" colors="{&quot;Pending Client Side&quot;: &quot;warning&quot;, &quot;auditing on it&quot;: &quot;primary&quot;, &quot;Done in this Stage&quot;: &quot;success&quot;}"/>
+              <templates>
+                <t t-name="kanban-box">
+                  <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                    <div class="o_kanban_record_details">
+                      <div class="o_kanban_record_top" name="studio_auto_kanban_top">
+                        <div class="o_kanban_record_headings" name="studio_auto_kanban_headings">
+                          <strong class="o_kanban_record_title" name="studio_auto_kanban_title">
+                            <field name="client_id"/>
+                          </strong>
+
+                          <div style="display: flex; align-items: center;">
+                            <i class="fa fa-hourglass" title="Hourglass icon" style="margin-right: 5px;"></i>
+                            <div>Priority : </div>
+                            <field name="priority" widget="priority"/>
+                          </div>
+
+                          <div style="display: flex; align-items: center;">
+                            <i class="fa fa-phone" title="Phone icon" style="margin-right: 5px;"></i>
+                            <div>Phone : </div>
+                            <field name="contact"/>
+                          </div>
+
+                          <div style="display: flex; align-items: center;">
+                            <i class="fa fa-clock-o" title="Clock icon" style="margin-right: 5px;"></i>
+                            <div>Audit Year : </div>
+                            <field name="audit_year"/>
+                          </div>
+
+                          <div style="display: flex; align-items: center;">
+                            <i class="fa fa-users" title="Users icon" style="margin-right: 5px;"></i>
+                            <div>Team Lead : </div>
+                            <field name="employee_id"/>
+                          </div>
+
+<!--                          <div style="display: flex; align-items: center;">-->
+<!--                            <i class="fa fa-file" title="File icon" style="margin-right: 5px;"></i>-->
+<!--                            <div>Documents : </div>-->
+<!--                            <field name="documents"/>-->
+<!--                             <t t-if="!record.documents.raw_value or record.documents.raw_value == 'Not Received' or record.documents.raw_value == 'Partially Received'">-->
+<!--                              <i class="fa fa-times cross-icon" title="Cross icon" style="margin-left: 20px;"></i>-->
+<!--                            </t>-->
+<!--                            <t t-else="">-->
+<!--                              <i class="fa fa-check tick-icon" title="Check icon" style="margin-left: 20px;"></i>-->
+<!--                            </t>-->
+<!--                          </div>-->
+
+<!--                          <div style="display: flex; align-items: center;">-->
+<!--                            <i class="fa fa-legal" title="Legal icon" style="margin-right: 5px;"></i>-->
+<!--                            <div>Manager Comments : </div>-->
+<!--                            <field name="manager_review"/>-->
+<!--                            <t t-if="!record.documents.raw_value or record.manager_review.raw_value == 'Revision Required' or record.manager_review.raw_value == 'Review Pending'">-->
+<!--                              <i class="fa fa-times cross-icon" title="Cross icon" style="margin-left: 15px;"></i>-->
+<!--                            </t>-->
+<!--                            <t t-else="">-->
+<!--                              <i class="fa fa-check tick-icon" title="Check icon" style="margin-left: 15px;"></i>-->
+<!--                            </t>-->
+<!--                          </div>-->
+
+<!--                          <div style="display: flex; align-items: center;">-->
+<!--                            <i class="fa fa-thumbs-up" title="Thumbs up icon" style="margin-right: 5px;"></i>-->
+<!--                            <div>Client Review : </div>-->
+<!--                            <field name="client_review"/>-->
+<!--                            <t t-if="!record.documents.raw_value or record.client_review.raw_value == 'Pending Confirmation'">-->
+<!--                              <i class="fa fa-times cross-icon" title="Cross icon" style="margin-left: 20px;"></i>-->
+<!--                            </t>-->
+<!--                            <t t-else="">-->
+<!--                              <i class="fa fa-check tick-icon" title="Check icon" style="margin-left: 20px;"></i>-->
+<!--                            </t>-->
+<!--                          </div>-->
+
+                            <div style="display: flex; ">
+                              <button type="object" name="move_to_previous_stage" class="btn btn-primary first-buttons" >Prev</button>
+                              <button type="object" name="move_to_next_stage" class="btn btn-primary second-buttons">Next</button>
+                            </div>
+                        </div>
+                        <div class="o_dropdown_kanban dropdown">
+                          <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown Menu" title="Dropdown Menu">
+                            <span class="fa fa-ellipsis-v" title="Menu icon"/>
+                          </a>
+                          <div class="dropdown-menu" role="menu">
+                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="o_kanban_record_body" name="studio_auto_kanban_body"/>
+                      <div class="o_kanban_record_bottom" name="studio_auto_kanban_bottom">
+                        <div class="oe_kanban_bottom_left" name="studio_auto_kanban_bottom_left"/>
+                        <div class="oe_kanban_bottom_right" name="studio_auto_kanban_bottom_right">
+                          <field name="state" widget="state_selection"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </t>
+              </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,114 @@
+<odoo>
+    <data>
+        <!-- Action -->
+        <record id="action_qaco_recurring_annual_audit" model="ir.actions.act_window">
+            <field name="name">Recurring Annual Audit</field>
+            <field name="res_model">qaco.recurring.annual.audit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_qaco_recurring_annual_audit_tree" model="ir.ui.view">
+            <field name="name">qaco.recurring.annual.audit.tree</field>
+            <field name="model">qaco.recurring.annual.audit</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="seq_code"/>
+                    <field name="client_id"/>
+                    <field name="work_year"/>
+                    <field name="stage_id"/>
+                    <field name="employee_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_qaco_recurring_annual_audit_form" model="ir.ui.view">
+            <field name="name">qaco.recurring.annual.audit.form</field>
+            <field name="model">qaco.recurring.annual.audit</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="move_to_previous_stage" string="Previous Stage" type="object" class="oe_highlight"/>
+                        <button name="move_to_next_stage" string="Next Stage" type="object" class="oe_highlight"/>
+                        <field name="stage_id" widget="statusbar_duration" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
+                    </header>
+                    <sheet>
+                        <div name="button_box">
+                            <!-- buttons will be added here by the inherited view -->
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                        <div>
+                            <div class="oe_title pe-0">
+                                <h1 class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex w-100">
+                                        <field name="client_id" options="{'line_breaks': False}"
+                                               class="o_task_name text-truncate w-md-75 w-100 pe-2"
+                                               placeholder="Select The Client Name in Below Field" readonly="True"/>
+                                    </div>
+                                    <div class="d-flex justify-content-end o_state_container">
+                                    </div>
+                                </h1>
+                            </div>
+                        </div>
+                        <br/>
+                        <group col="3">
+                            <field name="stage_name" invisible="1"/>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="client_id" force_save="1"/>
+                                <field name="contact" widget="phone"/>
+                                <field name="employee_id" widget="many2one_avatar_employee" invisible="stage_name in ['New']"/>
+                            </group>
+                            <group>
+                                <field name="date_deadline"/>
+                                <field name="priority" widget="priority"/>
+                            </group>
+                            <group>
+                                <field name="work_year" options="{'no_create': True}"/>
+                                <field name="folder" widget="CopyClipboardChar"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="description_page" string="Instructions">
+                                <field name="description" type="html"
+                                       options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="activity_ids"/>
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Stage Action -->
+        <record id="action_annual_audit_stage" model="ir.actions.act_window">
+            <field name="name">Recurring Audit Stages</field>
+            <field name="res_model">annual.audit.stages</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Year Action -->
+        <record id="action_annual_audit_year" model="ir.actions.act_window">
+            <field name="name">Recurring Audit Years</field>
+            <field name="res_model">annual.audit.year</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menus -->
+        <menuitem id="menu_recurring_annual_audit" name="Recurring Annual Audit"
+                  parent="qaco_audit.menu_root" action="action_qaco_recurring_annual_audit" sequence="2"/>
+
+        <menuitem id="menu_annual_audit_stage" name="Recurring Audit Stages"
+                  parent="qaco_audit.menu_2" action="action_annual_audit_stage"
+                  groups="qaco_audit.group_audit_administrator"/>
+
+        <menuitem id="menu_annual_audit_year" name="Recurring Audit Years"
+                  parent="qaco_audit.menu_2" action="action_annual_audit_year"
+                  groups="qaco_audit.group_audit_administrator"/>
+    </data>
+</odoo>

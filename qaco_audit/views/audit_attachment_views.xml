@@ -1,0 +1,15 @@
+
+<odoo>
+    <record id="view_work_attachment_tree" model="ir.ui.view">
+        <field name="name">audit.attachment.tree</field>
+        <field name="model">audit.attachment</field>
+        <field name="arch" type="xml">
+            <tree string="Attachments">
+                <field name="name"/>
+                <field name="file" invisible="0"/>
+                <button name="download_attachment" string="Download Attachment" type="object" icon="fa-download"/>
+                <button name="delete_attachment" string="Delete Attachment" type="object" icon="fa-trash"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

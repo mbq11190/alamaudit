@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="qaco_hr_leave_view_form_cancel" model="ir.ui.view">
+            <field name="name">hr.leave.view.form.qaco.cancel</field>
+            <field name="model">hr.leave</field>
+            <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_cancel']" position="replace">
+                    <button string="Cancel" name="action_cancel" type="object"
+                        groups="qaco_employees.group_qaco_employee_administrator"
+                        invisible="not active or not can_cancel"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

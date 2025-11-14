@@ -1,0 +1,435 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Sector D Records -->
+        <record id="sector_d11" model="qaco.region">
+            <field name="name">Sector D-11</field>
+        </record>
+        <record id="sector_d12" model="qaco.region">
+            <field name="name">Sector D-12</field>
+        </record>
+        <record id="sector_d13" model="qaco.region">
+            <field name="name">Sector D-13</field>
+        </record>
+        <record id="sector_d14" model="qaco.region">
+            <field name="name">Sector D-14</field>
+        </record>
+        <record id="sector_d15" model="qaco.region">
+            <field name="name">Sector D-15</field>
+        </record>
+        <record id="sector_d16" model="qaco.region">
+            <field name="name">Sector D-16</field>
+        </record>
+        <record id="sector_d17" model="qaco.region">
+            <field name="name">Sector D-17</field>
+        </record>
+        <record id="sector_d18" model="qaco.region">
+            <field name="name">Sector D-18</field>
+        </record>
+
+        <!-- Sector E Records -->
+        <record id="sector_e7" model="qaco.region">
+            <field name="name">Sector E-7</field>
+        </record>
+        <record id="sector_e8" model="qaco.region">
+            <field name="name">Sector E-8</field>
+        </record>
+        <record id="sector_e9" model="qaco.region">
+            <field name="name">Sector E-9</field>
+        </record>
+        <record id="sector_e10" model="qaco.region">
+            <field name="name">Sector E-10</field>
+        </record>
+        <record id="sector_e11" model="qaco.region">
+            <field name="name">Sector E-11</field>
+        </record>
+        <record id="sector_e12" model="qaco.region">
+            <field name="name">Sector E-12</field>
+        </record>
+        <record id="sector_e13" model="qaco.region">
+            <field name="name">Sector E-13</field>
+        </record>
+        <record id="sector_e14" model="qaco.region">
+            <field name="name">Sector E-14</field>
+        </record>
+        <record id="sector_e15" model="qaco.region">
+            <field name="name">Sector E-15</field>
+        </record>
+        <record id="sector_e16" model="qaco.region">
+            <field name="name">Sector E-16</field>
+        </record>
+        <record id="sector_e17" model="qaco.region">
+            <field name="name">Sector E-17</field>
+        </record>
+
+        <!-- Sector F Records -->
+        <record id="sector_f5" model="qaco.region">
+            <field name="name">Sector F-5</field>
+        </record>
+        <record id="sector_f6" model="qaco.region">
+            <field name="name">Sector F-6</field>
+        </record>
+        <record id="sector_f7" model="qaco.region">
+            <field name="name">Sector F-7</field>
+        </record>
+        <record id="sector_f8" model="qaco.region">
+            <field name="name">Sector F-8</field>
+        </record>
+        <record id="sector_f9" model="qaco.region">
+            <field name="name">Sector F-9</field>
+        </record>
+        <record id="sector_f10" model="qaco.region">
+            <field name="name">Sector F-10</field>
+        </record>
+        <record id="sector_f11" model="qaco.region">
+            <field name="name">Sector F-11</field>
+        </record>
+        <record id="sector_f12" model="qaco.region">
+            <field name="name">Sector F-12</field>
+        </record>
+        <record id="sector_f13" model="qaco.region">
+            <field name="name">Sector F-13</field>
+        </record>
+        <record id="sector_f14" model="qaco.region">
+            <field name="name">Sector F-14</field>
+        </record>
+        <record id="sector_f15" model="qaco.region">
+            <field name="name">Sector F-15</field>
+        </record>
+        <record id="sector_f16" model="qaco.region">
+            <field name="name">Sector F-16</field>
+        </record>
+        <record id="sector_f17" model="qaco.region">
+            <field name="name">Sector F-17</field>
+        </record>
+
+                <!-- Sector G Records -->
+        <record id="sector_g5" model="qaco.region">
+            <field name="name">Sector G-5</field>
+        </record>
+        <record id="sector_g6" model="qaco.region">
+            <field name="name">Sector G-6</field>
+        </record>
+        <record id="sector_g7" model="qaco.region">
+            <field name="name">Sector G-7</field>
+        </record>
+        <record id="sector_g8" model="qaco.region">
+            <field name="name">Sector G-8</field>
+        </record>
+        <record id="sector_g9" model="qaco.region">
+            <field name="name">Sector G-9</field>
+        </record>
+        <record id="sector_g10" model="qaco.region">
+            <field name="name">Sector G-10</field>
+        </record>
+        <record id="sector_g11" model="qaco.region">
+            <field name="name">Sector G-11</field>
+        </record>
+        <record id="sector_g12" model="qaco.region">
+            <field name="name">Sector G-12</field>
+        </record>
+        <record id="sector_g13" model="qaco.region">
+            <field name="name">Sector G-13</field>
+        </record>
+        <record id="sector_g14" model="qaco.region">
+            <field name="name">Sector G-14</field>
+        </record>
+        <record id="sector_g15" model="qaco.region">
+            <field name="name">Sector G-15</field>
+        </record>
+        <record id="sector_g16" model="qaco.region">
+            <field name="name">Sector G-16</field>
+        </record>
+        <record id="sector_g17" model="qaco.region">
+            <field name="name">Sector G-17</field>
+        </record>
+
+        <!-- Sector H Records -->
+        <record id="sector_h8" model="qaco.region">
+            <field name="name">Sector H-8</field>
+        </record>
+        <record id="sector_h9" model="qaco.region">
+            <field name="name">Sector H-9</field>
+        </record>
+        <record id="sector_h10" model="qaco.region">
+            <field name="name">Sector H-10</field>
+        </record>
+        <record id="sector_h11" model="qaco.region">
+            <field name="name">Sector H-11</field>
+        </record>
+        <record id="sector_h12" model="qaco.region">
+            <field name="name">Sector H-12</field>
+        </record>
+        <record id="sector_h13" model="qaco.region">
+            <field name="name">Sector H-13</field>
+        </record>
+        <record id="sector_h14" model="qaco.region">
+            <field name="name">Sector H-14</field>
+        </record>
+        <record id="sector_h15" model="qaco.region">
+            <field name="name">Sector H-15</field>
+        </record>
+        <record id="sector_h16" model="qaco.region">
+            <field name="name">Sector H-16</field>
+        </record>
+        <record id="sector_h17" model="qaco.region">
+            <field name="name">Sector H-17</field>
+        </record>
+
+        <!-- Sector I Records -->
+        <record id="sector_i8" model="qaco.region">
+            <field name="name">Sector I-8</field>
+        </record>
+        <record id="sector_i9" model="qaco.region">
+            <field name="name">Sector I-9</field>
+        </record>
+        <record id="sector_i10" model="qaco.region">
+            <field name="name">Sector I-10</field>
+        </record>
+        <record id="sector_i11" model="qaco.region">
+            <field name="name">Sector I-11</field>
+        </record>
+        <record id="sector_i12" model="qaco.region">
+            <field name="name">Sector I-12</field>
+        </record>
+        <record id="sector_i13" model="qaco.region">
+            <field name="name">Sector I-13</field>
+        </record>
+        <record id="sector_i14" model="qaco.region">
+            <field name="name">Sector I-14</field>
+        </record>
+        <record id="sector_i15" model="qaco.region">
+            <field name="name">Sector I-15</field>
+        </record>
+        <record id="sector_i16" model="qaco.region">
+            <field name="name">Sector I-16</field>
+        </record>
+        <record id="sector_i17" model="qaco.region">
+            <field name="name">Sector I-17</field>
+        </record>
+        <record id="sector_i18" model="qaco.region">
+            <field name="name">Sector I-18</field>
+        </record>
+
+                <!-- Urban Areas and Neighborhoods -->
+        <record id="area_saddar" model="qaco.region">
+            <field name="name">Saddar</field>
+        </record>
+        <record id="area_chaklala" model="qaco.region">
+            <field name="name">Chaklala</field>
+        </record>
+        <record id="area_westridge" model="qaco.region">
+            <field name="name">Westridge</field>
+        </record>
+        <record id="area_satellite_town" model="qaco.region">
+            <field name="name">Satellite Town</field>
+        </record>
+        <record id="area_murree_road" model="qaco.region">
+            <field name="name">Murree Road</field>
+        </record>
+        <record id="area_26no" model="qaco.region">
+            <field name="name">26 No/Jhangi Syedan</field>
+        </record>
+        <record id="area_muslimtown" model="qaco.region">
+            <field name="name">Muslim Town</field>
+        </record>
+
+        <!-- Housing Societies and Developments -->
+        <record id="area_bahria_town" model="qaco.region">
+            <field name="name">Bahria Town Rawalpindi</field>
+        </record>
+        <record id="area_dha" model="qaco.region">
+            <field name="name">Defence Housing Authority (DHA)</field>
+        </record>
+        <record id="area_askari" model="qaco.region">
+            <field name="name">Askari Housing Society</field>
+        </record>
+        <record id="area_gulraiz" model="qaco.region">
+            <field name="name">Gulraiz Housing Scheme</field>
+        </record>
+        <record id="area_airport_housing" model="qaco.region">
+            <field name="name">Airport Housing Society</field>
+        </record>
+        <record id="gulberg_housing" model="qaco.region">
+            <field name="name">Gulberg Housing</field>
+        </record>
+        <record id="lake_city" model="qaco.region">
+            <field name="name">Lake City-Lahore</field>
+        </record>
+        <record id="officers_colony" model="qaco.region">
+            <field name="name">Officers Colony</field>
+        </record>
+
+        <!-- Tehsils and Surrounding Towns -->
+        <record id="area_gujar_khan" model="qaco.region">
+            <field name="name">Gujar Khan</field>
+        </record>
+        <record id="area_kahuta" model="qaco.region">
+            <field name="name">Kahuta</field>
+        </record>
+        <record id="area_taxila" model="qaco.region">
+            <field name="name">Taxila</field>
+        </record>
+        <record id="area_murree" model="qaco.region">
+            <field name="name">Murree</field>
+        </record>
+        <record id="area_kallar_syedan" model="qaco.region">
+            <field name="name">Kallar Syedan</field>
+        </record>
+
+        <!-- Notable Union Councils -->
+        <record id="area_uc1" model="qaco.region">
+            <field name="name">Waris Khan</field>
+        </record>
+        <record id="area_uc2" model="qaco.region">
+            <field name="name">Awan Colony</field>
+        </record>
+        <record id="area_uc3" model="qaco.region">
+            <field name="name">Dhoke Ratta</field>
+        </record>
+        <record id="area_uc4" model="qaco.region">
+            <field name="name">Raja Bazaar</field>
+        </record>
+        <record id="area_uc5" model="qaco.region">
+            <field name="name">Committee Chowk</field>
+        </record>
+        <record id="area_uc6" model="qaco.region">
+            <field name="name">Hassan Abdal Attock</field>
+        </record>
+        <record id="area_uc7" model="qaco.region">
+            <field name="name">Jinnah Garden</field>
+        </record>
+        <record id="area_uc8" model="qaco.region">
+            <field name="name">Kurri Road</field>
+        </record>
+        <record id="area_uc9" model="qaco.region">
+            <field name="name">Ghauri Town</field>
+        </record>
+        <record id="area_uc10" model="qaco.region">
+            <field name="name">Bahria Enclave</field>
+        </record>
+        <record id="area_uc11" model="qaco.region">
+            <field name="name">Wah Cantt</field>
+        </record>
+        <record id="area_uc12" model="qaco.region">
+            <field name="name">Adyala Road</field>
+        </record>
+        <record id="area_uc13" model="qaco.region">
+            <field name="name">Jailani Bharakhu</field>
+        </record>
+        <record id="area_uc14" model="qaco.region">
+            <field name="name">Gulshan e Khurshid Pindi</field>
+        </record>
+        <record id="area_uc15" model="qaco.region">
+            <field name="name">Lehtrar Road</field>
+        </record>
+        <record id="area_uc16" model="qaco.region">
+            <field name="name">Kamalabad</field>
+        </record>
+        <record id="area_uc17" model="qaco.region">
+            <field name="name">Caltax Road</field>
+        </record>
+        <record id="area_uc18" model="qaco.region">
+            <field name="name">Chakri Road</field>
+        </record>
+        <record id="area_uc19" model="qaco.region">
+            <field name="name">Sadiqabad</field>
+        </record>
+        <record id="area_uc20" model="qaco.region">
+            <field name="name">Chak Shahzad</field>
+        </record>
+        <record id="area_uc21" model="qaco.region">
+            <field name="name">Saidpur Road</field>
+        </record>
+        <record id="area_uc22" model="qaco.region">
+            <field name="name">AECHS Pindi</field>
+        </record>
+        <record id="area_uc23" model="qaco.region">
+            <field name="name">Faizabad</field>
+        </record>
+        <record id="area_uc24" model="qaco.region">
+            <field name="name">Bari Imam</field>
+        </record>
+        <record id="area_uc25" model="qaco.region">
+            <field name="name">Dhoke Syedan Chowk</field>
+        </record>
+        <record id="area_uc26" model="qaco.region">
+            <field name="name">Stadium Road</field>
+        </record>
+        <record id="area_uc27" model="qaco.region">
+            <field name="name">Khayban e Sarfarz</field>
+        </record>
+        <record id="area_uc28" model="qaco.region">
+            <field name="name">6th Road</field>
+        </record>
+        <record id="area_uc29" model="qaco.region">
+            <field name="name">Khanna Pull</field>
+        </record>
+        <record id="area_uc30" model="qaco.region">
+            <field name="name">Jhanda Chichi Pindi</field>
+        </record>
+        <record id="area_uc31" model="qaco.region">
+            <field name="name">Commercial Market</field>
+        </record>
+        <record id="area_uc32" model="qaco.region">
+            <field name="name">Railway Scheme 7</field>
+        </record>
+        <record id="area_uc33" model="qaco.region">
+            <field name="name">Park Road</field>
+        </record>
+        <record id="area_uc34" model="qaco.region">
+            <field name="name">Dhok Kashmirian</field>
+        </record>
+        <record id="area_uc35" model="qaco.region">
+            <field name="name">Margalla Town</field>
+        </record>
+        <record id="area_uc36" model="qaco.region">
+            <field name="name">Range Road</field>
+        </record>
+        <record id="area_uc37" model="qaco.region">
+            <field name="name">Madina Town</field>
+        </record>
+        <record id="area_uc38" model="qaco.region">
+            <field name="name">Ghosia Mohalla Bharakhu</field>
+        </record>
+        <record id="area_uc39" model="qaco.region">
+            <field name="name">Lalazar Rwp</field>
+        </record>
+        <record id="area_uc41" model="qaco.region">
+            <field name="name">Fazal Town</field>
+        </record>
+        <record id="area_uc42" model="qaco.region">
+            <field name="name">Misrial Road</field>
+        </record>
+        <record id="area_uc43" model="qaco.region">
+            <field name="name">Soan Garden</field>
+        </record>
+        <record id="area_uc44" model="qaco.region">
+            <field name="name">Sangam Town</field>
+        </record>
+        <record id="area_uc45" model="qaco.region">
+            <field name="name">Fazaia Colony</field>
+        </record>
+        <record id="area_uc46" model="qaco.region">
+            <field name="name">Tarlai</field>
+        </record>
+        <record id="area_uc47" model="qaco.region">
+            <field name="name">Bani Gala</field>
+        </record>
+        <record id="area_uc48" model="qaco.region">
+            <field name="name">Ahmad Town Bharakhu</field>
+        </record>
+        <record id="area_uc49" model="qaco.region">
+            <field name="name">Taramri Chowk</field>
+        </record>
+        <record id="area_uc50" model="qaco.region">
+            <field name="name">Bilal Colony Rawalpindi</field>
+        </record>
+        <record id="area_uc51" model="qaco.region">
+            <field name="name">Tipu Road Jinnah Colony</field>
+        </record>
+        <record id="area_uc52" model="qaco.region">
+            <field name="name">Simly Dam Road Bharakhu</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_unallocated_employee_recipient_tree" model="ir.ui.view">
+        <field name="name">unallocated.employee.recipient.tree</field>
+        <field name="model">unallocated.employee.recipient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_unallocated_employee_recipient_form" model="ir.ui.view">
+        <field name="name">unallocated.employee.recipient.form</field>
+        <field name="model">unallocated.employee.recipient</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_unallocated_employee_recipient" model="ir.actions.act_window">
+        <field name="name">Unallocated Email Recipients</field>
+        <field name="res_model">unallocated.employee.recipient</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_unallocated_employee_recipient"
+              name="Unallocated Recipients"
+              parent="hr.menu_hr_root"
+              action="action_unallocated_employee_recipient"
+              sequence="16"/>
+</odoo>
+

@@ -1,0 +1,21 @@
+<odoo>
+    <record id="ir_cron_create_months_audit" model="ir.cron">
+        <field name="name">Create Next Two Months Audit</field>
+        <field name="model_id" ref="model_monthly_audit_month"/>
+        <field name="code">model.create_next_two_months()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1, months=1)).strftime('%Y-%m-%d 00:00:00')"/>
+    </record>
+    <record id="ir_cron_delete_empty_months_audit" model="ir.cron">
+        <field name="name">Delete Empty Months Audit</field>
+        <field name="model_id" ref="model_monthly_audit_month"/>
+        <field name="state">code</field>
+        <field name="code">model.delete_empty_months()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1, months=1)).strftime('%Y-%m-%d 00:00:00')"/>
+    </record>
+</odoo>

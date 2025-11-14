@@ -1,0 +1,38 @@
+<odoo>
+    <template id="email_transfer_request">
+        <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                    th, td { padding: 10px; border: 1px solid #dddddd; text-align: left; }
+                    th { background-color: #004080; color: white; font-weight: bold; }
+                    tr:nth-child(even) { background-color: #f2f2f2; }
+                </style>
+            </head>
+            <body>
+                <p>Dear <t t-esc="manager_name"/>,</p>
+                <p>An employee transfer request has been submitted for your approval:</p>
+                <table>
+                    <tr>
+                        <th>Employee</th>
+                        <th>From Client</th>
+                        <th>To Client</th>
+                        <th>Transfer Date</th>
+                        <th>Reason</th>
+                    </tr>
+                    <tr>
+                        <td><t t-esc="transfer.employee_id.name"/></td>
+                        <td><t t-esc="transfer.from_client_id.name or 'N/A'"/></td>
+                        <td><t t-esc="transfer.to_client_id.name"/></td>
+                        <td><t t-esc="transfer.transfer_date_from"/> - <t t-esc="transfer.transfer_date_to"/></td>
+                        <td><t t-esc="transfer.reason"/></td>
+                    </tr>
+                </table>
+                <p>Please log in to Odoo to approve or reject this request.</p>
+                <p>Best Regards,</p>
+                <p><strong>Odoo System</strong></p>
+            </body>
+        </html>
+    </template>
+</odoo>

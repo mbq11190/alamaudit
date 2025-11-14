@@ -1,0 +1,36 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_designation,employee.designation,model_employee_designation,base.group_user,1,1,1,1
+access_employee_family_reference,employee.family.reference,model_employee_family_reference,base.group_user,1,1,1,1
+access_employee_docs,employee.docs,model_employee_docs,base.group_user,1,1,1,1
+access_employee_experience,employee.experience,model_employee_experience,base.group_user,1,1,1,1
+access_qaco_region,qaco.region,model_qaco_region,base.group_user,1,1,1,1
+access_hr_employee_trainee,hr.employee trainee,model_hr_employee,qaco_employees.group_qaco_employee_trainee,1,0,0,0
+access_hr_employee_transfer_trainee,hr.employee.transfer,model_hr_employee_transfer,qaco_employees.group_qaco_employee_trainee,1,0,0,0
+access_hr_employee_transfer_manager,hr.employee.transfer,model_hr_employee_transfer,qaco_employees.group_qaco_employee_manager,1,1,1,1
+access_hr_employee_transfer_admin,hr.employee.transfer,model_hr_employee_transfer,qaco_employees.group_qaco_employee_administrator,1,1,1,1
+access_weekly_employee_report,weekly.employee.report,model_weekly_employee_report,base.group_user,1,1,1,1
+access_daily_attendance_report,daily.attendance.report,model_daily_attendance_report,base.group_user,1,1,1,1
+access_leave_summary,leave.summary,model_leave_summary,base.group_user,1,0,0,0
+access_leave_summary_hr_manager,leave.summary,model_leave_summary,qaco_employees.group_qaco_employee_hr_manager,1,1,1,1
+access_leave_allowance,leave.allowance,model_leave_allowance,base.group_user,1,0,0,0
+access_leave_allowance_hr_manager,leave.allowance,model_leave_allowance,qaco_employees.group_qaco_employee_hr_manager,1,1,1,1
+access_leave_adjustment,leave.adjustment,model_leave_adjustment,base.group_user,1,1,1,0
+access_leave_adjustment_hr_manager,leave.adjustment,model_leave_adjustment,qaco_employees.group_qaco_employee_hr_manager,1,1,1,1
+access_leave_adjustment_approval,leave.adjustment.approval,model_leave_adjustment_approval,base.group_user,1,0,1,0
+access_leave_adjustment_approval_manager,leave.adjustment.approval,model_leave_adjustment_approval,qaco_employees.group_qaco_employee_manager,1,1,1,0
+access_leave_adjustment_approval_hr_manager,leave.adjustment.approval,model_leave_adjustment_approval,qaco_employees.group_qaco_employee_hr_manager,1,1,1,1
+access_leave_adjustment_reject_wizard,leave.adjustment.reject.wizard,model_leave_adjustment_reject_wizard,base.group_user,1,1,1,1
+access_hr_public_holiday,hr.public.holiday,model_hr_public_holiday,base.group_user,1,0,0,0
+access_hr_public_holiday_hr_manager,hr.public.holiday,model_hr_public_holiday,qaco_employees.group_qaco_employee_hr_manager,1,1,1,1
+access_hr_employee_manager,hr.employee,model_hr_employee,qaco_employees.group_qaco_employee_manager,1,1,1,1
+access_hr_transfer_cc_recipient_user,hr.transfer.cc.recipient,model_hr_transfer_cc_recipient,base.group_user,1,0,0,0
+access_hr_transfer_cc_recipient_hr_manager,hr.transfer.cc.recipient,model_hr_transfer_cc_recipient,qaco_employees.group_qaco_employee_hr_manager,1,1,1,1
+access_hr_attendance_trainee,hr.attendance.trainee,hr_attendance.model_hr_attendance,qaco_employees.group_qaco_employee_trainee,1,1,1,0
+access_unallocated_employee_recipient,unallocated.employee.recipient,model_unallocated_employee_recipient,qaco_employees.group_qaco_employee_administrator,1,1,1,1
+access_hr_employee_user,hr.employee user,model_hr_employee,base.group_user,1,0,0,0
+access_leave_condonation,leave.condonation,model_leave_condonation,base.group_user,1,1,1,0
+access_leave_condonation_manager,leave.condonation,model_leave_condonation,qaco_employees.group_qaco_timeoff_manager,1,1,1,1
+access_leave_condonation_approval,leave.condonation.approval,model_leave_condonation_approval,base.group_user,1,0,1,0
+access_leave_condonation_approval_manager,leave.condonation.approval,model_leave_condonation_approval,qaco_employees.group_qaco_timeoff_manager,1,1,1,1
+access_leave_condonation_line,leave.condonation.line,model_leave_condonation_line,base.group_user,1,0,0,0
+access_leave_condonation_line_manager,leave.condonation.line,model_leave_condonation_line,qaco_employees.group_qaco_timeoff_manager,1,1,1,1

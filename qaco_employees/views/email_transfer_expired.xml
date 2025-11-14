@@ -1,0 +1,36 @@
+<odoo>
+    <template id="email_transfer_expired">
+        <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                    th, td { padding: 10px; border: 1px solid #dddddd; text-align: left; }
+                    th { background-color: #004080; color: white; font-weight: bold; }
+                    tr:nth-child(even) { background-color: #f2f2f2; }
+                </style>
+            </head>
+            <body>
+                <p>Dear <t t-esc="manager_name"/>,</p>
+                <p>The following employees have completed their deputation and are currently marked as <strong>UNALLOCATED</strong>. Please review and assign them to new clients:</p>
+                <table>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Previous Client</th>
+                        <th>Deputation End Date</th>
+                    </tr>
+                    <t t-foreach="transfers" t-as="transfer">
+                        <tr>
+                            <td><t t-esc="transfer.employee_id.name"/></td>
+                            <td><t t-esc="transfer.to_client_id.name or 'N/A'"/></td>
+                            <td><t t-esc="transfer.transfer_date_to"/></td>
+                        </tr>
+                    </t>
+                </table>
+                <p>Please log in to Odoo to reassign these employees.</p>
+                <p>Best Regards,</p>
+                <p><strong>Odoo System</strong></p>
+            </body>
+        </html>
+    </template>
+</odoo>

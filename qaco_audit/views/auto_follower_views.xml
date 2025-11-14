@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_qaco_audit_auto_follower_tree" model="ir.ui.view">
+        <field name="name">qaco.audit.auto.follower.tree</field>
+        <field name="model">qaco_audit.auto.follower</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_qaco_audit_auto_follower_form" model="ir.ui.view">
+        <field name="name">qaco.audit.auto.follower.form</field>
+        <field name="model">qaco_audit.auto.follower</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_qaco_audit_auto_follower" model="ir.actions.act_window">
+        <field name="name">Auto Followers</field>
+        <field name="res_model">qaco_audit.auto.follower</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
+

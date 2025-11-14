@@ -1,0 +1,109 @@
+<odoo>
+    <data>
+
+        <!-- ✅ Tree View: Define first -->
+        <record id="view_employee_transfer_tree" model="ir.ui.view">
+            <field name="name">hr.employee.transfer.tree</field>
+            <field name="model">hr.employee.transfer</field>
+            <field name="arch" type="xml">
+                <tree create="true" edit="false">
+                    <field name="sequence"/>
+                    <field name="employee_id"/>
+                    <field name="from_client_id" readonly="state == 'approved'"/>
+                    <field name="to_client_id" readonly="state == 'approved'"/>
+                    <field name="transfer_date_from" readonly="state == 'approved'"/>
+                    <field name="transfer_date_to" readonly="state == 'approved'"/>
+                    <field name="manager_id" readonly="1"/>
+                    <field name="state"/>
+                    <field name="active" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ✅ Employee Transfers Action -->
+        <record id="action_employee_transfer" model="ir.actions.act_window">
+            <field name="name">Employee Transfers</field>
+            <field name="res_model">hr.employee.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="context">{'form_view_initial_mode': 'edit'}</field>
+            <field name="domain">[('active', '=', True)]</field>
+        </record>
+
+        <!-- ✅ Employee Transfers Menu -->
+        <menuitem id="menu_employee_transfer"
+                  name="Employee Transfers"
+                  parent="hr.menu_hr_root"
+                  sequence="15"
+                  action="action_employee_transfer"/>
+
+        <!-- ✅ Form View -->
+        <record id="view_employee_transfer_form" model="ir.ui.view">
+            <field name="name">hr.employee.transfer.form</field>
+            <field name="model">hr.employee.transfer</field>
+            <field name="priority" eval="5"/>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_submit" type="object" string="Submit for Approval" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state != 'submitted'"/>
+                        <button name="action_reject" type="object" string="Reject" class="oe_highlight" invisible="state != 'submitted'"/>
+                        <button name="action_set_unallocated" type="object" string="Intimate Return to Office" class="oe_highlight" invisible="state != 'approved'"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '0'}"/>
+                    </header>
+
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <div name="button_box" position="inside">
+                            <button class="oe_stat_button" type="object" name="action_open_previous_transfers"
+                                    icon="fa-history">
+                                <field string="Previous Transfers" name="previous_transfers_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title pe-0">
+                            <h1 class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex w-100">
+                                    <field name="employee_id" options="{'no_create': True}"
+                                           class="o_task_name text-truncate w-md-75 w-100 pe-2"
+                                           placeholder="Select Employee" readonly="True"/>
+                                </div>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="sequence" readonly="1"/>
+                        </group>
+                        <group col="3">
+                            <group string="Transfer Details">
+                                <field name="employee_id" widget="many2one_avatar_employee" required="1" readonly="state != 'draft'"/>
+                                <field name="from_client_id" readonly="1"/>
+                                <field name="to_client_id" required="1" readonly="state != 'draft'"/>
+                                <field name="transfer_date_from" required="1" readonly="state != 'draft'"/>
+                                <field name="transfer_date_to" required="1" readonly="state != 'draft'"/>
+                                <field name="work_from" widget="radio" readonly="state != 'draft'"/>
+                            </group>
+
+                            <group string="Transfer Information">
+                                <field name="reason"/>
+                                <field name="manager_id" widget="many2one_avatar_employee" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="Notes" string="Notes">
+                                <field name="employee_id" invisible="1"/>
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="activity_ids"/>
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

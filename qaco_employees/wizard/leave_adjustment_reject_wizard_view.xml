@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_leave_adjustment_reject_wizard_form" model="ir.ui.view">
+        <field name="name">leave.adjustment.reject.wizard.form</field>
+        <field name="model">leave.adjustment.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Leave Adjustment">
+                <div class="alert alert-warning" role="alert" style="margin-bottom: 10px;">
+                    <strong>⚠️ Warning:</strong> You are about to reject this leave adjustment. Please provide a clear reason.
+                </div>
+                <group>
+                    <group>
+                        <field name="adjustment_id" invisible="1"/>
+                        <field name="employee_name"/>
+                        <field name="adjustment_date"/>
+                    </group>
+                    <group>
+                        <field name="adjustment_type" widget="badge"/>
+                        <field name="adjustment_amount"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="reason" readonly="1" widget="text"/>
+                </group>
+                <separator string="Rejection Reason"/>
+                <group>
+                    <field name="rejection_reason" placeholder="Please provide a detailed reason for rejecting this adjustment..." widget="text" nolabel="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_rejection" string="Confirm Rejection" type="object" class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

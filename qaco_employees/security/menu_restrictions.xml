@@ -1,0 +1,38 @@
+<odoo>
+    <data noupdate="0">
+        <record id="hr.hr_menu_hr_reports" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('qaco_employees.group_qaco_employee_administrator')])]"/>
+        </record>
+        <record id="hr.menu_human_resources_configuration" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('qaco_employees.group_qaco_employee_administrator')])]"/>
+        </record>
+        <record id="hr_holidays.menu_hr_holidays_dashboard" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('qaco_employees.group_qaco_employee_administrator')])]"/>
+        </record>
+        <!-- Allow all QACO employee groups except trainees to access the Time Off
+             Management menu -->
+        <record id="hr_holidays.menu_hr_holidays_management" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [
+                ref('hr_holidays.group_hr_holidays_responsible'),
+                ref('qaco_employees.group_qaco_employee_manager'),
+                ref('qaco_employees.group_qaco_employee_hr_manager'),
+                ref('qaco_employees.group_qaco_employee_partner'),
+                ref('qaco_employees.group_qaco_employee_administrator')
+            ])]"/>
+        </record>
+        <record id="hr_holidays.menu_hr_holidays_my_leaves" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+        </record>
+        <record id="hr_holidays.hr_leave_menu_new_request" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('qaco_employees.group_qaco_employee_administrator')])]"/>
+        </record>
+        <record id="hr_attendance.menu_hr_attendance_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+        <record id="hr_attendance.menu_hr_attendance_view_attendances" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+    </data>
+</odoo>

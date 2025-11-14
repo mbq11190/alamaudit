@@ -1,0 +1,26 @@
+<odoo>
+  <data>
+    <record id="email_template_leave_condonation_approval" model="mail.template">
+      <field name="name">Leave Condonation Approval Email</field>
+      <field name="model_id" ref="model_leave_condonation"/>
+      <field name="subject">[Action Required] Approve Leave Condonation {{ employee_name }}</field>
+      <field name="email_from">${(user.email_formatted or '')|safe}</field>
+      <field name="email_to"></field>
+      <field name="body_html" type="html">
+        <html>
+          <body>
+            <div style="margin:20px 0;">
+              <a href="__APPROVAL_URL__" style="background-color:#28a745; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">Approve</a>
+              <a href="__REFUSAL_URL__" style="background-color:#dc3545; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">Reject</a>
+              <a href="__REVERT_URL__" style="background-color:#6c757d; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">Revert</a>
+              <a href="__RECORD_URL__" style="background-color:#007bff; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; display:inline-block; margin-bottom:6px;">View Request</a>
+            </div>
+            <p>{{ employee_name }} requests condonation for <strong>{{ lines_count }}</strong> day(s).</p>
+            <p>Date of Condonation: <strong>{{ condonation_date }}</strong></p>
+          </body>
+        </html>
+      </field>
+    </record>
+  </data>
+</odoo>
+

@@ -1,0 +1,55 @@
+<odoo>
+  <data>
+    <template id="condonation_approval_success" name="Condonation Approval Success">
+      <t t-call="website.layout">
+        <div class="container mt-4">
+          <h3>Leave Condonation Approved</h3>
+          <p>Your approval has been recorded successfully.</p>
+        </div>
+      </t>
+    </template>
+
+    <template id="condonation_rejected" name="Condonation Rejected">
+      <t t-call="website.layout">
+        <div class="container mt-4">
+          <h3>Leave Condonation Rejected</h3>
+          <p>The condonation has been rejected.</p>
+        </div>
+      </t>
+    </template>
+
+    <template id="condonation_invalid_token" name="Invalid Condonation Token">
+      <t t-call="website.layout">
+        <div class="container mt-4">
+          <h3>Invalid or Expired Link</h3>
+          <p>The approval link is invalid or already used.</p>
+        </div>
+      </t>
+    </template>
+
+    <template id="condonation_revert_form" name="Condonation Revert Form">
+      <t t-call="website.layout">
+        <div class="container mt-4">
+          <h3>Revert Condonation</h3>
+          <form method="post">
+            <div class="form-group">
+              <label>Remark</label>
+              <textarea class="form-control" name="remark" rows="4"></textarea>
+            </div>
+            <button class="btn btn-secondary" type="submit">Revert</button>
+          </form>
+        </div>
+      </t>
+    </template>
+
+    <template id="condonation_reverted" name="Condonation Reverted">
+      <t t-call="website.layout">
+        <div class="container mt-4">
+          <h3>Condonation Reverted</h3>
+          <p>The condonation has been reverted and is back with the requester.</p>
+        </div>
+      </t>
+    </template>
+  </data>
+</odoo>
+

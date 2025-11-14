@@ -1,0 +1,29 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="qaco_audit.list">
+      <field name="name">audit list</field>
+      <field name="model">qaco.audit</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="seq_code" optional="show"/>
+          <field name="client_id" optional="show"/>
+          <field name="create_date" optional="show"/>
+          <field name="employee_id" optional="show"/>
+          <field name="contact" optional="show"/>
+          <field name="stage_id" optional="show"/>
+          <field name="firm_name" optional="show"/>
+          <field name="manager_review" optional="hide"/>
+          <field name="state" optional="hide"/>
+          <field name="qaco_assigning_partner" string="Assigning Partner" optional="hide"/>
+          <field name="qaco_audit_partner" optional="hide"/>
+          <field name="report_type" optional="show"/>
+          <field name="share_capital" optional="show"/>
+          <field name="turnover" optional="show"/>
+          <field name="bank_balance" optional="show"/>
+        </tree>
+      </field>
+    </record>
+  </data>
+</odoo>

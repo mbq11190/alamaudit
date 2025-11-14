@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        <record id="action_monthly_internal_audit" model="ir.actions.act_window">
+            <field name="name">Monthly Internal Audit</field>
+            <field name="res_model">qaco.monthly.internal.audit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_monthly_internal_audit" name="Monthly Internal Audit"
+                  parent="qaco_audit.menu_root" action="action_monthly_internal_audit" sequence="4"/>
+    </data>
+</odoo>

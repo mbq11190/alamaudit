@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Scheduled Action (Cron Job) -->
+        <record id="ir_cron_pending_transfer_email" model="ir.cron">
+            <field name="name">Reminder: Pending Transfer Approvals</field>
+            <field name="model_id" ref="qaco_employees.model_hr_employee_transfer"/>
+            <field name="state">code</field>
+            <field name="code">model.send_pending_transfer_reminder()</field>
+            <field name="user_id" ref="base.user_admin"/>  <!-- Runs as Administrator -->
+            <field name="interval_type">days</field>
+            <field name="interval_number">1</field>  <!-- Runs every 1 day -->
+            <field name="numbercall">-1</field>  <!-- Runs indefinitely -->
+            <field name="nextcall" eval="(datetime.now() + relativedelta(hours=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+    </data>
+</odoo>

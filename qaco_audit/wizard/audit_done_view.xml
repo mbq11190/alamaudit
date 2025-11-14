@@ -1,0 +1,17 @@
+<odoo>
+    <record id="audit_done_form_view" model="ir.ui.view">
+        <field name="name">audit.done.form.view</field>
+        <field name="model">audit.done</field>
+        <field name="arch" type="xml">
+            <form string="Confirm">
+                <group>
+                    <field name="confirm" readonly="True"/>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_leave_summary_tree" model="ir.ui.view">
+        <field name="name">leave.summary.tree</field>
+        <field name="model">leave.summary</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Summary" default_order="event_date desc" create="false">
+                <field name="sequence"/>
+                <field name="employee_id"/>
+                <field name="event_date"/>
+                <field name="opening_leaves" widget="float_time" readonly="1"/>
+                <field name="approved_leaves" readonly="1"/>
+                <field name="absent_days" readonly="1"/>
+                <field name="leave_adjustment" widget="float_time"/>
+                <field name="closing_leaves" widget="float_time" readonly="1"/>
+                <field name="allowed_leaves" widget="float_time" readonly="1"/>
+                <field name="remaining_leaves" widget="float_time" readonly="1"/>
+            </tree>
+
+        </field>
+    </record>
+
+    <record id="view_leave_summary_form" model="ir.ui.view">
+        <field name="name">leave.summary.form</field>
+        <field name="model">leave.summary</field>
+        <field name="arch" type="xml">
+            <form string="Leave Summary">
+                <header>
+                    <button name="action_recompute" type="object" string="Recompute" class="oe_highlight"
+                            groups="qaco_employees.group_qaco_employee_hr_manager,qaco_employees.group_qaco_employee_administrator,base.group_system"/>
+                </header>
+                <sheet>
+                    <group col="2">
+                        <field name="employee_id" readonly="1"/>
+                        <field name="event_date" readonly="1"/>
+                        <field name="opening_leaves" readonly="1"/>
+                        <field name="approved_leaves" readonly="1"/>
+                        <field name="absent_days" readonly="1"/>
+                        <field name="leave_adjustment" readonly="1"/>
+                        <field name="allowed_leaves" readonly="1"/>
+                        <field name="closing_leaves" readonly="1"/>
+                        <field name="remaining_leaves" readonly="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                         <field name="activity_ids"/>
+                         <field name="message_follower_ids"/>
+                         <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_leave_summary" model="ir.actions.act_window">
+        <field name="name">Monthly Leave Summary</field>
+        <field name="res_model">leave.summary</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_leave_allowance" model="ir.actions.act_window">
+        <field name="name">Leave Allowance</field>
+        <field name="res_model">leave.allowance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_leave_summary_root" name="Leave Summary" parent="hr_holidays.menu_hr_holidays_root" sequence="100"/>
+    <menuitem id="menu_leave_summary" name="Monthly Summary" parent="menu_leave_summary_root" action="action_leave_summary"/>
+    <menuitem id="menu_leave_allowance" name="Leave Allowance" parent="menu_leave_summary_root" action="action_leave_allowance" sequence="10"/>
+
+    <!-- Contextual Action: Recompute Leave Summary (multi-select) -->
+    <record id="ir_actions_server_recompute_leave_summary" model="ir.actions.server">
+        <field name="name">Recompute Leave Summary</field>
+        <field name="model_id" ref="model_leave_summary"/>
+        <field name="binding_model_id" ref="model_leave_summary"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">records.action_recompute()</field>
+        <field name="groups_id" eval="[(4, ref('qaco_employees.group_qaco_employee_hr_manager')), (4, ref('qaco_employees.group_qaco_employee_administrator')), (4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="ir_cron_create_monthly_leave_summary" model="ir.cron">
+        <field name="name">Generate Monthly Leave Summary</field>
+        <field name="model_id" ref="model_leave_summary"/>
+        <field name="state">code</field>
+        <field name="code">model.create_monthly_summaries()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="view_leave_allowance_tree" model="ir.ui.view">
+        <field name="name">leave.allowance.tree</field>
+        <field name="model">leave.allowance</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Allowance" default_order="create_date desc">
+                <field name="employee_id" width="20%"/>
+                <field name="create_date" width="15%"/>
+                <field name="time_off_type" width="15%"/>
+                <field name="from_date" width="15%"/>
+                <field name="to_date" width="15%"/>
+                <field name="allowed_leaves" width="10%"/>
+                <field name="state" width="10%"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_leave_allowance_form" model="ir.ui.view">
+        <field name="name">leave.allowance.form</field>
+        <field name="model">leave.allowance</field>
+        <field name="arch" type="xml">
+            <form string="Leave Allowance">
+                <header>
+                    <button name="action_validate" string="Validate" type="object" class="oe_highlight" invisible="state == 'approved'"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" class="oe_highlight" invisible="state == 'draft'" groups="qaco_employees.group_qaco_employee_hr_manager,qaco_employees.group_qaco_employee_administrator,base.group_system"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="employee_id" readonly="state == 'approved'"/>
+                        <field name="time_off_type" readonly="state == 'approved'"/>
+                        <field name="from_date" readonly="state == 'approved'"/>
+                        <field name="to_date" readonly="state == 'approved'"/>
+                        <field name="allowed_leaves" readonly="state == 'approved'"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                     <field name="activity_ids"/>
+                     <field name="message_follower_ids"/>
+                     <field name="message_ids"/>
+                </div>
+        </form>
+        </field>
+    </record>
+
+    <record id="view_employee_leave_search" model="ir.ui.view">
+            <field name="name">hr.employee.leave.search</field>
+        <field name="model">leave.summary</field>
+        <field name="arch" type="xml">
+            <search string="Leave Summary Search">
+                <field name="employee_id" string="Employee" filter_domain="[('employee_id.name','ilike',self)]"/>
+                <filter string="My Leaves" name="my_leaves" domain="[('employee_id.user_id','=',uid)]"/>
+                <filter string="By Month" name="month_filter" context="{'group_by': 'event_date'}"/>
+
+<!--                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>-->
+                <group expand="0" string="Group By">
+<!--                    <filter string="By State" name="state" context="{'group_by': 'state'}"/>-->
+<!--                    <filter string="By Client" name="client" context="{'group_by': 'to_client_id'}"/>-->
+<!--                    <filter string="By Manager" name="manager" context="{'group_by': 'manager_id'}"/>-->
+                    <filter string="By Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_leave_adjustment_tree" model="ir.ui.view">
+        <field name="name">leave.adjustment.tree</field>
+        <field name="model">leave.adjustment</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Adjustments" default_order="adjustment_date desc">
+                <field name="sequence"/>
+                <field name="employee_id"/>
+                <field name="adjustment_date"/>
+                <field name="adjustment"/>
+                <field name="adjustment_type" widget="radio"/>
+                <field name="reason"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'submitted'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-muted="state == 'reverted'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_leave_adjustment_form" model="ir.ui.view">
+        <field name="name">leave.adjustment.form</field>
+        <field name="model">leave.adjustment</field>
+        <field name="arch" type="xml">
+            <form string="Leave Adjustment">
+                <header>
+                    <button name="action_submit" type="object" string="Submit" class="oe_highlight"
+                            invisible="state not in ('draft', 'reverted')"/>
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight"
+                            invisible="state != 'submitted' or not show_approval_buttons"/>
+                    <button name="action_reject" type="object" string="Reject" class="oe_highlight"
+                            invisible="state != 'submitted' or not show_approval_buttons"/>
+                    <button name="action_revert" type="object" string="Revert" class="oe_highlight"
+                            invisible="state != 'submitted' or not show_approval_buttons"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="oe_highlight" groups="base.group_system"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,reverted,submitted,approved,rejected"
+                           options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
+                </header>
+                <sheet>
+                <group>
+                    <field name="show_approval_buttons" invisible="1"/>
+                    <field name="employee_id" readonly="1" groups="!qaco_employees.group_qaco_employee_administrator,!base.group_system"/>
+                    <field name="employee_id" groups="qaco_employees.group_qaco_employee_administrator,base.group_system"/>
+                    <field name="adjustment_date" readonly="state not in ('draft','reverted')"/>
+                    <field name="adjustment" readonly="state not in ('draft','reverted')"/>
+                    <field name="adjustment_type" readonly="state not in ('draft','reverted')" widget="radio"/>
+                    <field name="reason" readonly="state not in ('draft','reverted')" widget="text" placeholder="Please provide a detailed reason for this adjustment..."/>
+                </group>
+                <group string="Rejection Details" invisible="state != 'rejected'">
+                    <field name="rejection_reason" readonly="1" widget="text" nolabel="1"/>
+                </group>
+                <notebook>
+                    <page string="Approvals">
+                        <field name="approval_ids" mode="tree" readonly="1">
+                            <tree editable="false" create="false" delete="false">
+                                <field name="validating_users_id"/>
+                                <field name="is_manager" readonly="1" widget="boolean_toggle"/>
+                                <field name="is_partner" readonly="1" widget="boolean_toggle"/>
+                                <field name="is_validation_status" widget="boolean_toggle"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Employee Leave History">
+                        <field name="leave_history_ids" readonly="1">
+                            <tree string="Leave History" create="false" delete="false">
+                                <field name="event_date"/>
+                                <field name="approved_leaves"/>
+                                <field name="leave_adjustment" string="Adjustment"/>
+                                <field name="absent_days"/>
+                                <field name="allowed_leaves"/>
+                                <field name="remaining_leaves"/>
+                                <field name="closing_leaves" string="Closing Balance"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Previous Adjustments">
+                        <field name="previous_adjustments_ids" readonly="1">
+                            <tree string="Previous Adjustments" create="false" delete="false">
+                                <field name="sequence"/>
+                                <field name="adjustment_date"/>
+                                <field name="adjustment"/>
+                                <field name="adjustment_type" widget="badge"/>
+                                <field name="reason"/>
+                                <field name="state" widget="badge"
+                                       decoration-success="state == 'approved'"
+                                       decoration-danger="state == 'rejected'"
+                                       decoration-muted="state == 'reverted'"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                     <field name="activity_ids"/>
+                     <field name="message_follower_ids"/>
+                     <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_leave_adjustment" model="ir.actions.act_window">
+        <field name="name">Leave Adjustments</field>
+        <field name="res_model">leave.adjustment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_leave_adjustment"
+              name="Leave Adjustments"
+              parent="hr_holidays.menu_hr_holidays_root"
+              action="action_leave_adjustment"
+              sequence="20"/>
+
+
+    <!-- Leave Summary Access -->
+    <record id="rule_leave_summary_employee_edit_all" model="ir.rule">
+      <field name="name">Leave Summary: Create/Write All</field>
+      <field name="model_id" ref="model_leave_summary"/>
+      <field name="domain_force">[(1, '=', 1)]</field>  <!-- Unrestricted domain -->
+      <field name="perm_read" eval="False"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_unlink" eval="False"/>
+      <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_leave_summary_employee_read_only" model="ir.rule">
+      <field name="name">Leave Summary: Read Own Only</field>
+      <field name="model_id" ref="model_leave_summary"/>
+      <field name="domain_force">[('employee_id.user_id.id', '=', user.id)]</field>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="False"/>
+      <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_leave_summary_admin" model="ir.rule">
+      <field name="name">Leave Summary: Admin Full Access</field>
+      <field name="model_id" ref="model_leave_summary"/>
+      <field name="domain_force">[(1, '=', 1)]</field>
+      <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_leave_summary_attendance_admin" model="ir.rule">
+      <field name="name">Leave Summary: Attendance Admin Full Access</field>
+      <field name="model_id" ref="model_leave_summary"/>
+      <field name="domain_force">[(1, '=', 1)]</field>  <!-- Full access to all records -->
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
+
+
+    <!-- Leave Adjustment Access -->
+    <record id="rule_leave_adjustment_employee" model="ir.rule">
+      <field name="name">Leave Adjustment: Own Records Only</field>
+      <field name="model_id" ref="model_leave_adjustment"/>
+      <field name="domain_force">[('employee_id.user_id.id', '=', user.id)]</field>
+      <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_leave_adjustment_manager_team" model="ir.rule">
+      <field name="name">Leave Adjustment: manager team records</field>
+      <field name="model_id" ref="model_leave_adjustment"/>
+      <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), '|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.partner_id.user_id', '=', user.id)]</field>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_manager'))]"/>
+    </record>
+
+    <record id="rule_leave_adjustment_admin" model="ir.rule">
+      <field name="name">Leave Adjustment: Admin Full Access</field>
+      <field name="model_id" ref="model_leave_adjustment"/>
+      <field name="domain_force">[(1, '=', 1)]</field>
+      <field name="groups" eval="[(4, ref('base.group_system')), (4, ref('qaco_employees.group_qaco_employee_administrator'))]"/>
+    </record>
+
+    <record id="rule_leave_adjustment_attendance_admin" model="ir.rule">
+      <field name="name">Leave Adjustment: Attendance Admin Full Access</field>
+      <field name="model_id" ref="model_leave_adjustment"/>
+      <field name="domain_force">[(1, '=', 1)]</field>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
+
+    <!-- Leave Allowance Access -->
+    <record id="rule_leave_allowance_employee" model="ir.rule">
+      <field name="name">Leave Allowance: Own Records Only</field>
+      <field name="model_id" ref="model_leave_allowance"/>
+      <field name="domain_force">[('employee_id.user_id.id', '=', user.id)]</field>
+      <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+
+    <record id="rule_leave_allowance_admin" model="ir.rule">
+      <field name="name">Leave Allowance: Admin Full Access</field>
+      <field name="model_id" ref="model_leave_allowance"/>
+      <field name="domain_force">[(1, '=', 1)]</field>
+      <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_leave_allowance_attendance_admin" model="ir.rule">
+      <field name="name">Leave Allowance: Attendance Admin Full Access</field>
+      <field name="model_id" ref="model_leave_allowance"/>
+      <field name="domain_force">[(1, '=', 1)]</field>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
+    <!-- Public Holiday Tree View -->
+<record id="view_hr_public_holiday_tree" model="ir.ui.view">
+    <field name="name">hr.public.holiday.tree</field>
+    <field name="model">hr.public.holiday</field>
+    <field name="arch" type="xml">
+        <tree string="Public Holidays">
+            <field name="name"/>
+            <field name="date"/>
+            <field name="state"/>
+        </tree>
+    </field>
+</record>
+
+<!-- Public Holiday Form View -->
+<record id="view_hr_public_holiday_form" model="ir.ui.view">
+    <field name="name">hr.public.holiday.form</field>
+    <field name="model">hr.public.holiday</field>
+    <field name="arch" type="xml">
+        <form string="Public Holiday">
+            <header>
+                <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state == 'approved'"/>
+                <button name="action_reset_to_draft" string="Reset to Draft" type="object" invisible="state == 'draft'"/>
+                <field name="state" widget="statusbar"/>
+            </header>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="date"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<!-- Public Holiday Action -->
+<record id="action_hr_public_holiday" model="ir.actions.act_window">
+    <field name="name">Public Holidays</field>
+    <field name="res_model">hr.public.holiday</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<!-- Menu Item -->
+<menuitem id="menu_hr_public_holiday"
+          name="Public Holidays"
+          parent="menu_leave_summary_root"
+          action="action_hr_public_holiday"
+          sequence="30"/>
+
+
+
+
+</odoo>

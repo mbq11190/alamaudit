@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Employee access rules -->
+        <record id="rule_qaco_employee_trainee_own" model="ir.rule">
+            <field name="name">Employees: trainee partner/manager records</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <!--
+                Avoid accessing user.employee_id during safe_eval (it can trigger expensive computes
+                or side-effects). Use user.id and relations on the employee record instead.
+                This rule grants access to employees whose manager (parent) or partner is linked
+                to the current user.
+            -->
+            <field name="domain_force">['|', ('parent_id.user_id', '=', user.id), ('partner_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+
+        <record id="rule_qaco_employee_trainee_edit_own" model="ir.rule">
+            <field name="name">Employees: trainee edit own record</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+
+        <record id="rule_qaco_employee_manager_all" model="ir.rule">
+            <field name="name">Employees: manager full access</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_manager')), (4, ref('qaco_employees.group_qaco_employee_hr_manager')), (4, ref('qaco_employees.group_qaco_employee_partner')), (4, ref('qaco_employees.group_qaco_employee_administrator'))]"/>
+        </record>
+
+        <record id="rule_hr_employee_user_all" model="ir.rule">
+            <field name="name">Employees: user read access</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Attendance module rules -->
+        <record id="rule_qaco_attendance_trainee_own" model="ir.rule">
+            <field name="name">Attendance: trainee own records</field>
+            <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+
+        <record id="rule_qaco_attendance_manager_all" model="ir.rule">
+            <field name="name">Attendance: manager full access</field>
+            <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_manager')), (4, ref('qaco_employees.group_qaco_employee_hr_manager')), (4, ref('qaco_employees.group_qaco_employee_partner')), (4, ref('qaco_employees.group_qaco_employee_administrator'))]"/>
+        </record>
+
+        <!-- Time Off (Leaves) rules -->
+        <record id="rule_qaco_leave_trainee_own" model="ir.rule">
+            <field name="name">Time Off: trainee own records</field>
+            <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+
+        <record id="rule_qaco_leave_manager_all" model="ir.rule">
+            <field name="name">Time Off: manager full access</field>
+            <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_hr_manager')), (4, ref('qaco_employees.group_qaco_employee_partner')), (4, ref('qaco_employees.group_qaco_timeoff_manager'))]"/>
+        </record>
+
+        <record id="rule_qaco_leave_manager_team" model="ir.rule">
+            <field name="name">Time Off: manager team records</field>
+            <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+            <field name="domain_force">['|', ('employee_id.user_id', '=', user.id),
+                  ('employee_id.parent_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_manager'))]"/>
+        </record>
+
+        <!-- Expense rules -->
+        <record id="rule_qaco_expense_trainee_own" model="ir.rule">
+            <field name="name">Expense: trainee own records</field>
+            <field name="model_id" ref="hr_expense.model_hr_expense"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+
+        <record id="rule_qaco_expense_manager_all" model="ir.rule">
+            <field name="name">Expense: manager full access</field>
+            <field name="model_id" ref="hr_expense.model_hr_expense"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_manager')), (4, ref('qaco_employees.group_qaco_employee_hr_manager')), (4, ref('qaco_employees.group_qaco_employee_partner')), (4, ref('qaco_employees.group_qaco_employee_administrator'))]"/>
+        </record>
+
+        <!-- Employee Transfer rules -->
+        <record id="rule_qaco_transfer_trainee_own" model="ir.rule">
+            <field name="name">Transfer: trainee own records</field>
+            <field name="model_id" ref="qaco_employees.model_hr_employee_transfer"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_trainee'))]"/>
+        </record>
+
+        <record id="rule_qaco_transfer_manager_team" model="ir.rule">
+            <field name="name">Transfer: manager team records</field>
+            <field name="model_id" ref="qaco_employees.model_hr_employee_transfer"/>
+            <field name="domain_force">['|', ('employee_id.user_id','=',user.id), ('employee_id.parent_id.user_id','=',user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_manager')), (4, ref('qaco_employees.group_qaco_employee_hr_manager'))]"/>
+        </record>
+
+        <record id="rule_qaco_transfer_partner_all" model="ir.rule">
+            <field name="name">Transfer: partner full access</field>
+            <field name="model_id" ref="qaco_employees.model_hr_employee_transfer"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('qaco_employees.group_qaco_employee_partner')), (4, ref('qaco_employees.group_qaco_employee_administrator'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,110 @@
+<odoo>
+  <template id="leave_adjustment_approval_email_template">
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; color: #333; }
+          table {
+            width: 92%;
+            border-collapse: collapse;
+            margin: 16px auto 24px auto;
+            border: 1.5px solid #007bff;
+          }
+          th {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #0056b3;
+            font-size: 14px;
+          }
+          td {
+            padding: 8px 6px;
+            border: 1px solid #dee2e6;
+            text-align: left;
+            font-size: 13px;
+          }
+          tr:nth-child(even) { 
+            background-color: #f8f9fa; 
+          }
+          .section-title {
+            color: #007bff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 6px;
+          }
+          .table-separator {
+            height: 25px;
+            margin: 30px 0;
+            border-bottom: 1px solid #dee2e6;
+          }
+          .badge-approved { 
+            background-color: #28a745; 
+            color: white; 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+          }
+          .badge-rejected { 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+          }
+          .badge-reverted { 
+            background-color: #6c757d; 
+            color: white; 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+          }
+          .info-label { font-weight: bold; color: #555; }
+          .transfer-notice {
+            background-color: #f0f7ff;
+            border-left: 4px solid #007bff;
+            padding: 10px 14px;
+            margin: 18px 0 12px 0;
+            font-size: 13px;
+            line-height: 1.5;
+          }
+        </style>
+      </head>
+      <body>
+        <div style="margin:20px 0;">
+          <a t-att-href="approval_url" style="background-color:#28a745; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">✅ Approve</a>
+          <a t-att-href="refusal_url" style="background-color:#dc3545; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">❌ Reject</a>
+          <a t-att-href="revert_url" style="background-color:#6c757d; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">🔄 Revert</a>
+          <a t-att-href="transfer_url" style="background-color:#fd7e14; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; margin-right:8px; display:inline-block; margin-bottom:6px;">📤 Transfer</a>
+          <a t-att-href="record_url" style="background-color:#007bff; color:white; padding:6px 14px; text-decoration:none; border-radius:4px; display:inline-block; margin-bottom:6px;">📄 View Request</a>
+        </div>
+        
+        <h3 style="color:#007bff;">Leave Adjustment Request</h3>
+        <t t-if="transfer_notice">
+          <div class="transfer-notice"><t t-raw="transfer_notice"/></div>
+        </t>
+        <div class="info-section">
+          <p><span class="info-label">Employee:</span> <t t-esc="employee_name"/></p>
+          <p><span class="info-label">Adjustment:</span> <strong><t t-esc="adjustment"/></strong> day(s)</p>
+          <p><span class="info-label">Type:</span> <t t-esc="adjustment_type"/></p>
+          <p><span class="info-label">Date:</span> <t t-esc="adjustment_date"/></p>
+          <p><span class="info-label">Reason:</span> <t t-esc="reason"/></p>
+        </div>
+
+        <t t-raw="leave_summary_table"/>
+
+        <t t-raw="previous_adjustments_table"/>
+      </body>
+    </html>
+  </template>
+</odoo>

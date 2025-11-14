@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- Action -->
+    <record id="action_leave_condonation" model="ir.actions.act_window">
+      <field name="name">Leave Condonation</field>
+      <field name="res_model">leave.condonation</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">Create a new leave condonation</p>
+      </field>
+      <!-- Preselect the "My Records" filter without using env/user in JS context -->
+      <field name="context">{"search_default_my_records": 1}</field>
+    </record>
+
+    <!-- Menu under Time Off (My) -->
+    <menuitem id="menu_leave_condonation"
+              name="Leave Condonation"
+              parent="hr_holidays.menu_hr_holidays_my_leaves"
+              action="action_leave_condonation"
+              sequence="60"/>
+
+    <!-- Manager menu (optional) -->
+    <menuitem id="menu_leave_condonation_mgmt"
+              name="Leave Condonation"
+              parent="hr_holidays.menu_hr_holidays_management"
+              action="action_leave_condonation"
+              sequence="60"
+              groups="qaco_employees.group_qaco_timeoff_manager,qaco_employees.group_qaco_employee_hr_manager,qaco_employees.group_qaco_employee_partner,qaco_employees.group_qaco_employee_administrator"/>
+
+    <!-- Top-level Time Off menu entry so it appears in the app's main top menu -->
+    <menuitem id="menu_leave_condonation_root"
+              name="Leave Condonation"
+              parent="hr_holidays.menu_hr_holidays_root"
+              action="action_leave_condonation"
+              sequence="6"/>
+
+    <!-- Tree View -->
+    <record id="view_leave_condonation_tree" model="ir.ui.view">
+      <field name="name">leave.condonation.tree</field>
+      <field name="model">leave.condonation</field>
+      <field name="arch" type="xml">
+        <tree string="Leave Condonations" create="1" delete="0" 
+              decoration-success="state == 'approved'"
+              decoration-danger="state == 'rejected'"
+              decoration-warning="state == 'submitted'"
+              decoration-muted="state == 'reverted'">
+          <field name="sequence"/>
+          <field name="employee_id"/>
+          <field name="condonation_month"/>
+          <field name="condonation_date"/>
+          <field name="total_leave_deduction" sum="Total" widget="monetary"/>
+          <field name="state" widget="badge" 
+                 decoration-success="state == 'approved'"
+                 decoration-danger="state == 'rejected'"
+                 decoration-warning="state == 'submitted'"
+                 decoration-info="state == 'draft'"
+                 decoration-muted="state == 'reverted'"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_leave_condonation_form" model="ir.ui.view">
+      <field name="name">leave.condonation.form</field>
+      <field name="model">leave.condonation</field>
+      <field name="arch" type="xml">
+        <form string="Leave Condonation">
+          <header>
+            <button name="action_load_deductions" string="Load Deductions" type="object" class="btn-info" invisible="state != 'draft'" help="Load leave deductions from payroll for selected month"/>
+            <button name="action_submit" string="Submit for Approval" type="object" class="btn-primary" invisible="state != 'draft' or not line_ids"/>
+            <button name="action_approve" string="Approve" type="object" class="btn-success" invisible="state != 'submitted' or not show_approval_buttons"/>
+            <button name="action_reject" string="Reject" type="object" class="btn-danger" invisible="state != 'submitted' or not show_approval_buttons"/>
+            <button name="action_revert" string="Revert to Draft" type="object" class="btn-warning" invisible="state != 'submitted' or not show_approval_buttons"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+          </header>
+          <sheet>
+            <div class="oe_title">
+              <h1>
+                <field name="sequence" readonly="1"/>
+              </h1>
+            </div>
+            <group>
+              <group string="Employee Information">
+                <field name="employee_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
+                <field name="condonation_date" readonly="state != 'draft'"/>
+              </group>
+              <group string="Condonation Details">
+                <field name="condonation_month" required="1" readonly="state != 'draft'" 
+                       help="Select the month for which you want to request leave condonation"/>
+                <field name="total_leave_deduction" widget="monetary" 
+                       options="{'currency_field': 'False'}" readonly="1"/>
+              </group>
+              <field name="show_approval_buttons" invisible="1"/>
+            </group>
+            
+            <group string="Reason for Leave Condonation" invisible="state == 'draft' and not reason">
+              <field name="reason" placeholder="Please provide a detailed reason for requesting leave condonation..." 
+                     nolabel="1" readonly="state != 'draft'" 
+                     required="1"/>
+            </group>
+            
+            <notebook>
+              <page string="Payroll Deduction Details" name="deduction_lines">
+                <field name="line_ids" nolabel="1" readonly="1">
+                  <tree string="Payroll Deduction Lines" create="false" delete="false" editable="false">
+                    <field name="employee_id" optional="hide"/>
+                    <field name="department_id"/>
+                    <field name="designation_id"/>
+                    <field name="payroll_month"/>
+                    <field name="attendance_days"/>
+                    <field name="gross_salary" sum="Total Basic" widget="monetary"/>
+                    <field name="allowance_amount" sum="Total Allowance" widget="monetary"/>
+                    <field name="leave_deduction_amount" sum="Total Deduction" 
+                           widget="monetary" 
+                           decoration-danger="leave_deduction_amount > 0"/>
+                    <field name="net_salary" sum="Total Net" widget="monetary"/>
+                    <field name="payroll_date_from" optional="hide"/>
+                    <field name="payroll_date_to" optional="hide"/>
+                  </tree>
+                </field>
+                <div class="alert alert-info" role="alert" invisible="line_ids">
+                  <strong>No deduction lines found.</strong>
+                  <p>Please select a condonation month and click the "Load Deductions" button to fetch leave deductions from payroll.</p>
+                </div>
+              </page>
+              <page string="Approval Status" name="approvals">
+                <field name="approval_ids" nolabel="1" readonly="1">
+                  <tree string="Approvers" create="false" delete="false" editable="false">
+                    <field name="validating_users_id" string="Approver"/>
+                    <field name="is_validation_status" string="Approved" 
+                           widget="boolean" 
+                           decoration-success="is_validation_status == True"
+                           decoration-danger="is_validation_status == False"/>
+                    <field name="is_partner" invisible="1"/>
+                    <field name="is_manager" invisible="1"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_leave_condonation_search" model="ir.ui.view">
+      <field name="name">leave.condonation.search</field>
+      <field name="model">leave.condonation</field>
+      <field name="arch" type="xml">
+        <search string="Search Leave Condonations">
+          <field name="employee_id"/>
+          <field name="condonation_date"/>
+          <field name="condonation_month"/>
+          <field name="sequence"/>
+          <filter string="My Records" name="my_records" domain="[('employee_id.user_id','=',uid)]"/>
+          <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+          <filter string="Submitted" name="submitted" domain="[('state','=','submitted')]"/>
+          <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+          <filter string="Rejected" name="rejected" domain="[('state','=','rejected')]"/>
+          <separator/>
+          <filter string="Application Date" name="group_by_date" context="{'group_by':'condonation_date'}"/>
+          <filter string="Month" name="group_by_month" context="{'group_by':'condonation_month'}"/>
+          <filter string="Employee" name="group_by_employee" context="{'group_by':'employee_id'}"/>
+          <filter string="Status" name="group_by_state" context="{'group_by':'state'}"/>
+        </search>
+      </field>
+    </record>
+
+  </data>
+</odoo>
+
