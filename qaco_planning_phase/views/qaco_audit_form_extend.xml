@@ -8,26 +8,55 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='description_page']" position="after">
                     <page name="planning_phase" string="Planning Phase">
-                        <group>
+                        <!-- No Planning Phase - Show Initialize Button -->
+                        <div class="alert alert-info text-center" role="alert" invisible="planning_phase_id">
+                            <h4>Planning Phase Not Started</h4>
+                            <p>Click the button below to initialize the planning phase for this audit.</p>
                             <button name="action_create_planning_phase" 
                                     string="Initialize Planning Phase" 
                                     type="object" 
-                                    class="btn-primary"
-                                    invisible="planning_phase_id"/>
-                        </group>
+                                    class="btn btn-primary btn-lg"/>
+                        </div>
                         
-                        <group invisible="not planning_phase_id">
-                            <!-- Client & Industry Information -->
-                            <group string="Client &amp; Industry Information" col="2">
-                                <field name="planning_phase_id" invisible="1"/>
-                                <field name="planning_phase_id" widget="many2one" 
-                                       context="{'form_view_ref': 'qaco_planning_phase.view_planning_phase_form_embedded'}"
-                                       options="{'no_create': True, 'no_open': True}"/>
-                            </group>
-                        </group>
-                        
-                        <!-- Embedded Planning Phase Form -->
+                        <!-- Planning Phase Exists - Show Summary and Form -->
                         <div invisible="not planning_phase_id">
+                            <!-- Planning Phase Header with Status -->
+                            <div class="o_planning_header mb-3">
+                                <field name="planning_phase_id" invisible="1"/>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h3 class="mb-0">
+                                            <i class="fa fa-clipboard"/> Planning Phase
+                                        </h3>
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <field name="planning_phase_id" 
+                                               widget="statinfo"
+                                               string="Status"
+                                               options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <separator/>
+                            
+                            <!-- Planning Phase Summary Dashboard -->
+                            <group>
+                                <group name="planning_summary" string="Planning Summary" col="2">
+                                    <label for="planning_phase_id" string="Planning Status"/>
+                                    <div>
+                                        <field name="planning_phase_id" 
+                                               context="{'tree_view_ref': 'qaco_planning_phase.view_planning_phase_tree'}"
+                                               options="{'no_create': True}"
+                                               class="oe_inline"
+                                               readonly="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                            
+                            <separator string="Planning Phase Details"/>
+                            
+                            <!-- Embedded Planning Phase Form -->
                             <field name="planning_phase_id" mode="form" 
                                    context="{'default_audit_id': active_id}"
                                    options="{'no_create': True}">
@@ -49,6 +78,41 @@
                                                statusbar_visible="draft,in_progress,review,approved"/>
                                     </header>
                                     <sheet>
+                                        <div class="oe_button_box" name="button_box">
+                                            <button class="oe_stat_button" type="action" icon="fa-check-square-o">
+                                                <div class="o_field_widget o_stat_info">
+                                                    <span class="o_stat_value">
+                                                        <field name="engagement_letter_signed" widget="boolean"/>
+                                                    </span>
+                                                    <span class="o_stat_text">Engagement Letter</span>
+                                                </div>
+                                            </button>
+                                            <button class="oe_stat_button" type="action" icon="fa-shield">
+                                                <div class="o_field_widget o_stat_info">
+                                                    <span class="o_stat_value">
+                                                        <field name="independence_confirmed" widget="boolean"/>
+                                                    </span>
+                                                    <span class="o_stat_text">Independence</span>
+                                                </div>
+                                            </button>
+                                            <button class="oe_stat_button" type="action" icon="fa-list-ul">
+                                                <div class="o_field_widget o_stat_info">
+                                                    <span class="o_stat_value">
+                                                        <field name="understanding_entity_obtained" widget="boolean"/>
+                                                    </span>
+                                                    <span class="o_stat_text">Entity Understanding</span>
+                                                </div>
+                                            </button>
+                                            <button class="oe_stat_button" type="action" icon="fa-file-text-o">
+                                                <div class="o_field_widget o_stat_info">
+                                                    <span class="o_stat_value">
+                                                        <field name="planning_attachments" widget="statinfo" string="Documents"/>
+                                                    </span>
+                                                    <span class="o_stat_text">Documents</span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        
                                         <group>
                                             <field name="audit_id" invisible="1"/>
                                             <field name="client_id" invisible="1"/>
@@ -93,9 +157,9 @@
                                             <page name="risk" string="Risk Assessment">
                                                 <group>
                                                     <group string="Risk Levels">
-                                                        <field name="inherent_risk"/>
-                                                        <field name="control_risk"/>
-                                                        <field name="detection_risk"/>
+                                                        <field name="inherent_risk" widget="badge"/>
+                                                        <field name="control_risk" widget="badge"/>
+                                                        <field name="detection_risk" widget="badge"/>
                                                     </group>
                                                     <group string="Risk Analysis">
                                                         <field name="key_risk_areas" placeholder="Identify key risk areas..."/>
@@ -109,9 +173,9 @@
                                                 <group>
                                                     <group string="Materiality Calculations">
                                                         <field name="materiality_basis"/>
-                                                        <field name="overall_materiality"/>
-                                                        <field name="performance_materiality"/>
-                                                        <field name="trivial_threshold"/>
+                                                        <field name="overall_materiality" widget="monetary"/>
+                                                        <field name="performance_materiality" widget="monetary"/>
+                                                        <field name="trivial_threshold" widget="monetary"/>
                                                     </group>
                                                 </group>
                                             </page>
@@ -120,14 +184,14 @@
                                             <page name="checklist" string="Planning Checklist">
                                                 <group>
                                                     <group string="Engagement Setup">
-                                                        <field name="engagement_letter_signed"/>
-                                                        <field name="independence_confirmed"/>
-                                                        <field name="previous_auditor_communication"/>
+                                                        <field name="engagement_letter_signed" widget="boolean_toggle"/>
+                                                        <field name="independence_confirmed" widget="boolean_toggle"/>
+                                                        <field name="previous_auditor_communication" widget="boolean_toggle"/>
                                                     </group>
                                                     <group string="Planning Procedures">
-                                                        <field name="understanding_entity_obtained"/>
-                                                        <field name="internal_controls_documented"/>
-                                                        <field name="analytical_procedures_performed"/>
+                                                        <field name="understanding_entity_obtained" widget="boolean_toggle"/>
+                                                        <field name="internal_controls_documented" widget="boolean_toggle"/>
+                                                        <field name="analytical_procedures_performed" widget="boolean_toggle"/>
                                                     </group>
                                                 </group>
                                             </page>
