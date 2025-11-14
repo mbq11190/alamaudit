@@ -3,13 +3,62 @@
 ## Overview
 This migration converts the `firm_name` field from a hardcoded Selection field to a dynamic Many2one field linked to `audit.firm.name` configuration.
 
-## Version
-- **From:** 17.0.0.0.3
-- **To:** 17.0.0.0.4
+## ⚠️ IMPORTANT - Error Fix Required
 
-## What Changed
-- **Old:** `firm_name = fields.Selection([('Alam Aulakh', ...), ('QACO', ...), ...])`
-- **New:** `firm_name = fields.Many2one('audit.firm.name', ...)`
+If you're seeing this error:
+```
+AttributeError: 'str' object has no attribute 'get'
+```
+
+You MUST run the manual fix **BEFORE** upgrading the module.
+
+## Quick Fix Steps
+
+### Option 1: Using the bash script (Easiest)
+
+```bash
+cd /var/odoo/alamaudit.thinkoptimise.com/extra-addons/alamaudit.git-*/qaco_audit/migrations/17.0.0.0.4
+chmod +x apply_fix.sh
+./apply_fix.sh
+# Enter your database name when prompted
+```
+
+### Option 2: Using SQL directly
+
+```bash
+# Replace 'your_database_name' with your actual database name
+sudo -u postgres psql -d your_database_name -f fix_firm_name.sql
+```
+
+### Option 3: Manual psql commands
+
+```bash
+sudo -u postgres psql -d your_database_name
+```
+
+Then run:
+```sql
+-- Rename the column
+ALTER TABLE qaco_audit RENAME COLUMN firm_name TO firm_name_old;
+
+-- Delete field metadata
+DELETE FROM ir_model_fields WHERE model='qaco.audit' AND name='firm_name';
+
+-- Commit
+COMMIT;
+\q
+```
+
+## After Running the Fix
+
+1. **Restart Odoo:**
+   ```bash
+   sudo systemctl restart odoo
+   ```
+
+2. **Upgrade the module** from the Odoo UI (Apps → QACO Audit → Upgrade)
+
+3. The migration scripts will now run automatically and convert the data
 
 ## Migration Process
 
