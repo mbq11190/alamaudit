@@ -11,7 +11,7 @@
     'website': "https://www.qaco.com.pk",
 
     'category': 'Uncategorized',
-    'version': '17.0.0.0.3',
+    'version': '17.0.0.0.4',
 
     'depends': ['base', 'mail', 'hr', 'project', 'web', 'qaco_employees'],
 
