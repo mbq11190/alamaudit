@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_execution_phase_user,access.execution.phase.user,model_qaco_execution_phase,qaco_audit.group_audit_user,1,1,1,0
+access_execution_phase_manager,access.execution.phase.manager,model_qaco_execution_phase,qaco_audit.group_audit_manager,1,1,1,1
+access_execution_testing_category_user,access.execution.testing.category.user,model_execution_testing_category,qaco_audit.group_audit_user,1,0,0,0
+access_execution_testing_category_manager,access.execution.testing.category.manager,model_execution_testing_category,qaco_audit.group_audit_manager,1,1,1,1

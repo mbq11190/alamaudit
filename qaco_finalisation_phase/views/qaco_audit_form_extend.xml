@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Add Finalisation Phase Smart Button -->
+        <record id="view_qaco_audit_form_finalisation_button" model="ir.ui.view">
+            <field name="name">qaco.audit.form.finalisation.button</field>
+            <field name="model">qaco.audit</field>
+            <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
+            <field name="arch" type="xml">
+                <!-- Add Finalisation Phase Smart Button -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="finalisation_phase_id" invisible="1"/>
+                    <field name="finalisation_state" invisible="1"/>
+                    <button class="oe_stat_button" type="object" 
+                            name="action_open_finalisation_phase"
+                            icon="fa-check-square-o">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Finalisation</span>
+                            <span class="o_stat_value">
+                                <field name="finalisation_state" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

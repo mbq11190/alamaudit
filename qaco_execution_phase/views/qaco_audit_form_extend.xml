@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Add Execution Phase Smart Button -->
+        <record id="view_qaco_audit_form_execution_button" model="ir.ui.view">
+            <field name="name">qaco.audit.form.execution.button</field>
+            <field name="model">qaco.audit</field>
+            <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
+            <field name="arch" type="xml">
+                <!-- Add Execution Phase Smart Button -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="execution_phase_id" invisible="1"/>
+                    <field name="execution_state" invisible="1"/>
+                    <button class="oe_stat_button" type="object" 
+                            name="action_open_execution_phase"
+                            icon="fa-tasks">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Execution</span>
+                            <span class="o_stat_value">
+                                <field name="execution_state" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
