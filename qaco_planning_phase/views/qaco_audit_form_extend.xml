@@ -79,7 +79,7 @@
                                     </header>
                                     <sheet>
                                         <div class="oe_button_box" name="button_box">
-                                            <button class="oe_stat_button" type="action" icon="fa-check-square-o">
+                                            <button class="oe_stat_button" type="object" name="action_start_planning" icon="fa-check-square-o">
                                                 <div class="o_field_widget o_stat_info">
                                                     <span class="o_stat_value">
                                                         <field name="engagement_letter_signed" widget="boolean"/>
@@ -87,7 +87,7 @@
                                                     <span class="o_stat_text">Engagement Letter</span>
                                                 </div>
                                             </button>
-                                            <button class="oe_stat_button" type="action" icon="fa-shield">
+                                            <button class="oe_stat_button" type="object" name="action_start_planning" icon="fa-shield">
                                                 <div class="o_field_widget o_stat_info">
                                                     <span class="o_stat_value">
                                                         <field name="independence_confirmed" widget="boolean"/>
@@ -95,20 +95,12 @@
                                                     <span class="o_stat_text">Independence</span>
                                                 </div>
                                             </button>
-                                            <button class="oe_stat_button" type="action" icon="fa-list-ul">
+                                            <button class="oe_stat_button" type="object" name="action_start_planning" icon="fa-list-ul">
                                                 <div class="o_field_widget o_stat_info">
                                                     <span class="o_stat_value">
                                                         <field name="understanding_entity_obtained" widget="boolean"/>
                                                     </span>
                                                     <span class="o_stat_text">Entity Understanding</span>
-                                                </div>
-                                            </button>
-                                            <button class="oe_stat_button" type="action" icon="fa-file-text-o">
-                                                <div class="o_field_widget o_stat_info">
-                                                    <span class="o_stat_value">
-                                                        <field name="planning_attachments" widget="statinfo" string="Documents"/>
-                                                    </span>
-                                                    <span class="o_stat_text">Documents</span>
                                                 </div>
                                             </button>
                                         </div>
