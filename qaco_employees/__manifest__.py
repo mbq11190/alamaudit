@@ -22,6 +22,10 @@ QACO Employees Database Management System
     'depends': ['base', 'mail', 'hr', 'project', 'web',
                 'hr_attendance', 'hr_holidays', 'hr_expense'],
 
+    # external Python dependencies
+    'external_dependencies': {
+        'python': ['pandas'],
+    },
 
     # always loaded
     'data': [
