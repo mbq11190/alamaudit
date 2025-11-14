@@ -23,3 +23,25 @@ class QacoAuditExtend(models.Model):
         # Recompute to update the field
         self._compute_planning_phase()
         return True
+    
+    def action_open_planning_phase(self):
+        """Open planning phase form or create if doesn't exist"""
+        self.ensure_one()
+        planning = self.env['qaco.planning.phase'].search([('audit_id', '=', self.id)], limit=1)
+        
+        if not planning:
+            # Create new planning phase
+            planning = self.env['qaco.planning.phase'].create({
+                'audit_id': self.id,
+            })
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Planning Phase',
+            'res_model': 'qaco.planning.phase',
+            'res_id': planning.id,
+            'view_mode': 'form',
+            'view_id': self.env.ref('qaco_planning_phase.view_planning_phase_form').id,
+            'target': 'current',
+            'context': {'default_audit_id': self.id},
+        }

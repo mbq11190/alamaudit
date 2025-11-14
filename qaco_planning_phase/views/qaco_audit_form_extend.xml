@@ -1,35 +1,26 @@
 <odoo>
     <data>
-        <!-- Extend qaco_audit form view to add Planning Phase notebook -->
-        <record id="view_qaco_audit_form_planning_phase" model="ir.ui.view">
-            <field name="name">qaco.audit.form.planning.phase</field>
+        <!-- Add Planning Phase Smart Button -->
+        <record id="view_qaco_audit_form_planning_button" model="ir.ui.view">
+            <field name="name">qaco.audit.form.planning.button</field>
             <field name="model">qaco.audit</field>
             <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='description_page']" position="after">
-                    <page name="planning_phase" string="Planning Phase">
-                        <!-- No Planning Phase - Show Initialize Button -->
-                        <div class="alert alert-info text-center" role="alert" invisible="planning_phase_id" style="margin: 50px;">
-                            <h4><i class="fa fa-clipboard"/> Planning Phase Not Started</h4>
-                            <p>Click the button below to initialize the planning phase for this audit.</p>
-                            <button name="action_create_planning_phase" 
-                                    string="Initialize Planning Phase" 
-                                    type="object" 
-                                    class="btn btn-primary btn-lg"
-                                    icon="fa-plus-circle"/>
+                <!-- Add Planning Phase Smart Button -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="planning_phase_id" invisible="1"/>
+                    <button class="oe_stat_button" type="object" 
+                            name="action_open_planning_phase"
+                            icon="fa-clipboard">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Planning</span>
+                            <span class="o_stat_value">
+                                <field name="planning_phase_id" 
+                                       widget="statinfo"
+                                       options="{'label_field': 'state'}"/>
+                            </span>
                         </div>
-                        
-                        <!-- Planning Phase Exists - Show Form -->
-                        <group invisible="not planning_phase_id">
-                            <field name="planning_phase_id" 
-                                   invisible="1"/>
-                        </group>
-                        
-                        <div invisible="not planning_phase_id" class="o_planning_phase_container">
-                            <field name="planning_phase_id" 
-                                   context="{'default_audit_id': active_id, 'form_view_ref': 'qaco_planning_phase.view_planning_phase_form'}"/>
-                        </div>
-                    </page>
+                    </button>
                 </xpath>
             </field>
         </record>
