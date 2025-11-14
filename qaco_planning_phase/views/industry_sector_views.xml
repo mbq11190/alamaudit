@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <!-- Industry & Sector Tree View -->
+        <record id="view_industry_sector_tree" model="ir.ui.view">
+            <field name="name">planning.industry.sector.tree</field>
+            <field name="model">planning.industry.sector</field>
+            <field name="arch" type="xml">
+                <tree string="Industry &amp; Sector">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Industry & Sector Form View -->
+        <record id="view_industry_sector_form" model="ir.ui.view">
+            <field name="name">planning.industry.sector.form</field>
+            <field name="model">planning.industry.sector</field>
+            <field name="arch" type="xml">
+                <form string="Industry &amp; Sector">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Enter description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Industry & Sector Action -->
+        <record id="action_industry_sector" model="ir.actions.act_window">
+            <field name="name">Industry &amp; Sector</field>
+            <field name="res_model">planning.industry.sector</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Industry Sector
+                </p>
+                <p>
+                    Configure industry sectors that will be used in the planning phase.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_planning_phase_user,access.planning.phase.user,model_qaco_planning_phase,base.group_user,1,1,1,1
+access_industry_sector_user,access.industry.sector.user,model_planning_industry_sector,base.group_user,1,1,1,1
