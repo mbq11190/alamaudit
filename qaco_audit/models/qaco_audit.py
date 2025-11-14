@@ -38,7 +38,8 @@ class Qacoaudit(models.Model):
     documents = fields.Selection(
         [('Received', 'Received'), ('Not Received', 'Not Received'), ('Partially Received', 'Partially Received')],
         string='Documents Status')
-    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', ondelete='set null')
+    # firm_name temporarily commented for migration - will be uncommented in version 17.0.0.0.5
+    # firm_name = fields.Many2one('audit.firm.name', string='Firm Name', ondelete='set null')
     report_type = fields.Selection([('UDIN', 'UDIN'),('Agreed Upon Procedures','Agreed upon Procedures'), ('Internal Audit', 'Internal Audit'), ('3rd Party Audits', '3rd Party Audits')], string='Audit Type')
     udin_no = fields.Char(string='UDIN No',)
     legal_entity = fields.Selection([('Pvt Company', 'Pvt Company'), ('SMC Company', 'SMC Company'), ('Public Company', 'Public Company'), ('Branch Office', 'Branch Office'), ('Govt Organisation', 'Govt Organisation'), ('NGO Sec 42', 'NGO Sec 42'),('NGO-Other', 'NGO-Other'), ('Partnership', 'Partnership'),

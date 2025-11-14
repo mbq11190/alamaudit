@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <!-- Force delete old firm_name field metadata before module update -->
+        <delete model="ir.model.fields" search="[('model', '=', 'qaco.audit'), ('name', '=', 'firm_name'), ('ttype', '=', 'selection')]"/>
+        
+        <!-- Delete any selection values for the old field -->
+        <delete model="ir.model.fields.selection" search="[('field_id.model', '=', 'qaco.audit'), ('field_id.name', '=', 'firm_name')]"/>
+    </data>
+</odoo>
