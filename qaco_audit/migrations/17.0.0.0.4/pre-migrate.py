@@ -25,6 +25,14 @@ def migrate(cr, version):
             ALTER TABLE qaco_audit 
             RENAME COLUMN firm_name TO firm_name_old
         """)
-        _logger.info("Successfully renamed firm_name to firm_name_old")
+        
+        # Remove field metadata to prevent conflicts
+        _logger.info("Removing old firm_name field metadata")
+        cr.execute("""
+            DELETE FROM ir_model_fields 
+            WHERE model='qaco.audit' AND name='firm_name'
+        """)
+        
+        _logger.info("Successfully renamed firm_name to firm_name_old and cleaned metadata")
     else:
         _logger.info("No firm_name selection field found, skipping rename")
