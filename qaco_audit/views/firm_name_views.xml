@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_audit_firm_name_tree" model="ir.ui.view">
+        <field name="name">audit.firm.name.tree</field>
+        <field name="model">audit.firm.name</field>
+        <field name="arch" type="xml">
+            <tree string="Firm Names" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_audit_firm_name_form" model="ir.ui.view">
+        <field name="name">audit.firm.name.form</field>
+        <field name="model">audit.firm.name</field>
+        <field name="arch" type="xml">
+            <form string="Firm Name">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_audit_firm_name" model="ir.actions.act_window">
+        <field name="name">Firm Names</field>
+        <field name="res_model">audit.firm.name</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Firm Name
+            </p>
+            <p>
+                Configure firm names that will be available in audit records.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem
+        id="menu_audit_firm_name"
+        name="Firm Names"
+        parent="qaco_audit.menu_2"
+        action="action_audit_firm_name"
+        sequence="5"/>
+</odoo>

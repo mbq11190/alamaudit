@@ -18,8 +18,10 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security_groups.xml',
+        'data/firm_name_data.xml',
         'views/tree_view.xml',
         'views/auto_follower_views.xml',
+        'views/firm_name_views.xml',
         'views/menu_view.xml',
         'views/form_view.xml',
         'views/kanban_view.xml',

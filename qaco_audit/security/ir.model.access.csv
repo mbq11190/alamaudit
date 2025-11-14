@@ -3,6 +3,7 @@ access_qaco_audit,qaco.audit,model_qaco_audit,base.group_user,1,1,1,1
 access_audit_stages,audit.stages,model_audit_stages,base.group_user,1,1,1,1
 access_audit_attachment,audit.attachment,model_audit_attachment,base.group_user,1,1,1,1
 access_audit_year,audit.year,model_audit_year,base.group_user,1,1,1,1
+access_audit_firm_name,audit.firm.name,model_audit_firm_name,base.group_user,1,1,1,1
 access_audit_done,audit.done,model_audit_done,base.group_user,1,1,1,1
 access_qaco_audit_auto_follower,qaco_audit.auto.follower,model_qaco_audit_auto_follower,base.group_user,1,1,1,1
 access_qaco_recurring_annual_audit,qaco.recurring.annual.audit,model_qaco_recurring_annual_audit,base.group_user,1,1,1,1

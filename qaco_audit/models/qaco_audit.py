@@ -28,17 +28,6 @@ class Qacoaudit(models.Model):
     audit_year = fields.Many2many('audit.year', string='Audit Year')
     repeat = fields.Selection([('New Client', 'New Client'), ('Repeat Client', 'Repeat Client')],
                               string='Recurring')
-    partner = fields.Selection(
-        [
-            ('Qasim', 'Qasim'),
-            ('Adeel', 'Adeel'),
-            ('Idrees', 'Idrees'),
-            ('Manahil', 'Manahil'),
-            ('Najam US Saqib', 'Najam US Saqib'),
-            ('Siraj Ahmad', 'Siraj Ahmad'),
-        ],
-        string='Assigning Partner Old'
-    )
     folder = fields.Char(string='Folder Path', )
     qaco_assigning_partner = fields.Many2one(
         'hr.employee',
@@ -49,7 +38,7 @@ class Qacoaudit(models.Model):
     documents = fields.Selection(
         [('Received', 'Received'), ('Not Received', 'Not Received'), ('Partially Received', 'Partially Received')],
         string='Documents Status')
-    firm_name = fields.Selection([('Alam Aulakh', 'Alam Aulakh'), ('QACO', 'QACO'),('Baker Tilly', 'Baker Tilly'), ('3rd party Firm','3rd party Firm')], string='Firm Name')
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name')
     report_type = fields.Selection([('UDIN', 'UDIN'),('Agreed Upon Procedures','Agreed upon Procedures'), ('Internal Audit', 'Internal Audit'), ('3rd Party Audits', '3rd Party Audits')], string='Audit Type')
     udin_no = fields.Char(string='UDIN No',)
     legal_entity = fields.Selection([('Pvt Company', 'Pvt Company'), ('SMC Company', 'SMC Company'), ('Public Company', 'Public Company'), ('Branch Office', 'Branch Office'), ('Govt Organisation', 'Govt Organisation'), ('NGO Sec 42', 'NGO Sec 42'),('NGO-Other', 'NGO-Other'), ('Partnership', 'Partnership'),
@@ -58,8 +47,6 @@ class Qacoaudit(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     turnover = fields.Monetary(string='Turnover', currency_field='currency_id')
     bank_balance = fields.Monetary(string='Bank Balance', currency_field='currency_id')
-    audit_partner = fields.Selection([('Qasim', 'Qasim'), ('Adeel', 'Adeel'),('Idrees', 'Idrees'), ('Manahil', 'Manahil'), ('Najam US Saqib', 'Najam US Saqib'), ('Siraj Ahmad', 'Siraj Ahmad')],
-                                   string='Audit Partner')
     qaco_audit_partner = fields.Many2one(
         'hr.employee',
         string='Audit Partner',
@@ -216,12 +203,10 @@ class Qacoaudit(models.Model):
         ):
             raise AccessError(_('You do not have permission to perform this action.'))
         default = default or {}
-        default['partner'] = False
         default['audit_year'] = False
         default['repeat'] = False
         default['employee_id'] = False
         default['team_id'] = False
-        default['audit_partner'] = False
         default['qaco_audit_partner'] = False
         default['share_capital'] = False
         default['udin_no'] = False
