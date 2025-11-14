@@ -9,15 +9,14 @@
                 <!-- Add Planning Phase Smart Button -->
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <field name="planning_phase_id" invisible="1"/>
+                    <field name="planning_state" invisible="1"/>
                     <button class="oe_stat_button" type="object" 
                             name="action_open_planning_phase"
                             icon="fa-clipboard">
                         <div class="o_stat_info">
-                            <span class="o_stat_text">Planning</span>
+                            <span class="o_stat_text">Planning Phase</span>
                             <span class="o_stat_value">
-                                <field name="planning_phase_id" 
-                                       widget="statinfo"
-                                       options="{'label_field': 'state'}"/>
+                                <field name="planning_state" readonly="1"/>
                             </span>
                         </div>
                     </button>

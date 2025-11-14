@@ -6,11 +6,19 @@ class QacoAuditExtend(models.Model):
 
     planning_phase_id = fields.Many2one('qaco.planning.phase', string='Planning Phase', 
                                         compute='_compute_planning_phase', store=False)
+    planning_state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
+        ('review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('not_started', 'Not Started')
+    ], string='Planning Status', compute='_compute_planning_phase', store=False)
     
     def _compute_planning_phase(self):
         for record in self:
             planning = self.env['qaco.planning.phase'].search([('audit_id', '=', record.id)], limit=1)
             record.planning_phase_id = planning.id if planning else False
+            record.planning_state = planning.state if planning else 'not_started'
     
     def action_create_planning_phase(self):
         """Create planning phase if it doesn't exist"""
