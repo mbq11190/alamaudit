@@ -1,5 +1,12 @@
 <odoo>
     <data>
+        <!-- Main Planning Phase Menu under Audit -->
+        <menuitem id="menu_planning_phase"
+                  name="Planning Phase"
+                  parent="qaco_audit.qaco_audit_menu_root"
+                  action="action_planning_phase"
+                  sequence="15"/>
+        
         <!-- Industry & Sector Configuration under Configurations -->
         <menuitem id="menu_industry_sector"
                   name="Industry &amp; Sector"
