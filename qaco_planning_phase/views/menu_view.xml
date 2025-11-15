@@ -3,7 +3,7 @@
         <!-- Main Planning Phase Menu under Audit -->
         <menuitem id="menu_planning_phase"
                   name="Planning Phase"
-                  parent="qaco_audit.qaco_audit_menu_root"
+                  parent="qaco_audit.menu_root"
                   action="action_planning_phase"
                   sequence="15"/>
         
