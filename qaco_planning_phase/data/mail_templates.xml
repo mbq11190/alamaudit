@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_pbc_reminder" model="mail.template">
+            <field name="name">PBC Reminder</field>
+            <field name="model_id" ref="model_qaco_planning_pbc"/>
+            <field name="email_from">${object.planning_id.manager_id.email or user.email or ''}</field>
+            <field name="email_to">${object.client_contact_id.email or object.planning_id.client_partner_id.email or ''}</field>
+            <field name="subject">Reminder: ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <p>Dear ${object.client_contact_id.name or 'Client'},</p>
+                <p>This is a reminder to provide <strong>${object.name}</strong> for planning reference <strong>${object.planning_id.name}</strong>.</p>
+                <p>The current due date is ${object.due_date}. Kindly upload the evidence via the portal or email the signed documents.</p>
+                <p>Regards,<br/>${object.planning_id.manager_id.name or object.planning_id.partner_id.name}</p>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

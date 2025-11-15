@@ -10,3 +10,9 @@ access_planning_risk_partner,access.planning.risk.partner,model_qaco_planning_ri
 access_planning_checklist_partner,access.planning.checklist.partner,model_qaco_planning_checklist,qaco_audit.group_audit_partner,1,1,1,1
 access_planning_pbc_partner,access.planning.pbc.partner,model_qaco_planning_pbc,qaco_audit.group_audit_partner,1,1,1,1
 access_planning_milestone_partner,access.planning.milestone.partner,model_qaco_planning_milestone,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_materiality_user,access.planning.materiality.user,model_qaco_planning_materiality,base.group_user,1,1,1,0
+access_planning_materiality_partner,access.planning.materiality.partner,model_qaco_planning_materiality,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_materiality_config_partner,access.planning.materiality.config.partner,model_qaco_planning_materiality_config,qaco_audit.group_audit_partner,1,1,1,0
+access_planning_evidence_user,access.planning.evidence.user,model_qaco_planning_evidence,base.group_user,1,1,0,0
+access_planning_pbc_template_partner,access.planning.pbc.template.partner,model_qaco_planning_pbc_template,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_pbc_reminder_user,access.planning.pbc.reminder.user,model_qaco_planning_pbc_reminder,base.group_user,1,0,0,0

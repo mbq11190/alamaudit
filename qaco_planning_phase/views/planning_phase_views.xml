@@ -3,15 +3,40 @@
         <!-- Planning Phase Tree View -->
         <record id="view_planning_phase_tree" model="ir.ui.view">
             <field name="name">qaco.planning.phase.tree</field>
+                                <field name="legal_form"/>
+                                <field name="entity_classification"/>
             <field name="model">qaco.planning.phase</field>
             <field name="arch" type="xml">
                 <tree string="Planning Phase">
                     <field name="name"/>
+                                <field name="client_partner_id"/>
+                                <field name="reporting_period_start"/>
+                                <field name="reporting_period_end"/>
                     <field name="audit_id"/>
                     <field name="client_id"/>
                     <field name="industry_sector_id"/>
                     <field name="partner_id"/>
                     <field name="progress" widget="progressbar"/>
+                        <group string="Acceptance & Ethics">
+                            <group>
+                                <field name="acceptance_state" readonly="1"/>
+                                <field name="acceptance_rationale" placeholder="Document acceptance rationale..."/>
+                                <field name="independence_questionnaire_result"/>
+                                <field name="independence_notes"/>
+                                <field name="qcr_contact_id"/>
+                            </group>
+                            <group>
+                                <field name="engagement_letter_obtained"/>
+                                <field name="independence_confirmed"/>
+                                <field name="secp_reporting_required"/>
+                                <field name="audit_committee_required"/>
+                                <field name="statutory_filing_obligations"/>
+                            </group>
+                        </group>
+                        <group string="Governance">
+                            <field name="related_party_register" placeholder="Maintain related party log"/>
+                            <field name="audit_committee_briefing" widget="html"/>
+                        </group>
                     <field name="state"/>
                     <field name="create_date"/>
                     <field name="active"/>
@@ -79,14 +104,23 @@
                         <button name="action_reset_draft" string="Reset to Draft" 
                                 type="object" 
                                 invisible="state == 'draft'"/>
+                        <button name="action_accept_planning" string="Accept Engagement" type="object" class="btn-secondary" attrs="{'invisible': [('acceptance_state', '=', 'accepted')]}"/>
+                        <button name="action_trigger_independence_escalation" string="Escalate Independence" type="object" class="btn-secondary" attrs="{'invisible': [('independence_questionnaire_result', '!=', 'review')]}"/>
+                        <button name="action_mark_ready_for_fieldwork" string="Mark Fieldwork Ready" type="object" class="btn-success" attrs="{'invisible': [('state', 'not in', ['approved','review'])]}"/>
+                        <button name="action_export_planning_memorandum" string="Planning Memorandum" type="object" class="btn-outline-primary"/>
+                        <button name="action_export_secp_package" string="SECP Export" type="object" class="btn-outline-primary"/>
                         <field name="state" widget="statusbar" 
-                               statusbar_visible="draft,in_progress,review,approved"/>
+                               statusbar_visible="draft,in_progress,review,approved,fieldwork,finalisation"/>
+                        <field name="acceptance_state" widget="statusbar" statusbar_visible="draft,precheck,awaiting_clearance,accepted,rejected"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
                         
                         <!-- Smart Buttons -->
                         <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_materiality" icon="fa-balance-scale">
+                                <field string="Materiality" name="materiality_count" widget="statinfo"/>
+                            </button>
                             <button class="oe_stat_button" type="object" name="action_view_risks" icon="fa-exclamation-triangle">
                                 <field string="Risks" name="risk_count" widget="statinfo"/>
                             </button>
@@ -277,6 +311,19 @@
                                         <field name="audit_approach"/>
                                         <field name="significant_components" placeholder="Document significant components and areas..."/>
                                     </group>
+                                </group>
+                                <group string="Materiality Worksheets">
+                                    <field name="materiality_ids">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="basis"/>
+                                            <field name="base_value"/>
+                                            <field name="applied_percentage"/>
+                                            <field name="overall_materiality"/>
+                                            <field name="performance_materiality"/>
+                                            <field name="approved"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                             
@@ -576,11 +623,127 @@
                 <tree string="PBC List" decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
                     <field name="name"/>
                     <field name="category"/>
-                    <field name="client_contact"/>
+                    <field name="client_contact_id"/>
+                    <field name="delivery_status"/>
+                    <field name="requested_date"/>
                     <field name="due_date"/>
                     <field name="received"/>
                     <field name="received_date"/>
                 </tree>
+            </field>
+        </record>
+
+        <!-- Materiality Views -->
+        <record id="action_planning_materiality" model="ir.actions.act_window">
+            <field name="name">Materiality Worksheets</field>
+            <field name="res_model">qaco.planning.materiality</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_planning_materiality_tree" model="ir.ui.view">
+            <field name="name">qaco.planning.materiality.tree</field>
+            <field name="model">qaco.planning.materiality</field>
+            <field name="arch" type="xml">
+                <tree string="Materiality">
+                    <field name="name"/>
+                    <field name="planning_id"/>
+                    <field name="basis"/>
+                    <field name="base_value"/>
+                    <field name="applied_percentage"/>
+                    <field name="overall_materiality"/>
+                    <field name="performance_materiality"/>
+                    <field name="approved"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_planning_materiality_form" model="ir.ui.view">
+            <field name="name">qaco.planning.materiality.form</field>
+            <field name="model">qaco.planning.materiality</field>
+            <field name="arch" type="xml">
+                <form string="Materiality Worksheet">
+                    <header>
+                        <button name="action_partner_approve" string="Approve" type="object" class="btn-primary" attrs="{'invisible': [('approved', '=', True)]}"/>
+                        <field name="approved" widget="statusbar" statusbar_visible="False,True"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="planning_id"/>
+                                <field name="name"/>
+                                <field name="basis"/>
+                                <field name="base_value"/>
+                                <field name="base_source_type"/>
+                                <field name="base_source_reference"/>
+                            </group>
+                            <group>
+                                <field name="default_percentage" readonly="1"/>
+                                <field name="applied_percentage"/>
+                                <field name="overall_materiality"/>
+                                <field name="performance_factor"/>
+                                <field name="performance_materiality"/>
+                                <field name="tolerable_factor"/>
+                                <field name="tolerable_misstatement"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="justification_text" placeholder="Explain rationale..."/>
+                            <field name="evidence_attachment_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_planning_materiality_search" model="ir.ui.view">
+            <field name="name">qaco.planning.materiality.search</field>
+            <field name="model">qaco.planning.materiality</field>
+            <field name="arch" type="xml">
+                <search string="Materiality">
+                    <field name="name"/>
+                    <field name="planning_id"/>
+                    <filter string="Approved" name="approved" domain="[('approved', '=', True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Planning" name="group_planning" context="{'group_by': 'planning_id'}"/>
+                        <filter string="Basis" name="group_basis" context="{'group_by': 'basis'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- PBC Template Views -->
+        <record id="action_planning_pbc_templates" model="ir.actions.act_window">
+            <field name="name">PBC Templates</field>
+            <field name="res_model">qaco.planning.pbc.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_planning_pbc_template_tree" model="ir.ui.view">
+            <field name="name">qaco.planning.pbc.template.tree</field>
+            <field name="model">qaco.planning.pbc.template</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="entity_classification"/>
+                    <field name="category"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_planning_pbc_template_form" model="ir.ui.view">
+            <field name="name">qaco.planning.pbc.template.form</field>
+            <field name="model">qaco.planning.pbc.template</field>
+            <field name="arch" type="xml">
+                <form string="PBC Template">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="entity_classification"/>
+                            <field name="category"/>
+                        </group>
+                        <field name="description" nolabel="1"/>
+                    </sheet>
+                </form>
             </field>
         </record>
 
@@ -589,15 +752,24 @@
             <field name="model">qaco.planning.pbc</field>
             <field name="arch" type="xml">
                 <form string="PBC Item">
+                    <header>
+                        <button name="action_request" string="Send Request" type="object" class="btn-primary" attrs="{'invisible': [('delivery_status', 'in', ['requested','received'])]}"/>
+                        <button name="action_mark_received" string="Mark Received" type="object" class="btn-success" attrs="{'invisible': [('delivery_status', '=', 'received')]}"/>
+                        <button name="action_send_reminder" string="Send Reminder" type="object" class="btn-secondary"/>
+                        <field name="delivery_status" widget="statusbar" statusbar_visible="not_requested,requested,incomplete,received"/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="planning_id"/>
                                 <field name="name"/>
                                 <field name="category"/>
+                                <field name="client_contact_id"/>
                                 <field name="client_contact"/>
                             </group>
                             <group>
+                                <field name="delivery_status"/>
+                                <field name="requested_date"/>
                                 <field name="due_date"/>
                                 <field name="received"/>
                                 <field name="received_date"/>
@@ -608,6 +780,23 @@
                         </group>
                         <group string="Attachments">
                             <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field name="follow_up_log" widget="html"/>
+                        </group>
+                        <group>
+                            <field name="reminder_count" readonly="1"/>
+                            <field name="escalation_level" readonly="1"/>
+                            <field name="shared_with_portal"/>
+                        </group>
+                        <group string="Reminder History">
+                            <field name="reminder_log_ids">
+                                <tree editable="bottom">
+                                    <field name="reminder_type"/>
+                                    <field name="reminder_date"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
                         </group>
                         <group>
                             <field name="notes" placeholder="Additional notes..."/>

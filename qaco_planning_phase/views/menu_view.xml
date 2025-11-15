@@ -20,11 +20,24 @@
                   action="action_planning_checklist"
                   sequence="20"/>
         
+        <menuitem id="menu_planning_materiality"
+              name="Materiality"
+              parent="menu_planning_phase"
+              action="action_planning_materiality"
+              sequence="25"/>
+        
         <menuitem id="menu_planning_pbc"
                   name="PBC List"
                   parent="menu_planning_phase"
                   action="action_planning_pbc"
                   sequence="30"/>
+
+        <menuitem id="menu_planning_pbc_templates"
+              name="PBC Templates"
+              parent="menu_planning_phase"
+              action="action_planning_pbc_templates"
+              sequence="35"
+              groups="qaco_audit.group_audit_partner"/>
         
         <menuitem id="menu_planning_milestones"
                   name="Milestones"
