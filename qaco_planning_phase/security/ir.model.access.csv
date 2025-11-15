@@ -1,7 +1,12 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_planning_phase_user,access.planning.phase.user,model_qaco_planning_phase,base.group_user,1,1,1,1
-access_planning_risk_user,access.planning.risk.user,model_qaco_planning_risk,base.group_user,1,1,1,1
-access_planning_checklist_user,access.planning.checklist.user,model_qaco_planning_checklist,base.group_user,1,1,1,1
-access_planning_pbc_user,access.planning.pbc.user,model_qaco_planning_pbc,base.group_user,1,1,1,1
-access_planning_milestone_user,access.planning.milestone.user,model_qaco_planning_milestone,base.group_user,1,1,1,1
+access_planning_phase_user,access.planning.phase.user,model_qaco_planning_phase,base.group_user,1,1,1,0
+access_planning_risk_user,access.planning.risk.user,model_qaco_planning_risk,base.group_user,1,1,1,0
+access_planning_checklist_user,access.planning.checklist.user,model_qaco_planning_checklist,base.group_user,1,1,1,0
+access_planning_pbc_user,access.planning.pbc.user,model_qaco_planning_pbc,base.group_user,1,1,1,0
+access_planning_milestone_user,access.planning.milestone.user,model_qaco_planning_milestone,base.group_user,1,1,1,0
 access_industry_sector_user,access.industry.sector.user,model_planning_industry_sector,base.group_user,1,1,1,1
+access_planning_phase_partner,access.planning.phase.partner,model_qaco_planning_phase,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_risk_partner,access.planning.risk.partner,model_qaco_planning_risk,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_checklist_partner,access.planning.checklist.partner,model_qaco_planning_checklist,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_pbc_partner,access.planning.pbc.partner,model_qaco_planning_pbc,qaco_audit.group_audit_partner,1,1,1,1
+access_planning_milestone_partner,access.planning.milestone.partner,model_qaco_planning_milestone,qaco_audit.group_audit_partner,1,1,1,1
