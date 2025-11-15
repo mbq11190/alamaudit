@@ -1,0 +1,12 @@
+<odoo>
+  <data noupdate="1">
+    <record id="seq_planning_phase" model="ir.sequence">
+      <field name="name">Audit Planning Phase</field>
+      <field name="code">qaco.planning.phase</field>
+      <field name="prefix">PLAN-%(y)s-</field>
+      <field name="padding">4</field>
+      <field name="company_id" eval="False"/>
+      <field name="implementation">no_gap</field>
+    </record>
+  </data>
+</odoo>

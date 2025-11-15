@@ -1,8 +1,8 @@
 {
-    'name': 'QACO Planning Phase',
-    'version': '17.0.1.0.0',
-    'category': 'Audit',
-    'summary': 'Planning Phase for Audit Process',
+    'name': 'QACO Planning Phase (ISA)',
+    'version': '17.0.1.1',
+    'category': 'Accounting/Auditing',
+    'summary': 'ISA-aligned audit planning: strategy, materiality, risk assessment, checklist, PBC, timeline',
     'description': """
         Planning Phase Module
         ======================
@@ -12,17 +12,15 @@
     """,
     'author': 'QACO',
     'website': '',
-    'depends': ['base', 'qaco_audit'],
+    'depends': ['base', 'mail', 'qaco_audit'],
     'data': [
         'security/ir.model.access.csv',
+        'data/sequence_data.xml',
         'data/industry_sector_data.xml',
-        'views/industry_sector_views.xml',
-        'views/planning_phase_views.xml',
-        'views/qaco_audit_form_extend.xml',
-        'views/menu_view.xml',
+        'views/planning_views.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
     'license': 'LGPL-3',
 }
