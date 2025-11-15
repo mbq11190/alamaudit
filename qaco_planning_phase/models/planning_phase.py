@@ -238,6 +238,33 @@ class PlanningPhase(models.Model):
             rec.pbc_received_count = sum(1 for p in rec.pbc_ids if p.received)
             rec.milestone_count = len(rec.milestone_ids)
 
+    @api.constrains('planning_start_date', 'planning_end_date')
+    def _check_planning_dates(self):
+        """Validate planning dates"""
+        for rec in self:
+            if rec.planning_start_date and rec.planning_end_date:
+                if rec.planning_end_date < rec.planning_start_date:
+                    raise ValidationError(_("Planning end date must be after start date."))
+
+    @api.constrains('fieldwork_start_date', 'fieldwork_end_date')
+    def _check_fieldwork_dates(self):
+        """Validate fieldwork dates"""
+        for rec in self:
+            if rec.fieldwork_start_date and rec.fieldwork_end_date:
+                if rec.fieldwork_end_date < rec.fieldwork_start_date:
+                    raise ValidationError(_("Fieldwork end date must be after start date."))
+
+    @api.onchange('materiality_amount')
+    def _onchange_materiality_amount(self):
+        """Auto-calculate performance materiality and trivial threshold"""
+        if self.materiality_amount:
+            if not self.performance_materiality:
+                # Default to 75% of overall materiality
+                self.performance_materiality = self.materiality_amount * 0.75
+            if not self.trivial_misstatement:
+                # Default to 5% of overall materiality
+                self.trivial_misstatement = self.materiality_amount * 0.05
+
     def action_start(self):
         self.write({'state': 'in_progress'})
     
@@ -276,7 +303,10 @@ class PlanningPhase(models.Model):
             'res_model': 'qaco.planning.risk',
             'view_mode': 'tree,form',
             'domain': [('planning_id', '=', self.id)],
-            'context': {'default_planning_id': self.id},
+            'context': {
+                'default_planning_id': self.id,
+                'search_default_planning_id': self.id,
+            },
         }
 
     def action_view_significant_risks(self):
@@ -288,7 +318,11 @@ class PlanningPhase(models.Model):
             'res_model': 'qaco.planning.risk',
             'view_mode': 'tree,form',
             'domain': [('planning_id', '=', self.id), ('significant', '=', True)],
-            'context': {'default_planning_id': self.id, 'default_significant': True},
+            'context': {
+                'default_planning_id': self.id,
+                'default_significant': True,
+                'search_default_significant': 1,
+            },
         }
 
     def action_view_pbc(self):
@@ -300,7 +334,10 @@ class PlanningPhase(models.Model):
             'res_model': 'qaco.planning.pbc',
             'view_mode': 'tree,form',
             'domain': [('planning_id', '=', self.id)],
-            'context': {'default_planning_id': self.id},
+            'context': {
+                'default_planning_id': self.id,
+                'search_default_planning_id': self.id,
+            },
         }
 
     def action_view_milestones(self):
@@ -312,7 +349,10 @@ class PlanningPhase(models.Model):
             'res_model': 'qaco.planning.milestone',
             'view_mode': 'tree,form',
             'domain': [('planning_id', '=', self.id)],
-            'context': {'default_planning_id': self.id},
+            'context': {
+                'default_planning_id': self.id,
+                'search_default_planning_id': self.id,
+            },
         }
 
     @api.model_create_multi
@@ -518,6 +558,17 @@ class PlanningRisk(models.Model):
         for rec in self:
             rec.risk_score = int(rec.likelihood or "1") * int(rec.impact or "1")
 
+    @api.onchange('risk_score')
+    def _onchange_risk_score(self):
+        """Auto-flag as significant if score is high"""
+        if self.risk_score >= 6 and not self.significant:
+            return {
+                'warning': {
+                    'title': _('High Risk Score'),
+                    'message': _('This risk has a high score (≥6). Consider marking it as Significant Risk.'),
+                }
+            }
+
 
 class PlanningChecklist(models.Model):
     _name = "qaco.planning.checklist"
@@ -586,6 +637,15 @@ class PlanningPBC(models.Model):
         elif not self.received:
             self.received_date = False
 
+    @api.constrains('due_date')
+    def _check_overdue(self):
+        """Check for overdue PBC items"""
+        today = fields.Date.today()
+        for rec in self:
+            if rec.due_date and rec.due_date < today and not rec.received:
+                # Just a soft check, no error raised
+                pass
+
 
 class PlanningMilestone(models.Model):
     _name = "qaco.planning.milestone"
@@ -628,3 +688,7 @@ class PlanningIndustrySector(models.Model):
     name = fields.Char(string="Sector Name", required=True)
     description = fields.Text(string="Description")
     active = fields.Boolean(default=True)
+    
+    _sql_constraints = [
+        ('name_unique', 'unique(name)', 'Industry sector name must be unique!')
+    ]
