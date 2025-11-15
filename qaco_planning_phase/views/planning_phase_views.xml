@@ -6,13 +6,57 @@
             <field name="model">qaco.planning.phase</field>
             <field name="arch" type="xml">
                 <tree string="Planning Phase">
+                    <field name="name"/>
                     <field name="audit_id"/>
                     <field name="client_id"/>
                     <field name="industry_sector_id"/>
+                    <field name="partner_id"/>
+                    <field name="progress" widget="progressbar"/>
                     <field name="state"/>
                     <field name="create_date"/>
                     <field name="active"/>
                 </tree>
+            </field>
+        </record>
+
+        <!-- Planning Phase Kanban View -->
+        <record id="view_planning_phase_kanban" model="ir.ui.view">
+            <field name="name">qaco.planning.phase.kanban</field>
+            <field name="model">qaco.planning.phase</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="audit_id"/>
+                    <field name="client_id"/>
+                    <field name="state"/>
+                    <field name="progress"/>
+                    <field name="partner_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    </div>
+                                    <span class="float-end badge rounded-pill" t-attf-class="badge-{{record.state.raw_value == 'approved' ? 'success' : record.state.raw_value == 'review' ? 'warning' : 'info'}}">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="audit_id"/>
+                                    <br/>
+                                    <field name="client_id"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="partner_id" widget="many2one_avatar_user"/>
+                                        Progress: <field name="progress"/>%
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -40,13 +84,43 @@
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                        
+                        <!-- Smart Buttons -->
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_risks" icon="fa-exclamation-triangle">
+                                <field string="Risks" name="risk_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="action_view_significant_risks" icon="fa-warning">
+                                <field string="Significant" name="significant_risk_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="action_view_pbc" icon="fa-files-o">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">PBC</span>
+                                    <span class="o_stat_value">
+                                        <field name="pbc_received_count" nolabel="1"/> / <field name="pbc_count" nolabel="1"/>
+                                    </span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="action_view_milestones" icon="fa-calendar-check-o">
+                                <field string="Milestones" name="milestone_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        
                         <group>
                             <group>
+                                <field name="name"/>
                                 <field name="audit_id" options="{'no_create': True}"/>
                                 <field name="client_id"/>
                             </group>
                             <group>
+                                <field name="partner_id"/>
+                                <field name="manager_id"/>
                                 <field name="active" invisible="1"/>
+                                <field name="risk_count" invisible="1"/>
+                                <field name="significant_risk_count" invisible="1"/>
+                                <field name="pbc_count" invisible="1"/>
+                                <field name="pbc_received_count" invisible="1"/>
+                                <field name="milestone_count" invisible="1"/>
                             </group>
                         </group>
                         
@@ -99,30 +173,128 @@
                                 </group>
                             </page>
                             
+                            <!-- Risks Tab -->
+                            <page name="risks" string="Risks">
+                                <field name="risk_ids">
+                                    <tree decoration-danger="significant == True">
+                                        <field name="name"/>
+                                        <field name="risk_type"/>
+                                        <field name="assertion"/>
+                                        <field name="account_area"/>
+                                        <field name="likelihood"/>
+                                        <field name="impact"/>
+                                        <field name="risk_score"/>
+                                        <field name="significant"/>
+                                        <field name="response"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <!-- Checklist Tab -->
+                            <page name="checklist_items" string="Checklist">
+                                <group>
+                                    <group>
+                                        <field name="checklist_total"/>
+                                        <field name="checklist_done"/>
+                                        <field name="progress" widget="percentpie"/>
+                                    </group>
+                                </group>
+                                <field name="checklist_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="section"/>
+                                        <field name="description"/>
+                                        <field name="isa_ref"/>
+                                        <field name="owner_id"/>
+                                        <field name="done"/>
+                                        <field name="completion_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <!-- PBC Tab -->
+                            <page name="pbc_list" string="PBC List">
+                                <field name="pbc_ids">
+                                    <tree decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
+                                        <field name="name"/>
+                                        <field name="category"/>
+                                        <field name="client_contact"/>
+                                        <field name="due_date"/>
+                                        <field name="received"/>
+                                        <field name="received_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <!-- Timeline Tab -->
+                            <page name="timeline" string="Timeline">
+                                <field name="milestone_ids">
+                                    <tree decoration-success="completed == True">
+                                        <field name="name"/>
+                                        <field name="category"/>
+                                        <field name="date"/>
+                                        <field name="owner_id"/>
+                                        <field name="completed"/>
+                                        <field name="completion_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <!-- Team Tab -->
+                            <page name="team" string="Team">
+                                <group>
+                                    <group>
+                                        <field name="partner_id"/>
+                                        <field name="manager_id"/>
+                                    </group>
+                                </group>
+                                <group string="Engagement Team">
+                                    <field name="team_ids" widget="many2many_tags_avatar" nolabel="1"/>
+                                </group>
+                            </page>
+                            
                             <!-- Materiality Tab -->
                             <page name="materiality" string="Materiality">
                                 <group>
                                     <group string="Materiality Calculations">
                                         <field name="materiality_basis"/>
-                                        <field name="overall_materiality"/>
-                                        <field name="performance_materiality"/>
-                                        <field name="trivial_threshold"/>
+                                        <field name="materiality_amount" widget="monetary"/>
+                                        <field name="performance_materiality" widget="monetary"/>
+                                        <field name="trivial_misstatement" widget="monetary"/>
+                                    </group>
+                                    <group string="ISA 320 Requirements">
+                                        <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
+                                        <field name="scope" placeholder="Define audit scope and components..."/>
+                                        <field name="materiality_notes" placeholder="Document materiality rationale and judgments..."/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Additional Considerations">
+                                        <field name="use_of_experts"/>
+                                        <field name="rely_on_internal_audit"/>
+                                    </group>
+                                    <group string="Approach">
+                                        <field name="audit_approach"/>
+                                        <field name="significant_components" placeholder="Document significant components and areas..."/>
                                     </group>
                                 </group>
                             </page>
                             
-                            <!-- Checklists Tab -->
-                            <page name="checklist" string="Planning Checklist">
+                            <!-- Ethics & Compliance Tab -->
+                            <page name="ethics" string="Ethics &amp; Compliance">
                                 <group>
-                                    <group string="Engagement Setup">
-                                        <field name="engagement_letter_signed"/>
-                                        <field name="independence_confirmed"/>
-                                        <field name="previous_auditor_communication"/>
+                                    <group string="ISA 210: Engagement Letter">
+                                        <field name="engagement_letter_obtained"/>
+                                        <field name="engagement_letter_date"/>
                                     </group>
-                                    <group string="Planning Procedures">
-                                        <field name="understanding_entity_obtained"/>
-                                        <field name="internal_controls_documented"/>
-                                        <field name="analytical_procedures_performed"/>
+                                    <group string="IESBA Code: Independence">
+                                        <field name="independence_confirmed"/>
+                                        <field name="independence_date"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="ISA 220: Quality Control">
+                                        <field name="ethical_requirements_met"/>
                                     </group>
                                 </group>
                             </page>
@@ -176,15 +348,217 @@
         <record id="action_planning_phase" model="ir.actions.act_window">
             <field name="name">Planning Phase</field>
             <field name="res_model">qaco.planning.phase</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_active': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create your first Planning Phase Record
                 </p>
                 <p>
-                    Document the planning phase of your audit process.
+                    Document the planning phase of your audit process including risk assessment, 
+                    materiality determination, and planning procedures per ISA standards.
                 </p>
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- Planning Risk Views -->
+        <!-- ========================================= -->
+        
+        <record id="view_planning_risk_tree" model="ir.ui.view">
+            <field name="name">qaco.planning.risk.tree</field>
+            <field name="model">qaco.planning.risk</field>
+            <field name="arch" type="xml">
+                <tree string="Risks" decoration-danger="significant == True">
+                    <field name="name"/>
+                    <field name="risk_type"/>
+                    <field name="assertion"/>
+                    <field name="account_area"/>
+                    <field name="likelihood"/>
+                    <field name="impact"/>
+                    <field name="risk_score"/>
+                    <field name="significant"/>
+                    <field name="response"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_planning_risk_form" model="ir.ui.view">
+            <field name="name">qaco.planning.risk.form</field>
+            <field name="model">qaco.planning.risk</field>
+            <field name="arch" type="xml">
+                <form string="Risk">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="planning_id"/>
+                                <field name="name"/>
+                                <field name="risk_type"/>
+                                <field name="assertion"/>
+                                <field name="account_area"/>
+                            </group>
+                            <group>
+                                <field name="likelihood"/>
+                                <field name="impact"/>
+                                <field name="risk_score"/>
+                                <field name="significant"/>
+                                <field name="isa_ref"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="response"/>
+                            <field name="response_detail" placeholder="Describe planned audit response in detail..."/>
+                        </group>
+                        <group>
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- Planning Checklist Views -->
+        <!-- ========================================= -->
+        
+        <record id="view_planning_checklist_tree" model="ir.ui.view">
+            <field name="name">qaco.planning.checklist.tree</field>
+            <field name="model">qaco.planning.checklist</field>
+            <field name="arch" type="xml">
+                <tree string="Checklist" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="section"/>
+                    <field name="description"/>
+                    <field name="isa_ref"/>
+                    <field name="owner_id"/>
+                    <field name="done"/>
+                    <field name="completion_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_planning_checklist_form" model="ir.ui.view">
+            <field name="name">qaco.planning.checklist.form</field>
+            <field name="model">qaco.planning.checklist</field>
+            <field name="arch" type="xml">
+                <form string="Checklist Item">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="planning_id"/>
+                                <field name="section"/>
+                                <field name="description"/>
+                                <field name="isa_ref"/>
+                            </group>
+                            <group>
+                                <field name="owner_id"/>
+                                <field name="done"/>
+                                <field name="completion_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- Planning PBC Views -->
+        <!-- ========================================= -->
+        
+        <record id="view_planning_pbc_tree" model="ir.ui.view">
+            <field name="name">qaco.planning.pbc.tree</field>
+            <field name="model">qaco.planning.pbc</field>
+            <field name="arch" type="xml">
+                <tree string="PBC List" decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="client_contact"/>
+                    <field name="due_date"/>
+                    <field name="received"/>
+                    <field name="received_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_planning_pbc_form" model="ir.ui.view">
+            <field name="name">qaco.planning.pbc.form</field>
+            <field name="model">qaco.planning.pbc</field>
+            <field name="arch" type="xml">
+                <form string="PBC Item">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="planning_id"/>
+                                <field name="name"/>
+                                <field name="category"/>
+                                <field name="client_contact"/>
+                            </group>
+                            <group>
+                                <field name="due_date"/>
+                                <field name="received"/>
+                                <field name="received_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Describe the required document or information..."/>
+                        </group>
+                        <group string="Attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- Planning Milestone Views -->
+        <!-- ========================================= -->
+        
+        <record id="view_planning_milestone_tree" model="ir.ui.view">
+            <field name="name">qaco.planning.milestone.tree</field>
+            <field name="model">qaco.planning.milestone</field>
+            <field name="arch" type="xml">
+                <tree string="Milestones" decoration-success="completed == True">
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="date"/>
+                    <field name="owner_id"/>
+                    <field name="completed"/>
+                    <field name="completion_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_planning_milestone_form" model="ir.ui.view">
+            <field name="name">qaco.planning.milestone.form</field>
+            <field name="model">qaco.planning.milestone</field>
+            <field name="arch" type="xml">
+                <form string="Milestone">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="planning_id"/>
+                                <field name="name"/>
+                                <field name="category"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="owner_id"/>
+                                <field name="completed"/>
+                                <field name="completion_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
     </data>
