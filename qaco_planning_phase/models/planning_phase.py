@@ -683,9 +683,10 @@ class PlanningMilestone(models.Model):
 class PlanningIndustrySector(models.Model):
     _name = "planning.industry.sector"
     _description = "Industry Sector"
-    _order = "name"
+    _order = "sequence, name"
 
     name = fields.Char(string="Sector Name", required=True)
+    sequence = fields.Integer(string="Sequence", default=10)
     description = fields.Text(string="Description")
     active = fields.Boolean(default=True)
     
