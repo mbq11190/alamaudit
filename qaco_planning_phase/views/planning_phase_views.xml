@@ -366,46 +366,6 @@
             </field>
         </record>
 
-        <!-- Planning Phase Calendar View -->
-        <record id="view_planning_phase_calendar" model="ir.ui.view">
-            <field name="name">qaco.planning.phase.calendar</field>
-            <field name="model">qaco.planning.phase</field>
-            <field name="arch" type="xml">
-                <calendar string="Planning Phase Calendar" date_start="planning_start_date" date_stop="planning_end_date" color="state" mode="month">
-                    <field name="name"/>
-                    <field name="audit_id"/>
-                    <field name="client_id"/>
-                    <field name="partner_id"/>
-                    <field name="state"/>
-                </calendar>
-            </field>
-        </record>
-
-        <!-- Planning Phase Pivot View -->
-        <record id="view_planning_phase_pivot" model="ir.ui.view">
-            <field name="name">qaco.planning.phase.pivot</field>
-            <field name="model">qaco.planning.phase</field>
-            <field name="arch" type="xml">
-                <pivot string="Planning Phase Analysis">
-                    <field name="industry_sector_id" type="row"/>
-                    <field name="state" type="col"/>
-                    <field name="progress" type="measure"/>
-                </pivot>
-            </field>
-        </record>
-
-        <!-- Planning Phase Graph View -->
-        <record id="view_planning_phase_graph" model="ir.ui.view">
-            <field name="name">qaco.planning.phase.graph</field>
-            <field name="model">qaco.planning.phase</field>
-            <field name="arch" type="xml">
-                <graph string="Planning Phase Statistics" type="bar">
-                    <field name="state"/>
-                    <field name="progress" type="measure"/>
-                </graph>
-            </field>
-        </record>
-
         <!-- Planning Phase Search View -->
         <record id="view_planning_phase_search" model="ir.ui.view">
             <field name="name">qaco.planning.phase.search</field>
@@ -435,7 +395,7 @@
         <record id="action_planning_phase" model="ir.actions.act_window">
             <field name="name">Planning Phase</field>
             <field name="res_model">qaco.planning.phase</field>
-            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_active': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -451,13 +411,6 @@
         <!-- ========================================= -->
         <!-- Planning Risk Views -->
         <!-- ========================================= -->
-        
-        <record id="action_planning_risk" model="ir.actions.act_window">
-            <field name="name">Planning Risks</field>
-            <field name="res_model">qaco.planning.risk</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_significant': 1}</field>
-        </record>
         
         <record id="view_planning_risk_tree" model="ir.ui.view">
             <field name="name">qaco.planning.risk.tree</field>
@@ -511,37 +464,9 @@
             </field>
         </record>
 
-        <record id="view_planning_risk_search" model="ir.ui.view">
-            <field name="name">qaco.planning.risk.search</field>
-            <field name="model">qaco.planning.risk</field>
-            <field name="arch" type="xml">
-                <search string="Risks">
-                    <field name="name"/>
-                    <field name="planning_id"/>
-                    <field name="risk_type"/>
-                    <field name="account_area"/>
-                    <filter string="Significant Risks" name="significant" domain="[('significant', '=', True)]"/>
-                    <filter string="Fraud Risks" name="fraud" domain="[('risk_type', '=', 'fraud')]"/>
-                    <filter string="High Risk Score" name="high_score" domain="[('risk_score', '>=', 6)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Risk Type" name="group_risk_type" context="{'group_by': 'risk_type'}"/>
-                        <filter string="Account Area" name="group_account_area" context="{'group_by': 'account_area'}"/>
-                        <filter string="Planning Phase" name="group_planning" context="{'group_by': 'planning_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
         <!-- ========================================= -->
         <!-- Planning Checklist Views -->
         <!-- ========================================= -->
-        
-        <record id="action_planning_checklist" model="ir.actions.act_window">
-            <field name="name">Planning Checklist</field>
-            <field name="res_model">qaco.planning.checklist</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_not_done': 1}</field>
-        </record>
         
         <record id="view_planning_checklist_tree" model="ir.ui.view">
             <field name="name">qaco.planning.checklist.tree</field>
@@ -586,35 +511,9 @@
             </field>
         </record>
 
-        <record id="view_planning_checklist_search" model="ir.ui.view">
-            <field name="name">qaco.planning.checklist.search</field>
-            <field name="model">qaco.planning.checklist</field>
-            <field name="arch" type="xml">
-                <search string="Checklist">
-                    <field name="description"/>
-                    <field name="planning_id"/>
-                    <field name="owner_id"/>
-                    <filter string="Not Done" name="not_done" domain="[('done', '=', False)]"/>
-                    <filter string="Completed" name="completed" domain="[('done', '=', True)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Section" name="group_section" context="{'group_by': 'section'}"/>
-                        <filter string="Owner" name="group_owner" context="{'group_by': 'owner_id'}"/>
-                        <filter string="Planning Phase" name="group_planning" context="{'group_by': 'planning_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
         <!-- ========================================= -->
         <!-- Planning PBC Views -->
         <!-- ========================================= -->
-        
-        <record id="action_planning_pbc" model="ir.actions.act_window">
-            <field name="name">PBC List</field>
-            <field name="res_model">qaco.planning.pbc</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_not_received': 1}</field>
-        </record>
         
         <record id="view_planning_pbc_tree" model="ir.ui.view">
             <field name="name">qaco.planning.pbc.tree</field>
@@ -806,37 +705,9 @@
             </field>
         </record>
 
-        <record id="view_planning_pbc_search" model="ir.ui.view">
-            <field name="name">qaco.planning.pbc.search</field>
-            <field name="model">qaco.planning.pbc</field>
-            <field name="arch" type="xml">
-                <search string="PBC">
-                    <field name="name"/>
-                    <field name="planning_id"/>
-                    <field name="category"/>
-                    <field name="client_contact"/>
-                    <filter string="Not Received" name="not_received" domain="[('received', '=', False)]"/>
-                    <filter string="Received" name="received" domain="[('received', '=', True)]"/>
-                    <filter string="Overdue" name="overdue" domain="[('due_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('received', '=', False)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
-                        <filter string="Due Date" name="group_due_date" context="{'group_by': 'due_date'}"/>
-                        <filter string="Planning Phase" name="group_planning" context="{'group_by': 'planning_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
         <!-- ========================================= -->
         <!-- Planning Milestone Views -->
         <!-- ========================================= -->
-        
-        <record id="action_planning_milestone" model="ir.actions.act_window">
-            <field name="name">Planning Milestones</field>
-            <field name="res_model">qaco.planning.milestone</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_upcoming': 1}</field>
-        </record>
         
         <record id="view_planning_milestone_tree" model="ir.ui.view">
             <field name="name">qaco.planning.milestone.tree</field>
@@ -877,40 +748,6 @@
                         </group>
                     </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id="view_planning_milestone_search" model="ir.ui.view">
-            <field name="name">qaco.planning.milestone.search</field>
-            <field name="model">qaco.planning.milestone</field>
-            <field name="arch" type="xml">
-                <search string="Milestones">
-                    <field name="name"/>
-                    <field name="planning_id"/>
-                    <field name="owner_id"/>
-                    <filter string="Upcoming" name="upcoming" domain="[('date', '>=', context_today().strftime('%Y-%m-%d')), ('completed', '=', False)]"/>
-                    <filter string="Not Completed" name="not_completed" domain="[('completed', '=', False)]"/>
-                    <filter string="Completed" name="completed" domain="[('completed', '=', True)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
-                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
-                        <filter string="Owner" name="group_owner" context="{'group_by': 'owner_id'}"/>
-                        <filter string="Planning Phase" name="group_planning" context="{'group_by': 'planning_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="view_planning_milestone_calendar" model="ir.ui.view">
-            <field name="name">qaco.planning.milestone.calendar</field>
-            <field name="model">qaco.planning.milestone</field>
-            <field name="arch" type="xml">
-                <calendar string="Milestones Calendar" date_start="date" color="category" mode="month">
-                    <field name="name"/>
-                    <field name="planning_id"/>
-                    <field name="owner_id"/>
-                    <field name="completed"/>
-                </calendar>
             </field>
         </record>
     </data>

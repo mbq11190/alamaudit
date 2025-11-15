@@ -259,9 +259,8 @@ class PlanningPhase(models.Model):
     milestone_ids = fields.One2many("qaco.planning.milestone", "planning_id", string="Timeline")
     evidence_log_ids = fields.One2many(
         "qaco.planning.evidence",
-        "res_id",
+        "planning_id",
         string="Evidence Log",
-        domain=[("model_name", "=", "qaco.planning.phase")],
     )
 
     # Progress tracking
@@ -310,7 +309,16 @@ class PlanningPhase(models.Model):
         for rec in self:
             rec.audit_committee_required = rec.entity_classification in {"public_listed", "public_unlisted"}
 
-    @api.depends("materiality_ids", "risk_ids", "pbc_ids", "milestone_ids")
+    @api.depends(
+        "materiality_ids",
+        "materiality_ids.id",
+        "risk_ids",
+        "risk_ids.significant",
+        "pbc_ids",
+        "pbc_ids.received",
+        "milestone_ids",
+        "milestone_ids.id",
+    )
     def _compute_counts(self):
         for rec in self:
             rec.materiality_count = len(rec.materiality_ids)
@@ -325,6 +333,7 @@ class PlanningPhase(models.Model):
         self.ensure_one()
         self.env["qaco.planning.evidence"].log_event(
             name=name,
+            planning_id=self.id,
             model_name=self._name,
             res_id=self.id,
             action_type=action_type,
@@ -503,6 +512,7 @@ class PlanningPhase(models.Model):
             templates = template_model.search([('entity_classification', '=', rec.entity_classification)])
             if not templates:
                 templates = template_model.search([('entity_classification', '=', 'other')])
+            client_contact = rec.client_partner_id or rec.client_id
             for template in templates:
                 self.env['qaco.planning.pbc'].create(
                     {
@@ -513,8 +523,8 @@ class PlanningPhase(models.Model):
                         'delivery_status': 'not_requested',
                         'requested_date': fields.Date.context_today(self),
                         'due_date': rec.reporting_period_end,
-                        'client_contact': rec.client_partner_id.name,
-                        'client_contact_id': rec.client_partner_id.id,
+                        'client_contact': client_contact.name if client_contact else False,
+                        'client_contact_id': client_contact.id if client_contact else False,
                     }
                 )
 
@@ -1122,6 +1132,7 @@ class PlanningEvidenceLog(models.Model):
     _order = "create_date desc"
 
     name = fields.Char(string="Reference", required=True)
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade", index=True)
     model_name = fields.Char(string="Model")
     res_id = fields.Integer(string="Record ID")
     field_name = fields.Char(string="Field")
@@ -1141,10 +1152,23 @@ class PlanningEvidenceLog(models.Model):
     exported = fields.Boolean(string="Included in Latest Export", default=False)
 
     @api.model
-    def log_event(self, name, model_name, res_id, action_type, note, standard_reference, field_name=None, before_value=None, after_value=None):
+    def log_event(
+        self,
+        name,
+        planning_id,
+        model_name,
+        res_id,
+        action_type,
+        note,
+        standard_reference,
+        field_name=None,
+        before_value=None,
+        after_value=None,
+    ):
         return self.sudo().create(
             {
                 "name": name,
+                "planning_id": planning_id,
                 "model_name": model_name,
                 "res_id": res_id,
                 "action_type": action_type,
