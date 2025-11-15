@@ -7,6 +7,31 @@
                   action="action_planning_phase"
                   sequence="15"/>
         
+        <!-- Sub-menus for Planning Phase components -->
+        <menuitem id="menu_planning_risks"
+                  name="Risks"
+                  parent="menu_planning_phase"
+                  action="action_planning_risk"
+                  sequence="10"/>
+        
+        <menuitem id="menu_planning_checklist"
+                  name="Checklist"
+                  parent="menu_planning_phase"
+                  action="action_planning_checklist"
+                  sequence="20"/>
+        
+        <menuitem id="menu_planning_pbc"
+                  name="PBC List"
+                  parent="menu_planning_phase"
+                  action="action_planning_pbc"
+                  sequence="30"/>
+        
+        <menuitem id="menu_planning_milestones"
+                  name="Milestones"
+                  parent="menu_planning_phase"
+                  action="action_planning_milestone"
+                  sequence="40"/>
+        
         <!-- Industry & Sector Configuration under Configurations -->
         <menuitem id="menu_industry_sector"
                   name="Industry &amp; Sector"
