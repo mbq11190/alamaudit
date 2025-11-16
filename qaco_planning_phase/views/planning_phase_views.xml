@@ -17,7 +17,7 @@
                     <field name="industry_sector_id"/>
                     <field name="partner_id"/>
                     <field name="progress" widget="progressbar"/>
-                        <group string="Acceptance & Ethics">
+                        <group string="Acceptance &amp; Ethics">
                             <group>
                                 <field name="acceptance_state" readonly="1"/>
                                 <field name="acceptance_rationale" placeholder="Document acceptance rationale..."/>
