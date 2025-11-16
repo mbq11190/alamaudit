@@ -1,4 +1,6 @@
-from odoo import api, SUPERUSER_ID
+from psycopg2 import sql
+
+from odoo import SUPERUSER_ID, api
 
 
 def migrate(cr, version):
@@ -18,24 +20,26 @@ def migrate(cr, version):
         "client_compliance_matters": "TEXT",
     }
 
-    with api.Environment.manage():
-        env = api.Environment(cr, SUPERUSER_ID, {})
-        table = env["qaco.planning.phase"]._table
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    table = env["qaco.planning.phase"]._table
 
     for column, sql_type in field_defs.items():
         cr.execute(
             """
-            DO $$
-            BEGIN
-                IF NOT EXISTS (
-                    SELECT 1
-                    FROM information_schema.columns
-                    WHERE table_name = %s
-                      AND column_name = %s
-                ) THEN
-                    ALTER TABLE %s ADD COLUMN %s %s;
-                END IF;
-            END$$
+            SELECT 1
+            FROM information_schema.columns
+            WHERE table_name = %s AND column_name = %s
             """,
-            (table, column, table, column, sql_type),
+            (table, column),
+        )
+        exists = cr.fetchone()
+        if exists:
+            continue
+
+        cr.execute(
+            sql.SQL("ALTER TABLE {} ADD COLUMN {} {}").format(
+                sql.Identifier(table),
+                sql.Identifier(column),
+                sql.SQL(sql_type),
+            )
         )
