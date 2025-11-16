@@ -3,40 +3,21 @@
         <!-- Planning Phase Tree View -->
         <record id="view_planning_phase_tree" model="ir.ui.view">
             <field name="name">qaco.planning.phase.tree</field>
-                                <field name="legal_form"/>
-                                <field name="entity_classification"/>
             <field name="model">qaco.planning.phase</field>
             <field name="arch" type="xml">
                 <tree string="Planning Phase">
                     <field name="name"/>
-                                <field name="client_partner_id"/>
-                                <field name="reporting_period_start"/>
-                                <field name="reporting_period_end"/>
                     <field name="audit_id"/>
                     <field name="client_id"/>
+                    <field name="client_partner_id"/>
+                    <field name="reporting_period_start"/>
+                    <field name="reporting_period_end"/>
+                    <field name="legal_form"/>
+                    <field name="entity_classification"/>
                     <field name="industry_sector_id"/>
                     <field name="partner_id"/>
+                    <field name="acceptance_state"/>
                     <field name="progress" widget="progressbar"/>
-                        <group string="Acceptance &amp; Ethics">
-                            <group>
-                                <field name="acceptance_state" readonly="1"/>
-                                <field name="acceptance_rationale" placeholder="Document acceptance rationale..."/>
-                                <field name="independence_questionnaire_result"/>
-                                <field name="independence_notes"/>
-                                <field name="qcr_contact_id"/>
-                            </group>
-                            <group>
-                                <field name="engagement_letter_obtained"/>
-                                <field name="independence_confirmed"/>
-                                <field name="secp_reporting_required"/>
-                                <field name="audit_committee_required"/>
-                                <field name="statutory_filing_obligations"/>
-                            </group>
-                        </group>
-                        <group string="Governance">
-                            <field name="related_party_register" placeholder="Maintain related party log"/>
-                            <field name="audit_committee_briefing" widget="html"/>
-                        </group>
                     <field name="state"/>
                     <field name="create_date"/>
                     <field name="active"/>
