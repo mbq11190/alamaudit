@@ -30,7 +30,7 @@
 
         <record id="action_planning_materiality" model="ir.actions.act_window">
             <field name="name">Materiality Worksheets</field>
-            <field name="res_model">qaco.planning.materiality</field>
+            <field name="res_model">qaco.materiality</field>
             <field name="view_mode">tree,form</field>
         </record>
 

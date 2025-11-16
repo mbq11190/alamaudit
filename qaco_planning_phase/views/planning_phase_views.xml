@@ -319,12 +319,12 @@
                                     <field name="materiality_ids">
                                         <tree>
                                             <field name="name"/>
-                                            <field name="basis"/>
-                                            <field name="base_value"/>
-                                            <field name="applied_percentage"/>
-                                            <field name="overall_materiality"/>
-                                            <field name="performance_materiality"/>
-                                            <field name="approved"/>
+                                            <field name="benchmark_type"/>
+                                            <field name="benchmark_amount"/>
+                                            <field name="applied_percent"/>
+                                            <field name="materiality_amount"/>
+                                            <field name="performance_materiality_amount"/>
+                                            <field name="status"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -528,53 +528,71 @@
         <!-- Materiality Views -->
         <record id="view_planning_materiality_tree" model="ir.ui.view">
             <field name="name">qaco.planning.materiality.tree</field>
-            <field name="model">qaco.planning.materiality</field>
+            <field name="model">qaco.materiality</field>
             <field name="arch" type="xml">
-                <tree string="Materiality">
+                <tree string="Materiality Worksheets">
                     <field name="name"/>
                     <field name="planning_id"/>
-                    <field name="basis"/>
-                    <field name="base_value"/>
-                    <field name="applied_percentage"/>
-                    <field name="overall_materiality"/>
-                    <field name="performance_materiality"/>
-                    <field name="approved"/>
+                    <field name="benchmark_type"/>
+                    <field name="benchmark_amount"/>
+                    <field name="applied_percent"/>
+                    <field name="materiality_amount"/>
+                    <field name="performance_percent"/>
+                    <field name="performance_materiality_amount"/>
+                    <field name="status"/>
                 </tree>
             </field>
         </record>
 
         <record id="view_planning_materiality_form" model="ir.ui.view">
             <field name="name">qaco.planning.materiality.form</field>
-            <field name="model">qaco.planning.materiality</field>
+            <field name="model">qaco.materiality</field>
             <field name="arch" type="xml">
                 <form string="Materiality Worksheet">
                     <header>
-                        <button name="action_partner_approve" string="Approve" type="object" class="btn-primary" invisible="approved == True"/>
-                        <field name="approved" widget="statusbar" statusbar_visible="False,True"/>
+                        <button name="button_apply_defaults" string="Apply Defaults" type="object" attrs="{'invisible': [('status', 'in', ['approved','archived'])]}"/>
+                        <button name="button_approve" string="Approve" type="object" class="btn-primary" attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                        <button name="button_supersede" string="Supersede" type="object" attrs="{'invisible': [('status', '!=', 'approved')]}"/>
+                        <button name="button_reset_to_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('status', '!=', 'superseded')]}"/>
+                        <field name="status" widget="statusbar" statusbar_visible="draft,approved,superseded,archived"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="planning_id"/>
+                                <field name="audit_id"/>
                                 <field name="name"/>
-                                <field name="basis"/>
-                                <field name="base_value"/>
-                                <field name="base_source_type"/>
-                                <field name="base_source_reference"/>
+                                <field name="date_prepared"/>
+                                <field name="prepared_by"/>
+                                <field name="reviewed_by"/>
                             </group>
                             <group>
-                                <field name="default_percentage" readonly="1"/>
-                                <field name="applied_percentage"/>
-                                <field name="overall_materiality"/>
-                                <field name="performance_factor"/>
-                                <field name="performance_materiality"/>
-                                <field name="tolerable_factor"/>
-                                <field name="tolerable_misstatement"/>
+                                <field name="benchmark_type"/>
+                                <field name="benchmark_amount"/>
+                                <field name="base_source_type"/>
+                                <field name="base_source_reference"/>
+                                <field name="applied_percent"/>
+                                <field name="rounding"/>
                             </group>
                         </group>
                         <group>
-                            <field name="justification_text" placeholder="Explain rationale..."/>
-                            <field name="evidence_attachment_id"/>
+                            <group string="Materiality">
+                                <field name="materiality_amount"/>
+                                <field name="performance_percent"/>
+                                <field name="performance_materiality_amount"/>
+                                <field name="trivial_percent"/>
+                                <field name="trivial_amount"/>
+                            </group>
+                            <group string="Sensitivity">
+                                <field name="sensitivity_low_percent"/>
+                                <field name="sensitivity_low_amount"/>
+                                <field name="sensitivity_high_percent"/>
+                                <field name="sensitivity_high_amount"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="rationale" placeholder="Explain rationale..."/>
+                            <field name="notes"/>
                         </group>
                     </sheet>
                 </form>
@@ -583,15 +601,17 @@
 
         <record id="view_planning_materiality_search" model="ir.ui.view">
             <field name="name">qaco.planning.materiality.search</field>
-            <field name="model">qaco.planning.materiality</field>
+            <field name="model">qaco.materiality</field>
             <field name="arch" type="xml">
                 <search string="Materiality">
                     <field name="name"/>
                     <field name="planning_id"/>
-                    <filter string="Approved" name="approved" domain="[('approved', '=', True)]"/>
+                    <field name="audit_id"/>
+                    <filter string="Approved" name="approved" domain="[('status', '=', 'approved')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Planning" name="group_planning" context="{'group_by': 'planning_id'}"/>
-                        <filter string="Basis" name="group_basis" context="{'group_by': 'basis'}"/>
+                        <filter string="Benchmark" name="group_basis" context="{'group_by': 'benchmark_type'}"/>
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
                     </group>
                 </search>
             </field>

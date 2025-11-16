@@ -1,6 +1,7 @@
 import base64
+import json
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -20,6 +21,409 @@ ENTITY_CLASSES = [
 
 _logger = logging.getLogger(__name__)
 
+
+class QacoMaterialityHistory(models.Model):
+    _name = "qaco.materiality.history"
+    _description = "Materiality - Change History"
+
+    materiality_id = fields.Many2one(
+        "qaco.materiality",
+        string="Materiality Worksheet",
+        ondelete="cascade",
+        required=True,
+    )
+    changed_by = fields.Many2one("res.users", string="Changed by")
+    changed_date = fields.Datetime(string="Changed on", default=fields.Datetime.now)
+    old_values = fields.Text(string="Old values (JSON)")
+    note = fields.Text(string="Note")
+
+
+class QacoMateriality(models.Model):
+    _name = "qaco.materiality"
+    _description = "Audit Materiality Worksheet"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _order = "create_date desc"
+
+    planning_id = fields.Many2one("qaco.planning.phase", string="Planning Phase", ondelete="cascade")
+    audit_id = fields.Many2one("qaco.audit", string="Audit Reference", ondelete="cascade")
+    name = fields.Char(string="Reference", readonly=True, copy=False)
+    date_prepared = fields.Date(string="Date prepared", default=fields.Date.context_today)
+    prepared_by = fields.Many2one("res.users", string="Prepared by", default=lambda self: self.env.user)
+    reviewed_by = fields.Many2one("res.users", string="Reviewed by")
+    status = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("approved", "Approved"),
+            ("superseded", "Superseded"),
+            ("archived", "Archived"),
+        ],
+        default="draft",
+        tracking=True,
+    )
+
+    benchmark_type = fields.Selection(
+        [
+            ("pbt", "Profit before tax"),
+            ("revenue", "Total revenue"),
+            ("assets", "Total assets"),
+            ("equity", "Equity"),
+            ("other", "Other"),
+        ],
+        string="Benchmark",
+        default="pbt",
+        required=True,
+        tracking=True,
+    )
+    benchmark_amount = fields.Monetary(string="Benchmark amount", currency_field="currency_id")
+    benchmark_auto_pulled = fields.Boolean(string="Benchmark auto-pulled", compute="_compute_benchmark_auto_pulled", store=True)
+    base_source_type = fields.Selection(
+        [
+            ("tb_snapshot", "Trial balance snapshot"),
+            ("account_move", "Accounting module"),
+            ("manual", "Manual entry"),
+        ],
+        string="Source Type",
+        default="manual",
+    )
+    base_source_reference = fields.Char(string="Source Reference")
+
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        default=lambda self: self.env.company.currency_id,
+        required=True,
+    )
+
+    applied_percent = fields.Float(string="Applied %", digits=(12, 4))
+    materiality_amount = fields.Monetary(
+        string="Materiality amount",
+        compute="_compute_materiality",
+        store=True,
+        currency_field="currency_id",
+    )
+
+    performance_percent = fields.Float(string="Performance %", default=75.0, digits=(12, 4))
+    performance_materiality_amount = fields.Monetary(
+        string="Performance materiality",
+        compute="_compute_materiality",
+        store=True,
+        currency_field="currency_id",
+    )
+
+    trivial_percent = fields.Float(string="Clearly trivial %", default=5.0, digits=(12, 4))
+    trivial_amount = fields.Monetary(
+        string="Clearly trivial amount",
+        compute="_compute_materiality",
+        store=True,
+        currency_field="currency_id",
+    )
+
+    rounding = fields.Selection(
+        [("10", "10"), ("100", "100"), ("1000", "1,000"), ("10000", "10,000")],
+        string="Rounding",
+        default="1000",
+    )
+
+    rationale = fields.Text(
+        string="Rationale / Basis",
+        help="Explain the choice of benchmark and applied % with reference to ISA 320 and ISA 450.",
+    )
+    notes = fields.Text(string="Notes / Working Comments")
+
+    sensitivity_low_percent = fields.Float(string="Low sensitivity %", compute="_compute_sensitivity", store=True)
+    sensitivity_high_percent = fields.Float(string="High sensitivity %", compute="_compute_sensitivity", store=True)
+    sensitivity_low_amount = fields.Monetary(
+        string="Low sensitivity amount",
+        compute="_compute_sensitivity",
+        store=True,
+        currency_field="currency_id",
+    )
+    sensitivity_high_amount = fields.Monetary(
+        string="High sensitivity amount",
+        compute="_compute_sensitivity",
+        store=True,
+        currency_field="currency_id",
+    )
+
+    attachment_count = fields.Integer(string="Attachments", compute="_compute_attachment_count", store=True)
+
+    revision_of_id = fields.Many2one("qaco.materiality", string="Revision of")
+    approved_by = fields.Many2one("res.users", string="Approved by", readonly=True)
+    approved_date = fields.Datetime(string="Approved date", readonly=True)
+
+    _sql_constraints = [
+        ("qaco_materiality_name_uniq", "unique(name)", "Reference must be unique."),
+    ]
+
+    @api.model
+    def create(self, vals):
+        if not vals.get("name"):
+            seq = self.env["ir.sequence"].sudo().next_by_code("qaco.materiality") or _("MAT/PLAN/0000")
+            vals["name"] = seq
+        if vals.get("planning_id") and not vals.get("audit_id"):
+            planning = self.env["qaco.planning.phase"].browse(vals["planning_id"])
+            vals["audit_id"] = planning.audit_id.id
+        return super().create(vals)
+
+    def write(self, vals):
+        disallowed = {
+            "benchmark_type",
+            "benchmark_amount",
+            "applied_percent",
+            "materiality_amount",
+            "performance_percent",
+            "performance_materiality_amount",
+            "trivial_percent",
+            "trivial_amount",
+        }
+        for rec in self:
+            if rec.status == "approved" and any(key in vals for key in disallowed):
+                if not self._context.get("allow_write_approved"):
+                    raise ValidationError(
+                        _("Cannot modify critical materiality fields on an approved worksheet. Use Supersede.")
+                    )
+        return super().write(vals)
+
+    @api.depends("audit_id", "benchmark_type")
+    def _compute_benchmark_auto_pulled(self):
+        for rec in self:
+            pulled = False
+            if rec.audit_id:
+                attr_map = {
+                    "pbt": "tb_pbt",
+                    "revenue": "tb_revenue",
+                    "assets": "tb_assets",
+                    "equity": "tb_equity",
+                }
+                attr_name = attr_map.get(rec.benchmark_type)
+                if attr_name and hasattr(rec.audit_id, attr_name):
+                    value = getattr(rec.audit_id, attr_name)
+                    if value:
+                        pulled = True
+                        if not rec.benchmark_amount:
+                            try:
+                                rec.benchmark_amount = value
+                            except Exception:
+                                _logger.exception("Failed to auto-populate benchmark amount for %s", rec.id)
+            rec.benchmark_auto_pulled = pulled
+
+    @api.depends(
+        "benchmark_amount",
+        "applied_percent",
+        "performance_percent",
+        "trivial_percent",
+        "rounding",
+        "currency_id",
+    )
+    def _compute_materiality(self):
+        for rec in self:
+            def _round_amount(amount):
+                if amount is None:
+                    return 0.0
+                try:
+                    if rec.currency_id:
+                        return rec.currency_id.round(amount)
+                except Exception:
+                    pass
+                try:
+                    unit = int(rec.rounding)
+                except Exception:
+                    unit = 1000
+                if unit <= 0:
+                    return amount
+                return round(amount / unit) * unit
+
+            base = float(rec.benchmark_amount or 0.0)
+            applied = float(rec.applied_percent or 0.0)
+            perf = float(rec.performance_percent or 0.0)
+            trivial = float(rec.trivial_percent or 0.0)
+
+            mat_amount = (base * applied / 100.0) if applied else 0.0
+            perf_amount = (mat_amount * perf / 100.0) if perf else 0.0
+            trivial_amount = (mat_amount * trivial / 100.0) if trivial else 0.0
+
+            rec.materiality_amount = _round_amount(mat_amount)
+            rec.performance_materiality_amount = _round_amount(perf_amount)
+            rec.trivial_amount = _round_amount(trivial_amount)
+
+    @api.depends("applied_percent")
+    def _compute_sensitivity(self):
+        for rec in self:
+            applied = float(rec.applied_percent or 0.0)
+            rec.sensitivity_low_percent = round(applied * 0.75, 4)
+            rec.sensitivity_high_percent = round(applied * 1.25, 4)
+            base = float(rec.benchmark_amount or 0.0)
+            low_amount = base * rec.sensitivity_low_percent / 100.0 if rec.sensitivity_low_percent else 0.0
+            high_amount = base * rec.sensitivity_high_percent / 100.0 if rec.sensitivity_high_percent else 0.0
+            if rec.currency_id:
+                rec.sensitivity_low_amount = rec.currency_id.round(low_amount)
+                rec.sensitivity_high_amount = rec.currency_id.round(high_amount)
+            else:
+                rec.sensitivity_low_amount = round(low_amount)
+                rec.sensitivity_high_amount = round(high_amount)
+
+    @api.depends("id")
+    def _compute_attachment_count(self):
+        Attachment = self.env["ir.attachment"]
+        for rec in self:
+            if not rec.id:
+                rec.attachment_count = 0
+                continue
+            domain = [("res_model", "=", self._name), ("res_id", "=", rec.id)]
+            rec.attachment_count = Attachment.search_count(domain)
+
+    @api.constrains("applied_percent", "performance_percent", "trivial_percent")
+    def _check_percentages(self):
+        for rec in self:
+            if rec.applied_percent is None or rec.applied_percent <= 0 or rec.applied_percent > 100:
+                raise ValidationError(_("Applied % must be greater than 0 and less than or equal to 100."))
+            if rec.performance_percent is None or rec.performance_percent <= 0 or rec.performance_percent >= 100:
+                raise ValidationError(_("Performance % must be greater than 0 and less than 100."))
+            if rec.trivial_percent is None or rec.trivial_percent <= 0:
+                raise ValidationError(_("Clearly trivial % must be greater than 0."))
+            if rec.trivial_percent >= rec.performance_percent:
+                raise ValidationError(_("Clearly trivial % must be less than Performance %."))
+            if rec.trivial_percent >= rec.applied_percent:
+                raise ValidationError(_("Clearly trivial % should be less than Applied %."))
+
+    @api.onchange("audit_id", "benchmark_type")
+    def _onchange_audit_or_benchmark(self):
+        for rec in self:
+            if not rec.audit_id:
+                continue
+            attr_map = {
+                "pbt": "tb_pbt",
+                "revenue": "tb_revenue",
+                "assets": "tb_assets",
+                "equity": "tb_equity",
+            }
+            attr_name = attr_map.get(rec.benchmark_type)
+            if attr_name and hasattr(rec.audit_id, attr_name):
+                try:
+                    value = getattr(rec.audit_id, attr_name)
+                    if value:
+                        rec.benchmark_amount = value
+                        rec.benchmark_auto_pulled = True
+                except Exception:
+                    rec.benchmark_auto_pulled = False
+            else:
+                rec.benchmark_auto_pulled = False
+
+    def button_apply_defaults(self):
+        defaults = {
+            "pbt": 5.0,
+            "revenue": 0.5,
+            "assets": 0.5,
+            "equity": 1.0,
+            "other": 1.0,
+        }
+        for rec in self:
+            rec.applied_percent = defaults.get(rec.benchmark_type, 1.0)
+            rec.performance_percent = 75.0
+            rec.trivial_percent = 5.0
+
+    def button_approve(self):
+        for rec in self:
+            if rec.status == "approved":
+                continue
+            if not rec.rationale or not rec.prepared_by or not rec.reviewed_by:
+                raise ValidationError(
+                    _("Cannot approve. Rationale, Prepared by and Reviewed by are required."),
+                )
+            snapshot = {
+                "benchmark_type": rec.benchmark_type,
+                "benchmark_amount": float(rec.benchmark_amount or 0.0),
+                "applied_percent": float(rec.applied_percent or 0.0),
+                "materiality_amount": float(rec.materiality_amount or 0.0),
+                "performance_percent": float(rec.performance_percent or 0.0),
+                "performance_materiality_amount": float(rec.performance_materiality_amount or 0.0),
+                "trivial_percent": float(rec.trivial_percent or 0.0),
+                "trivial_amount": float(rec.trivial_amount or 0.0),
+            }
+            self.env["qaco.materiality.history"].create(
+                {
+                    "materiality_id": rec.id,
+                    "changed_by": self.env.user.id,
+                    "old_values": json.dumps(snapshot),
+                    "note": _("Approved by %s") % self.env.user.name,
+                }
+            )
+            rec.status = "approved"
+            rec.approved_by = self.env.user
+            rec.approved_date = fields.Datetime.now()
+            rec.message_post(
+                body=_("Materiality worksheet approved by %s on %s")
+                % (self.env.user.name, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            )
+            if rec.planning_id:
+                rec.planning_id.materiality_ready = True
+                rec.planning_id._log_evidence(
+                    name=_("Materiality approved"),
+                    action_type="approval",
+                    note=rec.rationale or _("Materiality approved"),
+                    standard_reference="ISA 320",
+                )
+
+    def button_supersede(self):
+        Attachment = self.env["ir.attachment"]
+        new_records = self.env["qaco.materiality"]
+        for rec in self:
+            copy_vals = {
+                "planning_id": rec.planning_id.id,
+                "audit_id": rec.audit_id.id,
+                "benchmark_type": rec.benchmark_type,
+                "benchmark_amount": rec.benchmark_amount,
+                "currency_id": rec.currency_id.id,
+                "applied_percent": rec.applied_percent,
+                "performance_percent": rec.performance_percent,
+                "trivial_percent": rec.trivial_percent,
+                "rounding": rec.rounding,
+                "rationale": rec.rationale,
+                "notes": rec.notes,
+                "prepared_by": rec.prepared_by.id if rec.prepared_by else False,
+                "reviewed_by": rec.reviewed_by.id if rec.reviewed_by else False,
+                "revision_of_id": rec.id,
+                "base_source_type": rec.base_source_type,
+                "base_source_reference": rec.base_source_reference,
+            }
+            new_rec = self.with_context(allow_write_approved=True).create(copy_vals)
+            rec.with_context(allow_write_approved=True).write({"status": "superseded"})
+            self.env["qaco.materiality.history"].create(
+                {
+                    "materiality_id": rec.id,
+                    "changed_by": self.env.user.id,
+                    "old_values": json.dumps({"superseded_by": new_rec.name}),
+                    "note": _("Superseded by %s") % new_rec.name,
+                }
+            )
+            attachments = Attachment.search([("res_model", "=", self._name), ("res_id", "=", rec.id)])
+            for attachment in attachments:
+                try:
+                    attachment.write({"res_id": new_rec.id})
+                except Exception:
+                    _logger.exception("Failed to reassign attachment %s during supersede", attachment.id)
+            new_records |= new_rec
+        return new_records
+
+    def button_reset_to_draft(self):
+        for rec in self:
+            rec.status = "draft"
+            rec.approved_by = False
+            rec.approved_date = False
+            rec.message_post(body=_("Materiality reset to draft by %s") % self.env.user.name)
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            label = rec.name or "/"
+            if rec.materiality_amount:
+                try:
+                    symbol = rec.currency_id.symbol or ""
+                    label = "%s [%s%s]" % (label, symbol, int(rec.materiality_amount))
+                except Exception:
+                    label = "%s [%s]" % (label, rec.materiality_amount)
+            result.append((rec.id, label))
+        return result
 
 class PlanningPhase(models.Model):
     _name = "qaco.planning.phase"
@@ -265,7 +669,7 @@ class PlanningPhase(models.Model):
     estimated_hours = fields.Float(string='Estimated Hours', tracking=True)
 
     # Related records
-    materiality_ids = fields.One2many("qaco.planning.materiality", "planning_id", string="Materiality Worksheets")
+    materiality_ids = fields.One2many("qaco.materiality", "planning_id", string="Materiality Worksheets")
     risk_ids = fields.One2many("qaco.planning.risk", "planning_id", string="Identified Risks")
     checklist_ids = fields.One2many("qaco.planning.checklist", "planning_id", string="Planning Checklist")
     pbc_ids = fields.One2many("qaco.planning.pbc", "planning_id", string="Information Requisitions")
@@ -391,8 +795,8 @@ class PlanningPhase(models.Model):
         for rec in self:
             if rec.progress < 70:
                 raise ValidationError(_("Complete at least 70% of the checklist before submitting for review."))
-            if not rec.materiality_amount and not rec.overall_materiality:
-                raise ValidationError(_("Set overall materiality before submitting for review."))
+            if not rec.materiality_ids:
+                raise ValidationError(_("Add at least one materiality worksheet before submitting for review."))
             rec.state = "review"
 
     def action_approve(self):
@@ -475,7 +879,7 @@ class PlanningPhase(models.Model):
         return {
             'name': _('Materiality Worksheets'),
             'type': 'ir.actions.act_window',
-            'res_model': 'qaco.planning.materiality',
+            'res_model': 'qaco.materiality',
             'view_mode': 'tree,form',
             'domain': [('planning_id', '=', self.id)],
             'context': {'default_planning_id': self.id},
@@ -504,14 +908,28 @@ class PlanningPhase(models.Model):
                 ['|', ('entity_classification', '=', rec.entity_classification), ('entity_classification', '=', 'other')],
                 limit=1,
             )
-            self.env['qaco.planning.materiality'].create(
+            default_basis = config.default_basis if config else 'pbt'
+            pct_map = {
+                'pbt': config.default_pct_pbt if config else 5.0,
+                'revenue': config.default_pct_revenue if config else 1.0,
+                'assets': config.default_pct_assets if config else 1.5,
+                'equity': config.default_pct_equity if config else 3.0,
+            }
+            applied_pct = pct_map.get(default_basis, 5.0)
+            performance_pct = (config.performance_factor if config else 0.75) * 100.0
+            self.env['qaco.materiality'].create(
                 {
                     'planning_id': rec.id,
-                    'basis': config.default_basis if config else 'pbt',
+                    'audit_id': rec.audit_id.id if rec.audit_id else False,
+                    'benchmark_type': default_basis if default_basis in pct_map else 'pbt',
+                    'benchmark_amount': 0.0,
+                    'currency_id': rec.currency_id.id,
                     'base_source_type': 'manual',
-                    'base_value': 0.0,
-                    'applied_percentage': config.default_pct_pbt if config else 5.0,
-                    'justification_text': _('Default planning pack generated (ISA 320 para 10). Update base figures from TB snapshot.'),
+                    'applied_percent': applied_pct,
+                    'performance_percent': performance_pct,
+                    'trivial_percent': 5.0,
+                    'rationale': _('Default planning pack generated (ISA 320 para 10). Update base figures from TB snapshot.'),
+                    'prepared_by': self.env.user.id,
                 }
             )
             rec._generate_default_pbc_items()
@@ -581,13 +999,14 @@ class PlanningPhase(models.Model):
         self.ensure_one()
         payload = {
             'planning': self.name,
-            'client': self.client_id.display_name,
+            'client': self.client_id.display_name if self.client_id else '',
             'entity_class': self.entity_classification,
             'materiality': [
                 {
-                    'basis': m.basis,
-                    'overall': m.overall_materiality,
-                    'performance': m.performance_materiality,
+                    'benchmark': m.benchmark_type,
+                    'overall': float(m.materiality_amount or 0.0),
+                    'performance': float(m.performance_materiality_amount or 0.0),
+                    'trivial': float(m.trivial_amount or 0.0),
                 }
                 for m in self.materiality_ids
             ],
@@ -603,7 +1022,7 @@ class PlanningPhase(models.Model):
         attachment = self.env['ir.attachment'].create(
             {
                 'name': f'SECP-package-{self.name}.json',
-                'datas': base64.b64encode(str(payload).encode()).decode(),
+                'datas': base64.b64encode(json.dumps(payload, default=str).encode()).decode(),
                 'res_model': self._name,
                 'res_id': self.id,
             }
@@ -1247,66 +1666,6 @@ class PlanningMaterialityConfig(models.Model):
     tolerable_factor = fields.Float(default=0.5)
 
 
-class PlanningMateriality(models.Model):
-    _name = "qaco.planning.materiality"
-    _description = "Materiality Worksheet"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
-    _order = "create_date desc"
-
-    name = fields.Char(default=lambda self: _("Materiality"), required=True)
-    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
-    basis = fields.Selection([
-        ("pbt", "Profit before tax"),
-        ("revenue", "Revenue"),
-        ("assets", "Total assets"),
-        ("equity", "Equity"),
-    ], required=True, tracking=True)
-    base_value = fields.Monetary(string="Benchmark Amount", tracking=True)
-    base_source_type = fields.Selection([
-        ("tb_snapshot", "Trial balance snapshot"),
-        ("account_move", "Accounting module"),
-        ("manual", "Manual entry"),
-    ], default="manual", tracking=True)
-    base_source_reference = fields.Char(string="Source Reference")
-    default_percentage = fields.Float(string="Default %", readonly=True)
-    applied_percentage = fields.Float(string="Applied %", required=True)
-    overall_materiality = fields.Monetary(string="Overall Materiality", compute="_compute_amounts", store=True)
-    performance_factor = fields.Float(string="Performance Factor", default=0.75)
-    performance_materiality = fields.Monetary(string="Performance Materiality", compute="_compute_amounts", store=True)
-    tolerable_factor = fields.Float(string="Tolerable Factor", default=0.5)
-    tolerable_misstatement = fields.Monetary(string="Tolerable Misstatement", compute="_compute_amounts", store=True)
-    currency_id = fields.Many2one(related="planning_id.currency_id", store=True)
-    justification_text = fields.Text(string="Justification", required=True)
-    evidence_attachment_id = fields.Many2one("ir.attachment", string="Evidence Attachment")
-    computed_by = fields.Many2one("res.users", default=lambda self: self.env.user)
-    computed_on = fields.Datetime(default=fields.Datetime.now)
-    approved = fields.Boolean(string="Partner Approved", default=False)
-
-    @api.depends("base_value", "applied_percentage", "performance_factor", "tolerable_factor")
-    def _compute_amounts(self):
-        for rec in self:
-            rec.overall_materiality = (rec.base_value or 0.0) * (rec.applied_percentage or 0.0) / 100.0
-            rec.performance_materiality = rec.overall_materiality * (rec.performance_factor or 0.0)
-            rec.tolerable_misstatement = rec.overall_materiality * (rec.tolerable_factor or 0.0)
-
-    @api.constrains("applied_percentage", "default_percentage")
-    def _check_justification(self):
-        for rec in self:
-            if rec.default_percentage and abs(rec.applied_percentage - rec.default_percentage) > 0.01 and not rec.justification_text:
-                raise ValidationError(_("Provide justification when overriding default percentage (ISA 320 para 12)."))
-
-    def action_partner_approve(self):
-        self.ensure_one()
-        if self.env.user not in (self.planning_id.partner_id,):
-            raise ValidationError(_("Only the engagement partner can approve materiality."))
-        self.approved = True
-        self.planning_id.materiality_ready = True
-        self.planning_id._log_evidence(
-            name=_('Materiality approved'),
-            action_type='approval',
-            note=self.justification_text,
-            standard_reference='ISA 320 para 14; ICAP APM section 5',
-        )
 
 
 class PlanningMaterialityWizard(models.TransientModel):
@@ -1314,21 +1673,29 @@ class PlanningMaterialityWizard(models.TransientModel):
     _description = "Materiality Wizard"
 
     planning_id = fields.Many2one("qaco.planning.phase", required=True)
-    basis = fields.Selection([
-        ("pbt", "Profit before tax"),
-        ("revenue", "Revenue"),
-        ("assets", "Total assets"),
-        ("equity", "Equity"),
-    ], required=True)
-    base_value = fields.Float(required=True)
-    base_source_type = fields.Selection([
-        ("tb_snapshot", "Trial balance snapshot"),
-        ("account_move", "Accounting module"),
-        ("manual", "Manual entry"),
-    ], default="manual")
-    base_source_reference = fields.Char()
-    applied_percentage = fields.Float()
-    justification_text = fields.Text(required=True)
+    benchmark_type = fields.Selection(
+        [
+            ("pbt", "Profit before tax"),
+            ("revenue", "Revenue"),
+            ("assets", "Total assets"),
+            ("equity", "Equity"),
+            ("other", "Other"),
+        ],
+        required=True,
+        default="pbt",
+    )
+    benchmark_amount = fields.Float(required=True)
+    source_type = fields.Selection(
+        [
+            ("tb_snapshot", "Trial balance snapshot"),
+            ("account_move", "Accounting module"),
+            ("manual", "Manual entry"),
+        ],
+        default="manual",
+    )
+    source_reference = fields.Char()
+    applied_percent = fields.Float()
+    rationale = fields.Text(required=True)
 
     def action_apply(self):
         self.ensure_one()
@@ -1338,23 +1705,28 @@ class PlanningMaterialityWizard(models.TransientModel):
         )
         default_pct = 5.0
         if config:
-            default_pct = getattr(config, f"default_pct_{self.basis}", default_pct)
-        applied_pct = self.applied_percentage or default_pct
-        materiality = self.env['qaco.planning.materiality'].create(
+            default_pct = getattr(config, f"default_pct_{self.benchmark_type}", default_pct)
+        applied_pct = self.applied_percent or default_pct
+        performance_pct = (config.performance_factor if config else 0.75) * 100.0
+        materiality = self.env['qaco.materiality'].create(
             {
                 'planning_id': self.planning_id.id,
-                'basis': self.basis,
-                'base_value': self.base_value,
-                'base_source_type': self.base_source_type,
-                'base_source_reference': self.base_source_reference,
-                'default_percentage': default_pct,
-                'applied_percentage': applied_pct,
-                'performance_factor': config.performance_factor if config else 0.75,
-                'tolerable_factor': config.tolerable_factor if config else 0.5,
-                'justification_text': self.justification_text,
+                'audit_id': self.planning_id.audit_id.id if self.planning_id.audit_id else False,
+                'benchmark_type': self.benchmark_type,
+                'benchmark_amount': self.benchmark_amount,
+                'base_source_type': self.source_type,
+                'base_source_reference': self.source_reference,
+                'currency_id': self.planning_id.currency_id.id,
+                'applied_percent': applied_pct,
+                'performance_percent': performance_pct,
+                'trivial_percent': 5.0,
+                'rationale': self.rationale,
+                'prepared_by': self.env.user.id,
             }
         )
-        return materiality.action_partner_approve()
+        if self.env.user == self.planning_id.partner_id:
+            materiality.button_approve()
+        return materiality
 
 
 class PlanningSettings(models.TransientModel):
@@ -1645,20 +2017,6 @@ class QacoPlanningPBCExtension(models.Model):
         string="Reminder Days (csv)",
         help="Comma separated days before due to remind, e.g. 7,3,1",
     )
-
-
-class PlanningMaterialityExtension(models.Model):
-    _inherit = "qaco.planning.materiality"
-
-    def calculate_materiality(self):
-        param = self.env["ir.config_parameter"].sudo()
-        default_pct = float(param.get_param("qaco.materiality_pct_default", 5.0))
-        for record in self:
-            record.applied_percentage = record.applied_percentage or default_pct
-            record._compute_amounts()
-            record.computed_by = self.env.user
-            record.computed_on = fields.Datetime.now()
-        return True
 
 
 class PlanningPBCReminderCron(models.Model):
