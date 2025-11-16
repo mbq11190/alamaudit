@@ -1279,9 +1279,18 @@ class PlanningMaterialityWizard(models.TransientModel):
     _description = "Materiality Wizard"
 
     planning_id = fields.Many2one("qaco.planning.phase", required=True)
-    basis = fields.Selection(selection=PlanningMateriality._fields["basis"].selection, required=True)
+    basis = fields.Selection([
+        ("pbt", "Profit before tax"),
+        ("revenue", "Revenue"),
+        ("assets", "Total assets"),
+        ("equity", "Equity"),
+    ], required=True)
     base_value = fields.Float(required=True)
-    base_source_type = fields.Selection(selection=PlanningMateriality._fields["base_source_type"].selection, default="manual")
+    base_source_type = fields.Selection([
+        ("tb_snapshot", "Trial balance snapshot"),
+        ("account_move", "Accounting module"),
+        ("manual", "Manual entry"),
+    ], default="manual")
     base_source_reference = fields.Char()
     applied_percentage = fields.Float()
     justification_text = fields.Text(required=True)
