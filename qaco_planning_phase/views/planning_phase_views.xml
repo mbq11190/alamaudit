@@ -85,9 +85,9 @@
                         <button name="action_reset_draft" string="Reset to Draft" 
                                 type="object" 
                                 invisible="state == 'draft'"/>
-                        <button name="action_accept_planning" string="Accept Engagement" type="object" class="btn-secondary" attrs="{'invisible': [('acceptance_state', '=', 'accepted')]}"/>
-                        <button name="action_trigger_independence_escalation" string="Escalate Independence" type="object" class="btn-secondary" attrs="{'invisible': [('independence_questionnaire_result', '!=', 'review')]}"/>
-                        <button name="action_mark_ready_for_fieldwork" string="Mark Fieldwork Ready" type="object" class="btn-success" attrs="{'invisible': [('state', 'not in', ['approved','review'])]}"/>
+                        <button name="action_accept_planning" string="Accept Engagement" type="object" class="btn-secondary" invisible="acceptance_state == 'accepted'"/>
+                        <button name="action_trigger_independence_escalation" string="Escalate Independence" type="object" class="btn-secondary" invisible="independence_questionnaire_result != 'review'"/>
+                        <button name="action_mark_ready_for_fieldwork" string="Mark Fieldwork Ready" type="object" class="btn-success" invisible="state not in ['approved','review']"/>
                         <button name="action_export_planning_memorandum" string="Planning Memorandum" type="object" class="btn-outline-primary"/>
                         <button name="action_export_secp_package" string="SECP Export" type="object" class="btn-outline-primary"/>
                         <field name="state" widget="statusbar" 
@@ -543,7 +543,7 @@
             <field name="arch" type="xml">
                 <form string="Materiality Worksheet">
                     <header>
-                        <button name="action_partner_approve" string="Approve" type="object" class="btn-primary" attrs="{'invisible': [('approved', '=', True)]}"/>
+                        <button name="action_partner_approve" string="Approve" type="object" class="btn-primary" invisible="approved == True"/>
                         <field name="approved" widget="statusbar" statusbar_visible="False,True"/>
                     </header>
                     <sheet>
@@ -633,8 +633,8 @@
             <field name="arch" type="xml">
                 <form string="PBC Item">
                     <header>
-                        <button name="action_request" string="Send Request" type="object" class="btn-primary" attrs="{'invisible': [('delivery_status', 'in', ['requested','received'])]}"/>
-                        <button name="action_mark_received" string="Mark Received" type="object" class="btn-success" attrs="{'invisible': [('delivery_status', '=', 'received')]}"/>
+                        <button name="action_request" string="Send Request" type="object" class="btn-primary" invisible="delivery_status in ['requested','received']"/>
+                        <button name="action_mark_received" string="Mark Received" type="object" class="btn-success" invisible="delivery_status == 'received'"/>
                         <button name="action_send_reminder" string="Send Reminder" type="object" class="btn-secondary"/>
                         <field name="delivery_status" widget="statusbar" statusbar_visible="not_requested,requested,incomplete,received"/>
                     </header>
