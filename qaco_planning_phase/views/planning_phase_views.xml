@@ -446,6 +446,12 @@
             </field>
         </record>
 
+        <record id="action_planning_risk" model="ir.actions.act_window">
+            <field name="name">Planning Risks</field>
+            <field name="res_model">qaco.planning.risk</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <!-- ========================================= -->
         <!-- Planning Checklist Views -->
         <!-- ========================================= -->
@@ -491,6 +497,12 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+
+        <record id="action_planning_checklist" model="ir.actions.act_window">
+            <field name="name">Planning Checklist</field>
+            <field name="res_model">qaco.planning.checklist</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
         <!-- ========================================= -->
@@ -628,6 +640,12 @@
             </field>
         </record>
 
+        <record id="action_planning_pbc" model="ir.actions.act_window">
+            <field name="name">PBC Requests</field>
+            <field name="res_model">qaco.planning.pbc</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <record id="view_planning_pbc_form" model="ir.ui.view">
             <field name="name">qaco.planning.pbc.form</field>
             <field name="model">qaco.planning.pbc</field>
@@ -731,6 +749,12 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+
+        <record id="action_planning_milestone" model="ir.actions.act_window">
+            <field name="name">Planning Milestones</field>
+            <field name="res_model">qaco.planning.milestone</field>
+            <field name="view_mode">tree,form</field>
         </record>
     </data>
 </odoo>
