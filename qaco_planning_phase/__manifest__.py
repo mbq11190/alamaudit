@@ -14,6 +14,7 @@
         "data/mail_templates.xml",
         "data/cron_jobs.xml",
         "views/planning_phase_views.xml",
+        "views/planning_phase_actions.xml",
         "views/industry_sector_views.xml",
         "views/qaco_audit_form_extend.xml",
         "views/menu_view.xml",
