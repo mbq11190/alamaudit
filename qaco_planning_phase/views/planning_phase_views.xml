@@ -151,6 +151,27 @@
                                         <field name="key_personnel" placeholder="List key client personnel and their roles..."/>
                                     </group>
                                 </group>
+                                <group>
+                                    <group string="Regulatory Profile">
+                                        <field name="client_year_end"/>
+                                        <field name="client_regulator" placeholder="e.g., SECP, SBP, tax authority"/>
+                                        <field name="client_listing_exchange" placeholder="If listed, note the exchange"/>
+                                    </group>
+                                    <group string="Ownership &amp; Governance">
+                                        <field name="client_ownership_structure" placeholder="Summarize shareholders / parent entities..."/>
+                                        <field name="client_governance_notes" placeholder="Describe governance bodies / committees..."/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Strategic Context">
+                                        <field name="client_objectives_strategies" placeholder="Document stated objectives and strategies (ISA 315)..."/>
+                                        <field name="client_measurement_basis" placeholder="Key KPIs / measurement bases used by management..."/>
+                                    </group>
+                                    <group string="Systems &amp; Compliance">
+                                        <field name="client_it_environment" placeholder="List key IT systems supporting financial reporting..."/>
+                                        <field name="client_compliance_matters" placeholder="Significant compliance / regulatory issues to note..."/>
+                                    </group>
+                                </group>
                             </page>
                             
                             <!-- Engagement Details Tab -->

@@ -187,6 +187,15 @@ class PlanningPhase(models.Model):
     )
     business_nature = fields.Text(string='Nature of Business', tracking=True)
     key_personnel = fields.Text(string='Key Client Personnel', tracking=True)
+    client_year_end = fields.Date(string='Financial Year End', tracking=True)
+    client_regulator = fields.Char(string='Primary Regulator / Oversight Body', tracking=True)
+    client_listing_exchange = fields.Char(string='Listed Exchange (if any)', tracking=True)
+    client_ownership_structure = fields.Text(string='Ownership Structure', tracking=True)
+    client_governance_notes = fields.Text(string='Governance Structure / Audit Committee', tracking=True)
+    client_objectives_strategies = fields.Text(string='Objectives & Strategies', tracking=True)
+    client_measurement_basis = fields.Text(string='Financial Measurement & KPIs', tracking=True)
+    client_it_environment = fields.Text(string='IT Environment & Key Systems', tracking=True)
+    client_compliance_matters = fields.Text(string='Compliance / Regulatory Matters', tracking=True)
     
     # Engagement Information
     engagement_type = fields.Selection([
