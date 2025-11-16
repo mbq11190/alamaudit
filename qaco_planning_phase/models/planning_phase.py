@@ -1,4 +1,5 @@
 import base64
+import logging
 from datetime import timedelta
 
 from odoo import api, fields, models, _
@@ -15,6 +16,9 @@ ENTITY_CLASSES = [
     ("section_42", "Section 42 Company"),
     ("other", "Other"),
 ]
+
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningPhase(models.Model):
@@ -1344,3 +1348,351 @@ class PlanningSettings(models.TransientModel):
         config_parameter="qaco_planning.pbc_escalation_days",
         default=3,
     )
+
+
+class QacoClientProfile(models.Model):
+    _name = "qaco.client_profile"
+    _description = "Client Profile / KYC"
+    _order = "id desc"
+
+    partner_id = fields.Many2one(
+        "res.partner",
+        string="Partner",
+        required=True,
+        ondelete="cascade",
+        help="Linked partner",
+    )
+    legal_name = fields.Char(string="Legal / Registered Name")
+    registration_no = fields.Char(string="Registration / Incorporation No.")
+    incorporation_date = fields.Date(string="Incorporation Date")
+    company_type = fields.Selection(
+        [
+            ("private", "Private Limited"),
+            ("public", "Public Limited"),
+            ("partnership", "Partnership"),
+            ("ngo", "NGO"),
+            ("other", "Other"),
+        ],
+        string="Company Type",
+    )
+    sector = fields.Many2one("planning.industry.sector", string="Sector")
+    registered_address = fields.Text(string="Registered Address")
+    principal_activity = fields.Text(string="Principal Activity")
+    risk_rating = fields.Selection(
+        [("low", "Low"), ("medium", "Medium"), ("high", "High")],
+        default="medium",
+        string="Client Risk Rating",
+    )
+    kyc_status = fields.Selection(
+        [
+            ("not_started", "Not Started"),
+            ("in_progress", "In Progress"),
+            ("complete", "Complete"),
+        ],
+        default="not_started",
+    )
+    kyc_documents = fields.Many2many("ir.attachment", string="KYC Documents")
+    beneficial_owner_ids = fields.One2many(
+        "qaco.client_beneficial_owner",
+        "client_profile_id",
+        string="Beneficial Owners",
+    )
+    notes = fields.Text(string="CDD / KYC Notes")
+
+
+class QacoClientBeneficialOwner(models.Model):
+    _name = "qaco.client_beneficial_owner"
+    _description = "Beneficial Owner (KYC)"
+
+    client_profile_id = fields.Many2one("qaco.client_profile", required=True, ondelete="cascade")
+    name = fields.Char(required=True, string="Owner Name")
+    nationality = fields.Char()
+    percentage = fields.Float()
+    id_document = fields.Many2one("ir.attachment", string="ID Document")
+    notes = fields.Text()
+
+
+class QacoClientAcceptance(models.Model):
+    _name = "qaco.client_acceptance"
+    _description = "Client Acceptance / Continuance (ISA / Firm Policy)"
+    _rec_name = "audit_id"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    decision = fields.Selection(
+        [("accept", "Accept"), ("decline", "Decline"), ("pending", "Pending")],
+        default="pending",
+    )
+    background_checks = fields.Text(string="Background Checks")
+    conflicts_detected = fields.Text(string="Conflicts / Issues")
+    sanctions_checked = fields.Boolean(string="Sanctions Checked")
+    acceptance_date = fields.Date(string="Decision Date")
+    accepted_by = fields.Many2one("res.users", string="Decision By")
+    notes = fields.Text()
+
+    @api.model
+    def create(self, vals):
+        record = super().create(vals)
+        audit = record.audit_id
+        planning = getattr(audit, "planning_phase_id", False)
+        if audit and planning:
+            try:
+                planning._log_evidence(
+                    name=_("Client acceptance recorded"),
+                    action_type="create",
+                    note=f"Decision: {record.decision}",
+                    standard_reference="ISA 210; Firm policy",
+                )
+            except Exception:  # pragma: no cover - logging guard
+                _logger.exception("Failed to log client acceptance evidence")
+        return record
+
+
+class QacoIndependenceCheck(models.Model):
+    _name = "qaco.independence_check"
+    _description = "Independence Check / Declaration"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    declaration_signed = fields.Boolean(string="Declaration Signed")
+    declaration_attachment = fields.Many2one(
+        "ir.attachment",
+        string="Declaration Attachment",
+        help="Partner/Manager signed declaration",
+    )
+    threats_identified = fields.Text(string="Threats Identified")
+    safeguards = fields.Text(string="Safeguards Proposed")
+    independence_status = fields.Selection(
+        [("ok", "OK"), ("needs_action", "Needs Action"), ("blocked", "Blocked")],
+        default="ok",
+    )
+    checked_on = fields.Date(default=fields.Date.context_today)
+    checked_by = fields.Many2one("res.users", default=lambda self: self.env.user)
+
+    @api.constrains("independence_status")
+    def _constrain_independence(self):
+        for record in self:
+            if record.independence_status == "ok" and not record.declaration_signed:
+                raise ValidationError(_("Independence cannot be marked OK unless declaration is signed."))
+
+
+class QacoLetterTemplate(models.Model):
+    _name = "qaco.letter.template"
+    _description = "Engagement Letter Template"
+
+    name = fields.Char(required=True)
+    version = fields.Char(string="Version")
+    scope_text = fields.Text(string="Scope Text")
+    fees = fields.Text(string="Fees / Fee Basis")
+    deliverable_list = fields.Text(string="Deliverables / Outputs")
+    notes = fields.Text(string="Legal Notes & Disclaimers")
+    active = fields.Boolean(default=True)
+
+
+class QacoEngagementLetter(models.Model):
+    _name = "qaco.engagement.letter"
+    _description = "Engagement Letter Instance"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    template_id = fields.Many2one("qaco.letter.template", string="Template")
+    version = fields.Char(string="Template Version")
+    scope_text = fields.Text(string="Scope")
+    fees = fields.Text(string="Fees")
+    deliverable_list = fields.Text(string="Deliverables")
+    finalized_pdf = fields.Binary(string="Finalized PDF", attachment=True)
+    finalized_fname = fields.Char(string="File Name")
+    signed = fields.Boolean(string="Signed")
+    signed_date = fields.Date(string="Signed Date")
+
+    def action_generate_pdf(self):
+        self.ensure_one()
+        audit = self.audit_id
+        planning = getattr(audit, "planning_phase_id", False)
+        if audit and planning:
+            try:
+                planning._log_evidence(
+                    name=_("Engagement letter generated"),
+                    action_type="create",
+                    note="Template %s" % (self.template_id.name if self.template_id else ""),
+                    standard_reference="ISA 210",
+                )
+            except Exception:  # pragma: no cover - logging guard
+                _logger.exception("Failed to log engagement letter evidence")
+        return True
+
+
+class QacoRiskMatrixFS(models.Model):
+    _name = "qaco.risk_matrix.fs"
+    _description = "Financial Statement Level Risk Matrix"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    name = fields.Char(string="Risk Description", required=True)
+    likelihood = fields.Selection([("1", "Low"), ("2", "Medium"), ("3", "High")], default="2")
+    impact = fields.Selection([("1", "Low"), ("2", "Medium"), ("3", "High")], default="2")
+    score = fields.Integer(compute="_compute_score", store=True)
+    owner_id = fields.Many2one("res.users", string="Owner")
+    linked_checklist_ids = fields.Many2many("qaco.planning.checklist", string="Related Checklist Items")
+    notes = fields.Text()
+
+    @api.depends("likelihood", "impact")
+    def _compute_score(self):
+        for record in self:
+            try:
+                record.score = int(record.likelihood or 1) * int(record.impact or 1)
+            except Exception:
+                record.score = 0
+
+
+class QacoRiskMatrixAssertion(models.Model):
+    _name = "qaco.risk_matrix.assertion"
+    _description = "Assertion Level Risk Matrix"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    account_area = fields.Char(string="Account / Area", required=True)
+    assertion = fields.Selection(
+        [
+            ("occurrence", "Occurrence"),
+            ("existence", "Existence"),
+            ("completeness", "Completeness"),
+            ("rights", "Rights & Obligations"),
+            ("valuation", "Valuation / Allocation"),
+            ("presentation", "Presentation & Disclosure"),
+            ("cutoff", "Cut-off"),
+            ("accuracy", "Accuracy"),
+        ],
+        required=True,
+    )
+    description = fields.Text()
+    likelihood = fields.Selection([("1", "Low"), ("2", "Medium"), ("3", "High")], default="2")
+    impact = fields.Selection([("1", "Low"), ("2", "Medium"), ("3", "High")], default="2")
+    score = fields.Integer(compute="_compute_score", store=True)
+    planned_substantive = fields.Text(string="Planned Substantive Procedures")
+    planned_controls = fields.Text(string="Planned Tests of Controls")
+
+    @api.depends("likelihood", "impact")
+    def _compute_score(self):
+        for record in self:
+            try:
+                record.score = int(record.likelihood or 1) * int(record.impact or 1)
+            except Exception:
+                record.score = 0
+
+
+class QacoInternalControlAssessment(models.Model):
+    _name = "qaco.internal_control_assessment"
+    _description = "Internal Control Assessment (ToC Questionnaire)"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    process_name = fields.Char(string="Process / Cycle")
+    questionnaire_responses = fields.Json(string="Questionnaire Responses (JSON)")
+    control_rating = fields.Selection(
+        [("weak", "Weak"), ("adequate", "Adequate"), ("strong", "Strong")],
+        default="adequate",
+    )
+    recommended_tests_of_controls = fields.Boolean(string="Recommend Tests of Controls")
+    notes = fields.Text()
+
+
+class QacoAnalyticalReview(models.Model):
+    _name = "qaco.analytical_review"
+    _description = "Preliminary Analytical Procedures"
+
+    audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
+    bs_commentary = fields.Text(string="Balance Sheet Commentary")
+    is_commentary = fields.Text(string="Income Statement Commentary")
+    ratio_analysis = fields.Json(string="Ratio Analysis (JSON)")
+    anomalies_found = fields.Text(string="Anomalies Found / Flags")
+    performed_on = fields.Date(default=fields.Date.context_today)
+    performed_by = fields.Many2one("res.users", default=lambda self: self.env.user)
+
+
+class QacoPlanningPBCExtension(models.Model):
+    _inherit = "qaco.planning.pbc"
+
+    priority = fields.Selection([("low", "Low"), ("normal", "Normal"), ("high", "High")], default="normal")
+    expected_format = fields.Selection(
+        [("pdf", "PDF"), ("excel", "Excel"), ("word", "Word"), ("other", "Other")],
+        default="pdf",
+    )
+    sample_items = fields.Text(string="Sample Items (if sampling required)")
+    auto_reminder_config = fields.Boolean(string="Auto Reminder Enabled", default=True)
+    reminder_days = fields.Char(
+        string="Reminder Days (csv)",
+        help="Comma separated days before due to remind, e.g. 7,3,1",
+    )
+
+
+class PlanningMaterialityExtension(models.Model):
+    _inherit = "qaco.planning.materiality"
+
+    def calculate_materiality(self):
+        param = self.env["ir.config_parameter"].sudo()
+        default_pct = float(param.get_param("qaco.materiality_pct_default", 5.0))
+        for record in self:
+            record.applied_percentage = record.applied_percentage or default_pct
+            record._compute_amounts()
+            record.computed_by = self.env.user
+            record.computed_on = fields.Datetime.now()
+        return True
+
+
+class PlanningPBCReminderCron(models.Model):
+    _inherit = "qaco.planning.pbc"
+
+    @api.model
+    def cron_send_pbc_reminders(self):
+        _logger.info("Running qaco cron: send_pbc_reminders")
+        param = self.env["ir.config_parameter"].sudo()
+        default_days = self._parse_days_csv(param.get_param("qaco.pbc.reminder_days", "7,3,1"))
+        today = fields.Date.to_date(fields.Date.context_today(self))
+        template = self.env.ref("qaco_planning_phase.email_template_pbc_reminder", raise_if_not_found=False)
+        activity_type = self.env.ref("mail.mail_activity_data_reminder", raise_if_not_found=False)
+        model_ref = self.env["ir.model"]._get(self._name)
+        reminders = 0
+        for pbc in self.search([("delivery_status", "!=", "received"), ("due_date", "!=", False)]):
+            if not pbc.auto_reminder_config:
+                continue
+            days_list = self._parse_days_csv(pbc.reminder_days) or default_days
+            for days in days_list:
+                target_date = fields.Date.to_date(pbc.due_date) - timedelta(days=days)
+                if target_date != today:
+                    continue
+                self._create_activity_for_pbc(pbc, activity_type, model_ref, days)
+                if template:
+                    self._send_template_email(template, pbc)
+                reminders += 1
+        _logger.info("qaco cron: created %s reminders", reminders)
+        return True
+
+    @staticmethod
+    def _parse_days_csv(days_csv):
+        try:
+            values = {
+                int(value.strip())
+                for value in (days_csv or "").split(",")
+                if value.strip()
+            }
+            return sorted(values, reverse=True)
+        except Exception:
+            return []
+
+    def _create_activity_for_pbc(self, pbc, activity_type, model_ref, days):
+        if not activity_type or not model_ref:
+            return
+        user_id = pbc.planning_id.manager_id.id or pbc.planning_id.partner_id.id or self.env.user.id
+        vals = {
+            "res_id": pbc.id,
+            "res_model_id": model_ref.id,
+            "activity_type_id": activity_type.id,
+            "note": _("PBC due in %s days: %s") % (days, pbc.name),
+            "user_id": user_id,
+            "date_deadline": pbc.due_date,
+        }
+        try:
+            self.env["mail.activity"].create(vals)
+        except Exception:  # pragma: no cover - logging guard
+            _logger.exception("Failed creating PBC reminder activity for PBC %s", pbc.id)
+
+    def _send_template_email(self, template, pbc):
+        try:
+            template.send_mail(pbc.id, force_send=True)
+        except Exception:  # pragma: no cover - logging guard
+            _logger.exception("Failed to send PBC reminder email for %s", pbc.id)

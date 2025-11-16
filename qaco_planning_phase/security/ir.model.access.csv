@@ -16,3 +16,15 @@ access_planning_materiality_config_partner,access.planning.materiality.config.pa
 access_planning_evidence_user,access.planning.evidence.user,model_qaco_planning_evidence,base.group_user,1,1,0,0
 access_planning_pbc_template_partner,access.planning.pbc.template.partner,model_qaco_planning_pbc_template,qaco_audit.group_audit_partner,1,1,1,1
 access_planning_pbc_reminder_user,access.planning.pbc.reminder.user,model_qaco_planning_pbc_reminder,base.group_user,1,0,0,0
+access_client_profile_user,access.client.profile.user,model_qaco_client_profile,base.group_user,1,1,1,0
+access_client_beneficial_owner_user,access.client.beneficial.owner.user,model_qaco_client_beneficial_owner,base.group_user,1,1,1,0
+access_client_acceptance_user,access.client.acceptance.user,model_qaco_client_acceptance,base.group_user,1,1,1,0
+access_independence_check_user,access.independence.check.user,model_qaco_independence_check,base.group_user,1,1,1,0
+access_letter_template_user,access.letter.template.user,model_qaco_letter_template,base.group_user,1,0,0,0
+access_letter_template_partner,access.letter.template.partner,model_qaco_letter_template,qaco_audit.group_audit_partner,1,1,1,1
+access_engagement_letter_user,access.engagement.letter.user,model_qaco_engagement_letter,base.group_user,1,1,1,0
+access_engagement_letter_partner,access.engagement.letter.partner,model_qaco_engagement_letter,qaco_audit.group_audit_partner,1,1,1,1
+access_risk_matrix_fs_user,access.risk.matrix.fs.user,model_qaco_risk_matrix_fs,base.group_user,1,1,1,0
+access_risk_matrix_assertion_user,access.risk.matrix.assertion.user,model_qaco_risk_matrix_assertion,base.group_user,1,1,1,0
+access_internal_control_user,access.internal.control.user,model_qaco_internal_control_assessment,base.group_user,1,1,1,0
+access_analytical_review_user,access.analytical.review.user,model_qaco_analytical_review,base.group_user,1,1,1,0

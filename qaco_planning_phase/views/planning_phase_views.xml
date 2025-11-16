@@ -508,10 +508,12 @@
                 <tree string="PBC List" decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
                     <field name="name"/>
                     <field name="category"/>
+                    <field name="priority"/>
                     <field name="client_contact_id"/>
                     <field name="delivery_status"/>
                     <field name="requested_date"/>
                     <field name="due_date"/>
+                    <field name="expected_format"/>
                     <field name="received"/>
                     <field name="received_date"/>
                 </tree>
@@ -637,6 +639,7 @@
                                 <field name="planning_id"/>
                                 <field name="name"/>
                                 <field name="category"/>
+                                <field name="priority"/>
                                 <field name="client_contact_id"/>
                                 <field name="client_contact"/>
                             </group>
@@ -644,12 +647,14 @@
                                 <field name="delivery_status"/>
                                 <field name="requested_date"/>
                                 <field name="due_date"/>
+                                <field name="expected_format"/>
                                 <field name="received"/>
                                 <field name="received_date"/>
                             </group>
                         </group>
                         <group>
                             <field name="description" placeholder="Describe the required document or information..."/>
+                            <field name="sample_items" placeholder="List sample items if partial sampling is required"/>
                         </group>
                         <group string="Attachments">
                             <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
@@ -661,6 +666,8 @@
                             <field name="reminder_count" readonly="1"/>
                             <field name="escalation_level" readonly="1"/>
                             <field name="shared_with_portal"/>
+                            <field name="auto_reminder_config"/>
+                            <field name="reminder_days"/>
                         </group>
                         <group string="Reminder History">
                             <field name="reminder_log_ids">

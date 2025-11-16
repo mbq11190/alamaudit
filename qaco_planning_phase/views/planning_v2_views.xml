@@ -1,0 +1,538 @@
+<odoo>
+    <data>
+        <!-- Client Profiles -->
+        <record id="view_client_profile_tree" model="ir.ui.view">
+            <field name="name">qaco.client.profile.tree</field>
+            <field name="model">qaco.client_profile</field>
+            <field name="arch" type="xml">
+                <tree string="Client Profiles" create="true" edit="true">
+                    <field name="partner_id"/>
+                    <field name="legal_name"/>
+                    <field name="risk_rating"/>
+                    <field name="kyc_status"/>
+                    <field name="sector"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_client_profile_form" model="ir.ui.view">
+            <field name="name">qaco.client.profile.form</field>
+            <field name="model">qaco.client_profile</field>
+            <field name="arch" type="xml">
+                <form string="Client Profile">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="legal_name"/>
+                                <field name="registration_no"/>
+                                <field name="incorporation_date"/>
+                                <field name="company_type"/>
+                                <field name="sector"/>
+                            </group>
+                            <group>
+                                <field name="registered_address"/>
+                                <field name="principal_activity"/>
+                                <field name="risk_rating"/>
+                                <field name="kyc_status"/>
+                                <field name="kyc_documents" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Beneficial Owners">
+                                <field name="beneficial_owner_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="nationality"/>
+                                        <field name="percentage"/>
+                                        <field name="id_document"/>
+                                        <field name="notes"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Client Acceptance -->
+        <record id="view_client_acceptance_tree" model="ir.ui.view">
+            <field name="name">qaco.client.acceptance.tree</field>
+            <field name="model">qaco.client_acceptance</field>
+            <field name="arch" type="xml">
+                <tree string="Client Acceptance">
+                    <field name="audit_id"/>
+                    <field name="decision"/>
+                    <field name="acceptance_date"/>
+                    <field name="accepted_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_client_acceptance_form" model="ir.ui.view">
+            <field name="name">qaco.client.acceptance.form</field>
+            <field name="model">qaco.client_acceptance</field>
+            <field name="arch" type="xml">
+                <form string="Client Acceptance">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="decision"/>
+                                <field name="sanctions_checked"/>
+                            </group>
+                            <group>
+                                <field name="acceptance_date"/>
+                                <field name="accepted_by"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="background_checks"/>
+                            <field name="conflicts_detected"/>
+                            <field name="notes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Independence Checks -->
+        <record id="view_independence_check_tree" model="ir.ui.view">
+            <field name="name">qaco.independence.check.tree</field>
+            <field name="model">qaco.independence_check</field>
+            <field name="arch" type="xml">
+                <tree string="Independence Checks">
+                    <field name="audit_id"/>
+                    <field name="independence_status"/>
+                    <field name="declaration_signed"/>
+                    <field name="checked_on"/>
+                    <field name="checked_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_independence_check_form" model="ir.ui.view">
+            <field name="name">qaco.independence.check.form</field>
+            <field name="model">qaco.independence_check</field>
+            <field name="arch" type="xml">
+                <form string="Independence Check">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="independence_status"/>
+                                <field name="declaration_signed"/>
+                                <field name="declaration_attachment"/>
+                            </group>
+                            <group>
+                                <field name="checked_on"/>
+                                <field name="checked_by"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="threats_identified"/>
+                            <field name="safeguards"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Engagement Letters -->
+        <record id="view_letter_template_tree" model="ir.ui.view">
+            <field name="name">qaco.letter.template.tree</field>
+            <field name="model">qaco.letter.template</field>
+            <field name="arch" type="xml">
+                <tree string="Engagement Letter Templates">
+                    <field name="name"/>
+                    <field name="version"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_letter_template_form" model="ir.ui.view">
+            <field name="name">qaco.letter.template.form</field>
+            <field name="model">qaco.letter.template</field>
+            <field name="arch" type="xml">
+                <form string="Engagement Letter Template">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="version"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Scope">
+                                <field name="scope_text"/>
+                            </page>
+                            <page string="Fees">
+                                <field name="fees"/>
+                            </page>
+                            <page string="Deliverables">
+                                <field name="deliverable_list"/>
+                            </page>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_engagement_letter_tree" model="ir.ui.view">
+            <field name="name">qaco.engagement.letter.tree</field>
+            <field name="model">qaco.engagement.letter</field>
+            <field name="arch" type="xml">
+                <tree string="Engagement Letters">
+                    <field name="audit_id"/>
+                    <field name="template_id"/>
+                    <field name="signed"/>
+                    <field name="signed_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_engagement_letter_form" model="ir.ui.view">
+            <field name="name">qaco.engagement.letter.form</field>
+            <field name="model">qaco.engagement.letter</field>
+            <field name="arch" type="xml">
+                <form string="Engagement Letter">
+                    <sheet>
+                        <header>
+                            <button name="action_generate_pdf" type="object" string="Generate PDF" class="btn-primary"/>
+                        </header>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="template_id"/>
+                                <field name="version"/>
+                            </group>
+                            <group>
+                                <field name="signed"/>
+                                <field name="signed_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Scope">
+                                <field name="scope_text"/>
+                            </page>
+                            <page string="Fees">
+                                <field name="fees"/>
+                            </page>
+                            <page string="Deliverables">
+                                <field name="deliverable_list"/>
+                            </page>
+                            <page string="Final Document">
+                                <field name="finalized_pdf" filename="finalized_fname"/>
+                                <field name="finalized_fname" invisible="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Risk Matrices -->
+        <record id="view_risk_matrix_fs_tree" model="ir.ui.view">
+            <field name="name">qaco.risk.matrix.fs.tree</field>
+            <field name="model">qaco.risk_matrix.fs</field>
+            <field name="arch" type="xml">
+                <tree string="FS Risk Matrix">
+                    <field name="audit_id"/>
+                    <field name="name"/>
+                    <field name="likelihood"/>
+                    <field name="impact"/>
+                    <field name="score"/>
+                    <field name="owner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_risk_matrix_fs_form" model="ir.ui.view">
+            <field name="name">qaco.risk.matrix.fs.form</field>
+            <field name="model">qaco.risk_matrix.fs</field>
+            <field name="arch" type="xml">
+                <form string="FS Risk">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="name"/>
+                                <field name="owner_id"/>
+                            </group>
+                            <group>
+                                <field name="likelihood"/>
+                                <field name="impact"/>
+                                <field name="score" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="notes"/>
+                            <field name="linked_checklist_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_risk_matrix_assertion_tree" model="ir.ui.view">
+            <field name="name">qaco.risk.matrix.assertion.tree</field>
+            <field name="model">qaco.risk_matrix.assertion</field>
+            <field name="arch" type="xml">
+                <tree string="Assertion Risks">
+                    <field name="audit_id"/>
+                    <field name="account_area"/>
+                    <field name="assertion"/>
+                    <field name="likelihood"/>
+                    <field name="impact"/>
+                    <field name="score"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_risk_matrix_assertion_form" model="ir.ui.view">
+            <field name="name">qaco.risk.matrix.assertion.form</field>
+            <field name="model">qaco.risk_matrix.assertion</field>
+            <field name="arch" type="xml">
+                <form string="Assertion Risk">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="account_area"/>
+                                <field name="assertion"/>
+                            </group>
+                            <group>
+                                <field name="likelihood"/>
+                                <field name="impact"/>
+                                <field name="score" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                            <page string="Responses">
+                                <field name="planned_substantive"/>
+                                <field name="planned_controls"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Internal Control Assessments -->
+        <record id="view_internal_control_tree" model="ir.ui.view">
+            <field name="name">qaco.internal.control.tree</field>
+            <field name="model">qaco.internal_control_assessment</field>
+            <field name="arch" type="xml">
+                <tree string="Internal Control Assessments">
+                    <field name="audit_id"/>
+                    <field name="process_name"/>
+                    <field name="control_rating"/>
+                    <field name="recommended_tests_of_controls"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_internal_control_form" model="ir.ui.view">
+            <field name="name">qaco.internal.control.form</field>
+            <field name="model">qaco.internal_control_assessment</field>
+            <field name="arch" type="xml">
+                <form string="Internal Control Assessment">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="process_name"/>
+                                <field name="control_rating"/>
+                            </group>
+                            <group>
+                                <field name="recommended_tests_of_controls"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Responses">
+                                <field name="questionnaire_responses" widget="json"/>
+                            </page>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Analytical Reviews -->
+        <record id="view_analytical_review_tree" model="ir.ui.view">
+            <field name="name">qaco.analytical.review.tree</field>
+            <field name="model">qaco.analytical_review</field>
+            <field name="arch" type="xml">
+                <tree string="Analytical Reviews">
+                    <field name="audit_id"/>
+                    <field name="performed_on"/>
+                    <field name="performed_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_analytical_review_form" model="ir.ui.view">
+            <field name="name">qaco.analytical.review.form</field>
+            <field name="model">qaco.analytical_review</field>
+            <field name="arch" type="xml">
+                <form string="Analytical Review">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="audit_id"/>
+                                <field name="performed_on"/>
+                                <field name="performed_by"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Balance Sheet">
+                                <field name="bs_commentary"/>
+                            </page>
+                            <page string="Income Statement">
+                                <field name="is_commentary"/>
+                            </page>
+                            <page string="Ratios">
+                                <field name="ratio_analysis" widget="json"/>
+                            </page>
+                            <page string="Anomalies">
+                                <field name="anomalies_found"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_client_profile" model="ir.actions.act_window">
+            <field name="name">Client Profiles</field>
+            <field name="res_model">qaco.client_profile</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_client_acceptance" model="ir.actions.act_window">
+            <field name="name">Client Acceptance</field>
+            <field name="res_model">qaco.client_acceptance</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_independence_check" model="ir.actions.act_window">
+            <field name="name">Independence Checks</field>
+            <field name="res_model">qaco.independence_check</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_letter_template" model="ir.actions.act_window">
+            <field name="name">Engagement Letter Templates</field>
+            <field name="res_model">qaco.letter.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_active': 1}</field>
+        </record>
+
+        <record id="action_engagement_letter" model="ir.actions.act_window">
+            <field name="name">Engagement Letters</field>
+            <field name="res_model">qaco.engagement.letter</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_risk_matrix_fs" model="ir.actions.act_window">
+            <field name="name">FS Risk Matrix</field>
+            <field name="res_model">qaco.risk_matrix.fs</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_risk_matrix_assertion" model="ir.actions.act_window">
+            <field name="name">Assertion Risk Matrix</field>
+            <field name="res_model">qaco.risk_matrix.assertion</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_internal_control" model="ir.actions.act_window">
+            <field name="name">Internal Control Assessments</field>
+            <field name="res_model">qaco.internal_control_assessment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_analytical_review" model="ir.actions.act_window">
+            <field name="name">Analytical Reviews</field>
+            <field name="res_model">qaco.analytical_review</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menus -->
+        <menuitem id="menu_planning_onboarding"
+                  name="Client Onboarding"
+                  parent="qaco_planning_phase.menu_planning_phase"
+                  sequence="5"/>
+
+        <menuitem id="menu_client_profiles"
+                  name="Client Profiles"
+                  parent="menu_planning_onboarding"
+                  action="action_client_profile"
+                  sequence="5"/>
+
+        <menuitem id="menu_client_acceptance"
+                  name="Client Acceptance"
+                  parent="menu_planning_onboarding"
+                  action="action_client_acceptance"
+                  sequence="10"/>
+
+        <menuitem id="menu_independence_checks"
+                  name="Independence Checks"
+                  parent="menu_planning_onboarding"
+                  action="action_independence_check"
+                  sequence="15"/>
+
+        <menuitem id="menu_engagement_letters"
+                  name="Engagement Letters"
+                  parent="menu_planning_onboarding"
+                  action="action_engagement_letter"
+                  sequence="20"/>
+
+        <menuitem id="menu_letter_templates"
+                  name="Engagement Letter Templates"
+                  parent="menu_planning_onboarding"
+                  action="action_letter_template"
+                  sequence="25"
+                  groups="qaco_audit.group_audit_partner"/>
+
+        <menuitem id="menu_risk_matrix_fs"
+                  name="FS Risk Matrix"
+                  parent="qaco_planning_phase.menu_planning_phase"
+                  action="action_risk_matrix_fs"
+                  sequence="45"/>
+
+        <menuitem id="menu_risk_matrix_assertion"
+                  name="Assertion Risk Matrix"
+                  parent="qaco_planning_phase.menu_planning_phase"
+                  action="action_risk_matrix_assertion"
+                  sequence="50"/>
+
+        <menuitem id="menu_internal_controls"
+                  name="Internal Controls"
+                  parent="qaco_planning_phase.menu_planning_phase"
+                  action="action_internal_control"
+                  sequence="55"/>
+
+        <menuitem id="menu_analytical_reviews"
+                  name="Analytical Reviews"
+                  parent="qaco_planning_phase.menu_planning_phase"
+                  action="action_analytical_review"
+                  sequence="60"/>
+    </data>
+</odoo>

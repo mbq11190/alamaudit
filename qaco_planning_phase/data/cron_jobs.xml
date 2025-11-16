@@ -12,5 +12,17 @@
             <field name="doall" eval="False"/>
             <field name="active" eval="True"/>
         </record>
+
+        <record id="ir_cron_pbc_reminders" model="ir.cron">
+            <field name="name">PBC Reminder Dispatch</field>
+            <field name="model_id" ref="model_qaco_planning_pbc"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_pbc_reminders()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
     </data>
 </odoo>
