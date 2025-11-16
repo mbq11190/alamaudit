@@ -311,13 +311,11 @@ class PlanningPhase(models.Model):
 
     @api.depends(
         "materiality_ids",
-        "materiality_ids.id",
         "risk_ids",
         "risk_ids.significant",
         "pbc_ids",
         "pbc_ids.received",
         "milestone_ids",
-        "milestone_ids.id",
     )
     def _compute_counts(self):
         for rec in self:
