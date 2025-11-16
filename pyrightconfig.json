@@ -1,5 +1,13 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/pyright/main/packages/pyright-internal/src/schemas/pyrightconfig.schema.json",
     "stubPath": "typings",
-    "include": ["qaco_planning_phase"]
+    "include": ["qaco_planning_phase"],
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": [
+                "typings"
+            ]
+        }
+    ]
 }

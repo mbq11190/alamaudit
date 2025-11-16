@@ -1827,7 +1827,7 @@ class QacoClientAcceptance(models.Model):
     def create(self, vals):
         record = super().create(vals)
         audit = record.audit_id
-        planning = getattr(audit, "planning_phase_id", False)
+        planning = getattr(audit, "planning_phase_id", None)
         if audit and planning:
             try:
                 planning._log_evidence(
@@ -1899,7 +1899,7 @@ class QacoEngagementLetter(models.Model):
     def action_generate_pdf(self):
         self.ensure_one()
         audit = self.audit_id
-        planning = getattr(audit, "planning_phase_id", False)
+        planning = getattr(audit, "planning_phase_id", None)
         if audit and planning:
             try:
                 planning._log_evidence(
