@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="ir_cron_pbc_escalation" model="ir.cron">
-            <field name="name">PBC Escalation</field>
+            <field name="name">Information Requisition Escalation</field>
             <field name="model_id" ref="model_qaco_planning_pbc"/>
             <field name="state">code</field>
             <field name="code">model.cron_escalate_overdue()</field>
@@ -14,7 +14,7 @@
         </record>
 
         <record id="ir_cron_pbc_reminders" model="ir.cron">
-            <field name="name">PBC Reminder Dispatch</field>
+            <field name="name">Information Requisition Reminder Dispatch</field>
             <field name="model_id" ref="model_qaco_planning_pbc"/>
             <field name="state">code</field>
             <field name="code">model.cron_send_pbc_reminders()</field>

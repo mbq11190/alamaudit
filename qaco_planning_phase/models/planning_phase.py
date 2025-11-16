@@ -268,7 +268,7 @@ class PlanningPhase(models.Model):
     materiality_ids = fields.One2many("qaco.planning.materiality", "planning_id", string="Materiality Worksheets")
     risk_ids = fields.One2many("qaco.planning.risk", "planning_id", string="Identified Risks")
     checklist_ids = fields.One2many("qaco.planning.checklist", "planning_id", string="Planning Checklist")
-    pbc_ids = fields.One2many("qaco.planning.pbc", "planning_id", string="PBC List")
+    pbc_ids = fields.One2many("qaco.planning.pbc", "planning_id", string="Information Requisitions")
     milestone_ids = fields.One2many("qaco.planning.milestone", "planning_id", string="Timeline")
     evidence_log_ids = fields.One2many(
         "qaco.planning.evidence",
@@ -282,13 +282,13 @@ class PlanningPhase(models.Model):
     progress = fields.Integer(string="Progress %", compute="_compute_progress", store=True)
     materiality_ready = fields.Boolean(string="Materiality Documented", default=False, tracking=True)
     risk_register_ready = fields.Boolean(string="Risk Register Complete", default=False, tracking=True)
-    pbc_sent = fields.Boolean(string="PBC Requests Sent", default=False, tracking=True)
+    pbc_sent = fields.Boolean(string="Information Requests Sent", default=False, tracking=True)
     staffing_signed_off = fields.Boolean(string="Staffing Signed Off", default=False, tracking=True)
     materiality_count = fields.Integer(compute="_compute_counts", string="Materiality")
     risk_count = fields.Integer(compute="_compute_counts", string="Risk Count")
     significant_risk_count = fields.Integer(compute="_compute_counts", string="Significant Risks")
-    pbc_count = fields.Integer(compute="_compute_counts", string="PBC Items")
-    pbc_received_count = fields.Integer(compute="_compute_counts", string="PBC Received")
+    pbc_count = fields.Integer(compute="_compute_counts", string="Information Requisitions")
+    pbc_received_count = fields.Integer(compute="_compute_counts", string="Requests Received")
     milestone_count = fields.Integer(compute="_compute_counts", string="Milestones")
     timeline_count = fields.Integer(compute="_compute_counts", string="Timeline Tasks")
     
@@ -441,10 +441,10 @@ class PlanningPhase(models.Model):
         }
 
     def action_view_pbc(self):
-        """Smart button: View PBC items"""
+        """Smart button: View client information requisitions"""
         self.ensure_one()
         return {
-            'name': _('PBC List'),
+            'name': _('Information Requisitions'),
             'type': 'ir.actions.act_window',
             'res_model': 'qaco.planning.pbc',
             'view_mode': 'tree,form',
@@ -520,24 +520,37 @@ class PlanningPhase(models.Model):
     def _generate_default_pbc_items(self):
         template_model = self.env['qaco.planning.pbc.template']
         for rec in self:
-            templates = template_model.search([('entity_classification', '=', rec.entity_classification)])
+            templates = template_model.search(
+                [('entity_classification', '=', rec.entity_classification)],
+                order="sequence_ref asc, id asc",
+            )
             if not templates:
-                templates = template_model.search([('entity_classification', '=', 'other')])
-            client_contact = rec.client_partner_id or rec.client_id
-            for template in templates:
-                self.env['qaco.planning.pbc'].create(
-                    {
-                        'planning_id': rec.id,
-                        'name': template.name,
-                        'description': template.description,
-                        'category': template.category,
-                        'delivery_status': 'not_requested',
-                        'requested_date': fields.Date.context_today(self),
-                        'due_date': rec.reporting_period_end,
-                        'client_contact': client_contact.name if client_contact else False,
-                        'client_contact_id': client_contact.id if client_contact else False,
-                    }
+                templates = template_model.search(
+                    [('entity_classification', '=', 'other')],
+                    order="sequence_ref asc, id asc",
                 )
+            client_contact = rec.client_partner_id or rec.client_id
+            default_due_date = rec.reporting_period_end or fields.Date.context_today(self)
+            for template in templates:
+                values = {
+                    'planning_id': rec.id,
+                    'name': template.name,
+                    'description': template.description,
+                    'category': template.category,
+                    'delivery_status': 'not_requested',
+                    'requested_date': fields.Date.context_today(self),
+                    'due_date': default_due_date,
+                    'client_contact': client_contact.name if client_contact else False,
+                    'client_contact_id': client_contact.id if client_contact else False,
+                    'priority': template.priority,
+                    'expected_format': template.format_expected,
+                    'format_detail': template.format_detail,
+                    'information_heading': template.information_heading,
+                    'sequence_ref': template.sequence_ref,
+                    'responsible_role': template.responsible_role,
+                    'applicable': True,
+                }
+                self.env['qaco.planning.pbc'].create(values)
 
     def _generate_default_milestones(self):
         for rec in self:
@@ -611,7 +624,7 @@ class PlanningPhase(models.Model):
     def action_mark_ready_for_fieldwork(self):
         for rec in self:
             if not all([rec.materiality_ready, rec.risk_register_ready, rec.pbc_sent, rec.staffing_signed_off]):
-                raise ValidationError(_("Materiality, risk register, PBC issuance and staffing sign-off must be complete before fieldwork."))
+                raise ValidationError(_("Materiality, risk register, information requisitions and staffing sign-off must be complete before fieldwork."))
             rec.state = 'fieldwork'
             rec._log_evidence(
                 name=_('Planning complete'),
@@ -939,11 +952,11 @@ class PlanningChecklist(models.Model):
 
 class PlanningPBC(models.Model):
     _name = "qaco.planning.pbc"
-    _description = "Prepared By Client (PBC) Request"
-    _order = "due_date asc, id desc"
+    _description = "Information Requisition"
+    _order = "sequence_ref asc, due_date asc, id desc"
 
     planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
-    name = fields.Char(string="PBC Item", required=True)
+    name = fields.Char(string="Information Requested", required=True)
     description = fields.Text(string="Description")
     category = fields.Selection([
         ("financial", "Financial Statements"),
@@ -966,7 +979,7 @@ class PlanningPBC(models.Model):
     ], default="not_requested", tracking=True)
     received = fields.Boolean(string="Received")
     received_date = fields.Date(string="Received Date")
-    client_contact = fields.Char(string="Client Contact (Legacy)")
+    client_contact = fields.Char(string="Client Contact")
     client_contact_id = fields.Many2one("res.partner", string="Client Contact")
     
     attachment_ids = fields.Many2many("ir.attachment", string="Attachments")
@@ -991,7 +1004,7 @@ class PlanningPBC(models.Model):
 
     @api.constrains('due_date')
     def _check_overdue(self):
-        """Check for overdue PBC items"""
+        """Check for overdue information requisitions"""
         today = fields.Date.today()
         for rec in self:
             if rec.due_date and rec.due_date < today and not rec.received:
@@ -1004,7 +1017,7 @@ class PlanningPBC(models.Model):
             rec.requested_date = fields.Date.context_today(self)
             rec.planning_id.pbc_sent = True
             rec.planning_id._log_evidence(
-                name=_('PBC issued'),
+                name=_('Information requisition issued'),
                 action_type='state',
                 note=rec.description or rec.name,
                 standard_reference='ISA 300 para 13; ICAP APM section 7',
@@ -1018,9 +1031,9 @@ class PlanningPBC(models.Model):
             if not rec.attachment_ids:
                 raise ValidationError(_('Attach evidence before marking received.'))
             rec.planning_id._log_evidence(
-                name=_('PBC received'),
+                name=_('Information requisition received'),
                 action_type='update',
-                note=_('Evidence attached for PBC.'),
+                note=_('Evidence attached for requisition.'),
                 standard_reference='ISA 300 para 11',
             )
 
@@ -1042,7 +1055,7 @@ class PlanningPBC(models.Model):
                 }
             )
             rec.planning_id._log_evidence(
-                name=_('PBC reminder'),
+                name=_('Information requisition reminder'),
                 action_type='reminder',
                 note=_('Reminder sent to client contact.'),
                 standard_reference='ICAP APM section 7; SECP Guide section 4',
@@ -1061,11 +1074,14 @@ class PlanningPBC(models.Model):
 
 class PlanningPbcTemplate(models.Model):
     _name = "qaco.planning.pbc.template"
-    _description = "Default PBC Template"
+    _description = "Information Requisition Template"
 
     name = fields.Char(required=True)
     entity_classification = fields.Selection(ENTITY_CLASSES, required=True)
+    information_heading = fields.Char(string="Information Category", required=True)
+    sequence_ref = fields.Integer(string="Reference #")
     description = fields.Text()
+    responsible_role = fields.Char(string="Responsible Role")
     category = fields.Selection([
         ("financial", "Financial"),
         ("legal", "Legal"),
@@ -1073,11 +1089,17 @@ class PlanningPbcTemplate(models.Model):
         ("governance", "Governance"),
         ("other", "Other"),
     ], default="financial")
+    priority = fields.Selection([("low", "Low"), ("normal", "Normal"), ("high", "High")], default="normal")
+    format_expected = fields.Selection(
+        [("pdf", "PDF"), ("excel", "Excel"), ("word", "Word"), ("other", "Other")],
+        default="excel",
+    )
+    format_detail = fields.Char(string="Format (Display)")
 
 
 class PlanningPbcReminder(models.Model):
     _name = "qaco.planning.pbc.reminder"
-    _description = "PBC Reminder Log"
+    _description = "Information Requisition Reminder Log"
 
     request_id = fields.Many2one("qaco.planning.pbc", required=True, ondelete="cascade")
     reminder_type = fields.Selection([
@@ -1100,7 +1122,7 @@ class PlanningMilestone(models.Model):
     
     category = fields.Selection([
         ("kickoff", "Kickoff Meeting"),
-        ("pbc_due", "PBC Due"),
+        ("pbc_due", "Information Requisition Due"),
         ("planning_complete", "Planning Complete"),
         ("fieldwork_start", "Fieldwork Start"),
         ("fieldwork_end", "Fieldwork End"),
@@ -1344,7 +1366,7 @@ class PlanningSettings(models.TransientModel):
         default=0.75,
     )
     pbc_escalation_days = fields.Integer(
-        string="PBC Escalation Days",
+        string="Information Requisition Escalation Days",
         config_parameter="qaco_planning.pbc_escalation_days",
         default=3,
     )
@@ -1607,6 +1629,11 @@ class QacoAnalyticalReview(models.Model):
 class QacoPlanningPBCExtension(models.Model):
     _inherit = "qaco.planning.pbc"
 
+    information_heading = fields.Char(string="Information Category")
+    sequence_ref = fields.Integer(string="Reference #")
+    responsible_role = fields.Char(string="Responsible Role")
+    format_detail = fields.Char(string="Format (Display)")
+    applicable = fields.Boolean(string="Applicable", default=True)
     priority = fields.Selection([("low", "Low"), ("normal", "Normal"), ("high", "High")], default="normal")
     expected_format = fields.Selection(
         [("pdf", "PDF"), ("excel", "Excel"), ("word", "Word"), ("other", "Other")],
@@ -1639,7 +1666,7 @@ class PlanningPBCReminderCron(models.Model):
 
     @api.model
     def cron_send_pbc_reminders(self):
-        _logger.info("Running qaco cron: send_pbc_reminders")
+        _logger.info("Running qaco cron: send_information_requisition_reminders")
         param = self.env["ir.config_parameter"].sudo()
         default_days = self._parse_days_csv(param.get_param("qaco.pbc.reminder_days", "7,3,1"))
         today = fields.Date.to_date(fields.Date.context_today(self))
@@ -1659,7 +1686,7 @@ class PlanningPBCReminderCron(models.Model):
                 if template:
                     self._send_template_email(template, pbc)
                 reminders += 1
-        _logger.info("qaco cron: created %s reminders", reminders)
+        _logger.info("qaco cron: created %s information requisition reminders", reminders)
         return True
 
     @staticmethod
@@ -1682,17 +1709,17 @@ class PlanningPBCReminderCron(models.Model):
             "res_id": pbc.id,
             "res_model_id": model_ref.id,
             "activity_type_id": activity_type.id,
-            "note": _("PBC due in %s days: %s") % (days, pbc.name),
+            "note": _("Information requisition due in %s days: %s") % (days, pbc.name),
             "user_id": user_id,
             "date_deadline": pbc.due_date,
         }
         try:
             self.env["mail.activity"].create(vals)
         except Exception:  # pragma: no cover - logging guard
-            _logger.exception("Failed creating PBC reminder activity for PBC %s", pbc.id)
+            _logger.exception("Failed creating information requisition reminder activity for request %s", pbc.id)
 
     def _send_template_email(self, template, pbc):
         try:
             template.send_mail(pbc.id, force_send=True)
         except Exception:  # pragma: no cover - logging guard
-            _logger.exception("Failed to send PBC reminder email for %s", pbc.id)
+            _logger.exception("Failed to send information requisition reminder email for %s", pbc.id)

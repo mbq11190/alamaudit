@@ -1,0 +1,844 @@
+<odoo>
+    <data noupdate="1">
+        <record id="info_requisition_template_001" model="qaco.planning.pbc.template">
+            <field name="name">Trial balance (final)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">General financial records &amp; ledgers</field>
+            <field name="sequence_ref">1</field>
+            <field name="description">TB at reporting date with account codes, currency, comparatives</field>
+            <field name="responsible_role">Head of Accounts</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_002" model="qaco.planning.pbc.template">
+            <field name="name">General ledger (all accounts)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">General financial records &amp; ledgers</field>
+            <field name="sequence_ref">2</field>
+            <field name="description">Full GL export for period + prior year</field>
+            <field name="responsible_role">Head of Accounts</field>
+            <field name="format_detail">Excel/CSV</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_003" model="qaco.planning.pbc.template">
+            <field name="name">Chart of accounts</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">General financial records &amp; ledgers</field>
+            <field name="sequence_ref">3</field>
+            <field name="description">COA with descriptions and cost centre mapping</field>
+            <field name="responsible_role">Head of Accounts</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_004" model="qaco.planning.pbc.template">
+            <field name="name">Audit adjustments / journal vouchers</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">General financial records &amp; ledgers</field>
+            <field name="sequence_ref">4</field>
+            <field name="description">JV listing, supporting invoices/authorisations</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_005" model="qaco.planning.pbc.template">
+            <field name="name">Financial statement draft</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">General financial records &amp; ledgers</field>
+            <field name="sequence_ref">51</field>
+            <field name="description">Draft audited/management FS for review</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_006" model="qaco.planning.pbc.template">
+            <field name="name">Supporting schedules to FS lines</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">General financial records &amp; ledgers</field>
+            <field name="sequence_ref">52</field>
+            <field name="description">Breakdowns: trade receivables, payables, accruals</field>
+            <field name="responsible_role">Finance</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_007" model="qaco.planning.pbc.template">
+            <field name="name">Bank statements (all accounts)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">5</field>
+            <field name="description">Last 12 months + up to audit date</field>
+            <field name="responsible_role">Treasury / Finance</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_008" model="qaco.planning.pbc.template">
+            <field name="name">Bank reconciliations</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">6</field>
+            <field name="description">Recs for each account with supporting clearing items</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_009" model="qaco.planning.pbc.template">
+            <field name="name">Bank confirmations (requested)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">7</field>
+            <field name="description">Template list of banks &amp; account numbers for auditor confirmations</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_010" model="qaco.planning.pbc.template">
+            <field name="name">Fixed deposits / bank guarantees</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">48</field>
+            <field name="description">FDR certificates, BGs, expiry schedule</field>
+            <field name="responsible_role">Treasury</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_011" model="qaco.planning.pbc.template">
+            <field name="name">Loan agreements &amp; bank facilities</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">26</field>
+            <field name="description">Facility letters, covenants, drawdown schedule</field>
+            <field name="responsible_role">CFO / Finance</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_012" model="qaco.planning.pbc.template">
+            <field name="name">Borrowings schedule &amp; interest computations</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">27</field>
+            <field name="description">Interest accruals, amortisation schedules</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_013" model="qaco.planning.pbc.template">
+            <field name="name">Banking covenants compliance schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Cash, bank &amp; treasury</field>
+            <field name="sequence_ref">67</field>
+            <field name="description">Covenant tests, waiver letters</field>
+            <field name="responsible_role">Finance</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_014" model="qaco.planning.pbc.template">
+            <field name="name">Revenue / sales register</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Revenue, receivables &amp; sales</field>
+            <field name="sequence_ref">20</field>
+            <field name="description">Sales invoices, credit notes, month-wise summary</field>
+            <field name="responsible_role">Sales Head</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_015" model="qaco.planning.pbc.template">
+            <field name="name">Sales cut-off support</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Revenue, receivables &amp; sales</field>
+            <field name="sequence_ref">21</field>
+            <field name="description">Last invoices before/after year end, shipment docs</field>
+            <field name="responsible_role">Sales / Logistics</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_016" model="qaco.planning.pbc.template">
+            <field name="name">Sample invoices / sales contracts (revenue testing)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Revenue, receivables &amp; sales</field>
+            <field name="sequence_ref">61</field>
+            <field name="description">Representative sample with shipment/delivery proofs</field>
+            <field name="responsible_role">Sales / Logistics</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_017" model="qaco.planning.pbc.template">
+            <field name="name">Accounts receivable aging</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Revenue, receivables &amp; sales</field>
+            <field name="sequence_ref">15</field>
+            <field name="description">Customer list, aged balances, collection status</field>
+            <field name="responsible_role">Credit Controller</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_018" model="qaco.planning.pbc.template">
+            <field name="name">AR confirmations (customer contact list)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Revenue, receivables &amp; sales</field>
+            <field name="sequence_ref">16</field>
+            <field name="description">Addresses/emails for confirmations</field>
+            <field name="responsible_role">Credit Controller</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_019" model="qaco.planning.pbc.template">
+            <field name="name">Provision for doubtful debts schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Revenue, receivables &amp; sales</field>
+            <field name="sequence_ref">17</field>
+            <field name="description">Basis, movements and supports</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_020" model="qaco.planning.pbc.template">
+            <field name="name">Purchase register</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Purchases, payables &amp; procurement</field>
+            <field name="sequence_ref">22</field>
+            <field name="description">Purchase invoices, GRNs, PO copies</field>
+            <field name="responsible_role">Procurement</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_021" model="qaco.planning.pbc.template">
+            <field name="name">Purchase cut-off support</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Purchases, payables &amp; procurement</field>
+            <field name="sequence_ref">23</field>
+            <field name="description">Invoices/receipts around year end, receiving reports</field>
+            <field name="responsible_role">Procurement</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_022" model="qaco.planning.pbc.template">
+            <field name="name">Accounts payable listing</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Purchases, payables &amp; procurement</field>
+            <field name="sequence_ref">18</field>
+            <field name="description">Supplier balances, reconciliations, ageing</field>
+            <field name="responsible_role">Procurement / AP</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_023" model="qaco.planning.pbc.template">
+            <field name="name">Supplier statements &amp; reconciliations</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Purchases, payables &amp; procurement</field>
+            <field name="sequence_ref">19</field>
+            <field name="description">Supplier replies and clearing items</field>
+            <field name="responsible_role">Procurement / AP</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_024" model="qaco.planning.pbc.template">
+            <field name="name">Sample purchase invoices (AP testing)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Purchases, payables &amp; procurement</field>
+            <field name="sequence_ref">62</field>
+            <field name="description">Representative sample with GRNs &amp; approvals</field>
+            <field name="responsible_role">Procurement</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_025" model="qaco.planning.pbc.template">
+            <field name="name">Inventory listing by location</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Inventory &amp; stores</field>
+            <field name="sequence_ref">12</field>
+            <field name="description">Stock listing, costing method, valuation supporting docs</field>
+            <field name="responsible_role">Stores Manager</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_026" model="qaco.planning.pbc.template">
+            <field name="name">Stock count sheets &amp; observation plan</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Inventory &amp; stores</field>
+            <field name="sequence_ref">13</field>
+            <field name="description">Stock take sheets, cut-off docs, variance explanation</field>
+            <field name="responsible_role">Stores Manager</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_027" model="qaco.planning.pbc.template">
+            <field name="name">Inventory valuation workings</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Inventory &amp; stores</field>
+            <field name="sequence_ref">14</field>
+            <field name="description">Costing, write-downs, slow-moving schedule</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_028" model="qaco.planning.pbc.template">
+            <field name="name">VAT / excise / custom documentation</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Inventory &amp; stores</field>
+            <field name="sequence_ref">63</field>
+            <field name="description">Import documents, duty, customs clearances</field>
+            <field name="responsible_role">Logistics / Tax</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_029" model="qaco.planning.pbc.template">
+            <field name="name">Fixed asset register</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Fixed assets, capex &amp; depreciation</field>
+            <field name="sequence_ref">9</field>
+            <field name="description">Details of cost, accumulated depreciation, location, custodian</field>
+            <field name="responsible_role">FA In-charge</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_030" model="qaco.planning.pbc.template">
+            <field name="name">Additions / disposals schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Fixed assets, capex &amp; depreciation</field>
+            <field name="sequence_ref">10</field>
+            <field name="description">Purchase invoices, approval memos, disposal docs</field>
+            <field name="responsible_role">FA In-charge</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_031" model="qaco.planning.pbc.template">
+            <field name="name">Depreciation policy &amp; computation</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Fixed assets, capex &amp; depreciation</field>
+            <field name="sequence_ref">11</field>
+            <field name="description">Method, useful lives, schedules</field>
+            <field name="responsible_role">FA / Finance Manager</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_032" model="qaco.planning.pbc.template">
+            <field name="name">Capital expenditure approvals</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Fixed assets, capex &amp; depreciation</field>
+            <field name="sequence_ref">49</field>
+            <field name="description">Capex authorisations and payment proofs</field>
+            <field name="responsible_role">Operations / Finance</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_033" model="qaco.planning.pbc.template">
+            <field name="name">Payroll register &amp; payroll journal</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Payroll &amp; human resources</field>
+            <field name="sequence_ref">38</field>
+            <field name="description">Employee list, salaries, allowances, payroll JVs</field>
+            <field name="responsible_role">HR / Finance</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_034" model="qaco.planning.pbc.template">
+            <field name="name">Employment contracts &amp; offer letters</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Payroll &amp; human resources</field>
+            <field name="sequence_ref">39</field>
+            <field name="description">Sample contracts and salary approval memos</field>
+            <field name="responsible_role">HR</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_035" model="qaco.planning.pbc.template">
+            <field name="name">Payroll taxes / social security filings</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Payroll &amp; human resources</field>
+            <field name="sequence_ref">40</field>
+            <field name="description">EOBI, social security or provincial filings</field>
+            <field name="responsible_role">HR / Payroll</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_036" model="qaco.planning.pbc.template">
+            <field name="name">Sample payroll evidence</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Payroll &amp; human resources</field>
+            <field name="sequence_ref">68</field>
+            <field name="description">Timesheets, overtime approvals, payment advices</field>
+            <field name="responsible_role">HR / Finance</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_037" model="qaco.planning.pbc.template">
+            <field name="name">Tax returns - Income tax (FBR)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Taxation, duties &amp; statutory compliance</field>
+            <field name="sequence_ref">34</field>
+            <field name="description">Filed returns, computation, payments and assessments</field>
+            <field name="responsible_role">Tax Head</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">tax</field>
+        </record>
+        <record id="info_requisition_template_038" model="qaco.planning.pbc.template">
+            <field name="name">Tax correspondence / notices</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Taxation, duties &amp; statutory compliance</field>
+            <field name="sequence_ref">35</field>
+            <field name="description">Assessments, show cause, appeals</field>
+            <field name="responsible_role">Tax Head / Legal</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">tax</field>
+        </record>
+        <record id="info_requisition_template_039" model="qaco.planning.pbc.template">
+            <field name="name">Withholding tax schedules</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Taxation, duties &amp; statutory compliance</field>
+            <field name="sequence_ref">36</field>
+            <field name="description">WHT deducted, deposited with FBR, challans</field>
+            <field name="responsible_role">Tax Team</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">tax</field>
+        </record>
+        <record id="info_requisition_template_040" model="qaco.planning.pbc.template">
+            <field name="name">Sales tax / GST returns &amp; reconciliations</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Taxation, duties &amp; statutory compliance</field>
+            <field name="sequence_ref">37</field>
+            <field name="description">Filed returns, input claims, reconciliations</field>
+            <field name="responsible_role">Tax Head</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">tax</field>
+        </record>
+        <record id="info_requisition_template_041" model="qaco.planning.pbc.template">
+            <field name="name">Share register &amp; composition</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Corporate governance, board &amp; legal</field>
+            <field name="sequence_ref">29</field>
+            <field name="description">Shareholder list, share certificates</field>
+            <field name="responsible_role">Company Secretary</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_042" model="qaco.planning.pbc.template">
+            <field name="name">Board &amp; committee minutes</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Corporate governance, board &amp; legal</field>
+            <field name="sequence_ref">30</field>
+            <field name="description">All minutes for the year (BoD, audit committee)</field>
+            <field name="responsible_role">Company Secretary</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_043" model="qaco.planning.pbc.template">
+            <field name="name">AGM/EGM minutes &amp; resolutions</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Corporate governance, board &amp; legal</field>
+            <field name="sequence_ref">31</field>
+            <field name="description">Resolutions passed, approvals</field>
+            <field name="responsible_role">Company Secretary</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_044" model="qaco.planning.pbc.template">
+            <field name="name">Memorandum &amp; Articles / incorporation docs</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Corporate governance, board &amp; legal</field>
+            <field name="sequence_ref">32</field>
+            <field name="description">Certificate of incorporation, bylaws</field>
+            <field name="responsible_role">Company Secretary</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">low</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_045" model="qaco.planning.pbc.template">
+            <field name="name">Statutory filings with SECP / Registrar</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Corporate governance, board &amp; legal</field>
+            <field name="sequence_ref">33</field>
+            <field name="description">Annual returns, Form A-1 (if any)</field>
+            <field name="responsible_role">Company Secretary</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_046" model="qaco.planning.pbc.template">
+            <field name="name">Legal claims / litigation schedule &amp; counsel letter</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Corporate governance, board &amp; legal</field>
+            <field name="sequence_ref">46</field>
+            <field name="description">Pending claims, contingent liabilities, counsel opinion</field>
+            <field name="responsible_role">Legal / CFO</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_047" model="qaco.planning.pbc.template">
+            <field name="name">Contracts with major customers/suppliers</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Contracts, long-term arrangements &amp; related parties</field>
+            <field name="sequence_ref">24</field>
+            <field name="description">Material contracts, service agreements</field>
+            <field name="responsible_role">Legal / Contracts</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_048" model="qaco.planning.pbc.template">
+            <field name="name">Major sales/purchase contracts (long-term)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Contracts, long-term arrangements &amp; related parties</field>
+            <field name="sequence_ref">25</field>
+            <field name="description">Concession, franchising, agency agreements</field>
+            <field name="responsible_role">Legal</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_049" model="qaco.planning.pbc.template">
+            <field name="name">Related-party transactions schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Contracts, long-term arrangements &amp; related parties</field>
+            <field name="sequence_ref">41</field>
+            <field name="description">Parties, balances, agreements and disclosure support</field>
+            <field name="responsible_role">CFO / Finance</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_050" model="qaco.planning.pbc.template">
+            <field name="name">Intercompany balances &amp; reconciliations</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Contracts, long-term arrangements &amp; related parties</field>
+            <field name="sequence_ref">42</field>
+            <field name="description">Cross-charge support, eliminations</field>
+            <field name="responsible_role">Finance / Group</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_051" model="qaco.planning.pbc.template">
+            <field name="name">Any other material agreements</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Contracts, long-term arrangements &amp; related parties</field>
+            <field name="sequence_ref">70</field>
+            <field name="description">JV agreements, sale/purchase of business docs</field>
+            <field name="responsible_role">Legal / CFO</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_052" model="qaco.planning.pbc.template">
+            <field name="name">Investments schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Investments, treasury &amp; valuations</field>
+            <field name="sequence_ref">43</field>
+            <field name="description">Details of quoted/unquoted investments, valuation</field>
+            <field name="responsible_role">Treasury / Finance</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_053" model="qaco.planning.pbc.template">
+            <field name="name">Investment agreements &amp; valuations</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Investments, treasury &amp; valuations</field>
+            <field name="sequence_ref">44</field>
+            <field name="description">Valuation reports, board approvals</field>
+            <field name="responsible_role">Finance / Legal</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">financial</field>
+        </record>
+        <record id="info_requisition_template_054" model="qaco.planning.pbc.template">
+            <field name="name">Insurance policies &amp; claims history</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Insurance, risk &amp; compliance permits</field>
+            <field name="sequence_ref">45</field>
+            <field name="description">Policies, premiums, outstanding claims</field>
+            <field name="responsible_role">Admin / Risk</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">low</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_055" model="qaco.planning.pbc.template">
+            <field name="name">Environmental / regulatory permits</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Insurance, risk &amp; compliance permits</field>
+            <field name="sequence_ref">69</field>
+            <field name="description">Licences, compliance certificates</field>
+            <field name="responsible_role">Operations / Legal</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">low</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_056" model="qaco.planning.pbc.template">
+            <field name="name">Grants / donor agreements (for NPOs)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Grants, donor funds &amp; NPO specific</field>
+            <field name="sequence_ref">47</field>
+            <field name="description">Grant contracts, restrictions, utilisation reports (Priority note: High (if NPO))</field>
+            <field name="responsible_role">Program / Finance</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_057" model="qaco.planning.pbc.template">
+            <field name="name">Grant utilization / donor compliance reports</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Grants, donor funds &amp; NPO specific</field>
+            <field name="sequence_ref">64</field>
+            <field name="description">Donor returns, project budgets vs actuals (Priority note: High (if applicable))</field>
+            <field name="responsible_role">Program / Finance</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">governance</field>
+        </record>
+        <record id="info_requisition_template_058" model="qaco.planning.pbc.template">
+            <field name="name">Internal control documentation</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">IT, systems &amp; internal control</field>
+            <field name="sequence_ref">57</field>
+            <field name="description">Flowcharts, policy manuals, internal control narrative</field>
+            <field name="responsible_role">Internal Audit / Finance</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_059" model="qaco.planning.pbc.template">
+            <field name="name">IT controls &amp; user access list</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">IT, systems &amp; internal control</field>
+            <field name="sequence_ref">58</field>
+            <field name="description">User access matrix, privileged users, backups</field>
+            <field name="responsible_role">IT Head</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_060" model="qaco.planning.pbc.template">
+            <field name="name">System generated reports (ERP)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">IT, systems &amp; internal control</field>
+            <field name="sequence_ref">59</field>
+            <field name="description">AR/AP aged, GL trial balance, inventory movements</field>
+            <field name="responsible_role">IT / Finance</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_061" model="qaco.planning.pbc.template">
+            <field name="name">Password / change management &amp; backup logs</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">IT, systems &amp; internal control</field>
+            <field name="sequence_ref">60</field>
+            <field name="description">Backup schedule, restore tests, change logs</field>
+            <field name="responsible_role">IT</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">low</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_062" model="qaco.planning.pbc.template">
+            <field name="name">Subsequent events listing</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Subsequent events, going concern &amp; management representations</field>
+            <field name="sequence_ref">55</field>
+            <field name="description">Events after balance sheet date up to report date</field>
+            <field name="responsible_role">CFO / Finance</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_063" model="qaco.planning.pbc.template">
+            <field name="name">Board / management letters on going concern</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Subsequent events, going concern &amp; management representations</field>
+            <field name="sequence_ref">65</field>
+            <field name="description">Assumptions, forecasts, cash flow projections</field>
+            <field name="responsible_role">CFO / CEO</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_064" model="qaco.planning.pbc.template">
+            <field name="name">Management representation letter - draft</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Subsequent events, going concern &amp; management representations</field>
+            <field name="sequence_ref">56</field>
+            <field name="description">Draft MRL for discussion (management prepares final)</field>
+            <field name="responsible_role">CFO / CEO</field>
+            <field name="format_detail">PDF</field>
+            <field name="format_expected">pdf</field>
+            <field name="priority">high</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_065" model="qaco.planning.pbc.template">
+            <field name="name">Forecasts &amp; budgets (next 12 months)</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Subsequent events, going concern &amp; management representations</field>
+            <field name="sequence_ref">66</field>
+            <field name="description">Cash flow forecasts and basis</field>
+            <field name="responsible_role">CFO</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_066" model="qaco.planning.pbc.template">
+            <field name="name">Management accounts / monthly reports</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Miscellaneous / Reporting support</field>
+            <field name="sequence_ref">50</field>
+            <field name="description">Management accounts for last 12 months + narrative</field>
+            <field name="responsible_role">CFO</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_067" model="qaco.planning.pbc.template">
+            <field name="name">Prepayments &amp; accruals schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Miscellaneous / Reporting support</field>
+            <field name="sequence_ref">53</field>
+            <field name="description">Details and supporting invoices</field>
+            <field name="responsible_role">Finance</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_068" model="qaco.planning.pbc.template">
+            <field name="name">Provisions &amp; contingent liabilities schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Miscellaneous / Reporting support</field>
+            <field name="sequence_ref">54</field>
+            <field name="description">Basis and movement analysis</field>
+            <field name="responsible_role">Finance / Legal</field>
+            <field name="format_detail">Excel/PDF</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">high</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_069" model="qaco.planning.pbc.template">
+            <field name="name">Provision for doubtful debts schedule</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Miscellaneous / Reporting support</field>
+            <field name="sequence_ref">17</field>
+            <field name="description">(also listed under Revenue)</field>
+            <field name="responsible_role">Finance Manager</field>
+            <field name="format_detail">Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+        <record id="info_requisition_template_070" model="qaco.planning.pbc.template">
+            <field name="name">Depreciation policy &amp; computation</field>
+            <field name="entity_classification">other</field>
+            <field name="information_heading">Miscellaneous / Reporting support</field>
+            <field name="sequence_ref">11</field>
+            <field name="description">(also listed under Fixed assets)</field>
+            <field name="responsible_role">FA / Finance Manager</field>
+            <field name="format_detail">PDF/Excel</field>
+            <field name="format_expected">excel</field>
+            <field name="priority">normal</field>
+            <field name="category">other</field>
+        </record>
+    </data>
+</odoo>

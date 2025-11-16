@@ -26,13 +26,13 @@
               sequence="25"/>
         
         <menuitem id="menu_planning_pbc"
-                  name="PBC List"
+                  name="Information Requisitions"
                   parent="menu_planning_phase"
                   action="action_planning_pbc"
                   sequence="30"/>
 
         <menuitem id="menu_planning_pbc_templates"
-              name="PBC Templates"
+              name="Information Requisition Templates"
               parent="menu_planning_phase"
               action="action_planning_pbc_templates"
               sequence="35"

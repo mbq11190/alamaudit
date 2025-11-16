@@ -35,13 +35,13 @@
         </record>
 
         <record id="action_planning_pbc" model="ir.actions.act_window">
-            <field name="name">PBC Requests</field>
+            <field name="name">Information Requisitions</field>
             <field name="res_model">qaco.planning.pbc</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <record id="action_planning_pbc_templates" model="ir.actions.act_window">
-            <field name="name">PBC Templates</field>
+            <field name="name">Information Requisition Templates</field>
             <field name="res_model">qaco.planning.pbc.template</field>
             <field name="view_mode">tree,form</field>
         </record>

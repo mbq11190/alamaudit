@@ -111,7 +111,7 @@
                             </button>
                             <button class="oe_stat_button" type="object" name="action_view_pbc" icon="fa-files-o">
                                 <div class="o_stat_info">
-                                    <span class="o_stat_text">PBC</span>
+                                    <span class="o_stat_text">Information Requests</span>
                                     <span class="o_stat_value">
                                         <field name="pbc_received_count" nolabel="1"/> / <field name="pbc_count" nolabel="1"/>
                                     </span>
@@ -249,8 +249,8 @@
                                 </field>
                             </page>
                             
-                            <!-- PBC Tab -->
-                            <page name="pbc_list" string="PBC List">
+                            <!-- Information Requisition Tab -->
+                            <page name="pbc_list" string="Information Requisitions">
                                 <field name="pbc_ids">
                                     <tree decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
                                         <field name="name"/>
@@ -498,22 +498,27 @@
         </record>
 
         <!-- ========================================= -->
-        <!-- Planning PBC Views -->
+        <!-- Information Requisition Views -->
         <!-- ========================================= -->
         
         <record id="view_planning_pbc_tree" model="ir.ui.view">
             <field name="name">qaco.planning.pbc.tree</field>
             <field name="model">qaco.planning.pbc</field>
             <field name="arch" type="xml">
-                <tree string="PBC List" decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
+                <tree string="Information Requisitions" decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
+                    <field name="sequence_ref"/>
+                    <field name="information_heading"/>
                     <field name="name"/>
                     <field name="category"/>
                     <field name="priority"/>
+                    <field name="responsible_role"/>
                     <field name="client_contact_id"/>
+                    <field name="expected_format"/>
+                    <field name="format_detail"/>
                     <field name="delivery_status"/>
                     <field name="requested_date"/>
                     <field name="due_date"/>
-                    <field name="expected_format"/>
+                    <field name="applicable"/>
                     <field name="received"/>
                     <field name="received_date"/>
                 </tree>
@@ -592,15 +597,19 @@
             </field>
         </record>
 
-        <!-- PBC Template Views -->
+        <!-- Information Requisition Template Views -->
         <record id="view_planning_pbc_template_tree" model="ir.ui.view">
             <field name="name">qaco.planning.pbc.template.tree</field>
             <field name="model">qaco.planning.pbc.template</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree string="Information Requisition Templates">
+                    <field name="sequence_ref"/>
                     <field name="name"/>
+                    <field name="information_heading"/>
                     <field name="entity_classification"/>
                     <field name="category"/>
+                    <field name="priority"/>
+                    <field name="format_expected"/>
                 </tree>
             </field>
         </record>
@@ -609,12 +618,22 @@
             <field name="name">qaco.planning.pbc.template.form</field>
             <field name="model">qaco.planning.pbc.template</field>
             <field name="arch" type="xml">
-                <form string="PBC Template">
+                <form string="Information Requisition Template">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="entity_classification"/>
-                            <field name="category"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="information_heading"/>
+                                <field name="sequence_ref"/>
+                                <field name="entity_classification"/>
+                            </group>
+                            <group>
+                                <field name="category"/>
+                                <field name="priority"/>
+                                <field name="format_expected"/>
+                                <field name="format_detail"/>
+                                <field name="responsible_role"/>
+                            </group>
                         </group>
                         <field name="description" nolabel="1"/>
                     </sheet>
@@ -626,7 +645,7 @@
             <field name="name">qaco.planning.pbc.form</field>
             <field name="model">qaco.planning.pbc</field>
             <field name="arch" type="xml">
-                <form string="PBC Item">
+                <form string="Information Requisition">
                     <header>
                         <button name="action_request" string="Send Request" type="object" class="btn-primary" invisible="delivery_status in ['requested','received']"/>
                         <button name="action_mark_received" string="Mark Received" type="object" class="btn-success" invisible="delivery_status == 'received'"/>
@@ -637,17 +656,29 @@
                         <group>
                             <group>
                                 <field name="planning_id"/>
+                                <field name="information_heading"/>
+                                <field name="sequence_ref"/>
                                 <field name="name"/>
                                 <field name="category"/>
                                 <field name="priority"/>
+                                <field name="applicable"/>
+                            </group>
+                            <group>
+                                <field name="responsible_role"/>
                                 <field name="client_contact_id"/>
                                 <field name="client_contact"/>
+                                <field name="expected_format"/>
+                                <field name="format_detail"/>
+                                <field name="shared_with_portal"/>
                             </group>
+                        </group>
+                        <group>
                             <group>
                                 <field name="delivery_status"/>
                                 <field name="requested_date"/>
                                 <field name="due_date"/>
-                                <field name="expected_format"/>
+                            </group>
+                            <group>
                                 <field name="received"/>
                                 <field name="received_date"/>
                             </group>
@@ -665,7 +696,6 @@
                         <group>
                             <field name="reminder_count" readonly="1"/>
                             <field name="escalation_level" readonly="1"/>
-                            <field name="shared_with_portal"/>
                             <field name="auto_reminder_config"/>
                             <field name="reminder_days"/>
                         </group>
