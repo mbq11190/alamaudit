@@ -95,6 +95,7 @@
                                 <field name="acceptance_state" widget="statusbar" statusbar_visible="draft,precheck,awaiting_clearance,accepted,rejected"/>
                             </header>
                             <sheet>
+                                <field name="active" invisible="1"/>
                                 <field name="independence_questionnaire_result" invisible="1"/>
                                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
                         
