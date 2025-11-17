@@ -1,4 +1,4 @@
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class EngagementDetails(models.Model):
@@ -71,6 +71,11 @@ class EngagementDetails(models.Model):
         string="Basis of Accounting",
     )
     special_purpose_framework = fields.Char(string="Special Purpose Framework")
+    special_framework = fields.Char(
+        string="Special Purpose Framework / IFRS",
+        related="special_purpose_framework",
+        readonly=False,
+    )
     deliverables = fields.Text(string="Deliverables")
 
     # ===============================
@@ -78,7 +83,17 @@ class EngagementDetails(models.Model):
     # ===============================
     framework_acceptability = fields.Boolean(string="Framework Acceptability Assessed", tracking=True)
     mgmt_responsibility_ack = fields.Boolean(string="Management Responsibilities Acknowledged", tracking=True)
+    mgmt_acknowledged = fields.Boolean(
+        string="Management Responsibilities Acknowledged",
+        related="mgmt_responsibility_ack",
+        readonly=False,
+    )
     info_access_agreed = fields.Boolean(string="Agreement on Access to Information", tracking=True)
+    access_to_info = fields.Boolean(
+        string="Agreement on Access to Information Received",
+        related="info_access_agreed",
+        readonly=False,
+    )
     preconditions_met = fields.Boolean(string="Preconditions for Audit Met", tracking=True)
     scope_limitation = fields.Text(string="Scope Limitation Identified")
 
@@ -92,6 +107,23 @@ class EngagementDetails(models.Model):
     signed_engagement_letter_filename = fields.Char(string="Signed Engagement Letter Filename")
     client_signed_copy = fields.Binary(string="Client Signed Copy", attachment=True)
     client_signed_copy_filename = fields.Char(string="Client Signed Copy Filename")
+    signed_engagement_letter_client = fields.Binary(
+        string="Signed by Client",
+        related="client_signed_copy",
+        attachment=True,
+        readonly=False,
+    )
+    signed_engagement_letter_firm = fields.Binary(
+        string="Signed by Firm",
+        related="signed_engagement_letter",
+        attachment=True,
+        readonly=False,
+    )
+    engagement_letter_version = fields.Char(
+        string="Engagement Letter Version / Reference",
+        related="engagement_letter_reference",
+        readonly=False,
+    )
 
     # ===============================
     # E. Timeline
@@ -99,6 +131,11 @@ class EngagementDetails(models.Model):
     planning_start = fields.Date(string="Planning Start Date")
     planning_end = fields.Date(string="Planning End Date")
     planning_meeting_date = fields.Date(string="Planning Meeting Date")
+    planning_date = fields.Date(
+        string="Planning Meeting Date",
+        related="planning_meeting_date",
+        readonly=False,
+    )
     fieldwork_start = fields.Date(string="Fieldwork Start Date")
     fieldwork_end = fields.Date(string="Fieldwork End Date")
     expected_completion = fields.Date(string="Expected Completion Date")
@@ -113,6 +150,11 @@ class EngagementDetails(models.Model):
     audit_objectives = fields.Text(string="Audit Objectives (ISA 200)")
     inherent_limitations = fields.Text(string="Inherent Limitations Identified")
     specialists_involved = fields.Text(string="Use of Component Auditors / Experts")
+    component_auditors = fields.Text(
+        string="Use of Component Auditors / Experts",
+        related="specialists_involved",
+        readonly=False,
+    )
 
     # ===============================
     # G. Team & Responsibilities (ISA 220)
@@ -147,9 +189,29 @@ class EngagementDetails(models.Model):
     # I. Risk Summary
     # ===============================
     significant_risks = fields.Text(string="Significant Risks Identified")
+    sig_risks = fields.Text(
+        string="Significant Risks Identified",
+        related="significant_risks",
+        readonly=False,
+    )
     fraud_risks = fields.Text(string="Fraud Risk Factors (ISA 240)")
+    fraud_risk = fields.Text(
+        string="Fraud Risk Factors (ISA 240)",
+        related="fraud_risks",
+        readonly=False,
+    )
     fs_level_risks = fields.Text(string="Risk of Material Misstatement – FS Level")
+    fs_level_risk = fields.Text(
+        string="FS-Level ROMM",
+        related="fs_level_risks",
+        readonly=False,
+    )
     assertion_level_risks = fields.Text(string="Risk of Material Misstatement – Assertion Level")
+    assertion_level_risk = fields.Text(
+        string="Assertion-Level ROMM",
+        related="assertion_level_risks",
+        readonly=False,
+    )
     management_override_risk = fields.Selection(
         [
             ("low", "Low"),
@@ -160,6 +222,7 @@ class EngagementDetails(models.Model):
         required=True,
         default="moderate",
     )
+    mgmt_override = fields.Boolean(string="Management Override Risk (Mandatory)")
 
     # ===============================
     # J. Engagement Budget & Resources
@@ -168,6 +231,11 @@ class EngagementDetails(models.Model):
     approved_budget_hours = fields.Float(string="Approved Budget Hours")
     fee_amount = fields.Float(string="Fee Amount")
     staff_allocation = fields.Text(string="Resource Allocation")
+    resource_allocation = fields.Text(
+        string="Resource Allocation / Staff Assigned",
+        related="staff_allocation",
+        readonly=False,
+    )
 
     # ===============================
     # K. Reporting Requirements
@@ -183,13 +251,38 @@ class EngagementDetails(models.Model):
         string="Type of Audit Report",
     )
     other_reporting_requirements = fields.Text(string="Other Reporting Requirements")
+    reporting_requirements = fields.Text(
+        string="Other Regulatory Reporting Requirements (SECP, Donor, etc.)",
+        related="other_reporting_requirements",
+        readonly=False,
+    )
     required_attachments = fields.Text(string="Required Attachments")
+    attachments_required = fields.Text(
+        string="Required Attachments (TB, FS Draft, etc.)",
+        related="required_attachments",
+        readonly=False,
+    )
 
     # ===============================
     # L. Regulatory & SECP / AOB Compliance
     # ===============================
     listed_entity = fields.Boolean(string="Listed Entity Requirements", tracking=True)
     pie_status = fields.Boolean(string="PIE Criteria", tracking=True)
+    is_pie = fields.Boolean(
+        string="Public Interest Entity (PIE)",
+        related="pie_status",
+        readonly=False,
+    )
     aob_registration_number = fields.Char(string="AOB Registration No.")
+    aob_registration = fields.Char(
+        string="AOB Registration No.",
+        related="aob_registration_number",
+        readonly=False,
+    )
     sepc_aob_requirements = fields.Text(string="SECP / AOB Requirements Applicable")
     additional_secp_sros = fields.Text(string="Additional SECP SROs Applicable")
+    additional_sros = fields.Text(
+        string="Additional SECP SROs Applicable",
+        related="additional_secp_sros",
+        readonly=False,
+    )

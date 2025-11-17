@@ -42,7 +42,8 @@
                             </group>
                             <group>
                                 <field name="basis_of_accounting"/>
-                                <field name="special_purpose_framework"/>
+                                <field name="deliverables"/>
+                                <field name="special_framework"/>
                                 <field name="period_start"/>
                                 <field name="period_end"/>
                             </group>
@@ -63,6 +64,7 @@
                                         <field name="planning_start"/>
                                         <field name="planning_end"/>
                                         <field name="planning_meeting_date"/>
+                                        <field name="planning_date"/>
                                         <field name="expected_completion"/>
                                     </group>
                                     <group>
@@ -81,7 +83,9 @@
                                     <group>
                                         <field name="framework_acceptability"/>
                                         <field name="mgmt_responsibility_ack"/>
+                                        <field name="mgmt_acknowledged"/>
                                         <field name="info_access_agreed"/>
+                                        <field name="access_to_info"/>
                                         <field name="preconditions_met"/>
                                     </group>
                                     <group>
@@ -97,10 +101,13 @@
                                         <field name="engagement_letter_issued"/>
                                         <field name="engagement_letter_date"/>
                                         <field name="engagement_letter_reference"/>
+                                        <field name="engagement_letter_version"/>
                                     </group>
                                     <group>
                                         <field name="signed_engagement_letter" filename="signed_engagement_letter_filename"/>
                                         <field name="client_signed_copy" filename="client_signed_copy_filename"/>
+                                        <field name="signed_engagement_letter_firm"/>
+                                        <field name="signed_engagement_letter_client"/>
                                     </group>
                                 </group>
                             </page>
@@ -112,6 +119,7 @@
                                     <field name="audit_objectives"/>
                                     <field name="inherent_limitations"/>
                                     <field name="specialists_involved"/>
+                                    <field name="component_auditors"/>
                                 </group>
                             </page>
 
@@ -155,6 +163,7 @@
                                     <field name="fs_level_risks"/>
                                     <field name="assertion_level_risks"/>
                                     <field name="management_override_risk"/>
+                                    <field name="mgmt_override"/>
                                 </group>
                             </page>
 
@@ -171,6 +180,7 @@
                                 </group>
                                 <group>
                                     <field name="staff_allocation"/>
+                                    <field name="resource_allocation"/>
                                 </group>
                             </page>
 
@@ -179,7 +189,9 @@
                                 <group>
                                     <field name="report_type"/>
                                     <field name="other_reporting_requirements"/>
+                                    <field name="reporting_requirements"/>
                                     <field name="required_attachments"/>
+                                    <field name="attachments_required"/>
                                 </group>
                             </page>
 
@@ -189,11 +201,14 @@
                                     <group>
                                         <field name="listed_entity"/>
                                         <field name="pie_status"/>
+                                        <field name="is_pie"/>
                                         <field name="aob_registration_number"/>
+                                        <field name="aob_registration"/>
                                     </group>
                                     <group>
                                         <field name="sepc_aob_requirements"/>
                                         <field name="additional_secp_sros"/>
+                                        <field name="additional_sros"/>
                                     </group>
                                 </group>
                             </page>
