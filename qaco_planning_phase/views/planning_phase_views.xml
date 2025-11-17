@@ -45,6 +45,7 @@
                                             <field name="independence_confirmation_date"/>
                                             <field name="independence_team_confirmed"/>
                                             <field name="independence_supporting_doc"/>
+                                            <field name="independence_team_attachment"/>
                                             <group colspan="2" string="Threats Identified">
                                                 <field name="threat_self_interest" placeholder="Self-interest threat or 'None'"/>
                                                 <field name="threat_self_review" placeholder="Self-review threat or 'None'"/>
@@ -88,6 +89,8 @@
 
                                         <group string="AOB / QCR Compliance" col="2">
                                             <field name="engagement_partner_review_form"/>
+                                            <field name="aob_independence_partner_confirmed"/>
+                                            <field name="aob_independence_team_confirmed"/>
                                             <field name="rotation_cooling_off_consent"/>
                                             <field name="aob_independence_checklist"/>
                                             <field name="qcr_compliance_checklist"/>
@@ -109,6 +112,10 @@
                                             <group colspan="2">
                                                 <field name="industry_specific_regulations" placeholder="Industry-specific regulatory considerations"/>
                                             </group>
+                                            <group colspan="2">
+                                                <field name="compliance_documentation_complete"/>
+                                                <field name="final_compliance_signoff"/>
+                                            </group>
                                         </group>
 
                                         <group string="Fraud &amp; Whistleblowing (ISA 240)" col="2">
@@ -124,7 +131,7 @@
                                         <group string="Related Parties (ISA 550)" col="2">
                                             <field name="related_party_list_obtained"/>
                                             <field name="management_related_party_declaration"/>
-                                            <field name="conflict_with_related_parties"/>
+                                            <field name="related_party_conflict_identified"/>
                                             <group colspan="2">
                                                 <field name="related_party_conflict_notes" placeholder="Notes / safeguards for related party conflicts"/>
                                             </group>

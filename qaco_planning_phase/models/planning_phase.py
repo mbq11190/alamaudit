@@ -241,6 +241,10 @@ class PlanningPhase(models.Model):
         string="Independence Confirmation Attachment",
         attachment=True
     )
+    independence_team_attachment = fields.Binary(
+        string="Team Independence Declarations (Attachment)",
+        attachment=True
+    )
     threat_self_interest = fields.Text(string="Self-Interest Threat")
     threat_self_review = fields.Text(string="Self-Review Threat")
     threat_advocacy = fields.Text(string="Advocacy Threat")
@@ -326,6 +330,14 @@ class PlanningPhase(models.Model):
         tracking=True,
         oldname="engagement_partner_review_done",
     )
+    aob_independence_partner_confirmed = fields.Boolean(
+        string="AOB Independence Declaration - Partner",
+        tracking=True
+    )
+    aob_independence_team_confirmed = fields.Boolean(
+        string="AOB Independence Declaration - Team",
+        tracking=True
+    )
     aob_independence_checklist = fields.Binary(
         string="AOB Independence Checklist (Attachment)",
         attachment=True
@@ -388,6 +400,14 @@ class PlanningPhase(models.Model):
         string="Industry-Specific Regulations",
         oldname="industry_regulation_notes",
     )
+    compliance_documentation_complete = fields.Boolean(
+        string="Compliance Documentation Completed",
+        tracking=True
+    )
+    final_compliance_signoff = fields.Boolean(
+        string="Final Compliance Sign-Off by Engagement Partner",
+        tracking=True
+    )
     
     fraud_risk_factors_identified = fields.Boolean(
         string="Fraud Risk Factors Identified",
@@ -419,10 +439,10 @@ class PlanningPhase(models.Model):
         tracking=True,
         oldname="management_related_party_decl",
     )
-    conflict_with_related_parties = fields.Boolean(
-        string="Conflict with Related Parties Identified",
+    related_party_conflict_identified = fields.Boolean(
+        string="Conflict with Related Parties Identified?",
         tracking=True,
-        oldname="related_party_conflict",
+        oldname="conflict_with_related_parties",
     )
     related_party_conflict_notes = fields.Text(string="Related Party Conflict Notes / Safeguards")
     
