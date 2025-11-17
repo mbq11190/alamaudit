@@ -8,6 +8,10 @@ class QacoExecutionPhase(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
+    def _default_currency_id(self):
+        """Prefer PKR currency; fallback to the logged-in company's currency."""
+        return self.env.ref('base.PKR', raise_if_not_found=False) or self.env.user.company_id.currency_id
+
     # Basic Information
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade',
                                tracking=True)
@@ -85,7 +89,7 @@ class QacoExecutionPhase(models.Model):
     misstatements_identified = fields.Boolean(string='Misstatements Identified', tracking=True)
     misstatement_amount = fields.Monetary(string='Total Misstatement Amount', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', 
-                                  default=lambda self: self.env.company.currency_id)
+                                  default=lambda self: self._default_currency_id())
     
     # Working Papers
     working_papers_complete = fields.Boolean(string='Working Papers Complete', tracking=True)

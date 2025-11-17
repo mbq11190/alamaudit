@@ -8,6 +8,10 @@ class QacoFinalisationPhase(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
+    def _default_currency_id(self):
+        """Force PKR usage where possible, falling back to the user's company currency."""
+        return self.env.ref('base.PKR', raise_if_not_found=False) or self.env.user.company_id.currency_id
+
     # Basic Information
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade',
                                tracking=True)
@@ -61,7 +65,7 @@ class QacoFinalisationPhase(models.Model):
     waived_adjustments = fields.Html(string='Waived Adjustments')
     total_adjustment_amount = fields.Monetary(string='Total Adjustment Amount', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', 
-                                  default=lambda self: self.env.company.currency_id)
+                                  default=lambda self: self._default_currency_id())
     
     # Client Discussions
     exit_meeting_date = fields.Date(string='Exit Meeting Date', tracking=True)

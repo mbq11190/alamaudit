@@ -181,6 +181,10 @@ class QacoMateriality(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "create_date desc"
 
+    def _default_currency_id(self):
+        """Prefer PKR for all worksheets, fallback to the user's company currency."""
+        return self.env.ref("base.PKR", raise_if_not_found=False) or self.env.user.company_id.currency_id
+
     planning_id = fields.Many2one("qaco.planning.phase", string="Planning Phase", ondelete="cascade")
     audit_id = fields.Many2one("qaco.audit", string="Audit Reference", ondelete="cascade")
     name = fields.Char(string="Reference", readonly=True, copy=False)
@@ -231,7 +235,7 @@ class QacoMateriality(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
-        default=lambda self: self.env.company.currency_id,
+        default=lambda self: self._default_currency_id(),
         required=True,
     )
 
@@ -823,12 +827,13 @@ class QacoMateriality(models.Model):
     @api.model
     def import_from_json(self, json_str):
         data = json.loads(json_str)
+        default_currency = self._default_currency_id()
         vals = {
             "planning_id": False,
             "audit_id": False,
             "benchmark_type": data.get("benchmark_type", "pbt"),
             "benchmark_amount": data.get("benchmark_amount", 0.0),
-            "currency_id": self.env.company.currency_id.id,
+            "currency_id": default_currency.id if default_currency else False,
             "applied_percent": data.get("applied_percent", 0.0),
             "performance_percent": data.get("performance_percent", 75.0),
             "trivial_percent": data.get("trivial_percent", 5.0),
