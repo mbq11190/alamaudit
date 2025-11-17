@@ -1,0 +1,146 @@
+<odoo>
+    <data>
+        <record id="view_partner_form_qaco_planning" model="ir.ui.view">
+            <field name="name">res.partner.form.qaco.planning</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Client Info (Permanent File)">
+                        <group>
+                            <group string="Corporate Identity">
+                                <field name="is_qaco_client"/>
+                                <field name="legal_name"/>
+                                <field name="trade_name"/>
+                                <field name="incorporation_no"/>
+                                <field name="incorporation_date"/>
+                                <field name="legal_form"/>
+                            </group>
+                            <group string="Group Structure" colspan="2">
+                                <field name="group_structure_permanent"/>
+                                <field name="group_structure_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Shareholding Structure">
+                                <field name="shareholding_structure_ids" editable="bottom">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="shareholder_name"/>
+                                        <field name="percentage_holding"/>
+                                        <field name="resident_status"/>
+                                        <field name="remarks"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="shareholder_name"/>
+                                            <field name="percentage_holding"/>
+                                        </group>
+                                        <group>
+                                            <field name="resident_status"/>
+                                            <field name="remarks"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </group>
+                            <group string="Licenses &amp; Registrations">
+                                <field name="license_ids" editable="bottom">
+                                    <tree>
+                                        <field name="license_type"/>
+                                        <field name="license_number"/>
+                                        <field name="issuing_authority"/>
+                                        <field name="validity_from"/>
+                                        <field name="validity_to"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="license_type"/>
+                                            <field name="license_number"/>
+                                            <field name="issuing_authority"/>
+                                        </group>
+                                        <group>
+                                            <field name="validity_from"/>
+                                            <field name="validity_to"/>
+                                            <field name="attachment_ids" widget="many2many_binary"/>
+                                        </group>
+                                        <field name="notes"/>
+                                    </form>
+                                </field>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Registrations &amp; Tax">
+                                <field name="ntn"/>
+                                <field name="strn"/>
+                                <field name="st_reg_province"/>
+                                <field name="eobi_registration_no"/>
+                                <field name="social_security_registration_no"/>
+                            </group>
+                            <group string="Financial Reporting &amp; IT">
+                                <field name="permanent_reporting_framework"/>
+                                <field name="permanent_year_end"/>
+                                <field name="primary_erp_permanent"/>
+                                <field name="other_systems_permanent"/>
+                                <field name="permanent_policies_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                        <group string="Permanent Operations Profile">
+                            <group>
+                                <field name="permanent_business_description" placeholder="Describe core operations for the permanent file."/>
+                                <field name="permanent_revenue_streams" placeholder="List principal revenue streams."/>
+                            </group>
+                            <group>
+                                <field name="main_locations" placeholder="Key locations / plants / warehouses."/>
+                                <field name="permanent_key_processes" placeholder="Summaries of key SOPs / processes."/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Laws &amp; Regulations Mapping">
+                        <field name="client_law_mapping_ids" context="{'default_client_id': active_id}" editable="bottom">
+                            <tree>
+                                <field name="law_id"/>
+                                <field name="applicable"/>
+                                <field name="applicability_scope"/>
+                                <field name="compliance_status"/>
+                                <field name="compliance_owner_id"/>
+                                <field name="next_compliance_review_due"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <group>
+                                            <field name="client_id" readonly="1"/>
+                                            <field name="law_id"/>
+                                            <field name="applicable"/>
+                                            <field name="applicability_scope"/>
+                                            <field name="compliance_status"/>
+                                        </group>
+                                        <group>
+                                            <field name="compliance_owner_id"/>
+                                            <field name="last_compliance_review_date"/>
+                                            <field name="next_compliance_review_due"/>
+                                            <field name="execution_checklist_id"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <group string="Key Risks">
+                                            <field name="key_risks_summary" placeholder="Summarize compliance risks / disputes."/>
+                                        </group>
+                                        <group string="Checklist">
+                                            <field name="law_applicability_reviewed"/>
+                                            <field name="law_applicability_reviewed_comment" placeholder="Applicability review notes."/>
+                                            <field name="law_significant_non_compliances"/>
+                                            <field name="law_significant_non_compliances_comment" placeholder="Describe findings."/>
+                                            <field name="law_unrecorded_provisions"/>
+                                            <field name="law_unrecorded_provisions_comment" placeholder="Document potential provisions."/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
