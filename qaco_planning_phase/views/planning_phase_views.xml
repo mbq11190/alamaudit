@@ -475,24 +475,6 @@
                         </form>
                     </field>
                 </record>
-                            <page name="documents" string="Documents &amp; Notes">
-                                <group>
-                                    <field name="planning_notes" placeholder="Enter planning notes and observations..."/>
-                                </group>
-                                <group string="Planning Documents">
-                                    <field name="planning_attachments" widget="many2many_binary" nolabel="1"/>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
-                </form>
-            </field>
-        </record>
 
         <!-- Planning Phase Search View -->
         <record id="view_planning_phase_search" model="ir.ui.view">
