@@ -37,3 +37,5 @@ access_internal_control_user,access.internal.control.user,model_qaco_internal_co
 access_analytical_review_user,access.analytical.review.user,model_qaco_analytical_review,base.group_user,1,1,1,0
 access_engagement_details_user,access.engagement.details.user,model_qaco_engagement_details,base.group_user,1,1,1,0
 access_engagement_details_partner,access.engagement.details.partner,model_qaco_engagement_details,qaco_audit.group_audit_partner,1,1,1,1
+access_risk_matrix_user,access.risk.matrix.user,model_qaco_risk_matrix,base.group_user,1,1,1,0
+access_risk_matrix_partner,access.risk.matrix.partner,model_qaco_risk_matrix,qaco_audit.group_audit_partner,1,1,1,1

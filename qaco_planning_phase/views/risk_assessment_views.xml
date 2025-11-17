@@ -1,0 +1,229 @@
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_qaco_risk_assessment_tree" model="ir.ui.view">
+            <field name="name">qaco.risk.assessment.tree</field>
+            <field name="model">qaco.risk.assessment</field>
+            <field name="arch" type="xml">
+                <tree string="Risk Assessments" create="1" edit="1">
+                    <field name="name"/>
+                    <field name="overall_risk"/>
+                    <field name="inherent_risk"/>
+                    <field name="control_risk"/>
+                    <field name="detection_risk"/>
+                    <field name="mgmt_override_risk"/>
+                    <field name="listed_entity_flag"/>
+                    <field name="pie_flag"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_qaco_risk_assessment_form" model="ir.ui.view">
+            <field name="name">qaco.risk.assessment.form</field>
+            <field name="model">qaco.risk.assessment</field>
+            <field name="arch" type="xml">
+                <form string="Risk Assessment" create="1" edit="1">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="overall_risk"/>
+                                <field name="inherent_risk"/>
+                                <field name="control_risk"/>
+                                <field name="detection_risk"/>
+                            </group>
+                            <group>
+                                <field name="listed_entity_flag"/>
+                                <field name="pie_flag"/>
+                                <field name="aob_registration"/>
+                                <field name="seccp_sros"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Risk Levels">
+                                <group>
+                                    <group>
+                                        <field name="inherent_risk"/>
+                                        <field name="inherent_risk_basis"/>
+                                        <field name="control_risk"/>
+                                        <field name="control_risk_basis"/>
+                                    </group>
+                                    <group>
+                                        <field name="detection_risk"/>
+                                        <field name="detection_risk_response"/>
+                                        <field name="overall_risk"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Entity-Level Risks (ISA 315)">
+                                <group>
+                                    <field name="governance_structure"/>
+                                    <field name="management_integrity"/>
+                                    <field name="management_competence"/>
+                                    <field name="industry_risks"/>
+                                    <field name="regulatory_risks"/>
+                                    <field name="economic_factors"/>
+                                    <field name="competition_risks"/>
+                                    <field name="business_processes"/>
+                                    <field name="revenue_risks"/>
+                                    <field name="business_changes"/>
+                                    <field name="outsourcing_risks"/>
+                                </group>
+                            </page>
+
+                            <page string="Fraud Risk (ISA 240)">
+                                <group>
+                                    <group>
+                                        <field name="fraud_triangle_pressure"/>
+                                        <field name="fraud_triangle_opportunity"/>
+                                        <field name="fraud_triangle_rationalization"/>
+                                        <field name="revenue_fraud_risk"/>
+                                        <field name="mgmt_override_risk"/>
+                                    </group>
+                                    <group>
+                                        <field name="fraud_schemes_identified"/>
+                                        <field name="journal_entry_risks"/>
+                                        <field name="asset_misappropriation_risk"/>
+                                        <field name="anti_fraud_controls"/>
+                                        <field name="fraud_inquiry_documentation"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Internal Controls (ISA 315)">
+                                <group>
+                                    <field name="control_environment"/>
+                                    <field name="hr_practices"/>
+                                    <field name="org_structure"/>
+                                    <field name="authority_responsibility"/>
+                                    <field name="risk_assessment_process"/>
+                                    <field name="risk_response_process"/>
+                                    <field name="risk_documentation"/>
+                                    <field name="it_systems_used"/>
+                                    <field name="change_management"/>
+                                    <field name="logical_access"/>
+                                    <field name="backup_recovery"/>
+                                    <field name="interface_risks"/>
+                                    <field name="authorization_controls"/>
+                                    <field name="reconciliations"/>
+                                    <field name="segregation_of_duties"/>
+                                    <field name="preventive_controls"/>
+                                    <field name="detective_controls"/>
+                                    <field name="it_dependent_controls"/>
+                                    <field name="monitoring_controls"/>
+                                    <field name="internal_audit_function"/>
+                                    <field name="board_oversight"/>
+                                    <field name="corrective_actions"/>
+                                    <field name="control_deficiencies"/>
+                                </group>
+                            </page>
+
+                            <page string="Planned Responses (ISA 330)">
+                                <group>
+                                    <field name="planned_responses"/>
+                                    <field name="tests_of_controls_planned"/>
+                                    <field name="substantive_analytics"/>
+                                    <field name="substantive_procedures"/>
+                                    <field name="extent_timing_nature"/>
+                                </group>
+                            </page>
+
+                            <page string="Professional Judgement (ISA 230)">
+                                <group>
+                                    <field name="basis_of_judgement"/>
+                                    <field name="key_audit_judgements"/>
+                                </group>
+                            </page>
+
+                            <page string="SECP / AOB Areas">
+                                <group>
+                                    <field name="listed_entity_flag"/>
+                                    <field name="pie_flag"/>
+                                    <field name="aob_registration"/>
+                                    <field name="seccp_sros"/>
+                                    <field name="aml_cft_risk"/>
+                                </group>
+                            </page>
+
+                            <page string="Risk Matrix">
+                                <field name="matrix_ids" context="{'default_risk_master_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="risk_reference"/>
+                                        <field name="risk_description"/>
+                                        <field name="fs_level"/>
+                                        <field name="affected_area"/>
+                                        <field name="assertion"/>
+                                        <field name="likelihood"/>
+                                        <field name="impact"/>
+                                        <field name="combined_rating"/>
+                                        <field name="significant_risk"/>
+                                        <field name="planned_response"/>
+                                        <field name="controls_linked"/>
+                                        <field name="reviewer_comments"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Risk Matrix form (optional standalone) -->
+        <record id="view_qaco_risk_matrix_form" model="ir.ui.view">
+            <field name="name">qaco.risk.matrix.form</field>
+            <field name="model">qaco.risk.matrix</field>
+            <field name="arch" type="xml">
+                <form string="Risk Matrix Line">
+                    <sheet>
+                        <group>
+                            <field name="risk_master_id"/>
+                            <field name="risk_reference"/>
+                            <field name="risk_description"/>
+                            <field name="fs_level"/>
+                            <field name="affected_area"/>
+                            <field name="assertion"/>
+                        </group>
+                        <group>
+                            <field name="likelihood"/>
+                            <field name="impact"/>
+                            <field name="combined_rating"/>
+                            <field name="significant_risk"/>
+                        </group>
+                        <group>
+                            <field name="planned_response"/>
+                            <field name="controls_linked"/>
+                            <field name="reviewer_comments"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_qaco_risk_matrix_tree" model="ir.ui.view">
+            <field name="name">qaco.risk.matrix.tree</field>
+            <field name="model">qaco.risk.matrix</field>
+            <field name="arch" type="xml">
+                <tree string="Risk Matrix Lines">
+                    <field name="risk_master_id"/>
+                    <field name="risk_reference"/>
+                    <field name="risk_description"/>
+                    <field name="fs_level"/>
+                    <field name="likelihood"/>
+                    <field name="impact"/>
+                    <field name="combined_rating"/>
+                    <field name="significant_risk"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

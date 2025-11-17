@@ -19,6 +19,7 @@
         "views/qaco_audit_form_extend.xml",
         "views/planning_v2_views.xml",
         "views/engagement_details_views.xml",
+        "views/risk_assessment_views.xml",
         "views/menu_view.xml",
     ],
     "application": True,
