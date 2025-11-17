@@ -12,6 +12,12 @@
                   parent="menu_planning_phase"
                   action="action_planning_risk"
                   sequence="10"/>
+
+      <menuitem id="menu_risk_assessments"
+              name="Risk Assessments"
+              parent="menu_planning_phase"
+              action="action_risk_assessment"
+              sequence="15"/>
         
         <menuitem id="menu_planning_checklist"
                   name="Checklist"

@@ -18,6 +18,14 @@ ENTITY_CLASSES = [
     ("other", "Other"),
 ]
 
+MATERIALITY_BENCHMARKS = [
+    ("profit_before_tax", "Profit Before Tax (5%)"),
+    ("revenue", "Revenue (0.5-1%)"),
+    ("assets", "Total Assets (1-2%)"),
+    ("equity", "Equity (3-5%)"),
+    ("custom", "Custom"),
+]
+
 
 _logger = logging.getLogger(__name__)
 
@@ -90,6 +98,7 @@ class PlanningPhase(models.Model):
         ("fieldwork", "Fieldwork"),
         ("finalisation", "Finalisation"),
     ], default="draft", tracking=True, string="Status")
+    planning_date = fields.Date(string="Planning Date", tracking=True)
 
     # ISA 300: Overall Audit Strategy
     overall_strategy = fields.Text(
@@ -112,13 +121,30 @@ class PlanningPhase(models.Model):
     ], string="Overall Audit Approach", default="combined", tracking=True)
 
     # ISA 320: Materiality
-    materiality_basis = fields.Selection([
-        ("profit_before_tax", "Profit Before Tax (5%)"),
-        ("revenue", "Revenue (0.5-1%)"),
-        ("assets", "Total Assets (1-2%)"),
-        ("equity", "Equity (3-5%)"),
-        ("custom", "Custom"),
-    ], default="profit_before_tax", tracking=True, string="Materiality Benchmark")
+    materiality_basis = fields.Selection(
+        MATERIALITY_BENCHMARKS,
+        default="profit_before_tax",
+        tracking=True,
+        string="Materiality Benchmark",
+    )
+    materiality_base = fields.Selection(
+        MATERIALITY_BENCHMARKS,
+        default="profit_before_tax",
+        tracking=True,
+        string="Materiality Base (ISA 320)",
+    )
+    materiality_base_amount = fields.Monetary(
+        string="Benchmark Amount",
+        tracking=True,
+        currency_field="currency_id",
+        help="Enter the base financial metric used to derive overall materiality",
+    )
+    materiality_percentage = fields.Float(
+        string="Materiality Percentage",
+        default=5.0,
+        tracking=True,
+        help="Percentage applied to the benchmark amount (ISA 320)",
+    )
     
     materiality_amount = fields.Monetary(
         string="Overall Materiality",
@@ -148,6 +174,12 @@ class PlanningPhase(models.Model):
         string='Trivial Threshold (Legacy)', 
         currency_field='currency_id', 
         tracking=True
+    )
+    clearly_trivial_threshold = fields.Monetary(
+        string="Clearly Trivial Threshold",
+        currency_field="currency_id",
+        tracking=True,
+        help="Threshold for clearly trivial misstatements communicated to management (ISA 320)",
     )
     
     materiality_notes = fields.Text(string="Materiality Rationale")
@@ -201,6 +233,12 @@ class PlanningPhase(models.Model):
     client_measurement_basis = fields.Text(string='Financial Measurement & KPIs', tracking=True)
     client_it_environment = fields.Text(string='IT Environment & Key Systems', tracking=True)
     client_compliance_matters = fields.Text(string='Compliance / Regulatory Matters', tracking=True)
+    industry_overview = fields.Text(string="Industry Overview", tracking=True)
+    regulatory_factors = fields.Text(string="Regulatory / External Factors", tracking=True)
+    business_overview = fields.Text(string="Business Model Overview", tracking=True)
+    it_environment_overview = fields.Text(string="IT Environment Overview", tracking=True)
+    governance_structure = fields.Text(string="Governance & Oversight", tracking=True)
+    going_concern_factors = fields.Text(string="Going Concern Factors", tracking=True)
     
     # Engagement Information
     engagement_type = fields.Selection([
@@ -238,6 +276,11 @@ class PlanningPhase(models.Model):
     ], string='Detection Risk', tracking=True)
     
     fraud_risk_assessment = fields.Text(string='Fraud Risk Assessment', tracking=True)
+    control_environment_notes = fields.Text(string="Control Environment", tracking=True)
+    risk_assessment_process_notes = fields.Text(string="Entity Risk Assessment Process", tracking=True)
+    information_systems_notes = fields.Text(string="Information Systems & Communication", tracking=True)
+    control_activities_notes = fields.Text(string="Control Activities", tracking=True)
+    monitoring_controls_notes = fields.Text(string="Monitoring of Controls", tracking=True)
     
     # Planning Checklists (Legacy)
     understanding_entity_obtained = fields.Boolean(
@@ -268,6 +311,7 @@ class PlanningPhase(models.Model):
     # Related records
     materiality_ids = fields.One2many("qaco.materiality", "planning_id", string="Materiality Worksheets")
     risk_ids = fields.One2many("qaco.planning.risk", "planning_id", string="Identified Risks")
+    risk_assessment_ids = fields.One2many("qaco.risk.assessment", "planning_id", string="Risk Assessments")
     checklist_ids = fields.One2many("qaco.planning.checklist", "planning_id", string="Planning Checklist")
     pbc_ids = fields.One2many("qaco.planning.pbc", "planning_id", string="Information Requisitions")
     milestone_ids = fields.One2many("qaco.planning.milestone", "planning_id", string="Timeline")
@@ -287,6 +331,7 @@ class PlanningPhase(models.Model):
     staffing_signed_off = fields.Boolean(string="Staffing Signed Off", default=False, tracking=True)
     materiality_count = fields.Integer(compute="_compute_counts", string="Materiality")
     risk_count = fields.Integer(compute="_compute_counts", string="Risk Count")
+    risk_assessment_count = fields.Integer(compute="_compute_counts", string="Risk Assessments")
     significant_risk_count = fields.Integer(compute="_compute_counts", string="Significant Risks")
     pbc_count = fields.Integer(compute="_compute_counts", string="Information Requisitions")
     pbc_received_count = fields.Integer(compute="_compute_counts", string="Requests Received")
@@ -335,6 +380,7 @@ class PlanningPhase(models.Model):
         for rec in self:
             rec.materiality_count = len(rec.materiality_ids)
             rec.risk_count = len(rec.risk_ids)
+            rec.risk_assessment_count = len(rec.risk_assessment_ids)
             rec.significant_risk_count = sum(1 for r in rec.risk_ids if r.significant)
             rec.pbc_count = len(rec.pbc_ids)
             rec.pbc_received_count = sum(1 for p in rec.pbc_ids if p.received)
@@ -381,6 +427,22 @@ class PlanningPhase(models.Model):
                 # Default to 5% of overall materiality
                 self.trivial_misstatement = self.materiality_amount * 0.05
 
+    @api.onchange('materiality_base')
+    def _onchange_materiality_base(self):
+        if self.materiality_base and not self.materiality_basis:
+            self.materiality_basis = self.materiality_base
+
+    @api.onchange('materiality_base_amount', 'materiality_percentage')
+    def _onchange_materiality_inputs(self):
+        if self.materiality_base_amount and self.materiality_percentage:
+            amount = self._compute_materiality_amount(self.materiality_base_amount, self.materiality_percentage)
+            self.materiality_amount = amount
+            if not self.performance_materiality:
+                self.performance_materiality = amount * 0.75
+            if not self.trivial_misstatement:
+                self.trivial_misstatement = amount * 0.05
+            self.clearly_trivial_threshold = self.trivial_misstatement or self.clearly_trivial_threshold
+
     def action_start(self):
         self.write({'state': 'in_progress'})
     
@@ -417,6 +479,21 @@ class PlanningPhase(models.Model):
             'name': _('Identified Risks'),
             'type': 'ir.actions.act_window',
             'res_model': 'qaco.planning.risk',
+            'view_mode': 'tree,form',
+            'domain': [('planning_id', '=', self.id)],
+            'context': {
+                'default_planning_id': self.id,
+                'search_default_planning_id': self.id,
+            },
+        }
+
+    def action_view_risk_assessments(self):
+        """Smart button: View ISA 315 risk assessments"""
+        self.ensure_one()
+        return {
+            'name': _('Risk Assessments'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'qaco.risk.assessment',
             'view_mode': 'tree,form',
             'domain': [('planning_id', '=', self.id)],
             'context': {
@@ -665,12 +742,64 @@ class PlanningPhase(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            self._sync_materiality_vals(vals)
+            if vals.get('materiality_base_amount') and vals.get('materiality_percentage') and not vals.get('materiality_amount'):
+                amount = self._compute_materiality_amount(vals['materiality_base_amount'], vals['materiality_percentage'])
+                vals.setdefault('materiality_amount', amount)
+                vals.setdefault('performance_materiality', amount * 0.75 if amount else 0.0)
+                trivial_value = amount * 0.05 if amount else 0.0
+                vals.setdefault('trivial_misstatement', trivial_value)
+                vals.setdefault('clearly_trivial_threshold', vals.get('trivial_misstatement') or trivial_value)
         records = super().create(vals_list)
         # Auto-seed ISA-oriented checklist
         for rec in records:
             if not rec.checklist_ids:
                 rec._create_default_checklist()
         return records
+
+    def write(self, vals):
+        if not self.env.context.get('skip_materiality_autofill'):
+            self._sync_materiality_vals(vals)
+        res = super().write(vals)
+        if (
+            not self.env.context.get('skip_materiality_autofill')
+            and any(field in vals for field in ['materiality_base_amount', 'materiality_percentage'])
+        ):
+            for record in self:
+                record._auto_update_materiality_from_inputs()
+        return res
+
+    @staticmethod
+    def _compute_materiality_amount(base_amount, percentage):
+        base = base_amount or 0.0
+        pct = percentage or 0.0
+        return (base * pct) / 100.0 if base and pct else 0.0
+
+    def _sync_materiality_vals(self, vals):
+        base = vals.get('materiality_base')
+        legacy = vals.get('materiality_basis')
+        if base and not legacy:
+            vals['materiality_basis'] = base
+        elif legacy and not base:
+            vals['materiality_base'] = legacy
+
+    def _auto_update_materiality_from_inputs(self):
+        self.ensure_one()
+        if not (self.materiality_base_amount and self.materiality_percentage):
+            return
+        amount = self._compute_materiality_amount(self.materiality_base_amount, self.materiality_percentage)
+        update_vals = {'materiality_amount': amount}
+        if not self.performance_materiality and amount:
+            update_vals['performance_materiality'] = amount * 0.75
+        if not self.trivial_misstatement and amount:
+            update_vals['trivial_misstatement'] = amount * 0.05
+        if not self.clearly_trivial_threshold:
+            threshold = update_vals.get('trivial_misstatement', self.trivial_misstatement)
+            if threshold:
+                update_vals['clearly_trivial_threshold'] = threshold
+        if len(update_vals) > 1 or update_vals.get('materiality_amount'):
+            self.with_context(skip_materiality_autofill=True).write(update_vals)
 
     def _create_default_checklist(self):
         """Create standard ISA-aligned checklist items"""
@@ -948,6 +1077,140 @@ class PlanningRisk(models.Model):
             note=_('Risk reviewed and response deemed adequate.'),
             standard_reference='ISA 315 para 32',
         )
+
+
+class RiskAssessment(models.Model):
+    _name = "qaco.risk.assessment"
+    _description = "ISA 315 Risk Assessment"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _order = "assessment_level desc, risk_score desc, id desc"
+
+    name = fields.Char(
+        string="Reference",
+        required=True,
+        default=lambda self: self._generate_default_name(),
+        tracking=True,
+    )
+    planning_id = fields.Many2one(
+        "qaco.planning.phase",
+        required=True,
+        ondelete="cascade",
+        tracking=True,
+    )
+    audit_id = fields.Many2one(
+        "qaco.audit",
+        related="planning_id.audit_id",
+        store=True,
+        readonly=True,
+    )
+    assessment_level = fields.Selection(
+        [
+            ("financial_statement", "Financial Statement Level"),
+            ("assertion", "Assertion Level"),
+        ],
+        default="financial_statement",
+        required=True,
+        tracking=True,
+    )
+    financial_statement_focus = fields.Char(string="FS-Level Focus", tracking=True)
+    account_area = fields.Char(string="Account / Area", tracking=True)
+    assertion = fields.Selection([
+        ("occurrence", "Occurrence"),
+        ("existence", "Existence"),
+        ("completeness", "Completeness"),
+        ("rights", "Rights & Obligations"),
+        ("valuation", "Valuation / Allocation"),
+        ("presentation", "Presentation & Disclosure"),
+        ("cutoff", "Cut-off"),
+        ("accuracy", "Accuracy"),
+    ], string="Assertion", tracking=True)
+    isa_reference = fields.Char(string="ISA Reference", tracking=True)
+    risk_statement = fields.Text(string="Risk Statement", tracking=True)
+    cause = fields.Text(string="Cause / Driver", tracking=True)
+    consequence = fields.Text(string="Potential Impact", tracking=True)
+    existing_controls = fields.Text(string="Relevant Controls", tracking=True)
+    control_reliance = fields.Selection([
+        ("none", "No Reliance"),
+        ("partial", "Partial Reliance"),
+        ("full", "Full Reliance"),
+    ], default="none", string="Control Reliance", tracking=True)
+    walkthrough_reference = fields.Char(string="Walkthrough Reference", tracking=True)
+    likelihood = fields.Selection([
+        ("1", "Low"),
+        ("2", "Medium"),
+        ("3", "High"),
+    ], default="2", tracking=True)
+    impact = fields.Selection([
+        ("1", "Low"),
+        ("2", "Medium"),
+        ("3", "High"),
+    ], default="2", tracking=True)
+    risk_score = fields.Integer(compute="_compute_risk_score", store=True, string="Risk Score")
+    overall_assessment = fields.Selection([
+        ("low", "Low"),
+        ("medium", "Medium"),
+        ("high", "High"),
+        ("very_high", "Very High"),
+    ], compute="_compute_risk_score", store=True, string="Overall Assessment")
+    significant = fields.Boolean(string="Significant Risk", tracking=True)
+    planned_response = fields.Text(string="Planned Response", tracking=True)
+    additional_considerations = fields.Text(string="Additional Considerations", tracking=True)
+    reviewer_id = fields.Many2one("res.users", string="Reviewer", tracking=True)
+    review_state = fields.Selection([
+        ("draft", "Draft"),
+        ("review", "In Review"),
+        ("approved", "Approved"),
+    ], default="draft", tracking=True)
+    review_date = fields.Date(string="Review Date", tracking=True)
+
+    @api.model
+    def _generate_default_name(self):
+        seq = self.env["ir.sequence"].sudo().next_by_code("qaco.risk.assessment")
+        return seq or _("New Risk Assessment")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("name"):
+                vals["name"] = self._generate_default_name()
+        return super().create(vals_list)
+
+    @api.depends("likelihood", "impact")
+    def _compute_risk_score(self):
+        for rec in self:
+            try:
+                likelihood = int(rec.likelihood or "0")
+                impact = int(rec.impact or "0")
+            except ValueError:
+                likelihood = impact = 0
+            score = likelihood * impact
+            rec.risk_score = score
+            if score >= 9:
+                rec.overall_assessment = "very_high"
+            elif score >= 6:
+                rec.overall_assessment = "high"
+            elif score >= 3:
+                rec.overall_assessment = "medium"
+            else:
+                rec.overall_assessment = "low"
+
+    def action_submit_for_review(self):
+        for rec in self:
+            rec.review_state = "review"
+
+    def action_mark_reviewed(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            rec.review_state = "approved"
+            rec.reviewer_id = self.env.user
+            rec.review_date = today
+            if rec.planning_id:
+                rec.planning_id._log_evidence(
+                    name=_('Risk assessment approved'),
+                    action_type='approval',
+                    note=rec.risk_statement or _('Risk assessment reviewed.'),
+                    standard_reference='ISA 315 para 32',
+                )
 
 
 class PlanningChecklist(models.Model):

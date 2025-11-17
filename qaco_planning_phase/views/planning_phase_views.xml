@@ -98,6 +98,20 @@
                                 <field name="active" invisible="1"/>
                                 <field name="independence_questionnaire_result" invisible="1"/>
                                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                                <div class="oe_button_box" name="button_box">
+                                    <button class="oe_stat_button" type="object" name="action_view_risks" icon="fa-exclamation-circle">
+                                        <div class="o_stat_info">
+                                            <span class="o_stat_text">Identified Risks</span>
+                                            <span class="o_stat_value"><field name="risk_count"/></span>
+                                        </div>
+                                    </button>
+                                    <button class="oe_stat_button" type="object" name="action_view_risk_assessments" icon="fa-bullseye">
+                                        <div class="o_stat_info">
+                                            <span class="o_stat_text">Risk Assessments</span>
+                                            <span class="o_stat_value"><field name="risk_assessment_count"/></span>
+                                        </div>
+                                    </button>
+                                </div>
                         
                                 <notebook>
                                     <page name="client_info" string="Client Information">
@@ -131,6 +145,18 @@
                                                 <field name="client_compliance_matters" placeholder="Significant compliance / regulatory issues to note..."/>
                                             </group>
                                         </group>
+                                        <group string="Entity Understanding (ISA 315)">
+                                            <group>
+                                                <field name="industry_overview" placeholder="Summarize industry trends and market dynamics..."/>
+                                                <field name="business_overview" placeholder="Describe the business model and revenue streams..."/>
+                                                <field name="going_concern_factors" placeholder="Document going concern indicators or mitigants..."/>
+                                            </group>
+                                            <group>
+                                                <field name="regulatory_factors" placeholder="List regulatory, tax, or external factors impacting the audit..."/>
+                                                <field name="it_environment_overview" placeholder="Capture critical IT infrastructure or third-party systems..."/>
+                                                <field name="governance_structure" placeholder="Outline governance and oversight arrangements..."/>
+                                            </group>
+                                        </group>
                                     </page>
                             
                                     <!-- Engagement Details Tab -->
@@ -144,6 +170,7 @@
                                             <group string="Timeline">
                                                 <field name="planning_start_date"/>
                                                 <field name="planning_end_date"/>
+                                                <field name="planning_date"/>
                                                 <field name="fieldwork_start_date"/>
                                                 <field name="fieldwork_end_date"/>
                                                 <field name="estimated_hours"/>
@@ -167,6 +194,81 @@
                                                 <field name="fraud_risk_assessment" placeholder="Document fraud risk assessment..."/>
                                             </group>
                                         </group>
+                                        <group string="Internal Controls (ISA 315)">
+                                            <group>
+                                                <field name="control_environment_notes" placeholder="Describe tone at the top, governance, and ethics..."/>
+                                                <field name="risk_assessment_process_notes" placeholder="How does management identify and respond to risks?"/>
+                                                <field name="information_systems_notes" placeholder="Summarize IT systems and communication processes..."/>
+                                            </group>
+                                            <group>
+                                                <field name="control_activities_notes" placeholder="Key control activities relied on (authorization, reconciliations, etc.)..."/>
+                                                <field name="monitoring_controls_notes" placeholder="Monitoring controls, internal audit, oversight..."/>
+                                            </group>
+                                        </group>
+                                    </page>
+
+                                    <!-- Risk Assessments Tab -->
+                                    <page name="risk_assessment_matrix" string="Risk Assessments">
+                                        <field name="risk_assessment_ids">
+                                            <tree decoration-danger="significant == True">
+                                                <field name="name"/>
+                                                <field name="assessment_level"/>
+                                                <field name="financial_statement_focus"/>
+                                                <field name="account_area"/>
+                                                <field name="assertion"/>
+                                                <field name="likelihood"/>
+                                                <field name="impact"/>
+                                                <field name="overall_assessment"/>
+                                                <field name="review_state"/>
+                                            </tree>
+                                            <form string="Risk Assessment">
+                                                <sheet>
+                                                    <group>
+                                                        <group string="Scope">
+                                                            <field name="name"/>
+                                                            <field name="assessment_level"/>
+                                                            <field name="financial_statement_focus"/>
+                                                            <field name="account_area"/>
+                                                            <field name="assertion"/>
+                                                            <field name="isa_reference"/>
+                                                        </group>
+                                                        <group string="Risk Details">
+                                                            <field name="risk_statement" placeholder="Describe the risk statement"/>
+                                                            <field name="cause" placeholder="Drivers / root causes"/>
+                                                            <field name="consequence" placeholder="Potential impact or misstatement"/>
+                                                            <field name="significant"/>
+                                                        </group>
+                                                    </group>
+                                                    <group>
+                                                        <group string="Evaluation">
+                                                            <field name="likelihood"/>
+                                                            <field name="impact"/>
+                                                            <field name="risk_score" readonly="1"/>
+                                                            <field name="overall_assessment" readonly="1"/>
+                                                            <field name="control_reliance"/>
+                                                            <field name="existing_controls" placeholder="Summarize relevant controls"/>
+                                                        </group>
+                                                        <group string="Responses">
+                                                            <field name="walkthrough_reference" placeholder="e.g., walkthrough memo reference"/>
+                                                            <field name="planned_response" placeholder="Document planned audit response"/>
+                                                            <field name="additional_considerations" placeholder="Notes, coordination items, etc."/>
+                                                        </group>
+                                                    </group>
+                                                    <group string="Review">
+                                                        <group>
+                                                            <field name="review_state"/>
+                                                            <field name="reviewer_id"/>
+                                                            <field name="review_date"/>
+                                                        </group>
+                                                    </group>
+                                                </sheet>
+                                                <footer>
+                                                    <button name="action_submit_for_review" type="object" string="Submit for Review" class="btn-primary"/>
+                                                    <button name="action_mark_reviewed" type="object" string="Mark Approved" class="btn-success"/>
+                                                    <button string="Close" class="btn-secondary" special="cancel"/>
+                                                </footer>
+                                            </form>
+                                        </field>
                                     </page>
                             
                                     <!-- Risks Tab -->
@@ -402,10 +504,14 @@
                                     <page name="materiality" string="Materiality">
                                         <group>
                                             <group string="Materiality Calculations">
+                                                <field name="materiality_base"/>
                                                 <field name="materiality_basis"/>
+                                                <field name="materiality_base_amount" widget="monetary"/>
+                                                <field name="materiality_percentage"/>
                                                 <field name="materiality_amount" widget="monetary"/>
                                                 <field name="performance_materiality" widget="monetary"/>
                                                 <field name="trivial_misstatement" widget="monetary"/>
+                                                <field name="clearly_trivial_threshold" widget="monetary"/>
                                             </group>
                                             <group string="ISA 320 Requirements">
                                                 <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
@@ -555,6 +661,100 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <!-- Risk Assessment Views -->
+        <record id="view_risk_assessment_tree" model="ir.ui.view">
+            <field name="name">qaco.risk.assessment.tree</field>
+            <field name="model">qaco.risk.assessment</field>
+            <field name="arch" type="xml">
+                <tree string="Risk Assessments" decoration-danger="significant == True">
+                    <field name="name"/>
+                    <field name="assessment_level"/>
+                    <field name="financial_statement_focus"/>
+                    <field name="account_area"/>
+                    <field name="assertion"/>
+                    <field name="likelihood"/>
+                    <field name="impact"/>
+                    <field name="risk_score"/>
+                    <field name="overall_assessment"/>
+                    <field name="review_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_risk_assessment_form" model="ir.ui.view">
+            <field name="name">qaco.risk.assessment.form</field>
+            <field name="model">qaco.risk.assessment</field>
+            <field name="arch" type="xml">
+                <form string="Risk Assessment">
+                    <header>
+                        <button name="action_submit_for_review" string="Submit for Review" type="object" class="btn-primary" modifiers="{'invisible': [('review_state', '!=', 'draft')]}"/>
+                        <button name="action_mark_reviewed" string="Approve" type="object" class="btn-success" modifiers="{'invisible': [('review_state', '!=', 'review')]}"/>
+                        <field name="review_state" widget="statusbar" statusbar_visible="draft,review,approved"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Scope">
+                                <field name="planning_id"/>
+                                <field name="name"/>
+                                <field name="assessment_level"/>
+                                <field name="financial_statement_focus"/>
+                                <field name="account_area"/>
+                                <field name="assertion"/>
+                                <field name="isa_reference"/>
+                            </group>
+                            <group string="Risk Details">
+                                <field name="risk_statement" placeholder="Describe the risk statement"/>
+                                <field name="cause" placeholder="Drivers / root causes"/>
+                                <field name="consequence" placeholder="Potential impact or misstatement"/>
+                                <field name="significant"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Evaluation">
+                                <field name="likelihood"/>
+                                <field name="impact"/>
+                                <field name="risk_score" readonly="1"/>
+                                <field name="overall_assessment" readonly="1"/>
+                                <field name="control_reliance"/>
+                                <field name="existing_controls" placeholder="Summarize relevant controls"/>
+                                <field name="walkthrough_reference" placeholder="Walkthrough reference"/>
+                            </group>
+                            <group string="Responses">
+                                <field name="planned_response" placeholder="Document planned audit response"/>
+                                <field name="additional_considerations" placeholder="Further considerations, coordination, documentation"/>
+                            </group>
+                        </group>
+                        <group string="Review">
+                            <group>
+                                <field name="reviewer_id"/>
+                                <field name="review_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_risk_assessment_search" model="ir.ui.view">
+            <field name="name">qaco.risk.assessment.search</field>
+            <field name="model">qaco.risk.assessment</field>
+            <field name="arch" type="xml">
+                <search string="Risk Assessments">
+                    <field name="name"/>
+                    <field name="planning_id"/>
+                    <filter string="Financial Statement Level" name="fs_level" domain="[('assessment_level', '=', 'financial_statement')]"/>
+                    <filter string="Assertion Level" name="assertion_level" domain="[('assessment_level', '=', 'assertion')]"/>
+                    <filter string="Draft" name="draft" domain="[('review_state', '=', 'draft')]"/>
+                    <filter string="Approved" name="approved" domain="[('review_state', '=', 'approved')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Planning" name="group_planning" context="{'group_by': 'planning_id'}"/>
+                        <filter string="Level" name="group_level" context="{'group_by': 'assessment_level'}"/>
+                        <filter string="Reviewer" name="group_reviewer" context="{'group_by': 'reviewer_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
