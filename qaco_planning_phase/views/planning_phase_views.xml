@@ -15,315 +15,466 @@
                     <field name="legal_form"/>
                     <field name="entity_classification"/>
                     <field name="industry_sector_id"/>
-                                <p><strong>Standards:</strong> ISA 315 and ISA 320.</p>
-                                <ul>
-                                    <li><strong>Risk assessment:</strong> Evaluate financial statement level risks (e.g., financial distress) and assertion level risks (e.g., complex valuations).</li>
-                                    <li><strong>Materiality:</strong> Set overall materiality (e.g., 5-10% PBT or 1-2% revenue) and performance materiality (roughly 50-75% of overall materiality).</li>
-                                    <li><strong>Sampling approach:</strong> Define statistical, non-statistical, monetary unit, or stratified sampling based on assessed risk.</li>
-                                </ul>
-                                <h3>3. Selecting the Sample and Performing Substantive Testing</h3>
-                                <p><strong>Standard:</strong> ISA 530.</p>
-                                <p><strong>Sample size guidance:</strong> apply adjustment factors of 0.5-0.7 (low RoMM), 0.8-1.0 (moderate RoMM), or 1.2-1.5 (high RoMM).</p>
-                                <p><strong>Sampling methods:</strong> statistical (random or systematic), non-statistical, monetary unit sampling, or stratified sampling. Perform inspection, recalculation, reperformance, or confirmation on selected items.</p>
-                                <pre><code>Sample size (n) = (Z^2 * P * (1 - P)) / E^2
-Where Z = confidence z-score, P = expected misstatement proportion, E = tolerable error rate</code></pre>
-                                <h3>4. Evaluating Identified Misstatements</h3>
-                                <p><strong>Standard:</strong> ISA 450.</p>
-                                <ul>
-                                    <li><strong>Factual:</strong> objective errors like misclassifications.</li>
-                                    <li><strong>Judgmental:</strong> differences in estimates or assumptions.</li>
-                                    <li><strong>Projected:</strong> extrapolated errors from sampling.</li>
-                                </ul>
-                                <p>Compare misstatements with overall and performance materiality as well as the acceptable misstatement performance threshold (AMPT). Request management adjustments when thresholds are exceeded.</p>
-                                <h3>Misstatement Evaluation Matrix</h3>
-                                <div class="oe_structure">
-                                    <table class="o_table o_inner_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Definition</th>
-                                        <field name="account_area"/>
-                                        <field name="likelihood"/>
-                                        <field name="impact"/>
-                                        <field name="risk_score"/>
-                                        <field name="significant"/>
-                                        <field name="response"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            
-                            <!-- Checklist Tab -->
-                            <page name="checklist_items" string="Checklist">
-                                <group>
-                                    <group>
-                                        <field name="checklist_total"/>
-                                        <field name="checklist_done"/>
-                                        <field name="progress" widget="percentpie"/>
-                                    </group>
-                                </group>
-                                <field name="checklist_ids">
-                                    <tree editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="section"/>
-                                        <field name="description"/>
-                                        <field name="isa_ref"/>
-                                        <field name="owner_id"/>
-                                        <field name="done"/>
-                                        <field name="completion_date"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            
-                            <!-- Information Requisition Tab -->
-                            <page name="pbc_list" string="Information Requisitions">
-                                <field name="pbc_ids">
-                                    <tree decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
-                                        <field name="name"/>
-                                        <field name="category"/>
-                                        <field name="client_contact"/>
-                                        <field name="due_date"/>
-                                        <field name="received"/>
-                                        <field name="received_date"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            
-                            <!-- Timeline Tab -->
-                            <page name="timeline" string="Timeline">
-                                <field name="milestone_ids">
-                                    <tree decoration-success="completed == True">
-                                        <field name="name"/>
-                                        <field name="category"/>
-                                        <field name="date"/>
-                                        <field name="owner_id"/>
-                                        <field name="completed"/>
-                                        <field name="completion_date"/>
-                                    </tree>
-                                </field>
-                            </page>
+                    <field name="partner_id"/>
+                    <field name="acceptance_state"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
 
-                            <!-- Audit Guide Tab -->
-                            <page name="audit_guide" string="Audit Guide">
-                                <div class="o_form_label" style="font-size:18px;font-weight:600;">Audit Guide</div>
-                                <p>
-                                    This guide outlines a step-by-step process for planning, performing, and reporting on an audit.
-                                    It covers client acceptance/continuance, risk assessment, audit sampling, misstatement evaluation,
-                                    and final reporting to stay compliant with International Standards on Auditing (ISAs).
-                                </p>
-                                <h3>Overview of the Audit Process</h3>
-                                <div class="oe_structure">
-                                    <table class="o_table o_inner_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Phase</th>
-                                                <th>Relevant Standards</th>
-                                                <th>Key Activities</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Client Acceptance and Continuance</td>
-                                                <td>ISA 210, ISA 220, Firm Policy</td>
-                                                <td>Evaluate client risk, independence, and ethical considerations before engagement; decide on acceptance or continuance.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Planning and Identifying the Risk of Misstatements</td>
-                                                <td>ISA 315, ISA 320</td>
-                                                <td>Assess risk of material misstatement at financial statement and assertion levels; determine materiality and sampling approach.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Selecting the Sample and Performing Substantive Testing</td>
-                                                <td>ISA 530</td>
-                                                <td>Determine sample size, select sampling method, and perform substantive audit procedures.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Evaluating Identified Misstatements</td>
-                                                <td>ISA 450</td>
-                                                <td>Classify misstatements, compare against thresholds, and schedule additional testing if required.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Determining the Impact on the Audit</td>
-                                                <td>ISA 330</td>
-                                                <td>Reassess risks, extend samples or apply alternative procedures, and modify the opinion if needed.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Engaging with Management for Adjustments</td>
-                                                <td>ISA 450, ISA 265</td>
-                                                <td>Communicate misstatements, evaluate responses, and assess uncorrected errors.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Documenting Audit Findings and Extrapolating Misstatements</td>
-                                                <td>ISA 230</td>
-                                                <td>Calculate projected misstatements, determine if thresholds are exceeded, and plan additional work.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Communicating and Reporting the Misstatements</td>
-                                                <td>ISA 260, ISA 450, ISA 700</td>
-                                                <td>Report uncorrected misstatements, assess pervasiveness, and prepare the final audit report.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <h3>1. Client Acceptance and Continuance</h3>
-                                <p><strong>Standards:</strong> ISA 210, ISA 220, and firm policy.</p>
-                                <p><strong>Pre-engagement evaluation:</strong> Assess integrity, reputation, and financial viability; evaluate conflicts, independence, and ethics; document rationale.</p>
-                                <p><strong>Decision-making:</strong> Decline engagements with unacceptable risk or independence concerns; if accepted, confirm scope and responsibilities in writing.</p>
-                                <h3>2. Planning and Identifying the Risk of Misstatements</h3>
-                                <p><strong>Standards:</strong> ISA 315 and ISA 320.</p>
-                                <ul>
-                                    <li><strong>Risk assessment:</strong> Evaluate financial statement level risks (e.g., financial distress) and assertion level risks (e.g., complex valuations).</li>
-                                    <li><strong>Materiality:</strong> Set overall materiality (e.g., 5-10% PBT or 1-2% revenue) and performance materiality (roughly 50-75% of overall materiality).</li>
-                                    <li><strong>Sampling approach:</strong> Define statistical, non-statistical, monetary unit, or stratified sampling based on assessed risk.</li>
-                                </ul>
-                                <h3>3. Selecting the Sample and Performing Substantive Testing</h3>
-                                <p><strong>Standard:</strong> ISA 530.</p>
-                                <p><strong>Sample size guidance:</strong> apply adjustment factors of 0.5-0.7 (low RoMM), 0.8-1.0 (moderate RoMM), or 1.2-1.5 (high RoMM).</p>
-                                <p><strong>Sampling methods:</strong> statistical (random or systematic), non-statistical, monetary unit sampling, or stratified sampling. Perform inspection, recalculation, reperformance, or confirmation on selected items.</p>
-                                <pre><code>Sample size (n) = (Z^2 * P * (1 - P)) / E^2
-Where Z = confidence z-score, P = expected misstatement proportion, E = tolerable error rate</code></pre>
-                                <h3>4. Evaluating Identified Misstatements</h3>
-                                <p><strong>Standard:</strong> ISA 450.</p>
-                                <ul>
-                                    <li><strong>Factual:</strong> objective errors like misclassifications.</li>
-                                    <li><strong>Judgmental:</strong> differences in estimates or assumptions.</li>
-                                    <li><strong>Projected:</strong> extrapolated errors from sampling.</li>
-                                </ul>
-                                <p>Compare misstatements with overall and performance materiality as well as the acceptable misstatement performance threshold (AMPT). Request management adjustments when thresholds are exceeded.</p>
-                                <h3>Misstatement Evaluation Matrix</h3>
-                                <div class="oe_structure">
-                                    <table class="o_table o_inner_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Definition</th>
-                                                <th>Comparison</th>
-                                                <th>Auditor Action</th>
-                                                <th>Management Response</th>
-                                                <th>Auditor Follow-up</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Factual</td>
-                                                <td>Objective errors such as calculation mistakes.</td>
-                                                <td>Compare with AMPT and overall materiality.</td>
-                                                <td>Request corrections, reassess controls.</td>
-                                                <td>Agree and correct.</td>
-                                                <td>Verify corrections; escalate disagreements to governance.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Judgmental</td>
-                                                <td>Differences in estimates or assumptions.</td>
-                                                <td>Compare with performance materiality and judgment thresholds.</td>
-                                                <td>Challenge assumptions, seek evidence or experts.</td>
-                                                <td>Provide justification.</td>
-                                                <td>Assess reasonableness; consider opinion modification if unresolved.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Projected</td>
-                                                <td>Errors extrapolated from samples.</td>
-                                                <td>Compare projected error with materiality and extrapolation impact.</td>
-                                                <td>Expand testing or alternative procedures.</td>
-                                                <td>Evaluate extrapolated misstatements.</td>
-                                                <td>Document response; reassess sample strategy if management declines adjustments.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <h3>5. Determining the Impact on the Audit</h3>
-                                <p><strong>Standard:</strong> ISA 330.</p>
-                                <p>Reassess risks, extend samples, apply alternative procedures, and document rationale for adjustments. Communicate key findings to governance.</p>
-                                <h3>6. Engaging with Management for Adjustments</h3>
-                                <p><strong>Standards:</strong> ISA 450 and ISA 265.</p>
-                                <p>Report misstatements, document discussions, verify corrections, and evaluate cumulative unadjusted errors for potential opinion modifications.</p>
-                                <h3>7. Documenting Audit Findings and Extrapolating Misstatements</h3>
-                                <p><strong>Standard:</strong> ISA 230.</p>
-                                <pre><code>Projected (value-based) = Factual error * Total population value / Sample value
-Projected (unit-based) = Factual error * Total sampling units / Sample size</code></pre>
-                                <p>Use the larger projection; if it exceeds 50% of performance materiality, plan additional procedures. Record calculations and rationale.</p>
-                                <h3>8. Communicating and Reporting the Misstatements</h3>
-                                <p><strong>Standards:</strong> ISA 260, ISA 450, ISA 700.</p>
-                                <p>Report uncorrected misstatements, assess pervasiveness, and determine the appropriate opinion (qualified, adverse, or modified). Ensure the final report reflects all significant findings and recommendations.</p>
-                                <h3>Conclusion</h3>
-                                <p>
-                                    Following this guide ensures robust client evaluation, thorough planning, effective sampling, careful evaluation of misstatements,
-                                    transparent communication, and accurate ISA-compliant reporting throughout the audit lifecycle.
-                                </p>
-                            </page>
+        <!-- Planning Phase Kanban View -->
+        <record id="view_planning_phase_kanban" model="ir.ui.view">
+                    <field name="name">qaco.planning.phase.kanban</field>
+                    <field name="model">qaco.planning.phase</field>
+                    <field name="arch" type="xml">
+                        <kanban class="o_kanban_mobile">
+                            <field name="name"/>
+                            <field name="audit_id"/>
+                            <field name="client_id"/>
+                            <field name="state"/>
+                            <field name="progress"/>
+                            <field name="partner_id"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div class="o_kanban_record_top">
+                                            <div class="o_kanban_record_headings">
+                                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                            </div>
+                                            <span class="float-end badge rounded-pill" t-attf-class="badge-{{record.state.raw_value == 'approved' ? 'success' : record.state.raw_value == 'review' ? 'warning' : 'info'}}">
+                                                <field name="state"/>
+                                            </span>
+                                        </div>
+                                        <div class="o_kanban_record_body">
+                                            <field name="audit_id"/>
+                                            <br/>
+                                            <field name="client_id"/>
+                                        </div>
+                                        <div class="o_kanban_record_bottom">
+                                            <div class="oe_kanban_bottom_left">
+                                                <field name="partner_id" widget="many2one_avatar_user"/>
+                                                Progress: <field name="progress"/>%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </record>
+
+                <!-- Planning Phase Form View -->
+                <record id="view_planning_phase_form" model="ir.ui.view">
+                    <field name="name">qaco.planning.phase.form</field>
+                    <field name="model">qaco.planning.phase</field>
+                    <field name="arch" type="xml">
+                        <form string="Planning Phase">
+                            <header>
+                                <button name="action_start_planning" string="Start Planning" 
+                                        type="object" class="btn-primary" 
+                                        invisible="state != 'draft'"/>
+                                <button name="action_submit_review" string="Submit for Review" 
+                                        type="object" class="btn-primary" 
+                                        invisible="state != 'in_progress'"/>
+                                <button name="action_approve" string="Approve" 
+                                        type="object" class="btn-success" 
+                                        invisible="state != 'review'"/>
+                                <button name="action_reset_draft" string="Reset to Draft" 
+                                        type="object" 
+                                        invisible="state == 'draft'"/>
+                                <button name="action_accept_planning" string="Accept Engagement" type="object" class="btn-secondary" invisible="acceptance_state == 'accepted'"/>
+                                <button name="action_trigger_independence_escalation" string="Escalate Independence" type="object" class="btn-secondary" invisible="independence_questionnaire_result != 'review'"/>
+                                <button name="action_mark_ready_for_fieldwork" string="Mark Fieldwork Ready" type="object" class="btn-success" invisible="state not in ['approved','review']"/>
+                                <button name="action_export_planning_memorandum" string="Planning Memorandum" type="object" class="btn-outline-primary"/>
+                                <button name="action_export_secp_package" string="SECP Export" type="object" class="btn-outline-primary"/>
+                                <field name="state" widget="statusbar" 
+                                       statusbar_visible="draft,in_progress,review,approved,fieldwork,finalisation"/>
+                                <field name="acceptance_state" widget="statusbar" statusbar_visible="draft,precheck,awaiting_clearance,accepted,rejected"/>
+                            </header>
+                            <sheet>
+                                <field name="independence_questionnaire_result" invisible="1"/>
+                                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                        
+                                <notebook>
+                                    <page name="client_info" string="Client Information">
+                                        <group>
+                                            <group string="Industry &amp; Business">
+                                                <field name="industry_sector_id" options="{'no_create': True}"/>
+                                                <field name="business_nature" placeholder="Describe the nature of client's business..."/>
+                                            </group>
+                                            <group string="Key Personnel">
+                                                <field name="key_personnel" placeholder="List key client personnel and their roles..."/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Regulatory Profile">
+                                                <field name="client_year_end"/>
+                                                <field name="client_regulator" placeholder="e.g., SECP, SBP, tax authority"/>
+                                                <field name="client_listing_exchange" placeholder="If listed, note the exchange"/>
+                                            </group>
+                                            <group string="Ownership &amp; Governance">
+                                                <field name="client_ownership_structure" placeholder="Summarize shareholders / parent entities..."/>
+                                                <field name="client_governance_notes" placeholder="Describe governance bodies / committees..."/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Strategic Context">
+                                                <field name="client_objectives_strategies" placeholder="Document stated objectives and strategies (ISA 315)..."/>
+                                                <field name="client_measurement_basis" placeholder="Key KPIs / measurement bases used by management..."/>
+                                            </group>
+                                            <group string="Systems &amp; Compliance">
+                                                <field name="client_it_environment" placeholder="List key IT systems supporting financial reporting..."/>
+                                                <field name="client_compliance_matters" placeholder="Significant compliance / regulatory issues to note..."/>
+                                            </group>
+                                        </group>
+                                    </page>
                             
-                            <!-- Team Tab -->
-                            <page name="team" string="Team">
-                                <group>
-                                    <group>
-                                        <field name="partner_id"/>
-                                        <field name="manager_id"/>
-                                    </group>
-                                </group>
-                                <group string="Engagement Team">
-                                    <field name="team_ids" widget="many2many_tags_avatar" nolabel="1"/>
-                                </group>
-                            </page>
+                                    <!-- Engagement Details Tab -->
+                                    <page name="engagement" string="Engagement Details">
+                                        <group>
+                                            <group string="Engagement Information">
+                                                <field name="engagement_type"/>
+                                                <field name="reporting_framework"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </group>
+                                            <group string="Timeline">
+                                                <field name="planning_start_date"/>
+                                                <field name="planning_end_date"/>
+                                                <field name="fieldwork_start_date"/>
+                                                <field name="fieldwork_end_date"/>
+                                                <field name="estimated_hours"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="audit_scope" placeholder="Define the scope and objectives of the audit..."/>
+                                        </group>
+                                    </page>
                             
-                            <!-- Materiality Tab -->
-                            <page name="materiality" string="Materiality">
-                                <group>
-                                    <group string="Materiality Calculations">
-                                        <field name="materiality_basis"/>
-                                        <field name="materiality_amount" widget="monetary"/>
-                                        <field name="performance_materiality" widget="monetary"/>
-                                        <field name="trivial_misstatement" widget="monetary"/>
-                                    </group>
-                                    <group string="ISA 320 Requirements">
-                                        <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
-                                        <field name="scope" placeholder="Define audit scope and components..."/>
-                                        <field name="materiality_notes" placeholder="Document materiality rationale and judgments..."/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group string="Additional Considerations">
-                                        <field name="use_of_experts"/>
-                                        <field name="rely_on_internal_audit"/>
-                                    </group>
-                                    <group string="Approach">
-                                        <field name="audit_approach"/>
-                                        <field name="significant_components" placeholder="Document significant components and areas..."/>
-                                    </group>
-                                </group>
-                                <group string="Materiality Worksheets">
-                                    <field name="materiality_ids">
-                                        <tree>
-                                            <field name="name"/>
-                                            <field name="benchmark_type"/>
-                                            <field name="benchmark_amount"/>
-                                            <field name="applied_percent"/>
-                                            <field name="materiality_amount"/>
-                                            <field name="performance_materiality_amount"/>
-                                            <field name="status"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                            </page>
+                                    <!-- Risk Assessment Tab -->
+                                    <page name="risk" string="Risk Assessment">
+                                        <group>
+                                            <group string="Risk Levels">
+                                                <field name="inherent_risk"/>
+                                                <field name="control_risk"/>
+                                                <field name="detection_risk"/>
+                                            </group>
+                                            <group string="Risk Analysis">
+                                                <field name="key_risk_areas" placeholder="Identify key risk areas..."/>
+                                                <field name="fraud_risk_assessment" placeholder="Document fraud risk assessment..."/>
+                                            </group>
+                                        </group>
+                                    </page>
                             
-                            <!-- Ethics & Compliance Tab -->
-                            <page name="ethics" string="Ethics &amp; Compliance">
-                                <group>
-                                    <group string="ISA 210: Engagement Letter">
-                                        <field name="engagement_letter_obtained"/>
-                                        <field name="engagement_letter_date"/>
-                                    </group>
-                                    <group string="IESBA Code: Independence">
-                                        <field name="independence_confirmed"/>
-                                        <field name="independence_date"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group string="ISA 220: Quality Control">
-                                        <field name="ethical_requirements_met"/>
-                                    </group>
-                                </group>
-                            </page>
+                                    <!-- Risks Tab -->
+                                    <page name="risks" string="Risks">
+                                        <field name="risk_ids">
+                                            <tree decoration-danger="significant == True">
+                                                <field name="name"/>
+                                                <field name="risk_type"/>
+                                                <field name="assertion"/>
+                                                <field name="account_area"/>
+                                                <field name="likelihood"/>
+                                                <field name="impact"/>
+                                                <field name="risk_score"/>
+                                                <field name="significant"/>
+                                                <field name="response"/>
+                                            </tree>
+                                        </field>
+                                    </page>
                             
-                            <!-- Documents &amp; Notes Tab -->
+                                    <!-- Checklist Tab -->
+                                    <page name="checklist_items" string="Checklist">
+                                        <group>
+                                            <group>
+                                                <field name="checklist_total"/>
+                                                <field name="checklist_done"/>
+                                                <field name="progress" widget="percentpie"/>
+                                            </group>
+                                        </group>
+                                        <field name="checklist_ids">
+                                            <tree editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="section"/>
+                                                <field name="description"/>
+                                                <field name="isa_ref"/>
+                                                <field name="owner_id"/>
+                                                <field name="done"/>
+                                                <field name="completion_date"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                            
+                                    <!-- Information Requisition Tab -->
+                                    <page name="pbc_list" string="Information Requisitions">
+                                        <field name="pbc_ids">
+                                            <tree decoration-success="received == True" decoration-danger="due_date and due_date &lt; context_today().strftime('%Y-%m-%d') and not received">
+                                                <field name="name"/>
+                                                <field name="category"/>
+                                                <field name="client_contact"/>
+                                                <field name="due_date"/>
+                                                <field name="received"/>
+                                                <field name="received_date"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                            
+                                    <!-- Timeline Tab -->
+                                    <page name="timeline" string="Timeline">
+                                        <field name="milestone_ids">
+                                            <tree decoration-success="completed == True">
+                                                <field name="name"/>
+                                                <field name="category"/>
+                                                <field name="date"/>
+                                                <field name="owner_id"/>
+                                                <field name="completed"/>
+                                                <field name="completion_date"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+
+                                    <!-- Audit Guide Tab -->
+                                    <page name="audit_guide" string="Audit Guide">
+                                        <div class="o_form_label" style="font-size:18px;font-weight:600;">Audit Guide</div>
+                                        <p>
+                                            This guide outlines a step-by-step process for planning, performing, and reporting on an audit.
+                                            It covers client acceptance/continuance, risk assessment, audit sampling, misstatement evaluation,
+                                            and final reporting to stay compliant with International Standards on Auditing (ISAs).
+                                        </p>
+                                        <h3>Overview of the Audit Process</h3>
+                                        <div class="oe_structure">
+                                            <table class="o_table o_inner_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Phase</th>
+                                                        <th>Relevant Standards</th>
+                                                        <th>Key Activities</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Client Acceptance and Continuance</td>
+                                                        <td>ISA 210, ISA 220, Firm Policy</td>
+                                                        <td>Evaluate client risk, independence, and ethical considerations before engagement; decide on acceptance or continuance.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Planning and Identifying the Risk of Misstatements</td>
+                                                        <td>ISA 315, ISA 320</td>
+                                                        <td>Assess risk of material misstatement at financial statement and assertion levels; determine materiality and sampling approach.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Selecting the Sample and Performing Substantive Testing</td>
+                                                        <td>ISA 530</td>
+                                                        <td>Determine sample size, select sampling method, and perform substantive audit procedures.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Evaluating Identified Misstatements</td>
+                                                        <td>ISA 450</td>
+                                                        <td>Classify misstatements, compare against thresholds, and schedule additional testing if required.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Determining the Impact on the Audit</td>
+                                                        <td>ISA 330</td>
+                                                        <td>Reassess risks, extend samples or apply alternative procedures, and modify the opinion if needed.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Engaging with Management for Adjustments</td>
+                                                        <td>ISA 450, ISA 265</td>
+                                                        <td>Communicate misstatements, evaluate responses, and assess uncorrected errors.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Documenting Audit Findings and Extrapolating Misstatements</td>
+                                                        <td>ISA 230</td>
+                                                        <td>Calculate projected misstatements, determine if thresholds are exceeded, and plan additional work.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Communicating and Reporting the Misstatements</td>
+                                                        <td>ISA 260, ISA 450, ISA 700</td>
+                                                        <td>Report uncorrected misstatements, assess pervasiveness, and prepare the final audit report.</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <h3>1. Client Acceptance and Continuance</h3>
+                                        <p><strong>Standards:</strong> ISA 210, ISA 220, and firm policy.</p>
+                                        <p><strong>Pre-engagement evaluation:</strong> Assess integrity, reputation, and financial viability; evaluate conflicts, independence, and ethics; document rationale.</p>
+                                        <p><strong>Decision-making:</strong> Decline engagements with unacceptable risk or independence concerns; if accepted, confirm scope and responsibilities in writing.</p>
+                                        <h3>2. Planning and Identifying the Risk of Misstatements</h3>
+                                        <p><strong>Standards:</strong> ISA 315 and ISA 320.</p>
+                                        <ul>
+                                            <li><strong>Risk assessment:</strong> Evaluate financial statement level risks (e.g., financial distress) and assertion level risks (e.g., complex valuations).</li>
+                                            <li><strong>Materiality:</strong> Set overall materiality (e.g., 5-10% PBT or 1-2% revenue) and performance materiality (roughly 50-75% of overall materiality).</li>
+                                            <li><strong>Sampling approach:</strong> Define statistical, non-statistical, monetary unit, or stratified sampling based on assessed risk.</li>
+                                        </ul>
+                                        <h3>3. Selecting the Sample and Performing Substantive Testing</h3>
+                                        <p><strong>Standard:</strong> ISA 530.</p>
+                                        <p><strong>Sample size guidance:</strong> apply adjustment factors of 0.5-0.7 (low RoMM), 0.8-1.0 (moderate RoMM), or 1.2-1.5 (high RoMM).</p>
+                                        <p><strong>Sampling methods:</strong> statistical (random or systematic), non-statistical, monetary unit sampling, or stratified sampling. Perform inspection, recalculation, reperformance, or confirmation on selected items.</p>
+                                        <pre><code>Sample size (n) = (Z^2 * P * (1 - P)) / E^2
+        Where Z = confidence z-score, P = expected misstatement proportion, E = tolerable error rate</code></pre>
+                                        <h3>4. Evaluating Identified Misstatements</h3>
+                                        <p><strong>Standard:</strong> ISA 450.</p>
+                                        <ul>
+                                            <li><strong>Factual:</strong> objective errors like misclassifications.</li>
+                                            <li><strong>Judgmental:</strong> differences in estimates or assumptions.</li>
+                                            <li><strong>Projected:</strong> extrapolated errors from sampling.</li>
+                                        </ul>
+                                        <p>Compare misstatements with overall and performance materiality as well as the acceptable misstatement performance threshold (AMPT). Request management adjustments when thresholds are exceeded.</p>
+                                        <h3>Misstatement Evaluation Matrix</h3>
+                                        <div class="oe_structure">
+                                            <table class="o_table o_inner_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Type</th>
+                                                        <th>Definition</th>
+                                                        <th>Comparison</th>
+                                                        <th>Auditor Action</th>
+                                                        <th>Management Response</th>
+                                                        <th>Auditor Follow-up</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Factual</td>
+                                                        <td>Objective errors such as calculation mistakes.</td>
+                                                        <td>Compare with AMPT and overall materiality.</td>
+                                                        <td>Request corrections, reassess controls.</td>
+                                                        <td>Agree and correct.</td>
+                                                        <td>Verify corrections; escalate disagreements to governance.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Judgmental</td>
+                                                        <td>Differences in estimates or assumptions.</td>
+                                                        <td>Compare with performance materiality and judgment thresholds.</td>
+                                                        <td>Challenge assumptions, seek evidence or experts.</td>
+                                                        <td>Provide justification.</td>
+                                                        <td>Assess reasonableness; consider opinion modification if unresolved.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Projected</td>
+                                                        <td>Errors extrapolated from samples.</td>
+                                                        <td>Compare projected error with materiality and extrapolation impact.</td>
+                                                        <td>Expand testing or alternative procedures.</td>
+                                                        <td>Evaluate extrapolated misstatements.</td>
+                                                        <td>Document response; reassess sample strategy if management declines adjustments.</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <h3>5. Determining the Impact on the Audit</h3>
+                                        <p><strong>Standard:</strong> ISA 330.</p>
+                                        <p>Reassess risks, extend samples, apply alternative procedures, and document rationale for adjustments. Communicate key findings to governance.</p>
+                                        <h3>6. Engaging with Management for Adjustments</h3>
+                                        <p><strong>Standards:</strong> ISA 450 and ISA 265.</p>
+                                        <p>Report misstatements, document discussions, verify corrections, and evaluate cumulative unadjusted errors for potential opinion modifications.</p>
+                                        <h3>7. Documenting Audit Findings and Extrapolating Misstatements</h3>
+                                        <p><strong>Standard:</strong> ISA 230.</p>
+                                        <pre><code>Projected (value-based) = Factual error * Total population value / Sample value
+        Projected (unit-based) = Factual error * Total sampling units / Sample size</code></pre>
+                                        <p>Use the larger projection; if it exceeds 50% of performance materiality, plan additional procedures. Record calculations and rationale.</p>
+                                        <h3>8. Communicating and Reporting the Misstatements</h3>
+                                        <p><strong>Standards:</strong> ISA 260, ISA 450, ISA 700.</p>
+                                        <p>Report uncorrected misstatements, assess pervasiveness, and determine the appropriate opinion (qualified, adverse, or modified). Ensure the final report reflects all significant findings and recommendations.</p>
+                                        <h3>Conclusion</h3>
+                                        <p>
+                                            Following this guide ensures robust client evaluation, thorough planning, effective sampling, careful evaluation of misstatements,
+                                            transparent communication, and accurate ISA-compliant reporting throughout the audit lifecycle.
+                                        </p>
+                                    </page>
+                            
+                                    <!-- Team Tab -->
+                                    <page name="team" string="Team">
+                                        <group>
+                                            <group>
+                                                <field name="partner_id"/>
+                                                <field name="manager_id"/>
+                                            </group>
+                                        </group>
+                                        <group string="Engagement Team">
+                                            <field name="team_ids" widget="many2many_tags_avatar" nolabel="1"/>
+                                        </group>
+                                    </page>
+                            
+                                    <!-- Materiality Tab -->
+                                    <page name="materiality" string="Materiality">
+                                        <group>
+                                            <group string="Materiality Calculations">
+                                                <field name="materiality_basis"/>
+                                                <field name="materiality_amount" widget="monetary"/>
+                                                <field name="performance_materiality" widget="monetary"/>
+                                                <field name="trivial_misstatement" widget="monetary"/>
+                                            </group>
+                                            <group string="ISA 320 Requirements">
+                                                <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
+                                                <field name="scope" placeholder="Define audit scope and components..."/>
+                                                <field name="materiality_notes" placeholder="Document materiality rationale and judgments..."/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Additional Considerations">
+                                                <field name="use_of_experts"/>
+                                                <field name="rely_on_internal_audit"/>
+                                            </group>
+                                            <group string="Approach">
+                                                <field name="audit_approach"/>
+                                                <field name="significant_components" placeholder="Document significant components and areas..."/>
+                                            </group>
+                                        </group>
+                                        <group string="Materiality Worksheets">
+                                            <field name="materiality_ids">
+                                                <tree>
+                                                    <field name="name"/>
+                                                    <field name="benchmark_type"/>
+                                                    <field name="benchmark_amount"/>
+                                                    <field name="applied_percent"/>
+                                                    <field name="materiality_amount"/>
+                                                    <field name="performance_materiality_amount"/>
+                                                    <field name="status"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </page>
+                            
+                                    <!-- Ethics &amp; Compliance Tab -->
+                                    <page name="ethics" string="Ethics &amp; Compliance">
+                                        <group>
+                                            <group string="ISA 210: Engagement Letter">
+                                                <field name="engagement_letter_obtained"/>
+                                                <field name="engagement_letter_date"/>
+                                            </group>
+                                            <group string="IESBA Code: Independence">
+                                                <field name="independence_confirmed"/>
+                                                <field name="independence_date"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="ISA 220: Quality Control">
+                                                <field name="ethical_requirements_met"/>
+                                            </group>
+                                        </group>
+                                    </page>
+                            
+                                    <!-- Documents &amp; Notes Tab -->
+                                    <page name="documents" string="Documents &amp; Notes">
+                                        <group>
+                                            <field name="planning_notes" placeholder="Enter planning notes and observations..."/>
+                                        </group>
+                                        <group string="Planning Documents">
+                                            <field name="planning_attachments" widget="many2many_binary" nolabel="1"/>
+                                        </group>
+                                    </page>
+                                </notebook>
+                            </sheet>
+                            <div class="oe_chatter">
+                                <field name="message_follower_ids"/>
+                                <field name="activity_ids"/>
+                                <field name="message_ids"/>
+                            </div>
+                        </form>
+                    </field>
+                </record>
                             <page name="documents" string="Documents &amp; Notes">
                                 <group>
                                     <field name="planning_notes" placeholder="Enter planning notes and observations..."/>
