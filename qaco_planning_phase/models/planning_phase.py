@@ -145,7 +145,11 @@ class QacoMateriality(models.Model):
         currency_field="currency_id",
     )
 
-    attachment_count = fields.Integer(string="Attachments", compute="_compute_attachment_count", store=True)
+    attachment_count = fields.Integer(
+        string="Attachments",
+        compute="_compute_attachment_count",
+        compute_sudo=True,
+    )
 
     revision_of_id = fields.Many2one("qaco.materiality", string="Revision of")
     approved_by = fields.Many2one("res.users", string="Approved by", readonly=True)
@@ -262,7 +266,6 @@ class QacoMateriality(models.Model):
                 rec.sensitivity_low_amount = round(low_amount)
                 rec.sensitivity_high_amount = round(high_amount)
 
-    @api.depends("id")
     def _compute_attachment_count(self):
         Attachment = self.env["ir.attachment"]
         for rec in self:
