@@ -685,18 +685,16 @@
             <field name="name">qaco.risk.assessment.tree</field>
             <field name="model">qaco.risk.assessment</field>
             <field name="arch" type="xml">
-                <tree string="Risk Assessments" decoration-danger="significant == True">
+                <tree string="Risk Assessments">
                     <field name="name"/>
-                    <field name="assessment_level"/>
-                    <field name="financial_statement_focus"/>
-                    <field name="account_area"/>
-                    <field name="assertion"/>
-                    <field name="likelihood"/>
-                    <field name="impact"/>
-                    <field name="risk_score"/>
-                    <field name="overall_assessment"/>
-                    <field name="significant"/>
-                    <field name="review_state"/>
+                    <field name="planning_id"/>
+                    <field name="overall_risk"/>
+                    <field name="inherent_risk"/>
+                    <field name="control_risk"/>
+                    <field name="detection_risk"/>
+                    <field name="mgmt_override_risk"/>
+                    <field name="listed_entity_flag"/>
+                    <field name="pie_flag"/>
                 </tree>
             </field>
         </record>
@@ -706,49 +704,43 @@
             <field name="model">qaco.risk.assessment</field>
             <field name="arch" type="xml">
                 <form string="Risk Assessment">
-                    <header>
-                        <button name="action_submit_for_review" string="Submit for Review" type="object" class="btn-primary" modifiers="{'invisible': [('review_state', '!=', 'draft')]}"/>
-                        <button name="action_mark_reviewed" string="Approve" type="object" class="btn-success" modifiers="{'invisible': [('review_state', '!=', 'review')]}"/>
-                        <field name="review_state" widget="statusbar" statusbar_visible="draft,review,approved"/>
-                    </header>
                     <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
                         <group>
-                            <group string="Scope">
-                                <field name="planning_id"/>
-                                <field name="name"/>
-                                <field name="assessment_level"/>
-                                <field name="financial_statement_focus"/>
-                                <field name="account_area"/>
-                                <field name="assertion"/>
-                                <field name="isa_reference"/>
-                            </group>
-                            <group string="Risk Details">
-                                <field name="risk_statement" placeholder="Describe the risk statement"/>
-                                <field name="cause" placeholder="Drivers / root causes"/>
-                                <field name="consequence" placeholder="Potential impact or misstatement"/>
-                                <field name="significant"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group string="Evaluation">
-                                <field name="likelihood"/>
-                                <field name="impact"/>
-                                <field name="risk_score" readonly="1"/>
-                                <field name="overall_assessment" readonly="1"/>
-                                <field name="control_reliance"/>
-                                <field name="existing_controls" placeholder="Summarize relevant controls"/>
-                                <field name="walkthrough_reference" placeholder="Walkthrough reference"/>
-                            </group>
-                            <group string="Responses">
-                                <field name="planned_response" placeholder="Document planned audit response"/>
-                                <field name="additional_considerations" placeholder="Further considerations, coordination, documentation"/>
-                            </group>
-                        </group>
-                        <group string="Review">
                             <group>
-                                <field name="reviewer_id"/>
-                                <field name="review_date"/>
+                                <field name="planning_id" options="{'no_create': True}"/>
+                                <field name="overall_risk"/>
+                                <field name="inherent_risk"/>
+                                <field name="control_risk"/>
+                                <field name="detection_risk"/>
                             </group>
+                            <group>
+                                <field name="mgmt_override_risk"/>
+                                <field name="revenue_fraud_risk"/>
+                                <field name="listed_entity_flag"/>
+                                <field name="pie_flag"/>
+                                <field name="aob_registration"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="fraud_triangle_pressure"/>
+                                <field name="fraud_triangle_opportunity"/>
+                                <field name="fraud_triangle_rationalization"/>
+                                <field name="fraud_schemes_identified"/>
+                            </group>
+                            <group>
+                                <field name="planned_responses"/>
+                                <field name="tests_of_controls_planned"/>
+                                <field name="substantive_analytics"/>
+                                <field name="substantive_procedures"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="key_audit_judgements"/>
+                            <field name="aml_cft_risk"/>
                         </group>
                     </sheet>
                 </form>
@@ -762,14 +754,11 @@
                 <search string="Risk Assessments">
                     <field name="name"/>
                     <field name="planning_id"/>
-                    <filter string="Financial Statement Level" name="fs_level" domain="[('assessment_level', '=', 'financial_statement')]"/>
-                    <filter string="Assertion Level" name="assertion_level" domain="[('assessment_level', '=', 'assertion')]"/>
-                    <filter string="Draft" name="draft" domain="[('review_state', '=', 'draft')]"/>
-                    <filter string="Approved" name="approved" domain="[('review_state', '=', 'approved')]"/>
+                    <filter string="High Override Risk" name="override" domain="[('mgmt_override_risk', '=', 'yes')]"/>
+                    <filter string="Listed Entities" name="listed" domain="[('listed_entity_flag', '=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Planning" name="group_planning" context="{'group_by': 'planning_id'}"/>
-                        <filter string="Level" name="group_level" context="{'group_by': 'assessment_level'}"/>
-                        <filter string="Reviewer" name="group_reviewer" context="{'group_by': 'reviewer_id'}"/>
+                        <filter string="Overall Risk" name="group_overall" context="{'group_by': 'overall_risk'}"/>
                     </group>
                 </search>
             </field>
