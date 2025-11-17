@@ -9,8 +9,10 @@
                     <field name="name"/>
                     <field name="audit_id"/>
                     <field name="client_id"/>
+                    <field name="entity_classification"/>
                     <field name="planning_date"/>
                     <field name="state"/>
+                    <field name="progress" widget="progressbar"/>
                 </tree>
             </field>
         </record>
@@ -20,8 +22,37 @@
             <field name="name">qaco.planning.phase.form</field>
             <field name="model">qaco.planning.phase</field>
             <field name="arch" type="xml">
-                <form string="Planning Phase">
+                <form string="Planning Phase" create="1" edit="1">
+                    <header>
+                        <button name="action_start" type="object" string="Start" states="draft" class="btn-primary"/>
+                        <button name="action_submit_review" type="object" string="Submit for Review" states="in_progress" class="btn-secondary"/>
+                        <button name="action_approve" type="object" string="Approve" states="review" class="btn-success"/>
+                        <button name="action_mark_ready_for_fieldwork" type="object" string="Move to Fieldwork" states="approved" class="btn-info"/>
+                        <button name="action_reset_draft" type="object" string="Reset" states="review,approved,fieldwork" class="btn-outline-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,review,approved,fieldwork,finalisation"/>
+                    </header>
                     <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h2><field name="audit_id" readonly="1"/></h2>
+                        </div>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_risks" type="object" class="oe_stat_button" icon="fa-exclamation-triangle">
+                                <field name="risk_count" widget="statinfo" string="Risks"/>
+                            </button>
+                            <button name="action_view_significant_risks" type="object" class="oe_stat_button" icon="fa-fire">
+                                <field name="significant_risk_count" widget="statinfo" string="Significant"/>
+                            </button>
+                            <button name="action_view_materiality" type="object" class="oe_stat_button" icon="fa-balance-scale">
+                                <field name="materiality_count" widget="statinfo" string="Materiality"/>
+                            </button>
+                            <button name="action_view_pbc" type="object" class="oe_stat_button" icon="fa-envelope">
+                                <field name="pbc_count" widget="statinfo" string="PBC"/>
+                            </button>
+                            <button name="action_view_milestones" type="object" class="oe_stat_button" icon="fa-calendar">
+                                <field name="milestone_count" widget="statinfo" string="Milestones"/>
+                            </button>
+                        </div>
                         <notebook>
                                     <!-- 1. Ethics & Compliance -->
                                     <page name="ethics" string="Ethics &amp; Compliance">
@@ -165,24 +196,25 @@
                                         </group>
                                     </page>
 
-                                    <!-- 2. Engagement Details -->
-                                    <page name="engagement" string="Engagement Details">
+                                    <!-- 2. Engagement Info -->
+                                    <page name="engagement" string="Engagement Info">
                                         <group>
-                                            <group string="Engagement Information">
+                                            <group string="Core">
+                                                <field name="audit_id" options="{'no_create': True}" readonly="1"/>
+                                                <field name="client_id" options="{'no_create': True}"/>
+                                                <field name="client_partner_id"/>
+                                                <field name="entity_classification"/>
+                                                <field name="legal_form"/>
                                                 <field name="engagement_type"/>
                                                 <field name="reporting_framework"/>
-                                                <field name="currency_id" invisible="1"/>
-                                            </group>
-                                            <group string="Timeline">
-                                                <field name="planning_start_date"/>
-                                                <field name="planning_end_date"/>
                                                 <field name="planning_date"/>
-                                                <field name="fieldwork_start_date"/>
-                                                <field name="fieldwork_end_date"/>
-                                                <field name="estimated_hours"/>
+                                            </group>
+                                            <group string="Reporting Period">
+                                                <field name="reporting_period_start"/>
+                                                <field name="reporting_period_end"/>
                                             </group>
                                         </group>
-                                        <group>
+                                        <group string="Engagement Context">
                                             <field name="audit_scope" placeholder="Define the scope and objectives of the audit..."/>
                                         </group>
                                     </page>
