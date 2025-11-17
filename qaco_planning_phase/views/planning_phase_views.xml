@@ -586,13 +586,13 @@
                                                 <group string="Benchmark &amp; Context">
                                                     <group>
                                                         <field name="entity_classification" readonly="1"/>
-                                                        <field name="materiality_basis" required="1"/>
+                                                        <field name="materiality_basis"/>
                                                         <field name="materiality_benchmark_source"/>
                                                         <field name="benchmark_source_other" modifiers="{'invisible': [('materiality_benchmark_source', '!=', 'other')]}"/>
                                                     </group>
                                                     <group>
                                                         <field name="materiality_base_amount" required="1"/>
-                                                        <field name="materiality_benchmark_rationale" required="1" placeholder="Explain why this benchmark best reflects user focus."/>
+                                                        <field name="materiality_benchmark_rationale" placeholder="Explain why this benchmark best reflects user focus."/>
                                                         <field name="materiality_notes" placeholder="Additional ICAP / AOB guidance, tie-outs, assumptions."/>
                                                     </group>
                                                 </group>
