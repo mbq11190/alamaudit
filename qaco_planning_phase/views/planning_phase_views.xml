@@ -24,11 +24,16 @@
             <field name="arch" type="xml">
                 <form string="Planning Phase" create="1" edit="1">
                     <header>
-                        <button name="action_start" type="object" string="Start" states="draft" class="btn-primary"/>
-                        <button name="action_submit_review" type="object" string="Submit for Review" states="in_progress" class="btn-secondary"/>
-                        <button name="action_approve" type="object" string="Approve" states="review" class="btn-success"/>
-                        <button name="action_mark_ready_for_fieldwork" type="object" string="Move to Fieldwork" states="approved" class="btn-info"/>
-                        <button name="action_reset_draft" type="object" string="Reset" states="review,approved,fieldwork" class="btn-outline-secondary"/>
+                        <button name="action_start" type="object" string="Start" class="btn-primary"
+                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_submit_review" type="object" string="Submit for Review" class="btn-secondary"
+                            modifiers="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                        <button name="action_approve" type="object" string="Approve" class="btn-success"
+                            modifiers="{'invisible': [('state', '!=', 'review')]}"/>
+                        <button name="action_mark_ready_for_fieldwork" type="object" string="Move to Fieldwork" class="btn-info"
+                            modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
+                        <button name="action_reset_draft" type="object" string="Reset" class="btn-outline-secondary"
+                            modifiers="{'invisible': [('state', 'not in', ['review', 'approved', 'fieldwork'])]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,review,approved,fieldwork,finalisation"/>
                     </header>
                     <sheet>
