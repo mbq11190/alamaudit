@@ -82,3 +82,5 @@ access_risk_strategy_checklist_user,access.risk.strategy.checklist.user,model_qa
 access_risk_strategy_checklist_partner,access.risk.strategy.checklist.partner,model_qaco_risk_strategy_checklist,qaco_audit.group_audit_partner,1,1,1,1
 access_risk_attachment_index_user,access.risk.attachment.index.user,model_qaco_risk_attachment_index,base.group_user,1,1,1,0
 access_risk_attachment_index_partner,access.risk.attachment.index.partner,model_qaco_risk_attachment_index,qaco_audit.group_audit_partner,1,1,1,1
+access_audit_strategy_timeline_user,access.audit.strategy.timeline.user,model_qaco_audit_strategy_timeline,base.group_user,1,1,1,0
+access_audit_strategy_timeline_partner,access.audit.strategy.timeline.partner,model_qaco_audit_strategy_timeline,qaco_audit.group_audit_partner,1,1,1,1

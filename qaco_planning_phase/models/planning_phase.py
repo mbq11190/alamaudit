@@ -196,6 +196,14 @@ CHECKLIST_CATEGORIES = [
     ("compliance_group_expert", "Compliance / Group / Experts"),
 ]
 
+TIMELINE_PHASES = [
+    ("planning", "Planning"),
+    ("interim", "Interim"),
+    ("year_end", "Year-end"),
+    ("reporting", "Reporting"),
+    ("other", "Other"),
+]
+
 
 _logger = logging.getLogger(__name__)
 
@@ -1198,6 +1206,11 @@ class PlanningPhase(models.Model):
         string="Communications with TCWG",
         tracking=True,
         help="Planned meetings, topics, and deliverables for those charged with governance",
+    )
+    strategy_timeline_ids = fields.One2many(
+        "qaco.audit.strategy.timeline",
+        "planning_id",
+        string="Audit Strategy Timeline",
     )
 
     # 4. Integrated Checklists
@@ -3643,6 +3656,21 @@ class QacoRiskAttachmentIndex(models.Model):
     description = fields.Char(string="Description", required=True)
     attachment = fields.Binary(string="File", attachment=True)
     filename = fields.Char(string="File Name")
+    notes = fields.Text(string="Notes")
+
+
+class QacoAuditStrategyTimeline(models.Model):
+    _name = "qaco.audit.strategy.timeline"
+    _description = "Audit Strategy Timeline"
+    _order = "planned_start_date, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    phase = fields.Selection(TIMELINE_PHASES, string="Phase", default="planning")
+    milestone = fields.Char(string="Milestone", required=True)
+    planned_start_date = fields.Date(string="Start Date")
+    planned_end_date = fields.Date(string="End Date")
+    owner_id = fields.Many2one("res.users", string="Owner")
+    key_deliverables = fields.Text(string="Key Deliverables")
     notes = fields.Text(string="Notes")
 
 
