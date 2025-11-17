@@ -588,6 +588,7 @@
                     <field name="impact"/>
                     <field name="risk_score"/>
                     <field name="overall_assessment"/>
+                    <field name="significant"/>
                     <field name="review_state"/>
                 </tree>
             </field>
