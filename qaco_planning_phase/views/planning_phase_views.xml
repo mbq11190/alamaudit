@@ -59,76 +59,304 @@
                             </button>
                         </div>
                         <notebook>
-                                    <!-- 1. Engagement Info -->
-                                    <page name="engagement" string="Engagement Info">
-                                        <group>
-                                            <group string="Core">
-                                                <field name="audit_id" options="{'no_create': True}" readonly="1"/>
-                                                <field name="client_id" options="{'no_create': True}"/>
-                                                <field name="client_partner_id"/>
-                                                <field name="entity_classification"/>
-                                                <field name="legal_form"/>
-                                                <field name="engagement_type"/>
-                                                <field name="reporting_framework"/>
-                                                <field name="planning_date"/>
-                                            </group>
-                                            <group string="Reporting Period">
-                                                <field name="reporting_period_start"/>
-                                                <field name="reporting_period_end"/>
-                                            </group>
-                                        </group>
-                                        <group string="Engagement Context">
-                                            <field name="audit_scope" placeholder="Define the scope and objectives of the audit..."/>
-                                        </group>
+                                    <!-- 1. Understanding the Entity & Environment -->
+                                    <page string="Understanding the Entity &amp; Environment">
+                                        <notebook>
+                                            <page name="engagement_understanding" string="Engagement Info – Current Year">
+                                                <group string="Business Model, Industry &amp; Revenue (ISA 300 / ISA 315)">
+                                                    <group>
+                                                        <field name="business_model_current_year" placeholder="Summarize the business model, value drivers, and operating footprint."/>
+                                                        <field name="key_products_services" placeholder="List key products and services."/>
+                                                        <field name="major_customers_current_year" placeholder="Identify major customers for the current year."/>
+                                                        <field name="major_suppliers_current_year" placeholder="Identify major suppliers for the current year."/>
+                                                        <field name="significant_changes_in_business" placeholder="Note significant changes in operations or markets."/>
+                                                        <field name="going_concern_indicators"/>
+                                                        <field name="going_concern_comments" placeholder="Explain going concern assessment."/>
+                                                    </group>
+                                                    <group string="Business Model Checklist" col="2">
+                                                        <field name="bm_prior_year_updated"/>
+                                                        <field name="bm_prior_year_updated_comment" placeholder="Document evidence of prior year file updates."/>
+                                                        <field name="bm_major_change"/>
+                                                        <field name="bm_major_change_comment" placeholder="Explain nature of change."/>
+                                                        <field name="bm_customer_supplier_dependency"/>
+                                                        <field name="bm_customer_supplier_dependency_comment" placeholder="Summarize dependency and mitigation."/>
+                                                        <field name="bm_going_concern_uncertainty"/>
+                                                        <field name="bm_going_concern_uncertainty_comment" placeholder="Capture uncertainties and planned procedures."/>
+                                                    </group>
+                                                    <group string="Supporting Documentation">
+                                                        <field name="bm_attachment_ids" widget="many2many_binary"/>
+                                                        <field name="bm_template_notes" placeholder="Reference ISA 315 business model template usage."/>
+                                                    </group>
+                                                </group>
+
+                                                <group string="Regulatory Environment (ISA 250 – SECP, SBP, FBR, Provincial ST)">
+                                                    <group>
+                                                        <field name="primary_regulator"/>
+                                                        <field name="tax_regime_summary" placeholder="Summarize income tax profile (FBR)."/>
+                                                        <field name="indirect_tax_regime_summary" placeholder="Capture provincial ST / indirect tax regime."/>
+                                                        <field name="regulatory_changes_current_year" placeholder="List key regulatory changes this year."/>
+                                                        <field name="pending_regulatory_inspections" placeholder="Pending inspections or inquiries."/>
+                                                        <field name="litigation_summary_regulatory" placeholder="Summarize regulator litigation / show cause notices."/>
+                                                    </group>
+                                                    <group string="Regulatory Checklist" col="2">
+                                                        <field name="reg_secp_filings_done"/>
+                                                        <field name="reg_secp_filings_comment" placeholder="Form A/29, annual returns status."/>
+                                                        <field name="reg_pending_notices"/>
+                                                        <field name="reg_pending_notices_comment" placeholder="Provide regulator, reference, next steps."/>
+                                                        <field name="reg_license_non_compliance"/>
+                                                        <field name="reg_license_non_compliance_comment" placeholder="Describe non-compliance and corrective actions."/>
+                                                        <field name="reg_tax_returns_on_time"/>
+                                                        <field name="reg_tax_returns_on_time_comment" placeholder="Explain deviations and penalties, if any."/>
+                                                    </group>
+                                                    <group string="Evidence">
+                                                        <field name="reg_attachment_ids" widget="many2many_binary"/>
+                                                    </group>
+                                                </group>
+
+                                                <group string="Financial Reporting Framework &amp; Policies (ISA 300 / ISA 315)">
+                                                    <group>
+                                                        <field name="reporting_framework"/>
+                                                        <field name="financial_reporting_schedule_ids" widget="many2many_tags"/>
+                                                        <field name="significant_policies_summary" placeholder="Summarize significant accounting policies."/>
+                                                        <field name="changes_in_policies_current_year" placeholder="Document policy changes this year."/>
+                                                        <field name="key_judgements_estimates" placeholder="Key judgements and estimates driving risk."/>
+                                                    </group>
+                                                    <group string="Financial Reporting Checklist" col="2">
+                                                        <field name="fr_companies_act_compliant"/>
+                                                        <field name="fr_companies_act_comment" placeholder="Reference schedules applied / gaps."/>
+                                                        <field name="fr_departures_ifrs"/>
+                                                        <field name="fr_departures_ifrs_comment" placeholder="Explain departures or special purpose frameworks."/>
+                                                        <field name="fr_new_ifrs_implemented"/>
+                                                        <field name="fr_new_ifrs_implemented_comment" placeholder="Impact of new/amended standards."/>
+                                                        <field name="fr_policies_consistent"/>
+                                                        <field name="fr_policies_consistent_comment" placeholder="Highlight group-wide consistency observations."/>
+                                                    </group>
+                                                    <group string="Financial Reporting Attachments">
+                                                        <field name="fr_attachment_ids" widget="many2many_binary"/>
+                                                    </group>
+                                                </group>
+
+                                                <group string="IT Environment &amp; Systems (ISA 315)">
+                                                    <group>
+                                                        <field name="main_erp_system"/>
+                                                        <field name="other_critical_systems" placeholder="Billing, inventory, treasury, etc."/>
+                                                        <field name="data_hosting"/>
+                                                        <field name="it_changes_current_year" placeholder="Major IT implementations / upgrades."/>
+                                                        <field name="extent_of_it_dependence"/>
+                                                        <field name="extent_of_it_dependence_comment" placeholder="Explain rationale for IT reliance assessment."/>
+                                                        <field name="planned_it_audit_involvement"/>
+                                                    </group>
+                                                    <group string="IT Checklist" col="2">
+                                                        <field name="it_access_controls_tested"/>
+                                                        <field name="it_access_controls_comment" placeholder="Summaries of logical access testing."/>
+                                                        <field name="it_incidents_or_breaches"/>
+                                                        <field name="it_incidents_or_breaches_comment" placeholder="Detail cyber / availability incidents."/>
+                                                        <field name="it_system_generated_reports_locked"/>
+                                                        <field name="it_system_generated_reports_locked_comment" placeholder="Describe report locking / audit trail controls."/>
+                                                        <field name="it_manual_interfaces_used"/>
+                                                        <field name="it_manual_interfaces_used_comment" placeholder="Key manual interfaces and validation controls."/>
+                                                    </group>
+                                                    <group string="IT Attachments">
+                                                        <field name="it_attachment_ids" widget="many2many_binary"/>
+                                                    </group>
+                                                </group>
+
+                                                <group string="Related Parties &amp; Group Structure (ISA 550)">
+                                                    <group>
+                                                        <field name="group_structure_current_year" placeholder="Summarize current-year group structure changes."/>
+                                                        <field name="material_related_party_transactions" placeholder="Document significant RP transactions."/>
+                                                        <field name="changes_in_shareholding_current_year" placeholder="Highlight shareholding changes."/>
+                                                        <field name="management_oversight_of_related_parties" placeholder="Describe oversight / approval process."/>
+                                                    </group>
+                                                    <group string="Related Party Checklist" col="2">
+                                                        <field name="rp_group_structure_updated"/>
+                                                        <field name="rp_group_structure_updated_comment" placeholder="Reference location of updated org chart."/>
+                                                        <field name="rp_policy_exists"/>
+                                                        <field name="rp_policy_exists_comment" placeholder="Summarize RP policy coverage."/>
+                                                        <field name="rp_non_commercial_terms"/>
+                                                        <field name="rp_non_commercial_terms_comment" placeholder="Document non-commercial arrangements."/>
+                                                        <field name="rp_undisclosed_parties_identified"/>
+                                                        <field name="rp_undisclosed_parties_identified_comment" placeholder="Open action items / follow-ups."/>
+                                                    </group>
+                                                    <group string="Related Party Attachments">
+                                                        <field name="rp_attachment_ids" widget="many2many_binary"/>
+                                                    </group>
+                                                </group>
+
+                                                <group string="Fraud Risk Factors &amp; Anti-Fraud Controls (ISA 240)">
+                                                    <group>
+                                                        <field name="fraud_brainstorming_summary" placeholder="Summarize fraud brainstorming outcomes."/>
+                                                        <field name="management_anti_fraud_controls" placeholder="Describe anti-fraud controls and monitoring."/>
+                                                        <field name="risk_of_management_override"/>
+                                                        <field name="override_rationale" placeholder="Explain rationale for override risk rating."/>
+                                                    </group>
+                                                    <group string="Fraud Checklist" col="2">
+                                                        <field name="fraud_mgmt_assessment_obtained"/>
+                                                        <field name="fraud_mgmt_assessment_comment" placeholder="Reference management representations."/>
+                                                        <field name="fraud_independent_oversight"/>
+                                                        <field name="fraud_independent_oversight_comment" placeholder="Describe AC / board oversight."/>
+                                                        <field name="fraud_known_or_suspected"/>
+                                                        <field name="fraud_known_or_suspected_comment" placeholder="Document cases / allegations."/>
+                                                        <field name="fraud_pressure_opportunity_rationalization"/>
+                                                        <field name="fraud_pressure_opportunity_rationalization_comment" placeholder="Fraud triangle observations."/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="identified_fraud_risks_ids" context="{'default_planning_id': active_id}">
+                                                            <tree string="Fraud-Oriented Risk Assessments">
+                                                                <field name="name"/>
+                                                                <field name="overall_assessment"/>
+                                                                <field name="mgmt_override_risk"/>
+                                                                <field name="revenue_fraud_risk"/>
+                                                                <field name="significant"/>
+                                                            </tree>
+                                                            <form string="Fraud Risk Assessment">
+                                                                <sheet>
+                                                                    <group>
+                                                                        <group>
+                                                                            <field name="name" readonly="1"/>
+                                                                            <field name="assessment_level"/>
+                                                                            <field name="risk_statement"/>
+                                                                        </group>
+                                                                        <group>
+                                                                            <field name="overall_assessment"/>
+                                                                            <field name="mgmt_override_risk"/>
+                                                                            <field name="revenue_fraud_risk"/>
+                                                                        </group>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="planned_response"/>
+                                                                        <field name="fraud_schemes_identified"/>
+                                                                    </group>
+                                                                </sheet>
+                                                            </form>
+                                                        </field>
+                                                    </group>
+                                                    <group string="Fraud Documentation">
+                                                        <field name="fraud_attachment_ids" widget="many2many_binary"/>
+                                                    </group>
+                                                </group>
+                                            </page>
+
+                                            <page name="client_permanent" string="Client Info (Permanent File)">
+                                                <group>
+                                                    <group string="Client Link">
+                                                        <field name="client_id" readonly="1" options="{'no_create': True}"/>
+                                                        <field name="client_legal_name" readonly="1"/>
+                                                        <field name="client_trade_name" readonly="1"/>
+                                                        <field name="client_legal_form" readonly="1"/>
+                                                        <field name="client_incorporation_no" readonly="1"/>
+                                                        <field name="client_incorporation_date" readonly="1"/>
+                                                    </group>
+                                                    <group string="Corporate Profile" colspan="2">
+                                                        <field name="client_group_structure_permanent" readonly="1"/>
+                                                        <field name="client_group_structure_attachment_ids" widget="many2many_binary" readonly="1"/>
+                                                    </group>
+                                                </group>
+                                                <group>
+                                                    <group string="Registrations &amp; Licenses">
+                                                        <field name="client_ntn" readonly="1"/>
+                                                        <field name="client_strn" readonly="1"/>
+                                                        <field name="client_st_reg_province" readonly="1"/>
+                                                        <field name="client_eobi_registration_no" readonly="1"/>
+                                                        <field name="client_social_security_registration_no" readonly="1"/>
+                                                    </group>
+                                                    <group string="Financial &amp; Systems Profile">
+                                                        <field name="client_permanent_reporting_framework" readonly="1"/>
+                                                        <field name="client_year_end_permanent" readonly="1"/>
+                                                        <field name="client_primary_erp_permanent" readonly="1"/>
+                                                        <field name="client_other_systems_permanent" readonly="1"/>
+                                                    </group>
+                                                </group>
+                                                <group string="Permanent Operations Snapshot">
+                                                    <group>
+                                                        <field name="client_permanent_business_description" readonly="1"/>
+                                                        <field name="client_permanent_revenue_streams" readonly="1"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="client_main_locations" readonly="1"/>
+                                                        <field name="client_permanent_key_processes" readonly="1"/>
+                                                        <field name="client_permanent_policies_attachment_ids" widget="many2many_binary" readonly="1"/>
+                                                    </group>
+                                                </group>
+                                                <group string="Shareholding &amp; Licenses">
+                                                    <group>
+                                                        <field name="client_shareholding_ids" readonly="1">
+                                                            <tree>
+                                                                <field name="shareholder_name"/>
+                                                                <field name="percentage_holding"/>
+                                                                <field name="resident_status"/>
+                                                                <field name="remarks"/>
+                                                            </tree>
+                                                        </field>
+                                                    </group>
+                                                    <group>
+                                                        <field name="client_license_ids" readonly="1">
+                                                            <tree>
+                                                                <field name="license_type"/>
+                                                                <field name="license_number"/>
+                                                                <field name="issuing_authority"/>
+                                                                <field name="validity_from"/>
+                                                                <field name="validity_to"/>
+                                                            </tree>
+                                                        </field>
+                                                    </group>
+                                                </group>
+                                            </page>
+
+                                            <page name="laws_mapping" string="Laws &amp; Regulations Mapping">
+                                                <group>
+                                                    <field name="client_law_mapping_ids">
+                                                        <tree editable="bottom" string="Client Law Mapping">
+                                                            <field name="law_id"/>
+                                                            <field name="applicable"/>
+                                                            <field name="applicability_scope"/>
+                                                            <field name="compliance_status"/>
+                                                            <field name="compliance_owner_id"/>
+                                                            <field name="last_compliance_review_date"/>
+                                                            <field name="next_compliance_review_due"/>
+                                                        </tree>
+                                                        <form string="Client Law Mapping">
+                                                            <sheet>
+                                                                <group>
+                                                                    <group>
+                                                                        <field name="client_id" readonly="1"/>
+                                                                        <field name="law_id"/>
+                                                                        <field name="applicable"/>
+                                                                        <field name="applicability_scope"/>
+                                                                        <field name="compliance_status"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="compliance_owner_id"/>
+                                                                        <field name="last_compliance_review_date"/>
+                                                                        <field name="next_compliance_review_due"/>
+                                                                        <field name="execution_checklist_id"/>
+                                                                    </group>
+                                                                </group>
+                                                                <group>
+                                                                    <group string="Risk &amp; Issues">
+                                                                        <field name="key_risks_summary" placeholder="Summarize key compliance risks."/>
+                                                                    </group>
+                                                                    <group string="Checklist">
+                                                                        <field name="law_applicability_reviewed"/>
+                                                                        <field name="law_applicability_reviewed_comment" placeholder="Applicability review observations."/>
+                                                                        <field name="law_significant_non_compliances"/>
+                                                                        <field name="law_significant_non_compliances_comment" placeholder="Describe significant findings / disputes."/>
+                                                                        <field name="law_unrecorded_provisions"/>
+                                                                        <field name="law_unrecorded_provisions_comment" placeholder="Provide potential provision / contingency details."/>
+                                                                    </group>
+                                                                </group>
+                                                            </sheet>
+                                                        </form>
+                                                    </field>
+                                                </group>
+                                                <div class="oe_link">
+                                                    <a type="action" name="action_law_master">Open Law Master</a>
+                                                </div>
+                                            </page>
+                                        </notebook>
                                     </page>
 
-                                    <!-- 2. Client Information -->
-                                    <page name="client_info" string="Client Information">
-                                        <group>
-                                            <group string="Industry &amp; Business">
-                                                <field name="industry_sector_id" options="{'no_create': True}"/>
-                                                <field name="business_nature" placeholder="Describe the nature of client's business..."/>
-                                            </group>
-                                            <group string="Key Personnel">
-                                                <field name="key_personnel" placeholder="List key client personnel and their roles..."/>
-                                            </group>
-                                        </group>
-                                        <group>
-                                            <group string="Regulatory Profile">
-                                                <field name="client_year_end"/>
-                                                <field name="client_regulator" placeholder="e.g., SECP, SBP, tax authority"/>
-                                                <field name="client_listing_exchange" placeholder="If listed, note the exchange"/>
-                                            </group>
-                                            <group string="Ownership &amp; Governance">
-                                                <field name="client_ownership_structure" placeholder="Summarize shareholders / parent entities..."/>
-                                                <field name="client_governance_notes" placeholder="Describe governance bodies / committees..."/>
-                                            </group>
-                                        </group>
-                                        <group>
-                                            <group string="Strategic Context">
-                                                <field name="client_objectives_strategies" placeholder="Document stated objectives and strategies (ISA 315)..."/>
-                                                <field name="client_measurement_basis" placeholder="Key KPIs / measurement bases used by management..."/>
-                                            </group>
-                                            <group string="Systems &amp; Compliance">
-                                                <field name="client_it_environment" placeholder="List key IT systems supporting financial reporting..."/>
-                                                <field name="client_compliance_matters" placeholder="Significant compliance / regulatory issues to note..."/>
-                                            </group>
-                                        </group>
-                                        <group string="Entity Understanding (ISA 315)">
-                                            <group>
-                                                <field name="industry_overview" placeholder="Summarize industry trends and market dynamics..."/>
-                                                <field name="business_overview" placeholder="Describe the business model and revenue streams..."/>
-                                                <field name="going_concern_factors" placeholder="Document going concern indicators or mitigants..."/>
-                                            </group>
-                                            <group>
-                                                <field name="regulatory_factors" placeholder="List regulatory, tax, or external factors impacting the audit..."/>
-                                                <field name="it_environment_overview" placeholder="Capture critical IT infrastructure or third-party systems..."/>
-                                                <field name="governance_structure" placeholder="Outline governance and oversight arrangements..."/>
-                                            </group>
-                                        </group>
-                                    </page>
-
-                                    <!-- 3. Risk Assessment -->
+                                    <!-- 2. Risk Assessment -->
                                     <page name="risk" string="Risk Assessment">
                                         <group>
                                             <group string="Risk Levels">

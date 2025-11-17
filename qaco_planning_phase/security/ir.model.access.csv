@@ -39,3 +39,10 @@ access_engagement_details_user,access.engagement.details.user,model_qaco_engagem
 access_engagement_details_partner,access.engagement.details.partner,model_qaco_engagement_details,qaco_audit.group_audit_partner,1,1,1,1
 access_risk_matrix_user,access.risk.matrix.user,model_qaco_risk_matrix,base.group_user,1,1,1,0
 access_risk_matrix_partner,access.risk.matrix.partner,model_qaco_risk_matrix,qaco_audit.group_audit_partner,1,1,1,1
+access_financial_reporting_schedule_user,access.financial.reporting.schedule.user,model_qaco_financial_reporting_schedule,base.group_user,1,1,1,1
+access_partner_shareholding_user,access.partner.shareholding.user,model_qaco_partner_shareholding,base.group_user,1,1,1,1
+access_partner_license_user,access.partner.license.user,model_qaco_partner_license,base.group_user,1,1,1,1
+access_law_master_user,access.law.master.user,model_qaco_law_master,base.group_user,1,1,1,1
+access_law_checklist_user,access.law.checklist.user,model_qaco_law_checklist,base.group_user,1,1,1,1
+access_law_checklist_line_user,access.law.checklist.line.user,model_qaco_law_checklist_line,base.group_user,1,1,1,1
+access_client_law_mapping_user,access.client.law.mapping.user,model_qaco_client_law_mapping,base.group_user,1,1,1,1

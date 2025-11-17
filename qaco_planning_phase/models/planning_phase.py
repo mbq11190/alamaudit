@@ -496,12 +496,21 @@ class PlanningPhase(models.Model):
         ('agreed_procedures', 'Agreed Upon Procedures'),
     ], string='Engagement Type', tracking=True)
     
-    reporting_framework = fields.Selection([
-        ('ifrs', 'IFRS'),
-        ('ifrs_sme', 'IFRS for SMEs'),
-        ('local_gaap', 'Local GAAP'),
-        ('other', 'Other'),
-    ], string='Reporting Framework', tracking=True)
+    reporting_framework = fields.Selection(
+        [
+            ("ifrs_pakistan", "IFRS (Pakistan Companies Act 2017)"),
+            ("ias_only", "IAS Only / Legacy"),
+            ("cash_basis", "Cash / Fund Accounting"),
+            ("special_purpose", "Special Purpose Framework"),
+            ("ifrs", "IFRS (Legacy)"),
+            ("ifrs_sme", "IFRS for SMEs (Legacy)"),
+            ("local_gaap", "Local GAAP (Legacy)"),
+            ("other", "Other"),
+        ],
+        string="Reporting Framework",
+        tracking=True,
+        help="Select the applicable financial reporting framework for the current engagement year.",
+    )
     
     # Risk Assessment
     inherent_risk = fields.Selection([
@@ -541,6 +550,291 @@ class PlanningPhase(models.Model):
     analytical_procedures_performed = fields.Boolean(
         string='Analytical Procedures Performed', 
         tracking=True
+    )
+
+    # Understanding the Entity & Environment (ISA 300 / ISA 315)
+    business_model_current_year = fields.Text(
+        string="Business Model (Current Year)",
+        tracking=True,
+        help="Summarize the client business model, key processes, and value drivers for the current audit year.",
+    )
+    key_products_services = fields.Text(string="Key Products / Services", tracking=True)
+    major_customers_current_year = fields.Text(string="Major Customers (Current Year)", tracking=True)
+    major_suppliers_current_year = fields.Text(string="Major Suppliers (Current Year)", tracking=True)
+    significant_changes_in_business = fields.Text(string="Significant Changes in Business", tracking=True)
+    going_concern_indicators = fields.Selection(
+        [
+            ("no_issues", "No indicators"),
+            ("mild_concern", "Mild concern"),
+            ("significant_doubt", "Significant doubt"),
+        ],
+        string="Going Concern Indicators",
+        default="no_issues",
+        tracking=True,
+    )
+    going_concern_comments = fields.Text(string="Going Concern Comments", tracking=True)
+    bm_prior_year_updated = fields.Boolean(string="Prior Year Business Model Updated?", tracking=True)
+    bm_prior_year_updated_comment = fields.Text(string="Prior Year BM Comments", tracking=True)
+    bm_major_change = fields.Boolean(string="Major Change in Business Model?", tracking=True)
+    bm_major_change_comment = fields.Text(string="Major Change Comment", tracking=True)
+    bm_customer_supplier_dependency = fields.Boolean(string="Significant Customer / Supplier Dependency?", tracking=True)
+    bm_customer_supplier_dependency_comment = fields.Text(string="Dependency Comment", tracking=True)
+    bm_going_concern_uncertainty = fields.Boolean(string="Going Concern Uncertainty Identified?", tracking=True)
+    bm_going_concern_uncertainty_comment = fields.Text(string="Going Concern Uncertainty Comment", tracking=True)
+    bm_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_bm_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Business Model Attachments",
+        help="Attach business profiles, strategy decks, and key customer / supplier agreements.",
+    )
+    bm_template_notes = fields.Text(
+        string="Business Model Questionnaire Notes",
+        help="Document whether ISA 315 business model templates were used and any tailoring applied.",
+    )
+
+    primary_regulator = fields.Selection(
+        [
+            ("secp", "SECP"),
+            ("sbp", "State Bank of Pakistan"),
+            ("other_sector_regulator", "Other Sector Regulator"),
+            ("none", "None"),
+            ("multiple", "Multiple regulators"),
+        ],
+        string="Primary Regulator",
+        tracking=True,
+    )
+    tax_regime_summary = fields.Text(string="Income Tax Regime Summary", tracking=True)
+    indirect_tax_regime_summary = fields.Text(string="Indirect / Provincial Tax Summary", tracking=True)
+    regulatory_changes_current_year = fields.Text(string="Regulatory Changes (Current Year)", tracking=True)
+    pending_regulatory_inspections = fields.Text(string="Pending Regulatory Inspections", tracking=True)
+    litigation_summary_regulatory = fields.Text(string="Regulatory Litigation Summary", tracking=True)
+    reg_secp_filings_done = fields.Boolean(string="SECP Filings Completed?", tracking=True)
+    reg_secp_filings_comment = fields.Text(string="SECP Filings Comments", tracking=True)
+    reg_pending_notices = fields.Boolean(string="Pending Regulatory Notices?", tracking=True)
+    reg_pending_notices_comment = fields.Text(string="Regulatory Notices Comment", tracking=True)
+    reg_license_non_compliance = fields.Boolean(string="License Non-Compliance?", tracking=True)
+    reg_license_non_compliance_comment = fields.Text(string="License Non-Compliance Comment", tracking=True)
+    reg_tax_returns_on_time = fields.Boolean(string="Tax Returns Filed On Time?", tracking=True)
+    reg_tax_returns_on_time_comment = fields.Text(string="Tax Filing Timeliness Comment", tracking=True)
+    reg_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_reg_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Regulatory Attachments",
+        help="Upload SECP filings, regulator licenses, and current tax filings.",
+    )
+
+    financial_reporting_schedule_ids = fields.Many2many(
+        "qaco.financial.reporting.schedule",
+        "qaco_planning_fr_schedule_rel",
+        "planning_id",
+        "schedule_id",
+        string="Financial Reporting Schedules",
+        help="Reference applicable Companies Act schedules or sector formats.",
+    )
+    significant_policies_summary = fields.Text(string="Significant Accounting Policies", tracking=True)
+    changes_in_policies_current_year = fields.Text(string="Changes in Policies (Current Year)", tracking=True)
+    key_judgements_estimates = fields.Text(string="Key Judgements & Estimates", tracking=True)
+    fr_companies_act_compliant = fields.Boolean(string="Companies Act 2017 Compliant?", tracking=True)
+    fr_companies_act_comment = fields.Text(string="Companies Act Compliance Comment", tracking=True)
+    fr_departures_ifrs = fields.Boolean(string="Departures from IFRS / IAS?", tracking=True)
+    fr_departures_ifrs_comment = fields.Text(string="IFRS Departure Details", tracking=True)
+    fr_new_ifrs_implemented = fields.Boolean(string="New IFRS Implemented?", tracking=True)
+    fr_new_ifrs_implemented_comment = fields.Text(string="New IFRS Commentary", tracking=True)
+    fr_policies_consistent = fields.Boolean(string="Policies Applied Consistently?", tracking=True)
+    fr_policies_consistent_comment = fields.Text(string="Policy Consistency Comment", tracking=True)
+    fr_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_fr_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Financial Reporting Attachments",
+        help="Attach prior year FS, draft current FS, and accounting policy manuals.",
+    )
+
+    main_erp_system = fields.Char(string="Primary ERP / G/L", tracking=True)
+    other_critical_systems = fields.Text(string="Other Critical Systems", tracking=True)
+    data_hosting = fields.Selection(
+        [("on_premise", "On Premise"), ("cloud", "Cloud"), ("hybrid", "Hybrid")],
+        string="Data Hosting",
+        tracking=True,
+    )
+    it_changes_current_year = fields.Text(string="IT Changes (Current Year)", tracking=True)
+    extent_of_it_dependence = fields.Selection(
+        [("high", "High"), ("medium", "Medium"), ("low", "Low")],
+        string="Extent of IT Dependence",
+        tracking=True,
+    )
+    extent_of_it_dependence_comment = fields.Text(string="IT Dependence Commentary", tracking=True)
+    planned_it_audit_involvement = fields.Selection(
+        [
+            ("yes_internal", "Internal IT specialists"),
+            ("yes_external_specialist", "External IT specialists"),
+            ("no", "No dedicated IT audit"),
+        ],
+        string="Planned IT Audit Involvement",
+        tracking=True,
+    )
+    it_access_controls_tested = fields.Boolean(string="Access Controls Tested?", tracking=True)
+    it_access_controls_comment = fields.Text(string="Access Controls Comment", tracking=True)
+    it_incidents_or_breaches = fields.Boolean(string="Security Incidents / Breaches?", tracking=True)
+    it_incidents_or_breaches_comment = fields.Text(string="Incident / Breach Commentary", tracking=True)
+    it_system_generated_reports_locked = fields.Boolean(string="System Reports Locked?", tracking=True)
+    it_system_generated_reports_locked_comment = fields.Text(string="System Reports Comment", tracking=True)
+    it_manual_interfaces_used = fields.Boolean(string="Manual Interfaces Used?", tracking=True)
+    it_manual_interfaces_used_comment = fields.Text(string="Manual Interface Commentary", tracking=True)
+    it_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_it_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="IT Environment Attachments",
+        help="Upload IT architecture diagrams, sample reports, and IT policy documents.",
+    )
+
+    group_structure_current_year = fields.Text(string="Group Structure (Current Year)", tracking=True)
+    material_related_party_transactions = fields.Text(string="Material Related Party Transactions", tracking=True)
+    changes_in_shareholding_current_year = fields.Text(string="Shareholding Changes (Current Year)", tracking=True)
+    management_oversight_of_related_parties = fields.Text(string="Management Oversight of Related Parties", tracking=True)
+    rp_group_structure_updated = fields.Boolean(string="Group Structure Updated?", tracking=True)
+    rp_group_structure_updated_comment = fields.Text(string="Group Structure Comment", tracking=True)
+    rp_policy_exists = fields.Boolean(string="Related Party Policy Exists?", tracking=True)
+    rp_policy_exists_comment = fields.Text(string="Related Party Policy Comment", tracking=True)
+    rp_non_commercial_terms = fields.Boolean(string="Non-Commercial Terms Identified?", tracking=True)
+    rp_non_commercial_terms_comment = fields.Text(string="Non-Commercial Terms Comment", tracking=True)
+    rp_undisclosed_parties_identified = fields.Boolean(string="Undisclosed Related Parties?", tracking=True)
+    rp_undisclosed_parties_identified_comment = fields.Text(string="Undisclosed RP Comment", tracking=True)
+    rp_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_rp_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Related Party Attachments",
+        help="Attach group charts, related party registers, and intra-group agreements.",
+    )
+
+    fraud_brainstorming_summary = fields.Text(string="Fraud Brainstorming Summary", tracking=True)
+    identified_fraud_risks_ids = fields.One2many(
+        "qaco.risk.assessment",
+        "planning_id",
+        string="Identified Fraud Risks",
+        help="Filtered view of risk assessments that capture ISA 240 fraud considerations.",
+    )
+    management_anti_fraud_controls = fields.Text(string="Management Anti-Fraud Controls", tracking=True)
+    risk_of_management_override = fields.Selection(
+        [("high", "High"), ("medium", "Medium"), ("low", "Low")],
+        string="Risk of Management Override",
+        tracking=True,
+    )
+    override_rationale = fields.Text(string="Override Risk Rationale", tracking=True)
+    fraud_mgmt_assessment_obtained = fields.Boolean(string="Management Fraud Assessment Obtained?", tracking=True)
+    fraud_mgmt_assessment_comment = fields.Text(string="Management Fraud Assessment Comment", tracking=True)
+    fraud_independent_oversight = fields.Boolean(string="Independent Oversight Present?", tracking=True)
+    fraud_independent_oversight_comment = fields.Text(string="Oversight Comment", tracking=True)
+    fraud_known_or_suspected = fields.Boolean(string="Known / Suspected Fraud?", tracking=True)
+    fraud_known_or_suspected_comment = fields.Text(string="Known / Suspected Fraud Comment", tracking=True)
+    fraud_pressure_opportunity_rationalization = fields.Boolean(string="Pressure / Opportunity / Rationalization Present?", tracking=True)
+    fraud_pressure_opportunity_rationalization_comment = fields.Text(string="Fraud Triangle Comment", tracking=True)
+    fraud_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_fraud_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Fraud Documentation Attachments",
+        help="Attach brainstorming minutes, whistleblowing policies, and investigation reports.",
+    )
+
+    # Client permanent information (read-only snapshots)
+    client_legal_name = fields.Char(related="client_id.legal_name", string="Legal Name", readonly=True)
+    client_trade_name = fields.Char(related="client_id.trade_name", string="Trade Name", readonly=True)
+    client_incorporation_no = fields.Char(related="client_id.incorporation_no", string="Incorporation No.", readonly=True)
+    client_incorporation_date = fields.Date(related="client_id.incorporation_date", string="Incorporation Date", readonly=True)
+    client_legal_form = fields.Selection(
+        related="client_id.legal_form",
+        string="Legal Form",
+        readonly=True,
+    )
+    client_shareholding_ids = fields.One2many(
+        related="client_id.shareholding_structure_ids",
+        string="Shareholding Structure",
+        readonly=True,
+    )
+    client_group_structure_permanent = fields.Text(
+        related="client_id.group_structure_permanent",
+        string="Group Structure (Permanent)",
+        readonly=True,
+    )
+    client_group_structure_attachment_ids = fields.Many2many(
+        related="client_id.group_structure_attachment_ids",
+        string="Group Attachments",
+        readonly=True,
+    )
+    client_ntn = fields.Char(related="client_id.ntn", string="NTN", readonly=True)
+    client_strn = fields.Char(related="client_id.strn", string="STRN", readonly=True)
+    client_st_reg_province = fields.Char(related="client_id.st_reg_province", string="Sales Tax Province", readonly=True)
+    client_eobi_registration_no = fields.Char(related="client_id.eobi_registration_no", string="EOBI #", readonly=True)
+    client_social_security_registration_no = fields.Char(
+        related="client_id.social_security_registration_no",
+        string="Social Security #",
+        readonly=True,
+    )
+    client_license_ids = fields.One2many(
+        related="client_id.license_ids",
+        string="Regulatory Licenses",
+        readonly=True,
+    )
+    client_permanent_reporting_framework = fields.Selection(
+        related="client_id.permanent_reporting_framework",
+        string="Permanent Reporting Framework",
+        readonly=True,
+    )
+    client_year_end_permanent = fields.Date(
+        related="client_id.permanent_year_end",
+        string="Year End",
+        readonly=True,
+    )
+    client_primary_erp_permanent = fields.Char(
+        related="client_id.primary_erp_permanent",
+        string="Primary ERP (Permanent)",
+        readonly=True,
+    )
+    client_other_systems_permanent = fields.Text(
+        related="client_id.other_systems_permanent",
+        string="Other Systems (Permanent)",
+        readonly=True,
+    )
+    client_permanent_business_description = fields.Text(
+        related="client_id.permanent_business_description",
+        string="Business Description (Permanent)",
+        readonly=True,
+    )
+    client_permanent_revenue_streams = fields.Text(
+        related="client_id.permanent_revenue_streams",
+        string="Revenue Streams (Permanent)",
+        readonly=True,
+    )
+    client_main_locations = fields.Text(
+        related="client_id.main_locations",
+        string="Main Locations",
+        readonly=True,
+    )
+    client_permanent_key_processes = fields.Text(
+        related="client_id.permanent_key_processes",
+        string="Key Processes",
+        readonly=True,
+    )
+    client_permanent_policies_attachment_ids = fields.Many2many(
+        related="client_id.permanent_policies_attachment_ids",
+        string="Permanent Policy Attachments",
+        readonly=True,
+    )
+    client_law_mapping_ids = fields.One2many(
+        related="client_id.client_law_mapping_ids",
+        string="Client Law Mapping",
+        readonly=False,
     )
 
     # Team
@@ -1490,6 +1784,259 @@ class PlanningChecklist(models.Model):
             self.completion_date = fields.Date.today()
         elif not self.done:
             self.completion_date = False
+
+
+class FinancialReportingSchedule(models.Model):
+    _name = "qaco.financial.reporting.schedule"
+    _description = "Companies Act Schedule / Reporting Format"
+    _order = "code, name"
+
+    name = fields.Char(required=True, string="Schedule / Format")
+    code = fields.Char(required=True, string="Reference Code")
+    description = fields.Text(string="Usage Notes")
+    active = fields.Boolean(default=True)
+
+
+class PartnerShareholding(models.Model):
+    _name = "qaco.partner.shareholding"
+    _description = "Client Shareholding Structure"
+    _order = "partner_id, sequence, id"
+
+    partner_id = fields.Many2one("res.partner", required=True, ondelete="cascade")
+    sequence = fields.Integer(default=10)
+    shareholder_name = fields.Char(required=True, string="Shareholder")
+    percentage_holding = fields.Float(string="Holding %")
+    resident_status = fields.Selection(
+        [("resident", "Resident"), ("non_resident", "Non-resident")],
+        string="Resident Status",
+    )
+    remarks = fields.Char(string="Remarks")
+
+
+class PartnerLicense(models.Model):
+    _name = "qaco.partner.license"
+    _description = "Client License / Registration"
+    _order = "partner_id, license_type, validity_to desc"
+
+    partner_id = fields.Many2one("res.partner", required=True, ondelete="cascade")
+    license_type = fields.Char(required=True, string="License Type")
+    license_number = fields.Char(string="Number")
+    issuing_authority = fields.Char(string="Issuing Authority")
+    validity_from = fields.Date(string="Valid From")
+    validity_to = fields.Date(string="Valid To")
+    notes = fields.Text(string="Notes")
+    attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_partner_license_attachment_rel",
+        "license_id",
+        "attachment_id",
+        string="License Attachments",
+    )
+
+
+class ResPartner(models.Model):
+    _inherit = "res.partner"
+
+    is_qaco_client = fields.Boolean(string="QACO Audit Client", help="Flag to show partner on audit planning forms.")
+    legal_name = fields.Char(string="Legal Name")
+    trade_name = fields.Char(string="Trade Name / Brand")
+    incorporation_no = fields.Char(string="Incorporation / Registration No")
+    incorporation_date = fields.Date(string="Incorporation Date")
+    legal_form = fields.Selection(
+        [
+            ("private_ltd", "Private Limited"),
+            ("public_listed", "Public Listed"),
+            ("public_unlisted", "Public Unlisted"),
+            ("section_42", "Section 42 / NGO"),
+            ("ngo", "NGO / NPO"),
+            ("partnership", "Partnership"),
+            ("sole_proprietor", "Sole Proprietor"),
+            ("other", "Other"),
+        ],
+        string="Legal Form",
+    )
+    shareholding_structure_ids = fields.One2many(
+        "qaco.partner.shareholding",
+        "partner_id",
+        string="Shareholding Structure",
+    )
+    group_structure_permanent = fields.Text(string="Group Structure (Permanent)")
+    group_structure_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_partner_group_attachment_rel",
+        "partner_id",
+        "attachment_id",
+        string="Group Attachments",
+    )
+    ntn = fields.Char(string="NTN")
+    strn = fields.Char(string="STRN")
+    st_reg_province = fields.Char(string="Sales Tax Province / Authority")
+    eobi_registration_no = fields.Char(string="EOBI Registration No")
+    social_security_registration_no = fields.Char(string="Social Security / PESSI / SESSI No")
+    license_ids = fields.One2many("qaco.partner.license", "partner_id", string="Licenses & Registrations")
+    permanent_reporting_framework = fields.Selection(
+        [
+            ("ifrs_pakistan", "IFRS (Pakistan Companies Act 2017)"),
+            ("ias_only", "IAS Only / Legacy"),
+            ("cash_basis", "Cash / Fund Accounting"),
+            ("special_purpose", "Special Purpose Framework"),
+            ("ifrs", "IFRS (Legacy)"),
+            ("ifrs_sme", "IFRS for SMEs (Legacy)"),
+            ("local_gaap", "Local GAAP (Legacy)"),
+            ("other", "Other"),
+        ],
+        string="Permanent Reporting Framework",
+    )
+    permanent_year_end = fields.Date(string="Financial Year End")
+    primary_erp_permanent = fields.Char(string="Primary ERP / Core System")
+    other_systems_permanent = fields.Text(string="Other Enterprise Systems")
+    permanent_policies_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_partner_policy_attachment_rel",
+        "partner_id",
+        "attachment_id",
+        string="Permanent Policy Attachments",
+    )
+    permanent_business_description = fields.Text(string="Business Description (Permanent)")
+    permanent_revenue_streams = fields.Text(string="Revenue Streams (Permanent)")
+    main_locations = fields.Text(string="Main Operating Locations")
+    permanent_key_processes = fields.Text(string="Key Processes / SOPs")
+    client_law_mapping_ids = fields.One2many(
+        "qaco.client.law.mapping",
+        "client_id",
+        string="Laws & Regulations Mapping",
+    )
+
+
+class LawMaster(models.Model):
+    _name = "qaco.law.master"
+    _description = "Law / Regulation Master"
+    _order = "law_category, name"
+
+    name = fields.Char(required=True, string="Law / Regulation")
+    law_category = fields.Selection(
+        [
+            ("company_law", "Companies Act / Corporate"),
+            ("direct_tax", "Direct Tax"),
+            ("indirect_tax", "Indirect / Sales Tax"),
+            ("labour", "Labour & Employment"),
+            ("sectoral", "Sector-Specific"),
+            ("other", "Other"),
+        ],
+        string="Category",
+        default="company_law",
+    )
+    section_reference = fields.Text(string="Key Sections / Rules")
+    checklist_template_id = fields.Many2one(
+        "qaco.law.checklist",
+        string="Preferred Checklist",
+        help="Reference checklist to seed execution testing in later phases.",
+        ondelete="set null",
+    )
+    note = fields.Text(string="Implementation Notes")
+    checklist_ids = fields.One2many("qaco.law.checklist", "law_id", string="Checklist Templates")
+
+
+class LawChecklist(models.Model):
+    _name = "qaco.law.checklist"
+    _description = "Law Compliance Checklist"
+    _order = "name"
+
+    name = fields.Char(required=True, string="Checklist Name")
+    law_id = fields.Many2one("qaco.law.master", string="Law / Regulation", ondelete="cascade")
+    line_ids = fields.One2many("qaco.law.checklist.line", "checklist_id", string="Checklist Lines")
+    reviewer_notes = fields.Text(string="Usage Notes")
+
+
+class LawChecklistLine(models.Model):
+    _name = "qaco.law.checklist.line"
+    _description = "Law Checklist Line"
+    _order = "sequence, id"
+
+    checklist_id = fields.Many2one("qaco.law.checklist", required=True, ondelete="cascade")
+    sequence = fields.Integer(default=10)
+    name = fields.Char(required=True, string="Requirement / Clause")
+    control_procedure = fields.Text(string="Audit / Compliance Procedure")
+    evidence_reference = fields.Char(string="Evidence Reference")
+
+
+class ClientLawMapping(models.Model):
+    _name = "qaco.client.law.mapping"
+    _description = "Client Law & Regulation Mapping"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _order = "law_id, compliance_status"
+
+    client_id = fields.Many2one(
+        "res.partner",
+        string="Client",
+        required=True,
+        ondelete="cascade",
+        domain="[('is_company','=',True)]",
+        tracking=True,
+    )
+    planning_id = fields.Many2one(
+        "qaco.planning.phase",
+        string="Planning Reference",
+        ondelete="set null",
+        help="Optional link to the planning file that initiated this mapping entry.",
+    )
+    law_id = fields.Many2one("qaco.law.master", string="Law / Regulation", required=True, tracking=True)
+    applicable = fields.Boolean(string="Applicable", default=True, tracking=True)
+    applicability_scope = fields.Selection(
+        [
+            ("fully", "Fully applicable"),
+            ("partially", "Partially applicable"),
+            ("not_applicable_this_year", "Not applicable this year"),
+        ],
+        string="Applicability Scope",
+        default="fully",
+        tracking=True,
+    )
+    compliance_owner_id = fields.Many2one("res.users", string="Compliance Owner")
+    last_compliance_review_date = fields.Date(string="Last Review Date")
+    next_compliance_review_due = fields.Date(string="Next Review Due")
+    compliance_status = fields.Selection(
+        [
+            ("compliant", "Compliant"),
+            ("non_compliant", "Non-compliant"),
+            ("under_dispute", "Under dispute"),
+            ("not_assessed", "Not assessed"),
+        ],
+        string="Compliance Status",
+        default="not_assessed",
+        tracking=True,
+    )
+    key_risks_summary = fields.Text(string="Key Risks / Issues")
+    execution_checklist_id = fields.Many2one(
+        "qaco.law.checklist",
+        string="Execution Checklist",
+        help="Manual linkage to detailed execution checklist for fieldwork phase.",
+    )
+    law_applicability_reviewed = fields.Boolean(string="Applicability Reviewed?", tracking=True)
+    law_applicability_reviewed_comment = fields.Text(string="Applicability Comments")
+    law_significant_non_compliances = fields.Boolean(string="Significant Non-compliances?", tracking=True)
+    law_significant_non_compliances_comment = fields.Text(string="Non-compliance Commentary")
+    law_unrecorded_provisions = fields.Boolean(string="Unrecorded Provisions / Contingencies?", tracking=True)
+    law_unrecorded_provisions_comment = fields.Text(string="Provision Commentary")
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("in_review", "In Review"),
+            ("approved", "Approved"),
+        ],
+        string="Status",
+        default="draft",
+        tracking=True,
+    )
+    color = fields.Integer(string="Kanban Color")
+
+    def action_approve(self):
+        for rec in self:
+            rec.state = "approved"
+
+    def action_request_review(self):
+        for rec in self:
+            rec.state = "in_review"
 
 
 class PlanningPBC(models.Model):
