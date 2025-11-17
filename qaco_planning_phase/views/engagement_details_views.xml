@@ -33,6 +33,46 @@
                             <div class="oe_edit_only" string=""/>
                         </div>
 
+                        <div class="oe_engagement_top_bar d-flex flex-wrap gap-3 mb-3">
+                            <div class="oe_metric_card card flex-grow-1 shadow-sm border-0">
+                                <div class="card-body">
+                                    <small class="text-muted text-uppercase">Overall Risk</small>
+                                    <div class="d-flex align-items-center gap-2 mt-2">
+                                        <span class="badge bg-danger text-white px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', 'high')]}">High</span>
+                                        <span class="badge bg-warning text-dark px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', 'medium')]}">Medium</span>
+                                        <span class="badge bg-success text-white px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', 'low')]}">Low</span>
+                                        <span class="badge bg-secondary text-white px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', False)]}">Not Set</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="oe_metric_card card flex-grow-1 shadow-sm border-0">
+                                <div class="card-body">
+                                    <small class="text-muted text-uppercase">Materiality (PKR)</small>
+                                    <div class="d-flex align-items-baseline mt-2 gap-2">
+                                        <h4 class="mb-0">
+                                            <field name="materiality_amount"/>
+                                        </h4>
+                                        <span class="text-muted">
+                                            <field name="materiality_basis" readonly="1"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="oe_metric_card card flex-grow-1 shadow-sm border-0">
+                                <div class="card-body">
+                                    <small class="text-muted text-uppercase">Planning Completion</small>
+                                    <div class="d-flex align-items-center gap-3 mt-2">
+                                        <field name="completion_ratio" widget="percentpie" readonly="1" options="{'max_value': 100}"/>
+                                        <strong>
+                                            <field name="completion_status" readonly="1"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <group>
                             <group>
                                 <field name="audit_year"/>
@@ -144,6 +184,7 @@
                             <page string="Materiality Summary">
                                 <group>
                                     <group>
+                                        <field name="materiality_amount"/>
                                         <field name="overall_materiality"/>
                                         <field name="performance_materiality"/>
                                         <field name="trivial_threshold"/>
@@ -158,6 +199,7 @@
                             <!-- G. Risk Summary -->
                             <page string="Risk Summary">
                                 <group>
+                                    <field name="overall_risk_level"/>
                                     <field name="significant_risks"/>
                                     <field name="fraud_risks"/>
                                     <field name="fs_level_risks"/>

@@ -7,6 +7,14 @@ class EngagementDetails(models.Model):
     _name = "qaco.engagement.details"
     _description = "Engagement Details (ISA / SECP / ICAP)"
     _inherit = ["mail.thread", "mail.activity.mixin"]
+    _completion_required_fields = [
+        "engagement_partner",
+        "engagement_manager",
+        "engagement_letter_issued",
+        "expected_report_date",
+        "audit_scope",
+        "overall_materiality",
+    ]
 
     # ===============================
     # A. Engagement Identification
@@ -41,6 +49,26 @@ class EngagementDetails(models.Model):
         ],
         string="Type of Engagement",
         tracking=True,
+    )
+    overall_risk_level = fields.Selection(
+        [
+            ("high", "High"),
+            ("medium", "Medium"),
+            ("low", "Low"),
+        ],
+        string="Overall Risk Level",
+        default="medium",
+        tracking=True,
+    )
+    completion_status = fields.Char(
+        string="Completion Status",
+        compute="_compute_completion_status",
+        store=False,
+    )
+    completion_ratio = fields.Float(
+        string="Completion Ratio",
+        compute="_compute_completion_status",
+        store=False,
     )
 
     # ===============================
@@ -171,6 +199,7 @@ class EngagementDetails(models.Model):
     # H. Materiality Summary
     # ===============================
     overall_materiality = fields.Float(string="Overall Materiality")
+    materiality_amount = fields.Float(string="Materiality (PKR)")
     performance_materiality = fields.Float(string="Performance Materiality")
     trivial_threshold = fields.Float(string="Trivial Misstatement Threshold")
     materiality_basis = fields.Selection(
@@ -286,3 +315,12 @@ class EngagementDetails(models.Model):
         related="additional_secp_sros",
         readonly=False,
     )
+
+    @api.depends(*_completion_required_fields)
+    def _compute_completion_status(self):
+        required_fields = self._completion_required_fields
+        total = len(required_fields)
+        for record in self:
+            filled = sum(1 for field_name in required_fields if bool(record[field_name]))
+            record.completion_status = _("%s / %s Completed") % (filled, total)
+            record.completion_ratio = (filled / total) * 100 if total else 0.0
