@@ -7,12 +7,13 @@
             <field name="model">qaco.audit</field>
             <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
             <field name="arch" type="xml">
-                <!-- Add Client Onboarding button BEFORE Planning button -->
+                <!-- Add Client Onboarding button as FIRST button in button_box -->
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="action_open_client_onboarding" 
                             type="object" 
                             class="oe_stat_button" 
-                            icon="fa-user-plus">
+                            icon="fa-user-plus"
+                            sequence="1">
                         <field name="onboarding_count" widget="statinfo" string="Onboarding"/>
                         <field name="onboarding_state" invisible="1"/>
                     </button>
