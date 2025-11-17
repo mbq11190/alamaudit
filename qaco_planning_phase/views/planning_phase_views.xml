@@ -25,123 +25,143 @@
                         <notebook>
                                     <!-- 1. Ethics & Compliance -->
                                     <page name="ethics" string="Ethics &amp; Compliance">
-                                        <group string="Engagement Acceptance &amp; Continuance (ISA 210)" col="2">
-                                            <field name="engagement_letter_obtained"/>
-                                            <field name="engagement_letter_signed"/>
-                                            <field name="engagement_letter_date"/>
-                                            <field name="scope_agreement_confirmed"/>
-                                            <field name="management_responsibility_ack"/>
-                                            <field name="preconditions_for_audit_assessed"/>
-                                            <field name="framework_acceptability_assessed"/>
-                                            <field name="continuing_client_evaluation_completed"/>
-                                            <field name="previous_auditor_communication"/>
+                                        <group string="Engagement Acceptance &amp; Continuance (ISA 210)">
+                                            <group string="Preconditions" col="2">
+                                                <field name="engagement_letter_obtained"/>
+                                                <field name="engagement_letter_signed"/>
+                                                <field name="engagement_letter_date"/>
+                                                <field name="scope_agreement_confirmed"/>
+                                                <field name="management_responsibility_ack"/>
+                                                <field name="preconditions_for_audit_assessed"/>
+                                                <field name="framework_acceptability_assessed"/>
+                                                <field name="continuing_client_evaluation_completed"/>
+                                                <field name="previous_auditor_communication"/>
+                                            </group>
                                             <group colspan="2">
                                                 <field name="acceptance_continuance_reason" placeholder="Summarize acceptance / continuance rationale"/>
                                             </group>
                                         </group>
 
-                                        <group string="Independence &amp; IESBA Code (ISA 220)" col="2">
-                                            <field name="independence_confirmed"/>
-                                            <field name="independence_confirmation_date"/>
-                                            <field name="independence_team_confirmed"/>
-                                            <field name="independence_supporting_doc"/>
-                                            <field name="independence_team_attachment"/>
-                                            <group colspan="2" string="Threats Identified">
+                                        <group string="Independence &amp; IESBA Code (ISA 220)">
+                                            <group string="Confirmations" col="2">
+                                                <field name="independence_confirmed"/>
+                                                <field name="independence_confirmation_date"/>
+                                                <field name="independence_team_confirmed"/>
+                                                <field name="eqcr_required"/>
+                                            </group>
+                                            <group string="Supporting Evidence" col="2">
+                                                <field name="independence_supporting_doc"/>
+                                                <field name="independence_team_attachment"/>
+                                            </group>
+                                            <group string="Threats Identified" colspan="2" col="2">
                                                 <field name="threat_self_interest" placeholder="Self-interest threat or 'None'"/>
                                                 <field name="threat_self_review" placeholder="Self-review threat or 'None'"/>
                                                 <field name="threat_advocacy" placeholder="Advocacy threat or 'None'"/>
                                                 <field name="threat_familiarity" placeholder="Familiarity threat or 'None'"/>
                                                 <field name="threat_intimidation" placeholder="Intimidation threat or 'None'"/>
                                             </group>
-                                            <group colspan="2">
+                                            <group string="Safeguards &amp; Rotation" col="2">
                                                 <field name="safeguards_documented" placeholder="Document safeguards applied"/>
-                                            </group>
-                                            <group colspan="2" string="Partner Rotation">
                                                 <field name="rotation_required"/>
                                                 <field name="last_rotation_date"/>
                                                 <field name="partner_tenure_years"/>
                                             </group>
                                         </group>
 
-                                        <group string="Ethical Requirements &amp; NOCLAR" col="2">
-                                            <field name="ethical_requirements_met"/>
-                                            <field name="integrity_confirmed"/>
-                                            <field name="objectivity_confirmed"/>
-                                            <field name="professional_competence_due_care"/>
-                                            <field name="confidentiality_compliance"/>
-                                            <field name="professional_behavior_compliance"/>
-                                            <field name="noclar_risk_identified"/>
-                                            <group colspan="2">
+                                        <group string="Ethical Requirements &amp; NOCLAR">
+                                            <group string="Fundamental Principles" col="3">
+                                                <field name="ethical_requirements_met"/>
+                                                <field name="integrity_confirmed"/>
+                                                <field name="objectivity_confirmed"/>
+                                                <field name="professional_competence_due_care"/>
+                                                <field name="confidentiality_compliance"/>
+                                                <field name="professional_behavior_compliance"/>
+                                            </group>
+                                            <group string="NOCLAR" col="2">
+                                                <field name="noclar_risk_identified"/>
                                                 <field name="noclar_actions_necessary" placeholder="Actions required / taken for NOCLAR"/>
                                             </group>
                                         </group>
 
-                                        <group string="Conflict of Interest" col="2">
-                                            <field name="conflict_of_interest_identified"/>
-                                            <field name="conflict_client_notified"/>
-                                            <group colspan="2">
-                                                <field name="conflict_of_interest_nature" placeholder="Describe nature of conflict"/>
+                                        <group string="Conflict of Interest">
+                                            <group col="2">
+                                                <field name="conflict_of_interest_identified"/>
+                                                <field name="conflict_client_notified"/>
                                             </group>
                                             <group colspan="2">
+                                                <field name="conflict_of_interest_nature" placeholder="Describe nature of conflict"/>
                                                 <field name="conflict_resolution_applied" placeholder="Document safeguards / resolution"/>
                                             </group>
                                         </group>
 
-                                        <group string="AOB / QCR Compliance" col="2">
-                                            <field name="engagement_partner_review_form"/>
-                                            <field name="aob_independence_partner_confirmed"/>
-                                            <field name="aob_independence_team_confirmed"/>
-                                            <field name="rotation_cooling_off_consent"/>
-                                            <field name="aob_independence_checklist"/>
-                                            <field name="qcr_compliance_checklist"/>
+                                        <group string="AOB / QCR Compliance">
+                                            <group string="Declarations" col="2">
+                                                <field name="engagement_partner_review_form"/>
+                                                <field name="aob_independence_partner_confirmed"/>
+                                                <field name="aob_independence_team_confirmed"/>
+                                                <field name="rotation_cooling_off_consent"/>
+                                            </group>
+                                            <group string="Evidence" col="2">
+                                                <field name="aob_independence_checklist"/>
+                                                <field name="qcr_compliance_checklist"/>
+                                            </group>
                                         </group>
 
-                                        <group string="AML / CFT &amp; DNFBP" col="2">
-                                            <field name="aml_kyc_performed"/>
-                                            <field name="beneficial_ownership_obtained"/>
-                                            <field name="aml_risk_rating"/>
-                                            <field name="dnfbp_compliance_check_completed"/>
-                                            <field name="suspicious_transaction_risk"/>
-                                            <field name="pep_screening_done"/>
+                                        <group string="AML / CFT &amp; DNFBP">
+                                            <group col="3">
+                                                <field name="aml_kyc_performed"/>
+                                                <field name="beneficial_ownership_obtained"/>
+                                                <field name="aml_risk_rating"/>
+                                                <field name="dnfbp_compliance_check_completed"/>
+                                                <field name="suspicious_transaction_risk"/>
+                                                <field name="pep_screening_done"/>
+                                            </group>
                                         </group>
 
-                                        <group string="Laws &amp; Regulations (Pakistan)" col="2">
-                                            <field name="companies_act_compliance_verified"/>
-                                            <field name="secp_rules_applicable"/>
-                                            <field name="tax_laws_compliance_verified"/>
+                                        <group string="Laws &amp; Regulations (Pakistan)">
+                                            <group col="3">
+                                                <field name="companies_act_compliance_verified"/>
+                                                <field name="secp_rules_applicable"/>
+                                                <field name="tax_laws_compliance_verified"/>
+                                            </group>
                                             <group colspan="2">
                                                 <field name="industry_specific_regulations" placeholder="Industry-specific regulatory considerations"/>
                                             </group>
-                                            <group colspan="2">
+                                            <group col="2">
                                                 <field name="compliance_documentation_complete"/>
                                                 <field name="final_compliance_signoff"/>
                                             </group>
                                         </group>
 
-                                        <group string="Fraud &amp; Whistleblowing (ISA 240)" col="2">
-                                            <field name="fraud_risk_factors_identified"/>
-                                            <field name="management_attitude_fraud_assessed"/>
-                                            <field name="ethical_concerns_identified"/>
-                                            <field name="whistleblower_policy_exists"/>
+                                        <group string="Fraud &amp; Whistleblowing (ISA 240)">
+                                            <group col="2">
+                                                <field name="fraud_risk_factors_identified"/>
+                                                <field name="management_attitude_fraud_assessed"/>
+                                                <field name="ethical_concerns_identified"/>
+                                                <field name="whistleblower_policy_exists"/>
+                                            </group>
                                             <group colspan="2">
                                                 <field name="management_attitude_fraud_notes" placeholder="Describe management attitude toward fraud"/>
                                             </group>
                                         </group>
 
-                                        <group string="Related Parties (ISA 550)" col="2">
-                                            <field name="related_party_list_obtained"/>
-                                            <field name="management_related_party_declaration"/>
-                                            <field name="related_party_conflict_identified"/>
+                                        <group string="Related Parties (ISA 550)">
+                                            <group col="2">
+                                                <field name="related_party_list_obtained"/>
+                                                <field name="management_related_party_declaration"/>
+                                                <field name="related_party_conflict_identified"/>
+                                            </group>
                                             <group colspan="2">
                                                 <field name="related_party_conflict_notes" placeholder="Notes / safeguards for related party conflicts"/>
                                             </group>
                                         </group>
 
-                                        <group string="EQCR Review (ISA 220 / ISQM-1)" col="2">
-                                            <field name="eqcr_required"/>
-                                            <field name="eqcr_reviewer_id"/>
-                                            <field name="eqcr_review_completed"/>
-                                            <field name="eqcr_review_date"/>
+                                        <group string="EQCR Review (ISA 220 / ISQM-1)">
+                                            <group col="2">
+                                                <field name="eqcr_reviewer_id"/>
+                                                <field name="eqcr_review_completed"/>
+                                                <field name="eqcr_review_date"/>
+                                            </group>
                                         </group>
                                     </page>
 
