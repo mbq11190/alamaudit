@@ -186,10 +186,10 @@ class PlanningPhase(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency(),
     )
 
-    # ISA 210/220: Ethics & Compliance
+       # ISA 210/220: Ethics & Compliance
     engagement_letter_obtained = fields.Boolean(
         string="Engagement Letter Obtained (ISA 210)",
         tracking=True
@@ -224,7 +224,7 @@ class PlanningPhase(models.Model):
         oldname="continuing_client_evaluation_done",
     )
     acceptance_continuance_reason = fields.Text(string="Reasons for Acceptance / Continuance")
-    
+
     independence_confirmed = fields.Boolean(
         string="Independence Confirmed (IESBA Code)",
         tracking=True
@@ -258,6 +258,10 @@ class PlanningPhase(models.Model):
         string="Engagement Quality Control Review (EQCR) Required",
         tracking=True
     )
+
+    def _get_default_currency(self):
+        """Return PKR currency if available, otherwise fall back to company currency."""
+        return self.env.ref("base.PKR", raise_if_not_found=False) or self.env.user.company_id.currency_id
     eqcr_reviewer_id = fields.Many2one(
         "res.users",
         string="EQCR Reviewer",
@@ -275,7 +279,7 @@ class PlanningPhase(models.Model):
         string="Current Engagement Partner Tenure (Years)",
         tracking=True
     )
-    
+
     ethical_requirements_met = fields.Boolean(
         string="Ethical Requirements Met (ISA 220)",
         tracking=True
@@ -310,7 +314,7 @@ class PlanningPhase(models.Model):
         string="NOCLAR Actions Necessary",
         oldname="noclar_actions_required",
     )
-    
+
     conflict_of_interest_identified = fields.Boolean(
         string="Conflict of Interest Identified",
         tracking=True
@@ -324,7 +328,7 @@ class PlanningPhase(models.Model):
         string="Client Notified of Conflict & Safeguards",
         tracking=True
     )
-    
+
     engagement_partner_review_form = fields.Boolean(
         string="Engagement Partner Review Form Completed",
         tracking=True,
@@ -350,7 +354,7 @@ class PlanningPhase(models.Model):
         string="Rotation & Cooling-Off Requirements Confirmed",
         tracking=True
     )
-    
+
     aml_kyc_performed = fields.Boolean(
         string="AML / KYC Performed",
         tracking=True
@@ -381,7 +385,7 @@ class PlanningPhase(models.Model):
         string="PEP (Politically Exposed Person) Screening Done",
         tracking=True
     )
-    
+
     companies_act_compliance_verified = fields.Boolean(
         string="Companies Act 2017 Compliance Verified",
         tracking=True,
@@ -408,7 +412,7 @@ class PlanningPhase(models.Model):
         string="Final Compliance Sign-Off by Engagement Partner",
         tracking=True
     )
-    
+
     fraud_risk_factors_identified = fields.Boolean(
         string="Fraud Risk Factors Identified",
         tracking=True
@@ -429,7 +433,7 @@ class PlanningPhase(models.Model):
         string="Whistleblower Policy Exists",
         tracking=True
     )
-    
+
     related_party_list_obtained = fields.Boolean(
         string="Related Party List Obtained",
         tracking=True
@@ -445,20 +449,6 @@ class PlanningPhase(models.Model):
         oldname="conflict_with_related_parties",
     )
     related_party_conflict_notes = fields.Text(string="Related Party Conflict Notes / Safeguards")
-    
-    eqcr_review_completed = fields.Boolean(
-        string="EQCR Review Completed",
-        tracking=True
-    )
-    eqcr_review_date = fields.Date(
-        string="EQCR Review Date",
-        tracking=True
-    )
-    
-    previous_auditor_communication = fields.Boolean(
-        string="Previous Auditor Communication",
-        tracking=True
-    )
 
     # Client & Industry Information
     industry_sector_id = fields.Many2one(
