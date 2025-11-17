@@ -892,8 +892,12 @@ class PlanningPhase(models.Model):
     secp_export_payload = fields.Binary(string="SECP Export Package", attachment=True, readonly=True)
     
     # UI helpers
-    color = fields.Integer(string="Color Index", default=0)
     active = fields.Boolean(default=True, tracking=True)
+    color = fields.Integer(
+        string="Color Index",
+        compute="_compute_color_index",
+        store=True,
+    )
 
     @api.depends("checklist_ids.done")
     def _compute_progress(self):
@@ -1837,6 +1841,8 @@ class PartnerLicense(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+   
+
     is_qaco_client = fields.Boolean(string="QACO Audit Client", help="Flag to show partner on audit planning forms.")
     legal_name = fields.Char(string="Legal Name")
     trade_name = fields.Char(string="Trade Name / Brand")
@@ -2767,3 +2773,26 @@ class PlanningPBCReminderCron(models.Model):
             template.send_mail(pbc.id, force_send=True)
         except Exception:  # pragma: no cover - logging guard
             _logger.exception("Failed to send information requisition reminder email for %s", pbc.id)
+
+    @api.depends("state", "acceptance_state")
+    def _compute_color_index(self):
+        state_colors = {
+            "draft": 0,            # grey
+            "in_progress": 4,      # amber
+            "review": 6,           # pink
+            "approved": 10,        # green
+            "fieldwork": 11,       # teal
+            "finalisation": 8,     # purple
+        }
+        acceptance_colors = {
+            "draft": 0,
+            "precheck": 2,         # orange
+            "awaiting_clearance": 1,  # red
+            "accepted": 10,
+            "rejected": 1,
+        }
+        for rec in self:
+            rec.color = state_colors.get(
+                rec.state,
+                acceptance_colors.get(rec.acceptance_state, 0),
+            )
