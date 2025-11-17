@@ -218,9 +218,10 @@ class PlanningPhase(models.Model):
         string="Acceptability of Accounting Framework Assessed",
         tracking=True
     )
-    continuing_client_evaluation_done = fields.Boolean(
+    continuing_client_evaluation_completed = fields.Boolean(
         string="Continuing Client Evaluation Completed",
-        tracking=True
+        tracking=True,
+        oldname="continuing_client_evaluation_done",
     )
     acceptance_continuance_reason = fields.Text(string="Reasons for Acceptance / Continuance")
     
@@ -245,7 +246,10 @@ class PlanningPhase(models.Model):
     threat_advocacy = fields.Text(string="Advocacy Threat")
     threat_familiarity = fields.Text(string="Familiarity Threat")
     threat_intimidation = fields.Text(string="Intimidation Threat")
-    safeguards_applied = fields.Text(string="Safeguards Applied")
+    safeguards_documented = fields.Text(
+        string="Safeguards Documented",
+        oldname="safeguards_applied",
+    )
     eqcr_required = fields.Boolean(
         string="Engagement Quality Control Review (EQCR) Required",
         tracking=True
@@ -284,34 +288,43 @@ class PlanningPhase(models.Model):
         string="Professional Competence & Due Care Confirmed",
         tracking=True
     )
-    confidentiality_confirmed = fields.Boolean(
-        string="Confidentiality Requirements Met",
-        tracking=True
+    confidentiality_compliance = fields.Boolean(
+        string="Confidentiality Compliance",
+        tracking=True,
+        oldname="confidentiality_confirmed",
     )
-    professional_behavior_confirmed = fields.Boolean(
-        string="Professional Behaviour Requirements Met",
-        tracking=True
+    professional_behavior_compliance = fields.Boolean(
+        string="Professional Behavior Compliance",
+        tracking=True,
+        oldname="professional_behavior_confirmed",
     )
     noclar_risk_identified = fields.Boolean(
         string="NOCLAR Risk Identified",
         tracking=True
     )
-    noclar_actions_required = fields.Text(string="NOCLAR – Actions Required / Taken")
+    noclar_actions_necessary = fields.Text(
+        string="NOCLAR Actions Necessary",
+        oldname="noclar_actions_required",
+    )
     
     conflict_of_interest_identified = fields.Boolean(
         string="Conflict of Interest Identified",
         tracking=True
     )
     conflict_of_interest_nature = fields.Text(string="Nature of Conflict")
-    conflict_resolution_action = fields.Text(string="Conflict Resolution / Safeguards")
+    conflict_resolution_applied = fields.Text(
+        string="Conflict Resolution Applied",
+        oldname="conflict_resolution_action",
+    )
     conflict_client_notified = fields.Boolean(
         string="Client Notified of Conflict & Safeguards",
         tracking=True
     )
     
-    engagement_partner_review_done = fields.Boolean(
+    engagement_partner_review_form = fields.Boolean(
         string="Engagement Partner Review Form Completed",
-        tracking=True
+        tracking=True,
+        oldname="engagement_partner_review_done",
     )
     aob_independence_checklist = fields.Binary(
         string="AOB Independence Checklist (Attachment)",
@@ -343,9 +356,10 @@ class PlanningPhase(models.Model):
         string="AML Risk Rating",
         tracking=True
     )
-    dnfbp_compliance_checked = fields.Boolean(
+    dnfbp_compliance_check_completed = fields.Boolean(
         string="DNFBP Compliance Check Completed",
-        tracking=True
+        tracking=True,
+        oldname="dnfbp_compliance_checked",
     )
     suspicious_transaction_risk = fields.Boolean(
         string="Suspicious Transaction Risk Identified",
@@ -356,25 +370,37 @@ class PlanningPhase(models.Model):
         tracking=True
     )
     
-    companies_act_compliance = fields.Boolean(
+    companies_act_compliance_verified = fields.Boolean(
         string="Companies Act 2017 Compliance Verified",
-        tracking=True
+        tracking=True,
+        oldname="companies_act_compliance",
     )
     secp_rules_applicable = fields.Boolean(
         string="SECP Rules / Regulations Applicable & Considered",
         tracking=True
     )
-    tax_laws_compliance = fields.Boolean(
+    tax_laws_compliance_verified = fields.Boolean(
         string="Tax Laws Compliance Verified",
-        tracking=True
+        tracking=True,
+        oldname="tax_laws_compliance",
     )
-    industry_regulation_notes = fields.Text(string="Industry-Specific Regulations / Notes")
+    industry_specific_regulations = fields.Text(
+        string="Industry-Specific Regulations",
+        oldname="industry_regulation_notes",
+    )
     
     fraud_risk_factors_identified = fields.Boolean(
         string="Fraud Risk Factors Identified",
         tracking=True
     )
-    management_attitude_fraud = fields.Text(string="Management Attitude Towards Fraud")
+    management_attitude_fraud_assessed = fields.Boolean(
+        string="Management Attitude Towards Fraud Assessed",
+        tracking=True,
+    )
+    management_attitude_fraud_notes = fields.Text(
+        string="Management Attitude Towards Fraud Notes",
+        oldname="management_attitude_fraud",
+    )
     ethical_concerns_identified = fields.Boolean(
         string="Ethical Concerns Identified",
         tracking=True
@@ -388,13 +414,15 @@ class PlanningPhase(models.Model):
         string="Related Party List Obtained",
         tracking=True
     )
-    management_related_party_decl = fields.Boolean(
+    management_related_party_declaration = fields.Boolean(
         string="Management Declaration on Related Parties Obtained",
-        tracking=True
+        tracking=True,
+        oldname="management_related_party_decl",
     )
-    related_party_conflict = fields.Boolean(
+    conflict_with_related_parties = fields.Boolean(
         string="Conflict with Related Parties Identified",
-        tracking=True
+        tracking=True,
+        oldname="related_party_conflict",
     )
     related_party_conflict_notes = fields.Text(string="Related Party Conflict Notes / Safeguards")
     
