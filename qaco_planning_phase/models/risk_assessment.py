@@ -16,6 +16,12 @@ class RiskAssessment(models.Model):
         readonly=True,
         tracking=True,
     )
+    planning_id = fields.Many2one(
+        "qaco.planning.phase",
+        string="Planning Phase",
+        ondelete="cascade",
+        tracking=True,
+    )
 
     # =============================================================
     # SECTION 1: RISK LEVELS (Inherent, Control, Detection)
