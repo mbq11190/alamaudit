@@ -59,6 +59,145 @@
                             </button>
                         </div>
                         <notebook>
+                            <page name="materiality_main" string="Materiality &amp; Performance Materiality">
+                                <group string="ISA 320 / ISA 450 Guidance">
+                                    <field name="materiality_guidance_html" nolabel="1" readonly="1" widget="html"/>
+                                </group>
+                                <group string="Section A – Benchmark &amp; Context">
+                                    <group>
+                                        <field name="entity_classification" readonly="1"/>
+                                        <field name="materiality_basis" required="1"/>
+                                        <field name="materiality_benchmark_source"/>
+                                        <field name="benchmark_source_other" attrs="{'invisible': [('materiality_benchmark_source', '!=', 'other')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="materiality_base_amount" required="1"/>
+                                        <field name="materiality_benchmark_rationale" required="1" placeholder="Explain why this benchmark best reflects user focus."/>
+                                        <field name="materiality_notes" placeholder="Additional ICAP / AOB guidance, tie-outs, assumptions."/>
+                                    </group>
+                                </group>
+                                <group string="Section B – Overall Materiality (ISA 320)">
+                                    <group>
+                                        <field name="materiality_percentage" required="1"/>
+                                        <field name="overall_materiality_amount_calc" readonly="1"/>
+                                        <field name="materiality_amount" readonly="1"/>
+                                    </group>
+                                    <group string="Override (partner approval)" attrs="{'invisible': [('overall_materiality_override', '=', False)]}">
+                                        <field name="overall_materiality_amount_override" attrs="{'required': [('overall_materiality_override', '=', True)]}"/>
+                                        <field name="overall_materiality_override_reason" attrs="{'required': [('overall_materiality_override', '=', True)]}" placeholder="Document rationale for override."/>
+                                        <field name="overall_materiality_approved_by"/>
+                                        <field name="overall_materiality_approved_date"/>
+                                    </group>
+                                    <field name="overall_materiality_override"/>
+                                </group>
+                                <group string="Section C – Performance Materiality">
+                                    <group>
+                                        <field name="performance_materiality_percentage"/>
+                                        <field name="performance_materiality_amount_calc" readonly="1"/>
+                                        <field name="performance_materiality" readonly="1"/>
+                                    </group>
+                                    <group string="Override (partner approval)" attrs="{'invisible': [('performance_materiality_override', '=', False)]}">
+                                        <field name="performance_materiality_amount_override" attrs="{'required': [('performance_materiality_override', '=', True)]}"/>
+                                        <field name="performance_materiality_override_reason" attrs="{'required': [('performance_materiality_override', '=', True)]}" placeholder="Document reasons (e.g., control deficiencies, history of misstatements)."/>
+                                        <field name="performance_materiality_approved_by"/>
+                                        <field name="performance_materiality_approved_date"/>
+                                    </group>
+                                    <field name="performance_materiality_override"/>
+                                </group>
+                                <group string="Section D – Clearly Trivial Misstatement Threshold (ISA 450)">
+                                    <group>
+                                        <field name="trivial_threshold_percentage"/>
+                                        <field name="trivial_threshold_amount_calc" readonly="1"/>
+                                        <field name="trivial_misstatement" readonly="1" string="Clearly Trivial Threshold"/>
+                                    </group>
+                                    <group string="Override (if needed)" attrs="{'invisible': [('trivial_threshold_override', '=', False)]}">
+                                        <field name="trivial_threshold_amount_override" attrs="{'required': [('trivial_threshold_override', '=', True)]}"/>
+                                        <field name="trivial_threshold_override_reason" attrs="{'required': [('trivial_threshold_override', '=', True)]}" placeholder="Explain communication / governance requirements."/>
+                                    </group>
+                                    <field name="trivial_threshold_override"/>
+                                </group>
+                                <group string="Section E – Specific Materiality for Particular Classes / Disclosures">
+                                    <field name="specific_materiality_ids" context="{'default_planning_id': active_id}">
+                                        <tree editable="bottom" string="Specific Materiality Items">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="specific_area"/>
+                                            <field name="specific_reason"/>
+                                            <field name="specific_base_amount"/>
+                                            <field name="specific_percentage"/>
+                                            <field name="specific_amount_calc"/>
+                                            <field name="specific_standard_reference"/>
+                                        </tree>
+                                        <form string="Specific Materiality">
+                                            <sheet>
+                                                <group>
+                                                    <field name="specific_area"/>
+                                                    <field name="specific_reason"/>
+                                                    <field name="specific_base_amount"/>
+                                                    <field name="specific_percentage"/>
+                                                    <field name="specific_amount_calc" readonly="1"/>
+                                                    <field name="specific_standard_reference"/>
+                                                </group>
+                                                <group>
+                                                    <field name="supporting_notes" placeholder="Reference procedures, responses, or additional approvals."/>
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </group>
+                                <group string="Section F – Reassessment of Materiality (ISA 320/450)">
+                                    <group>
+                                        <field name="materiality_reassessed"/>
+                                        <field name="materiality_reassessment_triggers" placeholder="Describe triggers (new results, subsequent events, scope changes)."/>
+                                    </group>
+                                    <group>
+                                        <field name="materiality_reassessment_date"/>
+                                        <field name="materiality_reassessment_approved_by"/>
+                                    </group>
+                                    <group>
+                                        <field name="revised_overall_materiality"/>
+                                        <field name="revised_performance_materiality"/>
+                                        <field name="revised_trivial_threshold"/>
+                                    </group>
+                                </group>
+                                <group string="Section G – Materiality Checklist" col="2">
+                                    <group>
+                                        <field name="chk_users_and_needs_identified"/>
+                                        <field name="comment_users_and_needs" placeholder="Summarize who relies on the FS and why."/>
+                                        <field name="chk_benchmark_selected_and_justified"/>
+                                        <field name="comment_benchmark_selected" placeholder="Tie benchmark to business model."/>
+                                        <field name="chk_benchmark_agrees_to_fs"/>
+                                        <field name="comment_benchmark_agrees_to_fs" placeholder="Reference TB/FS used."/>
+                                        <field name="chk_overall_materiality_approved"/>
+                                        <field name="comment_overall_materiality_approved" placeholder="Document approval discussion."/>
+                                        <field name="chk_performance_materiality_justified"/>
+                                        <field name="comment_performance_materiality_justified" placeholder="Explain percentage selected."/>
+                                    </group>
+                                    <group>
+                                        <field name="chk_trivial_threshold_set_and_communicated"/>
+                                        <field name="comment_trivial_threshold" placeholder="Describe communication plan with management/Audit Committee."/>
+                                        <field name="chk_specific_materiality_considered"/>
+                                        <field name="comment_specific_materiality" placeholder="When 'Yes', reference Section E lines."/>
+                                        <field name="chk_materiality_reassessment_considered"/>
+                                        <field name="comment_materiality_reassessment" placeholder="Explain approach to ongoing reassessment."/>
+                                        <field name="chk_consistency_prior_year_explained"/>
+                                        <field name="comment_consistency_prior_year" placeholder="Discuss variances from prior period thresholds."/>
+                                        <field name="materiality_tab_complete" readonly="1"/>
+                                    </group>
+                                </group>
+                                <group string="Section H – Attachments &amp; Templates">
+                                    <group>
+                                        <field name="materiality_attachment_ids" widget="many2many_binary"/>
+                                        <div class="text-muted" role="note">
+                                            <p>Attach FS/TB extracts, materiality calculation workbooks, prior-year working papers, firm policy, and ISA 450 misstatement summaries.</p>
+                                        </div>
+                                    </group>
+                                    <group col="2">
+                                        <field name="materiality_template_url" placeholder="https://..."/>
+                                        <field name="specific_materiality_template_url" placeholder="https://..."/>
+                                        <field name="misstatement_summary_template_url" placeholder="https://..."/>
+                                    </group>
+                                </group>
+                            </page>
                                     <!-- 1. Understanding the Entity & Environment -->
                                     <page string="Understanding the Entity &amp; Environment">
                                         <notebook>
