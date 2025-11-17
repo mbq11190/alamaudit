@@ -9,20 +9,17 @@ class QacoAudit(models.Model):
     onboarding_id = fields.Many2one(
         'qaco.client.onboarding',
         string='Client Onboarding',
-        compute='_compute_onboarding_id',
-        store=True
+        compute='_compute_onboarding_id'
     )
     onboarding_state = fields.Selection(
         related='onboarding_id.state',
-        string='Onboarding Status',
-        store=True
+        string='Onboarding Status'
     )
     onboarding_count = fields.Integer(
         string='Onboarding Count',
         compute='_compute_onboarding_count'
     )
 
-    @api.depends('id')
     def _compute_onboarding_id(self):
         for record in self:
             onboarding = self.env['qaco.client.onboarding'].search(

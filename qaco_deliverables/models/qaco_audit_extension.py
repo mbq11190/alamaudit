@@ -9,20 +9,17 @@ class QacoAudit(models.Model):
     deliverables_id = fields.Many2one(
         'qaco.deliverables',
         string='Deliverables',
-        compute='_compute_deliverables_id',
-        store=True
+        compute='_compute_deliverables_id'
     )
     deliverables_state = fields.Selection(
         related='deliverables_id.state',
-        string='Deliverables Status',
-        store=True
+        string='Deliverables Status'
     )
     deliverables_count = fields.Integer(
         string='Deliverables Count',
         compute='_compute_deliverables_count'
     )
 
-    @api.depends('id')
     def _compute_deliverables_id(self):
         for record in self:
             deliverables = self.env['qaco.deliverables'].search(

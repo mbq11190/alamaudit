@@ -9,20 +9,17 @@ class QacoAudit(models.Model):
     quality_review_id = fields.Many2one(
         'qaco.quality.review',
         string='Quality Review',
-        compute='_compute_quality_review_id',
-        store=True
+        compute='_compute_quality_review_id'
     )
     quality_review_state = fields.Selection(
         related='quality_review_id.state',
-        string='Quality Review Status',
-        store=True
+        string='Quality Review Status'
     )
     quality_review_count = fields.Integer(
         string='Quality Review Count',
         compute='_compute_quality_review_count'
     )
 
-    @api.depends('id')
     def _compute_quality_review_id(self):
         for record in self:
             quality_review = self.env['qaco.quality.review'].search(
