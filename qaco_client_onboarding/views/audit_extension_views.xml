@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extend Audit Form View to add Client Onboarding Smart Button -->
+        <record id="view_qaco_audit_form_onboarding_button" model="ir.ui.view">
+            <field name="name">qaco.audit.form.onboarding.button</field>
+            <field name="model">qaco.audit</field>
+            <field name="inherit_id" ref="qaco_audit.view_qaco_audit_form"/>
+            <field name="arch" type="xml">
+                <!-- Add Client Onboarding button BEFORE Planning button -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_client_onboarding" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-user-plus">
+                        <field name="onboarding_count" widget="statinfo" string="Onboarding"/>
+                        <field name="onboarding_state" invisible="1"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Quality Review Form View -->
+        <record id="view_quality_review_form" model="ir.ui.view">
+            <field name="name">qaco.quality.review.form</field>
+            <field name="model">qaco.quality.review</field>
+            <field name="arch" type="xml">
+                <form string="Quality Review">
+                    <header>
+                        <button name="action_start_review" string="Start Review" type="object" 
+                                class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_identify_findings" string="Identify Findings" type="object" 
+                                class="oe_highlight" invisible="state != 'in_progress'"/>
+                        <button name="action_start_remediation" string="Start Remediation" type="object" 
+                                class="oe_highlight" invisible="state != 'findings_identified'"/>
+                        <button name="action_final_review" string="Final Review" type="object" 
+                                class="oe_highlight" invisible="state != 'remediation'"/>
+                        <button name="action_approve" string="Approve" type="object" 
+                                class="oe_highlight" invisible="state != 'final_review'"/>
+                        <button name="action_reject" string="Reject" type="object" 
+                                invisible="state in ('approved', 'rejected')"/>
+                        <button name="action_reset_to_draft" string="Reset to Draft" type="object" 
+                                invisible="state == 'draft'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,findings_identified,remediation,final_review,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="audit_id" options="{'no_create': True}"/>
+                                <field name="client_id"/>
+                                <field name="deliverables_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="review_date"/>
+                                <field name="review_type"/>
+                                <field name="lead_reviewer_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="checklist_completion_percentage" widget="progressbar"/>
+                                <field name="findings_count"/>
+                                <field name="critical_findings_count"/>
+                                <field name="open_findings_count"/>
+                            </group>
+                            <group>
+                                <field name="overall_quality_rating" widget="badge" decoration-success="overall_quality_rating == 'satisfactory'" decoration-warning="overall_quality_rating in ('satisfactory_with_improvements', 'needs_improvement')" decoration-danger="overall_quality_rating == 'unsatisfactory'"/>
+                                <field name="professional_standards_compliance"/>
+                                <field name="file_completeness_rating"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <!-- Review Setup Tab -->
+                            <page string="Review Setup">
+                                <group>
+                                    <group>
+                                        <field name="review_scope" placeholder="Define the scope of the quality review..."/>
+                                    </group>
+                                </group>
+                                <group string="Review Team">
+                                    <field name="reviewer_ids" widget="many2many_tags"/>
+                                </group>
+                                <group string="EQCR" invisible="review_type != 'eqcr'">
+                                    <group>
+                                        <field name="is_eqcr_required"/>
+                                        <field name="eqcr_reviewer_id"/>
+                                        <field name="eqcr_independence_confirmed"/>
+                                    </group>
+                                    <group>
+                                        <field name="eqcr_completion_date"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Review Areas Tab -->
+                            <page string="Review Areas">
+                                <group>
+                                    <group>
+                                        <field name="planning_review_completed"/>
+                                        <field name="execution_review_completed"/>
+                                    </group>
+                                    <group>
+                                        <field name="finalisation_review_completed"/>
+                                        <field name="documentation_review_completed"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Quality Checklist Tab -->
+                            <page string="Quality Checklist">
+                                <field name="checklist_item_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="category"/>
+                                        <field name="completed" widget="boolean_toggle"/>
+                                        <field name="result"/>
+                                        <field name="reviewed_by_id"/>
+                                        <field name="reference_document"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="category"/>
+                                                <field name="description"/>
+                                            </group>
+                                            <group>
+                                                <field name="completed"/>
+                                                <field name="completion_date"/>
+                                                <field name="reviewed_by_id"/>
+                                                <field name="result"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="reference_document"/>
+                                            <field name="comments" placeholder="Review comments..."/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+
+                            <!-- Findings Tab -->
+                            <page string="Findings">
+                                <field name="finding_ids">
+                                    <tree decoration-danger="severity == 'critical'" decoration-warning="severity == 'high'">
+                                        <field name="finding_number"/>
+                                        <field name="name"/>
+                                        <field name="severity" widget="badge" decoration-danger="severity == 'critical'" decoration-warning="severity == 'high'" decoration-info="severity == 'low'"/>
+                                        <field name="category"/>
+                                        <field name="responsible_person_id"/>
+                                        <field name="due_date"/>
+                                        <field name="state" widget="badge" decoration-success="state == 'resolved'" decoration-danger="state == 'open'"/>
+                                    </tree>
+                                    <form>
+                                        <header>
+                                            <button name="action_start_remediation" string="Start Remediation" type="object" 
+                                                    class="oe_highlight" invisible="state != 'open'"/>
+                                            <button name="action_mark_resolved" string="Mark Resolved" type="object" 
+                                                    class="oe_highlight" invisible="state != 'in_progress'"/>
+                                            <button name="action_accept_risk" string="Accept Risk" type="object" 
+                                                    invisible="state in ('resolved', 'accepted_risk')"/>
+                                            <button name="action_reopen" string="Reopen" type="object" 
+                                                    invisible="state in ('open', 'in_progress')"/>
+                                            <field name="state" widget="statusbar" statusbar_visible="open,in_progress,resolved"/>
+                                        </header>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="finding_number"/>
+                                                    <field name="name"/>
+                                                    <field name="severity"/>
+                                                    <field name="category"/>
+                                                </group>
+                                                <group>
+                                                    <field name="responsible_person_id"/>
+                                                    <field name="due_date"/>
+                                                    <field name="related_workpaper"/>
+                                                    <field name="related_section"/>
+                                                </group>
+                                            </group>
+                                            <group>
+                                                <field name="description" placeholder="Describe the finding..."/>
+                                            </group>
+                                            <group>
+                                                <field name="impact" placeholder="Describe the impact or risk..."/>
+                                            </group>
+                                            <group>
+                                                <field name="recommendation" placeholder="Recommendation for remediation..."/>
+                                            </group>
+                                            <group string="Remediation">
+                                                <group>
+                                                    <field name="remediation_date"/>
+                                                    <label for="remediation_evidence"/>
+                                                    <div class="o_row">
+                                                        <field name="remediation_evidence" filename="remediation_evidence_filename"/>
+                                                        <field name="remediation_evidence_filename" invisible="1"/>
+                                                    </div>
+                                                </group>
+                                            </group>
+                                            <group>
+                                                <field name="remediation_action" placeholder="Describe remediation actions taken..."/>
+                                            </group>
+                                            <group string="Verification">
+                                                <group>
+                                                    <field name="verified_by_id"/>
+                                                    <field name="verification_date"/>
+                                                </group>
+                                            </group>
+                                            <group>
+                                                <field name="verification_notes" placeholder="Verification notes..."/>
+                                            </group>
+                                            <group>
+                                                <field name="notes" placeholder="Additional notes..."/>
+                                            </group>
+                                        </sheet>
+                                        <div class="oe_chatter">
+                                            <field name="message_follower_ids"/>
+                                            <field name="activity_ids"/>
+                                            <field name="message_ids"/>
+                                        </div>
+                                    </form>
+                                </field>
+                            </page>
+
+                            <!-- Overall Assessment Tab -->
+                            <page string="Overall Assessment">
+                                <group>
+                                    <field name="key_strengths" placeholder="Document key strengths identified..."/>
+                                </group>
+                                <group>
+                                    <field name="areas_for_improvement" placeholder="Document areas for improvement..."/>
+                                </group>
+                                <group>
+                                    <field name="recommendations" placeholder="Overall recommendations..."/>
+                                </group>
+                            </page>
+
+                            <!-- Review Completion Tab -->
+                            <page string="Review Completion">
+                                <group>
+                                    <group>
+                                        <field name="review_start_date"/>
+                                        <field name="review_completion_date"/>
+                                        <field name="review_hours"/>
+                                    </group>
+                                    <group>
+                                        <field name="reviewer_signoff"/>
+                                        <field name="reviewer_signoff_date"/>
+                                        <field name="quality_partner_signoff"/>
+                                        <field name="quality_partner_signoff_date"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Notes Tab -->
+                            <page string="Notes">
+                                <field name="notes" placeholder="Additional notes and observations..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Quality Review Tree View -->
+        <record id="view_quality_review_tree" model="ir.ui.view">
+            <field name="name">qaco.quality.review.tree</field>
+            <field name="model">qaco.quality.review</field>
+            <field name="arch" type="xml">
+                <tree string="Quality Reviews">
+                    <field name="name"/>
+                    <field name="audit_id"/>
+                    <field name="client_id"/>
+                    <field name="review_type"/>
+                    <field name="lead_reviewer_id"/>
+                    <field name="review_date"/>
+                    <field name="checklist_completion_percentage" widget="progressbar"/>
+                    <field name="findings_count"/>
+                    <field name="open_findings_count"/>
+                    <field name="overall_quality_rating" widget="badge" decoration-success="overall_quality_rating == 'satisfactory'" decoration-warning="overall_quality_rating in ('satisfactory_with_improvements', 'needs_improvement')" decoration-danger="overall_quality_rating == 'unsatisfactory'"/>
+                    <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" decoration-info="state == 'draft'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Quality Review Search View -->
+        <record id="view_quality_review_search" model="ir.ui.view">
+            <field name="name">qaco.quality.review.search</field>
+            <field name="model">qaco.quality.review</field>
+            <field name="arch" type="xml">
+                <search string="Quality Reviews">
+                    <field name="name"/>
+                    <field name="audit_id"/>
+                    <field name="client_id"/>
+                    <field name="lead_reviewer_id"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="In Progress" name="in_progress" domain="[('state', 'in', ('in_progress', 'findings_identified', 'remediation'))]"/>
+                    <filter string="Final Review" name="final_review" domain="[('state', '=', 'final_review')]"/>
+                    <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <separator/>
+                    <filter string="EQCR" name="eqcr" domain="[('review_type', '=', 'eqcr')]"/>
+                    <filter string="Hot Review" name="hot_review" domain="[('review_type', '=', 'hot_review')]"/>
+                    <filter string="Cold Review" name="cold_review" domain="[('review_type', '=', 'cold_review')]"/>
+                    <separator/>
+                    <filter string="With Open Findings" name="open_findings" domain="[('open_findings_count', '>', 0)]"/>
+                    <filter string="With Critical Findings" name="critical_findings" domain="[('critical_findings_count', '>', 0)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Review Type" name="group_type" context="{'group_by': 'review_type'}"/>
+                        <filter string="Lead Reviewer" name="group_reviewer" context="{'group_by': 'lead_reviewer_id'}"/>
+                        <filter string="Quality Rating" name="group_rating" context="{'group_by': 'overall_quality_rating'}"/>
+                        <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Quality Review Action -->
+        <record id="action_quality_review" model="ir.actions.act_window">
+            <field name="name">Quality Reviews</field>
+            <field name="res_model">qaco.quality.review</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quality review
+                </p>
+                <p>
+                    Conduct EQCR, hot reviews, cold reviews, and peer reviews.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_quality_review"
+                  name="Quality Review"
+                  parent="qaco_audit.menu_audit_root"
+                  action="action_quality_review"
+                  sequence="80"/>
+    </data>
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- This file can contain seed data for deliverable types if needed -->
+        <!-- Currently, types are defined in the model -->
+    </data>
+</odoo>

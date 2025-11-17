@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_qaco_quality_review_trainee,access.qaco.quality.review.trainee,model_qaco_quality_review,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_quality_review_supervisor,access.qaco.quality.review.supervisor,model_qaco_quality_review,qaco_audit.group_audit_supervisor,1,0,0,0
+access_qaco_quality_review_manager,access.qaco.quality.review.manager,model_qaco_quality_review,qaco_audit.group_audit_manager,1,1,1,0
+access_qaco_quality_review_partner,access.qaco.quality.review.partner,model_qaco_quality_review,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_quality_review_admin,access.qaco.quality.review.admin,model_qaco_quality_review,qaco_audit.group_audit_administrator,1,1,1,1
+access_qaco_quality_checklist_item_trainee,access.qaco.quality.checklist.item.trainee,model_qaco_quality_checklist_item,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_quality_checklist_item_supervisor,access.qaco.quality.checklist.item.supervisor,model_qaco_quality_checklist_item,qaco_audit.group_audit_supervisor,1,0,0,0
+access_qaco_quality_checklist_item_manager,access.qaco.quality.checklist.item.manager,model_qaco_quality_checklist_item,qaco_audit.group_audit_manager,1,1,1,0
+access_qaco_quality_checklist_item_partner,access.qaco.quality.checklist.item.partner,model_qaco_quality_checklist_item,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_quality_checklist_item_admin,access.qaco.quality.checklist.item.admin,model_qaco_quality_checklist_item,qaco_audit.group_audit_administrator,1,1,1,1
+access_qaco_quality_finding_trainee,access.qaco.quality.finding.trainee,model_qaco_quality_finding,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_quality_finding_supervisor,access.qaco.quality.finding.supervisor,model_qaco_quality_finding,qaco_audit.group_audit_supervisor,1,1,1,0
+access_qaco_quality_finding_manager,access.qaco.quality.finding.manager,model_qaco_quality_finding,qaco_audit.group_audit_manager,1,1,1,0
+access_qaco_quality_finding_partner,access.qaco.quality.finding.partner,model_qaco_quality_finding,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_quality_finding_admin,access.qaco.quality.finding.admin,model_qaco_quality_finding,qaco_audit.group_audit_administrator,1,1,1,1
