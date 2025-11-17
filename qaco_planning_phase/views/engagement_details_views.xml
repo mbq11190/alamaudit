@@ -38,10 +38,10 @@
                                 <div class="card-body">
                                     <small class="text-muted text-uppercase">Overall Risk</small>
                                     <div class="d-flex align-items-center gap-2 mt-2">
-                                        <span class="badge bg-danger text-white px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', 'high')]}">High</span>
-                                        <span class="badge bg-warning text-dark px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', 'medium')]}">Medium</span>
-                                        <span class="badge bg-success text-white px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', 'low')]}">Low</span>
-                                        <span class="badge bg-secondary text-white px-3 py-2 text-uppercase" attrs="{'invisible': [('overall_risk_level', '!=', False)]}">Not Set</span>
+                                        <span class="badge bg-danger text-white px-3 py-2 text-uppercase" modifiers="{'invisible': [('overall_risk_level', '!=', 'high')]}">High</span>
+                                        <span class="badge bg-warning text-dark px-3 py-2 text-uppercase" modifiers="{'invisible': [('overall_risk_level', '!=', 'medium')]}">Medium</span>
+                                        <span class="badge bg-success text-white px-3 py-2 text-uppercase" modifiers="{'invisible': [('overall_risk_level', '!=', 'low')]}">Low</span>
+                                        <span class="badge bg-secondary text-white px-3 py-2 text-uppercase" modifiers="{'invisible': [('overall_risk_level', '!=', False)]}">Not Set</span>
                                     </div>
                                 </div>
                             </div>
