@@ -74,6 +74,115 @@ IC_IMPLEMENTATION_STATUS = [
     ("partial", "Partially Implemented"),
 ]
 
+FS_RISK_LEVELS = [
+    ("low", "Low"),
+    ("moderate", "Moderate"),
+    ("high", "High"),
+]
+
+CONTROL_RELIANCE = [
+    ("no_reliance", "No Reliance"),
+    ("limited", "Limited Reliance"),
+    ("significant", "Significant Reliance"),
+]
+
+RISK_ACCOUNT_CYCLES = [
+    ("revenue", "Revenue"),
+    ("receivables", "Receivables"),
+    ("inventory", "Inventory"),
+    ("ppe", "Property, Plant & Equipment"),
+    ("cash", "Cash & Cash Equivalents"),
+    ("purchases", "Purchases / Payables"),
+    ("payroll", "Payroll"),
+    ("tax", "Tax"),
+    ("others", "Others"),
+]
+
+RISK_TYPES = [
+    ("fraud", "Fraud"),
+    ("error", "Error"),
+    ("compliance", "Compliance"),
+    ("presentation", "Presentation / Disclosure"),
+]
+
+RISK_CATEGORIES = [
+    ("inherent", "Inherent"),
+    ("control", "Control"),
+    ("detection", "Detection"),
+    ("combined", "Combined"),
+]
+
+RISK_RATINGS = [
+    ("low", "Low"),
+    ("medium", "Medium"),
+    ("high", "High"),
+]
+
+PLANNED_RESPONSE_TYPES = [
+    ("toc", "Tests of Controls"),
+    ("substantive", "Substantive Procedures"),
+    ("combined", "Combined"),
+    ("analytics", "Substantive Analytics"),
+]
+
+PLANNED_TIMINGS = [
+    ("interim", "Interim"),
+    ("year_end", "Year-end"),
+    ("both", "Both"),
+]
+
+ESTIMATE_UNCERTAINTY_LEVELS = [
+    ("low", "Low"),
+    ("medium", "Medium"),
+    ("high", "High"),
+]
+
+RELATED_PARTY_RISK_LEVELS = [
+    ("low", "Low"),
+    ("medium", "Medium"),
+    ("high", "High"),
+]
+
+GOING_CONCERN_INDICATORS = [
+    ("no_significant_doubt", "No Significant Doubt"),
+    ("significant_doubt", "Significant Doubt"),
+    ("material_uncertainty", "Material Uncertainty"),
+]
+
+EXPERT_TYPES = [
+    ("valuation", "Valuation"),
+    ("actuarial", "Actuarial"),
+    ("legal", "Legal"),
+    ("tax", "Tax"),
+    ("it", "IT"),
+    ("other", "Other"),
+]
+
+TEAM_LEVELS = [
+    ("partner", "Partner"),
+    ("manager", "Manager"),
+    ("supervisor", "Supervisor"),
+    ("semi_senior", "Semi Senior"),
+    ("junior", "Junior"),
+]
+
+ATTACHMENT_TYPES = [
+    ("memo", "Memo"),
+    ("minutes", "Minutes"),
+    ("excel", "Excel"),
+    ("legal_doc", "Legal Document"),
+    ("other", "Other"),
+]
+
+ASSERTION_CODES = [
+    ("existence", "Existence"),
+    ("completeness", "Completeness"),
+    ("accuracy", "Accuracy"),
+    ("valuation", "Valuation"),
+    ("rights_obligations", "Rights & Obligations"),
+    ("presentation", "Presentation & Disclosure"),
+]
+
 
 _logger = logging.getLogger(__name__)
 
