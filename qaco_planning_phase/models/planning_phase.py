@@ -800,7 +800,11 @@ class PlanningRisk(models.Model):
     _order = "risk_score desc, id desc"
 
     planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
-    name = fields.Char(required=True, string="Risk Description")
+    name = fields.Char(
+        required=True,
+        string="Risk Description",
+        default=lambda self: self._generate_default_name(),
+    )
     business_area = fields.Selection([
         ("revenue", "Revenue"),
         ("inventory", "Inventory"),
@@ -883,6 +887,17 @@ class PlanningRisk(models.Model):
     notes = fields.Text()
     sign_off_user_id = fields.Many2one("res.users", string="Reviewer")
     sign_off_date = fields.Date()
+
+    @api.model
+    def _generate_default_name(self):
+        seq = self.env["ir.sequence"].sudo().next_by_code("qaco.planning.risk")
+        return seq or _("New Risk")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals.setdefault("name", self._generate_default_name())
+        return super().create(vals_list)
 
     @api.depends("likelihood", "impact", "inherent_risk_level", "control_risk_level")
     def _compute_score(self):
@@ -1515,13 +1530,28 @@ class QacoRiskMatrixFS(models.Model):
     _description = "Financial Statement Level Risk Matrix"
 
     audit_id = fields.Many2one("qaco.audit", required=True, ondelete="cascade")
-    name = fields.Char(string="Risk Description", required=True)
+    name = fields.Char(
+        string="Risk Description",
+        required=True,
+        default=lambda self: self._generate_default_name(),
+    )
     likelihood = fields.Selection([("1", "Low"), ("2", "Medium"), ("3", "High")], default="2")
     impact = fields.Selection([("1", "Low"), ("2", "Medium"), ("3", "High")], default="2")
     score = fields.Integer(compute="_compute_score", store=True)
     owner_id = fields.Many2one("res.users", string="Owner")
     linked_checklist_ids = fields.Many2many("qaco.planning.checklist", string="Related Checklist Items")
     notes = fields.Text()
+
+    @api.model
+    def _generate_default_name(self):
+        seq = self.env["ir.sequence"].sudo().next_by_code("qaco.risk_matrix.fs")
+        return seq or _("Financial Statement Risk")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals.setdefault("name", self._generate_default_name())
+        return super().create(vals_list)
 
     @api.depends("likelihood", "impact")
     def _compute_score(self):

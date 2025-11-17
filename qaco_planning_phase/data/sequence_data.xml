@@ -16,5 +16,21 @@
       <field name="company_id" eval="False"/>
       <field name="implementation">no_gap</field>
     </record>
+    <record id="seq_planning_risk" model="ir.sequence">
+      <field name="name">Planning Risk</field>
+      <field name="code">qaco.planning.risk</field>
+      <field name="prefix">RISK-%(y)s-</field>
+      <field name="padding">4</field>
+      <field name="company_id" eval="False"/>
+      <field name="implementation">no_gap</field>
+    </record>
+    <record id="seq_risk_matrix_fs" model="ir.sequence">
+      <field name="name">FS Risk Matrix</field>
+      <field name="code">qaco.risk_matrix.fs</field>
+      <field name="prefix">FSR-%(y)s-</field>
+      <field name="padding">4</field>
+      <field name="company_id" eval="False"/>
+      <field name="implementation">no_gap</field>
+    </record>
   </data>
 </odoo>
