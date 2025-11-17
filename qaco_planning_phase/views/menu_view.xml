@@ -6,6 +6,12 @@
                   parent="qaco_audit.menu_root"
                   action="action_planning_phase"
                   sequence="15"/>
+
+      <menuitem id="menu_engagement_details"
+              name="Engagement Details"
+              parent="menu_planning_phase"
+              action="action_engagement_details"
+              sequence="5"/>
         <!-- Sub-menus for Planning Phase components -->
         <menuitem id="menu_planning_risks"
                   name="Risks"

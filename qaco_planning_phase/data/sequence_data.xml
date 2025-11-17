@@ -40,5 +40,13 @@
       <field name="company_id" eval="False"/>
       <field name="implementation">no_gap</field>
     </record>
+    <record id="seq_engagement_details" model="ir.sequence">
+      <field name="name">Engagement Details</field>
+      <field name="code">qaco.engagement.details</field>
+      <field name="prefix">ENG-%(y)s-</field>
+      <field name="padding">4</field>
+      <field name="company_id" eval="False"/>
+      <field name="implementation">no_gap</field>
+    </record>
   </data>
 </odoo>

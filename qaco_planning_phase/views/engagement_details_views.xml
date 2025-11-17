@@ -1,0 +1,180 @@
+<odoo>
+    <data>
+        <!-- TREE VIEW -->
+        <record id="view_engagement_details_tree" model="ir.ui.view">
+            <field name="name">qaco.engagement.details.tree</field>
+            <field name="model">qaco.engagement.details</field>
+            <field name="arch" type="xml">
+                <tree string="Engagement Details">
+                    <field name="name"/>
+                    <field name="audit_year"/>
+                    <field name="entity_class"/>
+                    <field name="engagement_type"/>
+                    <field name="engagement_partner"/>
+                    <field name="planning_start"/>
+                    <field name="expected_report_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FORM VIEW -->
+        <record id="view_engagement_details_form" model="ir.ui.view">
+            <field name="name">qaco.engagement.details.form</field>
+            <field name="model">qaco.engagement.details</field>
+            <field name="arch" type="xml">
+                <form string="Engagement Details">
+                    <sheet>
+                        <notebook>
+
+                            <!-- A. ENGAGEMENT IDENTIFICATION -->
+                            <page string="Engagement Information">
+                                <group>
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="audit_year"/>
+                                        <field name="entity_class"/>
+                                        <field name="engagement_type"/>
+                                    </group>
+                                    <group>
+                                        <field name="reporting_framework"/>
+                                        <field name="applicable_laws"/>
+                                        <field name="period_start"/>
+                                        <field name="period_end"/>
+                                    </group>
+                                </group>
+
+                                <group string="Engagement Purpose &amp; Scope">
+                                    <field name="engagement_purpose"/>
+                                    <field name="basis_of_accounting"/>
+                                    <field name="special_purpose_framework"/>
+                                    <field name="deliverables"/>
+                                </group>
+                            </page>
+
+                            <!-- B. PRECONDITIONS -->
+                            <page string="Preconditions (ISA 210)">
+                                <group>
+                                    <group>
+                                        <field name="framework_acceptability"/>
+                                        <field name="mgmt_responsibility_ack"/>
+                                        <field name="info_access_agreed"/>
+                                        <field name="preconditions_met"/>
+                                    </group>
+                                    <group>
+                                        <field name="scope_limitation"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- C. Engagement Letter -->
+                            <page string="Engagement Letter">
+                                <group>
+                                    <field name="engagement_letter_issued"/>
+                                    <field name="engagement_letter_date"/>
+                                    <field name="signed_engagement_letter" filename="signed_engagement_letter_filename"/>
+                                </group>
+                            </page>
+
+                            <!-- D. TIMELINE -->
+                            <page string="Timeline">
+                                <group>
+                                    <group>
+                                        <field name="planning_start"/>
+                                        <field name="planning_end"/>
+                                        <field name="planning_meeting_date"/>
+                                    </group>
+                                    <group>
+                                        <field name="fieldwork_start"/>
+                                        <field name="fieldwork_end"/>
+                                        <field name="expected_completion"/>
+                                        <field name="audit_committee_meeting"/>
+                                        <field name="expected_report_date"/>
+                                        <field name="estimated_hours"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- E. Scope & Objectives -->
+                            <page string="Scope &amp; Objectives">
+                                <group>
+                                    <field name="audit_scope"/>
+                                    <field name="audit_objectives"/>
+                                    <field name="inherent_limitations"/>
+                                    <field name="specialists_involved"/>
+                                </group>
+                            </page>
+
+                            <!-- F. Team -->
+                            <page string="Team &amp; Responsibilities">
+                                <group>
+                                    <group>
+                                        <field name="engagement_partner"/>
+                                        <field name="engagement_manager"/>
+                                        <field name="eqcr_reviewer"/>
+                                        <field name="specialists"/>
+                                    </group>
+                                    <group>
+                                        <field name="independence_confirmed"/>
+                                        <field name="competence_assessed"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- G. Materiality -->
+                            <page string="Materiality Summary">
+                                <group>
+                                    <group>
+                                        <field name="overall_materiality"/>
+                                        <field name="performance_materiality"/>
+                                        <field name="trivial_threshold"/>
+                                    </group>
+                                    <group>
+                                        <field name="materiality_basis"/>
+                                        <field name="materiality_rationale"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- H. Risk -->
+                            <page string="Risk Summary">
+                                <group>
+                                    <field name="significant_risks"/>
+                                    <field name="fraud_risks"/>
+                                    <field name="fs_level_risks"/>
+                                    <field name="assertion_level_risks"/>
+                                </group>
+                            </page>
+
+                            <!-- I. Budget -->
+                            <page string="Budget &amp; Resources">
+                                <group>
+                                    <field name="approved_budget_hours"/>
+                                    <field name="fee_amount"/>
+                                    <field name="staff_allocation"/>
+                                </group>
+                            </page>
+
+                            <!-- J. Compliance -->
+                            <page string="Compliance">
+                                <group>
+                                    <field name="listed_entity"/>
+                                    <field name="pie_status"/>
+                                    <field name="sepc_aob_requirements"/>
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ACTION -->
+        <record id="action_engagement_details" model="ir.actions.act_window">
+            <field name="name">Engagement Details</field>
+            <field name="res_model">qaco.engagement.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
