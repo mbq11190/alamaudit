@@ -68,7 +68,7 @@
                                         <field name="entity_classification" readonly="1"/>
                                         <field name="materiality_basis" required="1"/>
                                         <field name="materiality_benchmark_source"/>
-                                        <field name="benchmark_source_other" attrs="{'invisible': [('materiality_benchmark_source', '!=', 'other')]}"/>
+                                        <field name="benchmark_source_other" modifiers="{'invisible': [('materiality_benchmark_source', '!=', 'other')]}"/>
                                     </group>
                                     <group>
                                         <field name="materiality_base_amount" required="1"/>
@@ -82,9 +82,9 @@
                                         <field name="overall_materiality_amount_calc" readonly="1"/>
                                         <field name="materiality_amount" readonly="1"/>
                                     </group>
-                                    <group string="Override (partner approval)" attrs="{'invisible': [('overall_materiality_override', '=', False)]}">
-                                        <field name="overall_materiality_amount_override" attrs="{'required': [('overall_materiality_override', '=', True)]}"/>
-                                        <field name="overall_materiality_override_reason" attrs="{'required': [('overall_materiality_override', '=', True)]}" placeholder="Document rationale for override."/>
+                                    <group string="Override (partner approval)" modifiers="{'invisible': [('overall_materiality_override', '=', False)]}">
+                                        <field name="overall_materiality_amount_override" modifiers="{'required': [('overall_materiality_override', '=', True)]}"/>
+                                        <field name="overall_materiality_override_reason" modifiers="{'required': [('overall_materiality_override', '=', True)]}" placeholder="Document rationale for override."/>
                                         <field name="overall_materiality_approved_by"/>
                                         <field name="overall_materiality_approved_date"/>
                                     </group>
@@ -96,9 +96,9 @@
                                         <field name="performance_materiality_amount_calc" readonly="1"/>
                                         <field name="performance_materiality" readonly="1"/>
                                     </group>
-                                    <group string="Override (partner approval)" attrs="{'invisible': [('performance_materiality_override', '=', False)]}">
-                                        <field name="performance_materiality_amount_override" attrs="{'required': [('performance_materiality_override', '=', True)]}"/>
-                                        <field name="performance_materiality_override_reason" attrs="{'required': [('performance_materiality_override', '=', True)]}" placeholder="Document reasons (e.g., control deficiencies, history of misstatements)."/>
+                                    <group string="Override (partner approval)" modifiers="{'invisible': [('performance_materiality_override', '=', False)]}">
+                                        <field name="performance_materiality_amount_override" modifiers="{'required': [('performance_materiality_override', '=', True)]}"/>
+                                        <field name="performance_materiality_override_reason" modifiers="{'required': [('performance_materiality_override', '=', True)]}" placeholder="Document reasons (e.g., control deficiencies, history of misstatements)."/>
                                         <field name="performance_materiality_approved_by"/>
                                         <field name="performance_materiality_approved_date"/>
                                     </group>
@@ -110,9 +110,9 @@
                                         <field name="trivial_threshold_amount_calc" readonly="1"/>
                                         <field name="trivial_misstatement" readonly="1" string="Clearly Trivial Threshold"/>
                                     </group>
-                                    <group string="Override (if needed)" attrs="{'invisible': [('trivial_threshold_override', '=', False)]}">
-                                        <field name="trivial_threshold_amount_override" attrs="{'required': [('trivial_threshold_override', '=', True)]}"/>
-                                        <field name="trivial_threshold_override_reason" attrs="{'required': [('trivial_threshold_override', '=', True)]}" placeholder="Explain communication / governance requirements."/>
+                                    <group string="Override (if needed)" modifiers="{'invisible': [('trivial_threshold_override', '=', False)]}">
+                                        <field name="trivial_threshold_amount_override" modifiers="{'required': [('trivial_threshold_override', '=', True)]}"/>
+                                        <field name="trivial_threshold_override_reason" modifiers="{'required': [('trivial_threshold_override', '=', True)]}" placeholder="Explain communication / governance requirements."/>
                                     </group>
                                     <field name="trivial_threshold_override"/>
                                 </group>
