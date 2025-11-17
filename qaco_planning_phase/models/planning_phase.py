@@ -141,7 +141,7 @@ class PlanningPhase(models.Model):
     )
     materiality_percentage = fields.Float(
         string="Materiality Percentage",
-        default=5.0,
+        default=10.0,
         tracking=True,
         help="Percentage applied to the benchmark amount (ISA 320)",
     )
