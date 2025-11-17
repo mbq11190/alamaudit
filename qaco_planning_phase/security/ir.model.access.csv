@@ -12,6 +12,10 @@ access_planning_pbc_partner,access.planning.pbc.partner,model_qaco_planning_pbc,
 access_planning_milestone_partner,access.planning.milestone.partner,model_qaco_planning_milestone,qaco_audit.group_audit_partner,1,1,1,1
 access_materiality_user,access.materiality.user,model_qaco_materiality,base.group_user,1,1,1,0
 access_materiality_partner,access.materiality.partner,model_qaco_materiality,qaco_audit.group_audit_partner,1,1,1,1
+access_materiality_component_user,access.materiality.component.user,model_qaco_materiality_component,base.group_user,1,1,1,0
+access_materiality_component_partner,access.materiality.component.partner,model_qaco_materiality_component,qaco_audit.group_audit_partner,1,1,1,1
+access_materiality_tolerance_user,access.materiality.tolerance.user,model_qaco_materiality_tolerance,base.group_user,1,1,1,0
+access_materiality_tolerance_partner,access.materiality.tolerance.partner,model_qaco_materiality_tolerance,qaco_audit.group_audit_partner,1,1,1,1
 access_materiality_history_user,access.materiality.history.user,model_qaco_materiality_history,base.group_user,1,0,0,0
 access_planning_materiality_config_partner,access.planning.materiality.config.partner,model_qaco_planning_materiality_config,qaco_audit.group_audit_partner,1,1,1,0
 access_planning_evidence_user,access.planning.evidence.user,model_qaco_planning_evidence,base.group_user,1,1,0,0
