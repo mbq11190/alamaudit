@@ -25,6 +25,11 @@
         "views/law_mapping_views.xml",
         "views/menu_view.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "qaco_planning_phase/static/src/scss/planning_tabs.scss",
+        ],
+    },
     "application": True,
     "installable": True,
     "auto_install": False,
