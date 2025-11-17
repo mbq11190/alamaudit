@@ -223,6 +223,11 @@ class PlanningPhase(models.Model):
         tracking=True,
         oldname="continuing_client_evaluation_done",
     )
+    previous_auditor_communication = fields.Boolean(
+        string="Communication with Previous Auditor Completed",
+        tracking=True,
+        help="Tick once professional clearance / communication with the predecessor auditor has been obtained.",
+    )
     acceptance_continuance_reason = fields.Text(string="Reasons for Acceptance / Continuance")
 
     independence_confirmed = fields.Boolean(
