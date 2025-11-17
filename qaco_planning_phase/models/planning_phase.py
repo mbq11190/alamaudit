@@ -272,6 +272,14 @@ class PlanningPhase(models.Model):
         string="EQCR Reviewer",
         tracking=True
     )
+    eqcr_review_completed = fields.Boolean(
+        string="EQCR Review Completed",
+        tracking=True,
+    )
+    eqcr_review_date = fields.Date(
+        string="EQCR Review Date",
+        tracking=True,
+    )
     rotation_required = fields.Boolean(
         string="Partner Rotation Required",
         tracking=True
