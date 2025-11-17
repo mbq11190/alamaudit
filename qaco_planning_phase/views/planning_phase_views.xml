@@ -359,7 +359,7 @@
                                     <!-- Internal Control Assessment -->
                                     <page name="ic_assessment" string="Internal Control Assessment">
                                         <group>
-                                            <label string="Document the ISA 315 understanding of internal control and drive the ISA 330 execution strategy." class="text-muted"/>
+                                            <label string="Document the ISA 315 understanding of internal control and drive the ISA 330 execution strategy." class="o_form_label text-muted"/>
                                         </group>
                                         <notebook>
                                             <page name="ic_control_environment" string="Control Environment">
