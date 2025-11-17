@@ -367,33 +367,42 @@ class QacoMateriality(models.Model):
     )
     def _compute_materiality(self):
         for rec in self:
-            base = float(rec.benchmark_amount or 0.0)
-            applied = float(rec.applied_percent or 0.0)
+            base = _decimal(rec.benchmark_amount or 0.0)
+            applied = _decimal(rec.applied_percent or 0.0)
             perf = float(rec.performance_percent or 0.0)
             trivial = float(rec.trivial_percent or 0.0)
 
-            mat_amount = (base * applied / 100.0) if applied else 0.0
+            if applied:
+                mat_amount = (base * applied) / Decimal("100")
+            else:
+                mat_amount = Decimal("0")
+
             rounded = _round_to_nearest(mat_amount, rec.rounding)
-            final = rounded - float(rec.aggregation_allowance or 0.0)
-            if final < 0:
-                final = 0.0
+            rounded_dec = _decimal(rounded or 0.0)
+            allowance = _decimal(rec.aggregation_allowance or 0.0)
+            final_dec = rounded_dec - allowance
+            if final_dec < 0:
+                final_dec = Decimal("0")
+            final_float = float(final_dec)
 
             if rec.currency_id:
-                rec.materiality_amount = rec.currency_id.round(final)
+                rec.materiality_amount = rec.currency_id.round(final_float)
+                rec_performance_base = rec.materiality_amount or 0.0
                 rec.performance_materiality_amount = (
-                    rec.currency_id.round((rec.materiality_amount or 0.0) * perf / 100.0)
+                    rec.currency_id.round(rec_performance_base * perf / 100.0)
                     if perf
                     else 0.0
                 )
                 rec.trivial_amount = (
-                    rec.currency_id.round((rec.materiality_amount or 0.0) * trivial / 100.0)
+                    rec.currency_id.round(rec_performance_base * trivial / 100.0)
                     if trivial
                     else 0.0
                 )
             else:
-                rec.materiality_amount = round(final)
-                rec.performance_materiality_amount = round((rec.materiality_amount or 0.0) * perf / 100.0) if perf else 0.0
-                rec.trivial_amount = round((rec.materiality_amount or 0.0) * trivial / 100.0) if trivial else 0.0
+                rec.materiality_amount = round(final_float)
+                base_amount = rec.materiality_amount or 0.0
+                rec.performance_materiality_amount = round(base_amount * perf / 100.0) if perf else 0.0
+                rec.trivial_amount = round(base_amount * trivial / 100.0) if trivial else 0.0
 
             rec.component_ids._compute_computed_materiality()
             rec.tolerance_ids._compute_computed_amount()
