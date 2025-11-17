@@ -358,11 +358,6 @@
 
                                     <!-- Internal Control Assessment -->
                                     <page name="ic_assessment" string="Internal Control Assessment">
-                                        <group>
-                                            <div class="o_form_label text-muted">
-                                                Document the ISA 315 understanding of internal control and drive the ISA 330 execution strategy.
-                                            </div>
-                                        </group>
                                         <notebook>
                                             <page name="ic_control_environment" string="Control Environment">
                                                 <group>
