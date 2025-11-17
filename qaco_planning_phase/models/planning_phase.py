@@ -26,6 +26,54 @@ MATERIALITY_BENCHMARKS = [
     ("custom", "Custom"),
 ]
 
+IC_CHECKLIST_ANSWERS = [
+    ("yes", "Yes"),
+    ("no", "No"),
+    ("na", "Not Applicable"),
+]
+
+IC_RISK_RATINGS = [
+    ("low", "Low"),
+    ("medium", "Medium"),
+    ("high", "High"),
+]
+
+IC_CONTROL_CYCLES = [
+    ("revenue", "Revenue"),
+    ("purchases", "Purchases / Payables"),
+    ("inventory", "Inventory / Production"),
+    ("payroll", "Payroll"),
+    ("fixed_assets", "Fixed Assets"),
+    ("treasury", "Treasury / Cash"),
+    ("closing_reporting", "Financial Closing & Reporting"),
+    ("other", "Other"),
+]
+
+IC_CONTROL_TYPES = [
+    ("preventive", "Preventive"),
+    ("detective", "Detective"),
+]
+
+IC_CONTROL_NATURE = [
+    ("manual", "Manual"),
+    ("automated", "Automated"),
+    ("it_dependent", "IT Dependent"),
+]
+
+IC_CONTROL_FREQUENCY = [
+    ("daily", "Daily"),
+    ("weekly", "Weekly"),
+    ("monthly", "Monthly"),
+    ("quarterly", "Quarterly"),
+    ("adhoc", "Ad-hoc"),
+]
+
+IC_IMPLEMENTATION_STATUS = [
+    ("implemented", "Implemented"),
+    ("not_implemented", "Not Implemented"),
+    ("partial", "Partially Implemented"),
+]
+
 
 _logger = logging.getLogger(__name__)
 
@@ -537,6 +585,269 @@ class PlanningPhase(models.Model):
     information_systems_notes = fields.Text(string="Information Systems & Communication", tracking=True)
     control_activities_notes = fields.Text(string="Control Activities", tracking=True)
     monitoring_controls_notes = fields.Text(string="Monitoring of Controls", tracking=True)
+
+    # Internal Control Assessment / Understanding (ISA 315 & ISA 330 linkage)
+    tone_at_the_top = fields.Text(string="Tone at the Top", tracking=True)
+    organizational_structure_file = fields.Binary(
+        string="Organizational Structure (Attachment)",
+        attachment=True,
+    )
+    organizational_structure_filename = fields.Char(string="Org Structure Filename")
+    authority_and_responsibility = fields.Text(string="Authority & Responsibility", tracking=True)
+    human_resource_policies = fields.Text(string="Human Resource Policies", tracking=True)
+    code_of_conduct_existence = fields.Selection(
+        [
+            ("yes", "Yes"),
+            ("no", "No"),
+            ("partial", "Partially Documented"),
+        ],
+        string="Code of Conduct / Ethics Program",
+        tracking=True,
+    )
+    whistleblowing_policy = fields.Selection(
+        [("yes", "Yes"), ("no", "No")],
+        string="Whistleblowing Mechanism in Place",
+        tracking=True,
+    )
+    whistleblowing_details = fields.Text(string="Whistleblowing Details", tracking=True)
+    has_audit_committee = fields.Boolean(string="Audit Committee in Place", tracking=True)
+    audit_committee_composition = fields.Text(string="Audit Committee Composition", tracking=True)
+    audit_committee_meeting_freq = fields.Selection(
+        [
+            ("quarterly", "Quarterly"),
+            ("semi_annual", "Semi-Annual"),
+            ("annual", "Annual"),
+            ("ad_hoc", "Ad-hoc"),
+        ],
+        string="Audit Committee Meeting Frequency",
+        tracking=True,
+    )
+    audit_committee_effectiveness_assessment = fields.Text(
+        string="Audit Committee Effectiveness Assessment",
+        tracking=True,
+    )
+    has_internal_audit_function = fields.Boolean(string="Internal Audit Function Exists", tracking=True)
+    internal_audit_reporting_line = fields.Selection(
+        [
+            ("audit_committee", "Audit Committee"),
+            ("board", "Board of Directors"),
+            ("ceo", "CEO"),
+            ("cfo", "CFO"),
+        ],
+        string="Internal Audit Reporting Line",
+        tracking=True,
+    )
+    internal_audit_scope_summary = fields.Text(string="Internal Audit Scope Summary", tracking=True)
+    last_internal_audit_report_date = fields.Date(string="Last Internal Audit Report Date", tracking=True)
+    key_ia_findings_summary = fields.Text(string="Key IA Findings Summary", tracking=True)
+    control_env_checklist_ids = fields.One2many(
+        "qaco.ic.control.env.line",
+        "planning_id",
+        string="Control Environment Checklist",
+    )
+    control_env_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_control_env_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Control Environment Attachments",
+    )
+
+    formal_risk_management_framework = fields.Selection(
+        [
+            ("yes", "Yes - Documented"),
+            ("no", "No Formal Framework"),
+            ("informal", "Informal / Emerging"),
+        ],
+        string="Formal Risk Management Framework",
+        tracking=True,
+    )
+    risk_policy_exists = fields.Boolean(string="Risk Policy Exists", tracking=True)
+    risk_policy_attachment = fields.Binary(string="Risk Policy Attachment", attachment=True)
+    risk_policy_attachment_name = fields.Char(string="Risk Policy Filename")
+    has_risk_register = fields.Boolean(string="Risk Register Maintained", tracking=True)
+    risk_register_attachment = fields.Binary(string="Risk Register Attachment", attachment=True)
+    risk_register_attachment_name = fields.Char(string="Risk Register Filename")
+    risk_assessment_frequency = fields.Selection(
+        [
+            ("annual", "Annual"),
+            ("quarterly", "Quarterly"),
+            ("ad_hoc", "Ad-hoc"),
+            ("none", "None"),
+        ],
+        string="Risk Assessment Frequency",
+        tracking=True,
+    )
+    responsible_person_for_risk = fields.Many2one(
+        "res.partner",
+        string="Responsible Person for Risk",
+        tracking=True,
+    )
+    linkage_to_financial_reporting = fields.Text(string="Linkage to Financial Reporting", tracking=True)
+    key_business_risks_summary = fields.Text(string="Key Business Risks Summary", tracking=True)
+    key_fraud_risks_identified = fields.Text(string="Key Fraud Risks Identified", tracking=True)
+    impact_on_audit_strategy = fields.Text(string="Impact on Audit Strategy", tracking=True)
+    risk_process_checklist_ids = fields.One2many(
+        "qaco.ic.risk.process.line",
+        "planning_id",
+        string="Risk Assessment Process Checklist",
+    )
+    risk_process_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_risk_process_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Risk Process Attachments",
+    )
+
+    main_erp_or_accounting_system = fields.Char(string="Main ERP / Accounting System", tracking=True)
+    other_critical_applications = fields.Text(string="Other Critical Applications", tracking=True)
+    it_infrastructure_summary = fields.Text(string="IT Infrastructure Summary", tracking=True)
+    outsourced_it_services = fields.Text(string="Outsourced IT Services", tracking=True)
+    user_access_management = fields.Text(string="User Access Management", tracking=True)
+    password_policies = fields.Text(string="Password Policies", tracking=True)
+    change_management_process = fields.Text(string="Change Management Process", tracking=True)
+    backup_and_restore_procedures = fields.Text(string="Backup & Restore Procedures", tracking=True)
+    incident_management = fields.Text(string="Incident Management", tracking=True)
+    business_continuity_and_dr = fields.Text(string="Business Continuity & DRP", tracking=True)
+    security_controls = fields.Text(string="Security Controls", tracking=True)
+    itgc_reliance_planned = fields.Boolean(string="Plan to Rely on ITGC?", tracking=True)
+    needs_it_specialist = fields.Boolean(string="IT Specialist Needed?", tracking=True)
+    itgc_checklist_ids = fields.One2many(
+        "qaco.ic.itgc.line",
+        "planning_id",
+        string="ITGC Checklist",
+    )
+    itgc_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_itgc_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="ITGC Attachments",
+    )
+
+    control_activity_ids = fields.One2many(
+        "qaco.ic.control.activity.line",
+        "planning_id",
+        string="Control Activities by Cycle",
+    )
+
+    monitoring_activities_description = fields.Text(string="Monitoring Activities Description", tracking=True)
+    frequency_of_monitoring = fields.Selection(
+        [
+            ("continuous", "Continuous / Embedded"),
+            ("quarterly", "Quarterly"),
+            ("annual", "Annual"),
+            ("ad_hoc", "Ad-hoc"),
+        ],
+        string="Frequency of Monitoring",
+        tracking=True,
+    )
+    reporting_of_deficiencies = fields.Text(string="Reporting of Deficiencies", tracking=True)
+    follow_up_on_deficiencies = fields.Text(string="Follow-up on Deficiencies", tracking=True)
+    monitoring_checklist_ids = fields.One2many(
+        "qaco.ic.monitoring.line",
+        "planning_id",
+        string="Monitoring Checklist",
+    )
+    monitoring_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_monitoring_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Monitoring Attachments",
+    )
+
+    is_listed_company = fields.Boolean(string="Listed Company", tracking=True)
+    is_public_sector_company = fields.Boolean(string="Public Sector Company", tracking=True)
+    is_regulated_by_sbp_or_secp_specific_regime = fields.Selection(
+        [
+            ("sbp", "State Bank of Pakistan"),
+            ("secp_nbfc", "SECP NBFC Regulations"),
+            ("insurance", "Insurance / Takaful Regulations"),
+            ("modaraba", "Modaraba Regulations"),
+            ("none", "None"),
+        ],
+        string="Specific Regulator",
+        tracking=True,
+    )
+    cg_regulation_applicable = fields.Selection(
+        [
+            ("secp_listed", "SECP Listed Co CG Regulations 2019"),
+            ("psc_rules", "Public Sector Companies (Corporate Governance) Rules"),
+            ("sbp_guidelines", "SBP Governance Guidelines"),
+            ("other", "Other / Custom Framework"),
+        ],
+        string="Applicable CG Regulation",
+        tracking=True,
+    )
+    cg_compliance_status = fields.Selection(
+        [
+            ("compliant", "Compliant"),
+            ("partial", "Partially Compliant"),
+            ("non_compliant", "Non-compliant"),
+        ],
+        string="Corporate Governance Compliance",
+        tracking=True,
+    )
+    cg_compliance_comments = fields.Text(string="CG Compliance Comments", tracking=True)
+    board_and_ac_composition_vs_regulations = fields.Text(
+        string="Board & AC Composition vs Regulations",
+        tracking=True,
+    )
+    required_committees_in_place = fields.Boolean(string="Required Committees Constituted?", tracking=True)
+    required_committees_details = fields.Text(string="Required Committees Details", tracking=True)
+    ceocfo_certification_exists = fields.Boolean(string="CEO/CFO Certification Obtained?", tracking=True)
+    ceocfo_certification_attachment = fields.Binary(
+        string="CEO/CFO Certification",
+        attachment=True,
+    )
+    ceocfo_certification_filename = fields.Char(string="Certification Filename")
+    related_party_approval_process = fields.Text(string="Related Party Approval Process", tracking=True)
+    cg_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "qaco_planning_cg_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Corporate Governance Attachments",
+    )
+
+    ic_deficiency_ids = fields.One2many(
+        "qaco.ic.deficiency.line",
+        "planning_id",
+        string="Key IC Deficiencies",
+    )
+    ic_attachment_index_ids = fields.One2many(
+        "qaco.ic.attachment.index.line",
+        "planning_id",
+        string="IC Attachment Index",
+    )
+
+    overall_ic_assessment = fields.Selection(
+        [
+            ("does_not_exist", "Controls do not exist / no formal internal control system"),
+            ("weak", "Weak controls (significant deficiencies; cannot rely on controls)"),
+            ("moderate", "Moderate controls (some deficiencies; partial reliance possible)"),
+            ("strong", "Strong controls (well designed & implemented; reliance appropriate)"),
+        ],
+        string="Overall Internal Control Assessment",
+        tracking=True,
+        help="Summarise the auditor's ISA 315 conclusion on the design & implementation of internal controls relevant to financial reporting.",
+    )
+    toc_strategy = fields.Selection(
+        [
+            ("perform_toc", "Perform Tests of Controls during execution and rely on controls (ISA 330)"),
+            ("no_toc", "Do not perform Tests of Controls; adopt fully substantive approach"),
+        ],
+        string="Tests of Controls Strategy",
+        tracking=True,
+        help="Automatically determined based on the overall internal control assessment to evidence whether ToC will be performed in execution.",
+    )
+    ic_assessment_conclusion = fields.Text(
+        string="Internal Control Assessment Conclusion",
+        help="Document rationale for the IC assessment, impact on RoMM and resulting ISA 330 audit approach.",
+        tracking=True,
+    )
     
     # Planning Checklists (Legacy)
     understanding_entity_obtained = fields.Boolean(
@@ -1289,6 +1600,7 @@ class PlanningPhase(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             self._sync_materiality_vals(vals)
+            self._sync_ic_strategy_vals(vals)
             if vals.get('materiality_base_amount') and vals.get('materiality_percentage') and not vals.get('materiality_amount'):
                 amount = self._compute_materiality_amount(vals['materiality_base_amount'], vals['materiality_percentage'])
                 vals.setdefault('materiality_amount', amount)
@@ -1304,6 +1616,9 @@ class PlanningPhase(models.Model):
         return records
 
     def write(self, vals):
+        vals = dict(vals)
+        if 'overall_ic_assessment' in vals:
+            self._sync_ic_strategy_vals(vals)
         if not self.env.context.get('skip_materiality_autofill'):
             self._sync_materiality_vals(vals)
         res = super().write(vals)
@@ -1328,6 +1643,36 @@ class PlanningPhase(models.Model):
             vals['materiality_basis'] = base
         elif legacy and not base:
             vals['materiality_base'] = legacy
+
+    def _sync_ic_strategy_vals(self, vals):
+        assessment = vals.get('overall_ic_assessment')
+        if not assessment or vals.get('toc_strategy'):
+            return
+        strategy = self._determine_toc_strategy(assessment)
+        if strategy:
+            vals['toc_strategy'] = strategy
+
+    @staticmethod
+    def _determine_toc_strategy(assessment):
+        if assessment in ('does_not_exist', 'weak'):
+            return 'no_toc'
+        if assessment in ('moderate', 'strong'):
+            return 'perform_toc'
+        return False
+
+    @api.onchange('overall_ic_assessment')
+    def _onchange_overall_ic_assessment(self):
+        self.toc_strategy = self._determine_toc_strategy(self.overall_ic_assessment)
+
+    @api.constrains('overall_ic_assessment', 'toc_strategy')
+    def _check_ic_strategy_alignment(self):
+        for rec in self:
+            if not rec.overall_ic_assessment or not rec.toc_strategy:
+                continue
+            expected = rec._determine_toc_strategy(rec.overall_ic_assessment)
+            if expected and rec.toc_strategy != expected:
+                raise ValidationError(_(
+                    "The selected Tests of Controls strategy contradicts the internal control assessment per ISA 330."))
 
     def _auto_update_materiality_from_inputs(self):
         self.ensure_one()
@@ -2526,6 +2871,151 @@ class QacoRiskMatrixAssertion(models.Model):
                 record.score = int(record.likelihood or 1) * int(record.impact or 1)
             except Exception:
                 record.score = 0
+
+
+class QacoICControlEnvLine(models.Model):
+    _name = "qaco.ic.control.env.line"
+    _description = "Control Environment Checklist Line"
+    _order = "ref_no, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    ref_no = fields.Char(string="Reference")
+    question = fields.Text(string="Question", required=True)
+    answer = fields.Selection(IC_CHECKLIST_ANSWERS, string="Answer", default="yes")
+    risk_rating = fields.Selection(IC_RISK_RATINGS, string="Risk Rating")
+    comments = fields.Text(string="Comments")
+    evidence_attached = fields.Boolean(string="Evidence Attached")
+    wp_ref = fields.Char(string="WP Ref")
+
+
+class QacoICRiskProcessLine(models.Model):
+    _name = "qaco.ic.risk.process.line"
+    _description = "Entity Risk Assessment Process Checklist"
+    _order = "ref_no, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    ref_no = fields.Char(string="Reference")
+    question = fields.Text(string="Question", required=True)
+    answer = fields.Selection(IC_CHECKLIST_ANSWERS, string="Answer", default="yes")
+    risk_rating = fields.Selection(IC_RISK_RATINGS, string="Risk Rating")
+    comments = fields.Text(string="Comments")
+    evidence_attached = fields.Boolean(string="Evidence Attached")
+    wp_ref = fields.Char(string="WP Ref")
+
+
+class QacoICITGCLine(models.Model):
+    _name = "qaco.ic.itgc.line"
+    _description = "IT General Controls Checklist"
+    _order = "ref_no, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    ref_no = fields.Char(string="Reference")
+    question = fields.Text(string="Question", required=True)
+    answer = fields.Selection(IC_CHECKLIST_ANSWERS, string="Answer", default="yes")
+    risk_rating = fields.Selection(IC_RISK_RATINGS, string="Risk Rating")
+    comments = fields.Text(string="Comments")
+    evidence_attached = fields.Boolean(string="Evidence Attached")
+    wp_ref = fields.Char(string="WP Ref")
+
+
+class QacoICMonitoringLine(models.Model):
+    _name = "qaco.ic.monitoring.line"
+    _description = "Monitoring of Controls Checklist"
+    _order = "ref_no, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    ref_no = fields.Char(string="Reference")
+    question = fields.Text(string="Question", required=True)
+    answer = fields.Selection(IC_CHECKLIST_ANSWERS, string="Answer", default="yes")
+    risk_rating = fields.Selection(IC_RISK_RATINGS, string="Risk Rating")
+    comments = fields.Text(string="Comments")
+    evidence_attached = fields.Boolean(string="Evidence Attached")
+    wp_ref = fields.Char(string="WP Ref")
+
+
+class QacoICControlActivityLine(models.Model):
+    _name = "qaco.ic.control.activity.line"
+    _description = "Control Activity by Process"
+    _order = "cycle, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    cycle = fields.Selection(IC_CONTROL_CYCLES, string="Process / Cycle", required=True)
+    key_controls_description = fields.Text(string="Key Controls Description", required=True)
+    control_type = fields.Selection(IC_CONTROL_TYPES, string="Control Type")
+    control_nature = fields.Selection(IC_CONTROL_NATURE, string="Control Nature")
+    frequency = fields.Selection(IC_CONTROL_FREQUENCY, string="Frequency")
+    control_owner = fields.Char(string="Control Owner")
+    design_effective = fields.Boolean(string="Design Effective")
+    design_effective_note = fields.Text(string="Design Effectiveness Notes")
+    implementation_status = fields.Selection(
+        IC_IMPLEMENTATION_STATUS,
+        string="Implementation Status",
+        default="implemented",
+    )
+
+
+class QacoICDeficiencyLine(models.Model):
+    _name = "qaco.ic.deficiency.line"
+    _description = "Internal Control Deficiency"
+    _order = "remediation_timeline desc, id"
+
+    area = fields.Selection(
+        [
+            ("control_environment", "Control Environment"),
+            ("risk_process", "Risk Assessment Process"),
+            ("itgc", "IT General Controls"),
+            ("cycle_controls", "Cycle / Process Controls"),
+            ("monitoring", "Monitoring"),
+            ("cg", "Corporate Governance / Regulatory"),
+        ],
+        string="Area",
+        required=True,
+    )
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    description = fields.Text(string="Deficiency Description", required=True)
+    likelihood = fields.Selection(IC_RISK_RATINGS, string="Likelihood")
+    impact = fields.Selection(IC_RISK_RATINGS, string="Impact")
+    potential_effect_on_fs = fields.Text(string="Potential Effect on FS")
+    related_assertions = fields.Char(string="Related Assertions")
+    planned_audit_response = fields.Text(string="Planned Audit Response")
+    management_remediation_plan = fields.Text(string="Management Remediation Plan")
+    remediation_timeline = fields.Date(string="Remediation Timeline")
+    follow_up_next_audit = fields.Boolean(string="Follow-up Next Audit")
+
+
+class QacoICAttachmentIndexLine(models.Model):
+    _name = "qaco.ic.attachment.index.line"
+    _description = "Internal Control Attachment Index"
+    _order = "category, template_name"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    template_name = fields.Char(string="Template / Document", required=True)
+    category = fields.Selection(
+        [
+            ("control_environment", "Control Environment"),
+            ("risk_process", "Risk Assessment Process"),
+            ("itgc", "ITGC"),
+            ("cycle_controls", "Cycle Controls"),
+            ("monitoring", "Monitoring"),
+            ("cg", "Corporate Governance"),
+        ],
+        string="Category",
+        required=True,
+    )
+    doc_type = fields.Selection(
+        [
+            ("template", "Template"),
+            ("policy", "Policy / SOP"),
+            ("evidence", "Evidence"),
+            ("minutes", "Minutes / Meeting"),
+            ("register", "Register / Log"),
+            ("other", "Other"),
+        ],
+        string="Document Type",
+        required=True,
+    )
+    uploaded = fields.Boolean(string="Uploaded?")
+    attachment_id = fields.Many2one("ir.attachment", string="Attachment")
 
 
 class QacoInternalControlAssessment(models.Model):

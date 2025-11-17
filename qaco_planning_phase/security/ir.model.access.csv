@@ -46,3 +46,17 @@ access_law_master_user,access.law.master.user,model_qaco_law_master,base.group_u
 access_law_checklist_user,access.law.checklist.user,model_qaco_law_checklist,base.group_user,1,1,1,1
 access_law_checklist_line_user,access.law.checklist.line.user,model_qaco_law_checklist_line,base.group_user,1,1,1,1
 access_client_law_mapping_user,access.client.law.mapping.user,model_qaco_client_law_mapping,base.group_user,1,1,1,1
+access_ic_control_env_line_user,access.ic.control.env.line.user,model_qaco_ic_control_env_line,base.group_user,1,1,1,0
+access_ic_control_env_line_partner,access.ic.control.env.line.partner,model_qaco_ic_control_env_line,qaco_audit.group_audit_partner,1,1,1,1
+access_ic_risk_process_line_user,access.ic.risk.process.line.user,model_qaco_ic_risk_process_line,base.group_user,1,1,1,0
+access_ic_risk_process_line_partner,access.ic.risk.process.line.partner,model_qaco_ic_risk_process_line,qaco_audit.group_audit_partner,1,1,1,1
+access_ic_itgc_line_user,access.ic.itgc.line.user,model_qaco_ic_itgc_line,base.group_user,1,1,1,0
+access_ic_itgc_line_partner,access.ic.itgc.line.partner,model_qaco_ic_itgc_line,qaco_audit.group_audit_partner,1,1,1,1
+access_ic_monitoring_line_user,access.ic.monitoring.line.user,model_qaco_ic_monitoring_line,base.group_user,1,1,1,0
+access_ic_monitoring_line_partner,access.ic.monitoring.line.partner,model_qaco_ic_monitoring_line,qaco_audit.group_audit_partner,1,1,1,1
+access_ic_control_activity_line_user,access.ic.control.activity.line.user,model_qaco_ic_control_activity_line,base.group_user,1,1,1,0
+access_ic_control_activity_line_partner,access.ic.control.activity.line.partner,model_qaco_ic_control_activity_line,qaco_audit.group_audit_partner,1,1,1,1
+access_ic_deficiency_line_user,access.ic.deficiency.line.user,model_qaco_ic_deficiency_line,base.group_user,1,1,1,0
+access_ic_deficiency_line_partner,access.ic.deficiency.line.partner,model_qaco_ic_deficiency_line,qaco_audit.group_audit_partner,1,1,1,1
+access_ic_attachment_index_line_user,access.ic.attachment.index.line.user,model_qaco_ic_attachment_index_line,base.group_user,1,1,1,0
+access_ic_attachment_index_line_partner,access.ic.attachment.index.line.partner,model_qaco_ic_attachment_index_line,qaco_audit.group_audit_partner,1,1,1,1

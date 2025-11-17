@@ -356,6 +356,233 @@
                                         </notebook>
                                     </page>
 
+                                    <!-- Internal Control Assessment -->
+                                    <page name="ic_assessment" string="Internal Control Assessment">
+                                        <group>
+                                            <label string="Document the ISA 315 understanding of internal control and drive the ISA 330 execution strategy." class="text-muted"/>
+                                        </group>
+                                        <notebook>
+                                            <page name="ic_control_environment" string="Control Environment">
+                                                <group>
+                                                    <group string="Governance &amp; Tone">
+                                                        <field name="governance_structure" placeholder="Board composition, independent directors, oversight."/>
+                                                        <field name="tone_at_the_top" placeholder="Culture, ethics, enforcement of policies."/>
+                                                        <field name="authority_and_responsibility" placeholder="Delegation of authority, approvals matrix."/>
+                                                        <field name="human_resource_policies" placeholder="Hiring, training, performance &amp; disciplinary practices."/>
+                                                    </group>
+                                                    <group string="Ethics &amp; Reporting">
+                                                        <field name="code_of_conduct_existence"/>
+                                                        <field name="whistleblowing_policy"/>
+                                                        <field name="whistleblowing_details" placeholder="Mechanism design, hotline, independence."/>
+                                                        <field name="organizational_structure_file" filename="organizational_structure_filename"/>
+                                                    </group>
+                                                </group>
+                                                <group string="Audit Committee &amp; Internal Audit">
+                                                    <group>
+                                                        <field name="has_audit_committee"/>
+                                                        <field name="audit_committee_composition" placeholder="Independent directors, finance experts."/>
+                                                        <field name="audit_committee_meeting_freq"/>
+                                                        <field name="audit_committee_effectiveness_assessment" placeholder="Effectiveness observations."/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="has_internal_audit_function"/>
+                                                        <field name="internal_audit_reporting_line"/>
+                                                        <field name="internal_audit_scope_summary" placeholder="Coverage of IA plan."/>
+                                                        <field name="last_internal_audit_report_date"/>
+                                                        <field name="key_ia_findings_summary" placeholder="Summaries of recent IA findings."/>
+                                                    </group>
+                                                </group>
+                                                <group string="Control Environment Checklist">
+                                                    <field name="control_env_checklist_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="Control Environment Checklist">
+                                                            <field name="ref_no"/>
+                                                            <field name="question"/>
+                                                            <field name="answer"/>
+                                                            <field name="risk_rating"/>
+                                                            <field name="evidence_attached"/>
+                                                            <field name="wp_ref"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                                <group string="Attachments">
+                                                    <field name="control_env_attachment_ids" widget="many2many_binary"/>
+                                                </group>
+                                            </page>
+                                            <page name="ic_risk_process" string="Risk Assessment Process">
+                                                <group>
+                                                    <group>
+                                                        <field name="formal_risk_management_framework"/>
+                                                        <field name="risk_policy_exists"/>
+                                                        <field name="risk_policy_attachment" filename="risk_policy_attachment_name"/>
+                                                        <field name="has_risk_register"/>
+                                                        <field name="risk_register_attachment" filename="risk_register_attachment_name"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="risk_assessment_frequency"/>
+                                                        <field name="responsible_person_for_risk"/>
+                                                        <field name="linkage_to_financial_reporting" placeholder="How RoMM is identified via entity risk process."/>
+                                                        <field name="key_business_risks_summary"/>
+                                                        <field name="key_fraud_risks_identified"/>
+                                                        <field name="impact_on_audit_strategy" placeholder="Implications for ISA 330 audit approach."/>
+                                                    </group>
+                                                </group>
+                                                <group string="Risk Process Checklist">
+                                                    <field name="risk_process_checklist_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="Risk Process Checklist">
+                                                            <field name="ref_no"/>
+                                                            <field name="question"/>
+                                                            <field name="answer"/>
+                                                            <field name="risk_rating"/>
+                                                            <field name="evidence_attached"/>
+                                                            <field name="wp_ref"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                                <group string="Attachments">
+                                                    <field name="risk_process_attachment_ids" widget="many2many_binary"/>
+                                                </group>
+                                            </page>
+                                            <page name="ic_itgc" string="IT &amp; ITGC">
+                                                <group>
+                                                    <group>
+                                                        <field name="main_erp_or_accounting_system"/>
+                                                        <field name="other_critical_applications"/>
+                                                        <field name="it_infrastructure_summary"/>
+                                                        <field name="outsourced_it_services"/>
+                                                    </group>
+                                                    <group string="ITGC Focus">
+                                                        <field name="user_access_management"/>
+                                                        <field name="password_policies"/>
+                                                        <field name="change_management_process"/>
+                                                        <field name="backup_and_restore_procedures"/>
+                                                        <field name="incident_management"/>
+                                                        <field name="business_continuity_and_dr"/>
+                                                        <field name="security_controls"/>
+                                                        <field name="itgc_reliance_planned"/>
+                                                        <field name="needs_it_specialist"/>
+                                                    </group>
+                                                </group>
+                                                <group string="ITGC Checklist">
+                                                    <field name="itgc_checklist_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="ITGC Checklist">
+                                                            <field name="ref_no"/>
+                                                            <field name="question"/>
+                                                            <field name="answer"/>
+                                                            <field name="risk_rating"/>
+                                                            <field name="evidence_attached"/>
+                                                            <field name="wp_ref"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                                <group string="Attachments">
+                                                    <field name="itgc_attachment_ids" widget="many2many_binary"/>
+                                                </group>
+                                            </page>
+                                            <page name="ic_control_activities" string="Control Activities">
+                                                <group>
+                                                    <field name="control_activity_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="Control Activities by Cycle">
+                                                            <field name="cycle"/>
+                                                            <field name="key_controls_description"/>
+                                                            <field name="control_type"/>
+                                                            <field name="control_nature"/>
+                                                            <field name="frequency"/>
+                                                            <field name="control_owner"/>
+                                                            <field name="design_effective"/>
+                                                            <field name="implementation_status"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                            </page>
+                                            <page name="ic_monitoring" string="Monitoring">
+                                                <group>
+                                                    <group>
+                                                        <field name="monitoring_activities_description"/>
+                                                        <field name="frequency_of_monitoring"/>
+                                                        <field name="reporting_of_deficiencies"/>
+                                                        <field name="follow_up_on_deficiencies"/>
+                                                    </group>
+                                                </group>
+                                                <group string="Monitoring Checklist">
+                                                    <field name="monitoring_checklist_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="Monitoring Checklist">
+                                                            <field name="ref_no"/>
+                                                            <field name="question"/>
+                                                            <field name="answer"/>
+                                                            <field name="risk_rating"/>
+                                                            <field name="evidence_attached"/>
+                                                            <field name="wp_ref"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                                <group string="Attachments">
+                                                    <field name="monitoring_attachment_ids" widget="many2many_binary"/>
+                                                </group>
+                                            </page>
+                                            <page name="ic_cg" string="Regulatory / CG">
+                                                <group>
+                                                    <group>
+                                                        <field name="is_listed_company"/>
+                                                        <field name="is_public_sector_company"/>
+                                                        <field name="is_regulated_by_sbp_or_secp_specific_regime"/>
+                                                        <field name="cg_regulation_applicable"/>
+                                                        <field name="cg_compliance_status"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="cg_compliance_comments"/>
+                                                        <field name="board_and_ac_composition_vs_regulations"/>
+                                                        <field name="required_committees_in_place"/>
+                                                        <field name="required_committees_details"/>
+                                                        <field name="ceocfo_certification_exists"/>
+                                                        <field name="ceocfo_certification_attachment" filename="ceocfo_certification_filename"/>
+                                                        <field name="related_party_approval_process"/>
+                                                    </group>
+                                                </group>
+                                                <group string="Attachments">
+                                                    <field name="cg_attachment_ids" widget="many2many_binary"/>
+                                                </group>
+                                            </page>
+                                            <page name="ic_deficiencies" string="Key Deficiencies">
+                                                <group>
+                                                    <field name="ic_deficiency_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="Key IC Deficiencies">
+                                                            <field name="area"/>
+                                                            <field name="description"/>
+                                                            <field name="likelihood"/>
+                                                            <field name="impact"/>
+                                                            <field name="potential_effect_on_fs"/>
+                                                            <field name="planned_audit_response"/>
+                                                            <field name="remediation_timeline"/>
+                                                            <field name="follow_up_next_audit"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                            </page>
+                                            <page name="ic_attachments" string="Attachments Index">
+                                                <group>
+                                                    <field name="ic_attachment_index_ids" context="{'default_planning_id': active_id}">
+                                                        <tree editable="bottom" string="Internal Control Attachments">
+                                                            <field name="template_name"/>
+                                                            <field name="category"/>
+                                                            <field name="doc_type"/>
+                                                            <field name="uploaded"/>
+                                                            <field name="attachment_id"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                            </page>
+                                        </notebook>
+                                        <group string="Overall Internal Control Conclusion" class="o_box">
+                                            <group>
+                                                <field name="overall_ic_assessment"/>
+                                                <field name="toc_strategy"/>
+                                            </group>
+                                            <group>
+                                                <field name="ic_assessment_conclusion" colspan="2" placeholder="Narrative linking ISA 315 assessment with ISA 330 response."/>
+                                            </group>
+                                        </group>
+                                    </page>
+
                                     <!-- 2. Risk Assessment -->
                                     <page name="risk" string="Risk Assessment">
                                         <group>
