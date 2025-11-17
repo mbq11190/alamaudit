@@ -896,7 +896,8 @@ class PlanningRisk(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals.setdefault("name", self._generate_default_name())
+            if not vals.get("name"):
+                vals["name"] = self._generate_default_name()
         return super().create(vals_list)
 
     @api.depends("likelihood", "impact", "inherent_risk_level", "control_risk_level")
@@ -1550,7 +1551,8 @@ class QacoRiskMatrixFS(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals.setdefault("name", self._generate_default_name())
+            if not vals.get("name"):
+                vals["name"] = self._generate_default_name()
         return super().create(vals_list)
 
     @api.depends("likelihood", "impact")
