@@ -5,7 +5,7 @@
     "author": "QACO",
     "license": "LGPL-3",
     "category": "Accounting/Auditing",
-    "depends": ["base", "mail", "qaco_audit"],
+    "depends": ["base", "mail", "qaco_audit", "qaco_client_onboarding"],
     "data": [
         "security/ir.model.access.csv",
         "data/sequence_data.xml",

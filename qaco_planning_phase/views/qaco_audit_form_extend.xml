@@ -4,7 +4,7 @@
         <record id="view_qaco_audit_form_planning_button" model="ir.ui.view">
             <field name="name">qaco.audit.form.planning.button</field>
             <field name="model">qaco.audit</field>
-            <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
+            <field name="inherit_id" ref="qaco_client_onboarding.view_qaco_audit_form_onboarding_button"/>
             <field name="arch" type="xml">
                 <!-- Add Planning Phase Smart Button -->
                 <xpath expr="//div[@name='button_box']" position="inside">
