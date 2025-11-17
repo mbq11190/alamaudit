@@ -1,7 +1,7 @@
 {
     "name": "QACO Planning Phase (ISA)",
     "summary": "ISA-aligned audit planning: strategy, materiality, risk assessment, checklist, information requisitions, timeline",
-    "version": "17.0.1.6",
+    "version": "17.0.1.7",
     "author": "QACO",
     "license": "LGPL-3",
     "category": "Accounting/Auditing",
