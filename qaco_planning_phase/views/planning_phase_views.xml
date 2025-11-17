@@ -219,6 +219,7 @@
                                                 <field name="likelihood"/>
                                                 <field name="impact"/>
                                                 <field name="overall_assessment"/>
+                                                <field name="significant" invisible="1"/>
                                                 <field name="review_state"/>
                                             </tree>
                                             <form string="Risk Assessment">
