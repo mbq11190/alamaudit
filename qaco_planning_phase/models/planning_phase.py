@@ -183,6 +183,19 @@ ASSERTION_CODES = [
     ("presentation", "Presentation & Disclosure"),
 ]
 
+COMPONENT_WORK_TYPES = [
+    ("full_scope", "Full Scope"),
+    ("specified_procedures", "Specified Procedures"),
+    ("analytics_only", "Analytical Only"),
+]
+
+CHECKLIST_CATEGORIES = [
+    ("fs_risk", "FS & Assertion Risks"),
+    ("fraud", "Fraud (ISA 240)"),
+    ("estimates_gc", "Estimates & Going Concern"),
+    ("compliance_group_expert", "Compliance / Group / Experts"),
+]
+
 
 _logger = logging.getLogger(__name__)
 
@@ -1038,6 +1051,168 @@ class PlanningPhase(models.Model):
         tracking=True,
     )
     linkage_to_financial_reporting = fields.Text(string="Linkage to Financial Reporting", tracking=True)
+
+    # 2.1 Financial Statement Level Risk Summary (ISA 300/315/330)
+    fs_risk_overall_level = fields.Selection(
+        FS_RISK_LEVELS,
+        string="Overall FS Risk Level",
+        tracking=True,
+        help="Summarise assessed risk of material misstatement at the financial statement level",
+    )
+    fs_risk_summary = fields.Text(
+        string="Key FS Level Risk Drivers",
+        tracking=True,
+        help="Capture business, industry, control and environmental factors driving RoMM",
+    )
+    significant_areas_summary = fields.Text(
+        string="Significant Areas Summary",
+        tracking=True,
+        help="List significant classes of transactions, balances and disclosures",
+    )
+    use_of_controls = fields.Selection(
+        CONTROL_RELIANCE,
+        string="Reliance on Controls",
+        tracking=True,
+    )
+    prior_year_findings_impact = fields.Text(
+        string="Prior Year Findings Impact",
+        tracking=True,
+        help="Document how prior year findings influence the current year risk response",
+    )
+
+    # 2.2 Assertion-Level Risk Register
+    risk_register_ids = fields.One2many(
+        "qaco.risk.register",
+        "planning_id",
+        string="Risk Register",
+    )
+
+    # 2.3 Fraud Risk Assessment (ISA 240)
+    fraud_brainstorming_held = fields.Boolean(string="Fraud Brainstorming Held", tracking=True)
+    fraud_brainstorming_date = fields.Date(string="Fraud Brainstorming Date", tracking=True)
+    fraud_brainstorming_participant_ids = fields.Many2many(
+        "res.users",
+        "qaco_planning_fraud_participant_rel",
+        "planning_id",
+        "user_id",
+        string="Brainstorming Participants",
+    )
+    fraud_incentives_pressures = fields.Text(string="Fraud Incentives / Pressures", tracking=True)
+    fraud_opportunities = fields.Text(string="Fraud Opportunities", tracking=True)
+    fraud_attitudes_rationalisation = fields.Text(string="Fraud Attitudes / Rationalisation", tracking=True)
+    presumed_fraud_risk_revenue = fields.Boolean(string="Presumed Fraud Risk on Revenue", tracking=True)
+    fraud_risk_revenue_description = fields.Text(string="Revenue Fraud Risk Description", tracking=True)
+    management_override_risk = fields.Boolean(string="Management Override Risk", tracking=True)
+    management_override_response = fields.Text(string="Management Override Planned Response", tracking=True)
+    fraud_brainstorming_minutes = fields.Binary(string="Fraud Brainstorming Minutes", attachment=True)
+    fraud_brainstorming_minutes_fname = fields.Char(string="Fraud Minutes Filename")
+    fraud_irregularity_reports = fields.Binary(string="Whistle-blower / Irregularity Reports", attachment=True)
+    fraud_irregularity_reports_fname = fields.Char(string="Whistle-blower File Name")
+
+    # 2.4 Key Estimates (ISA 540)
+    key_estimates_list = fields.Text(string="Key Estimates List", tracking=True)
+    estimate_assessment_ids = fields.One2many(
+        "qaco.estimate.assessment",
+        "planning_id",
+        string="Estimate Assessments",
+    )
+
+    # 2.5 Related Parties (ISA 550)
+    related_party_risk_level = fields.Selection(
+        RELATED_PARTY_RISK_LEVELS,
+        string="Related Party Risk Level",
+        tracking=True,
+    )
+    completeness_of_related_parties_risk = fields.Text(string="Completeness Risk", tracking=True)
+    related_party_transactions_summary = fields.Text(string="Significant Related Transactions (Summary)", tracking=True)
+    related_party_transaction_ids = fields.One2many(
+        "qaco.related.party.line",
+        "planning_id",
+        string="Related Party Transactions",
+    )
+    controls_over_related_party_approval = fields.Text(string="Controls over Related Party Approval", tracking=True)
+    planned_procedures_related_parties = fields.Text(string="Planned Related Party Procedures", tracking=True)
+
+    # 2.6 Going Concern (ISA 570)
+    going_concern_indicator = fields.Selection(
+        GOING_CONCERN_INDICATORS,
+        string="Going Concern Indicator",
+        tracking=True,
+    )
+    key_gc_risks = fields.Text(string="Key Going Concern Risks", tracking=True)
+    management_gc_assessment_obtained = fields.Boolean(string="Management GC Assessment Obtained", tracking=True)
+    gc_assessment_period_end = fields.Date(string="Going Concern Assessment Period End", tracking=True)
+    planned_gc_procedures = fields.Text(string="Planned Going Concern Procedures", tracking=True)
+
+    # 2.7 Compliance & Regulatory
+    key_compliance_risks = fields.Text(string="Compliance Risks", tracking=True)
+    statutory_reporting_risks = fields.Text(string="Statutory Reporting Risks", tracking=True)
+    tax_litigation_risks = fields.Text(string="Tax / Litigation Risks", tracking=True)
+    planned_compliance_procedures = fields.Text(string="Planned Compliance Procedures", tracking=True)
+
+    # 2.8 Group / Component Risks (ISA 600)
+    is_group_audit = fields.Boolean(string="Group Audit Engagement", tracking=True)
+    group_structure_summary = fields.Text(string="Group Structure Summary", tracking=True)
+    group_structure_attachment = fields.Binary(string="Group Structure Attachment", attachment=True)
+    group_structure_attachment_name = fields.Char(string="Group Structure Filename")
+    group_component_ids = fields.One2many(
+        "qaco.group.component.line",
+        "planning_id",
+        string="Group Components",
+    )
+    group_consolidation_risks = fields.Text(string="Group Consolidation Risks", tracking=True)
+    planned_group_procedures = fields.Text(string="Planned Group Procedures", tracking=True)
+
+    # 2.9 Use of Experts (ISA 620)
+    use_of_expert_required = fields.Boolean(string="Use of Expert Required", tracking=True)
+    expert_type = fields.Selection(EXPERT_TYPES, string="Expert Type", tracking=True)
+    expert_name = fields.Char(string="Expert Name", tracking=True)
+    objective_of_expert_work = fields.Text(string="Objective of Expert Work", tracking=True)
+    assessment_of_expert_competence = fields.Text(string="Expert Competence Assessment", tracking=True)
+    expert_usage_ids = fields.One2many(
+        "qaco.audit.expert.line",
+        "planning_id",
+        string="Expert Engagements",
+    )
+
+    # 3. Overall Audit Strategy Linkage
+    overall_strategy_summary = fields.Text(string="Overall Strategy Summary", tracking=True)
+    audit_scope_summary = fields.Text(string="Audit Scope Summary", tracking=True)
+    reliance_on_internal_audit_level = fields.Selection(
+        CONTROL_RELIANCE,
+        string="Reliance on Internal Audit",
+        tracking=True,
+    )
+    reliance_on_internal_audit_notes = fields.Text(string="Internal Audit Reliance Notes", tracking=True)
+    planned_analytics_level = fields.Text(string="Planned Analytics Coverage", tracking=True)
+    team_mix_line_ids = fields.One2many(
+        "qaco.audit.team.mix.line",
+        "planning_id",
+        string="Team Mix",
+    )
+    eqcr_required = fields.Boolean(string="EQCR Required", tracking=True)
+    eqcr_user_id = fields.Many2one("res.users", string="EQCR Reviewer")
+    timeline_key_milestones = fields.Text(string="Timeline & Key Milestones", tracking=True)
+    component_auditor_coordination_plan = fields.Text(string="Component Auditor Coordination", tracking=True)
+    tcwg_communications_plan = fields.Text(
+        string="Communications with TCWG",
+        tracking=True,
+        help="Planned meetings, topics, and deliverables for those charged with governance",
+    )
+
+    # 4. Integrated Checklists
+    risk_strategy_checklist_ids = fields.One2many(
+        "qaco.risk.strategy.checklist",
+        "planning_id",
+        string="Risk & Strategy Checklists",
+    )
+
+    # 5. Attachment Index
+    risk_attachment_index_ids = fields.One2many(
+        "qaco.risk.attachment.index",
+        "planning_id",
+        string="Risk Attachment Index",
+    )
     key_business_risks_summary = fields.Text(string="Key Business Risks Summary", tracking=True)
     key_fraud_risks_identified = fields.Text(string="Key Fraud Risks Identified", tracking=True)
     impact_on_audit_strategy = fields.Text(string="Impact on Audit Strategy", tracking=True)
@@ -3260,6 +3435,215 @@ class QacoEngagementLetter(models.Model):
             except Exception:  # pragma: no cover - logging guard
                 _logger.exception("Failed to log engagement letter evidence")
         return True
+
+
+class QacoAuditAssertionTag(models.Model):
+    _name = "qaco.audit.assertion.tag"
+    _description = "Audit Assertion Tag"
+    _order = "sequence, id"
+
+    name = fields.Char(required=True)
+    code = fields.Selection(ASSERTION_CODES, required=True, string="Assertion")
+    sequence = fields.Integer(default=10)
+    active = fields.Boolean(default=True)
+
+    _sql_constraints = [
+        ("assertion_code_unique", "unique(code)", "Each assertion code must be unique."),
+    ]
+
+    @api.model
+    def init(self):  # pragma: no cover - install helper
+        records = self.sudo().search([])
+        existing_codes = {rec.code for rec in records}
+        for index, (code, label) in enumerate(ASSERTION_CODES, start=1):
+            if code in existing_codes:
+                continue
+            self.sudo().create(
+                {
+                    "code": code,
+                    "name": label,
+                    "sequence": index * 10,
+                }
+            )
+
+
+class QacoRiskWorkProgram(models.Model):
+    _name = "qaco.risk.work.program"
+    _description = "Risk Work Programme Template"
+
+    name = fields.Char(required=True)
+    account_cycle = fields.Selection(RISK_ACCOUNT_CYCLES, string="Account / Process")
+    objective = fields.Text(string="Objective / Scope")
+    reference_document = fields.Binary(string="Template / Reference", attachment=True)
+    reference_filename = fields.Char(string="Template Filename")
+    notes = fields.Text(string="Notes")
+    active = fields.Boolean(default=True)
+
+
+class QacoRiskRegister(models.Model):
+    _name = "qaco.risk.register"
+    _description = "Assertion Level Risk Register"
+    _order = "risk_code, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    risk_code = fields.Char(string="Risk Code", readonly=True)
+    account_cycle = fields.Selection(RISK_ACCOUNT_CYCLES, string="Account Cycle", required=True)
+    fs_item = fields.Char(string="Financial Statement Item", required=True)
+    assertion_ids = fields.Many2many(
+        "qaco.audit.assertion.tag",
+        "qaco_risk_assertion_rel",
+        "risk_id",
+        "assertion_id",
+        string="Assertions Affected",
+    )
+    risk_description = fields.Text(string="Risk Description", required=True)
+    risk_cause = fields.Text(string="Risk Cause / Source")
+    risk_type = fields.Selection(RISK_TYPES, string="Risk Type", required=True, default="error")
+    risk_category = fields.Selection(RISK_CATEGORIES, string="Risk Category", required=True, default="inherent")
+    risk_rating = fields.Selection(RISK_RATINGS, string="Risk Rating", required=True, default="medium")
+    significant_risk = fields.Boolean(string="Significant Risk")
+    linked_control_ids = fields.Many2many(
+        "qaco.ic.control.activity.line",
+        "qaco_risk_register_control_rel",
+        "risk_id",
+        "control_id",
+        string="Linked Controls",
+    )
+    linked_controls_note = fields.Text(string="Linked Controls Narrative")
+    planned_response_type = fields.Selection(
+        PLANNED_RESPONSE_TYPES,
+        string="Planned Response Type",
+        default="combined",
+    )
+    key_audit_procedures = fields.Text(string="Key Audit Procedures")
+    linked_work_programme_id = fields.Many2one(
+        "qaco.risk.work.program",
+        string="Linked Work Programme",
+    )
+    responsible_team_member_id = fields.Many2one("res.users", string="Responsible Team Member")
+    planned_timing = fields.Selection(PLANNED_TIMINGS, string="Planned Timing", default="year_end")
+    notes = fields.Text(string="Additional Notes")
+
+    _sql_constraints = [
+        ("risk_code_unique", "unique(risk_code)", "Risk code must be unique."),
+    ]
+
+    @api.model
+    def _generate_risk_code(self):
+        return self.env["ir.sequence"].next_by_code("qaco.planning.risk") or _("New Risk")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("risk_code"):
+                vals["risk_code"] = self._generate_risk_code()
+        return super().create(vals_list)
+
+
+class QacoEstimateAssessment(models.Model):
+    _name = "qaco.estimate.assessment"
+    _description = "Key Estimate Assessment"
+    _order = "estimate_name"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    estimate_name = fields.Char(string="Estimate / Judgement", required=True)
+    related_account = fields.Char(string="Related Account / Disclosure")
+    estimation_uncertainty_level = fields.Selection(
+        ESTIMATE_UNCERTAINTY_LEVELS,
+        string="Estimation Uncertainty",
+        default="medium",
+    )
+    management_methodology_summary = fields.Text(string="Management Methodology Summary")
+    management_bias_indicators = fields.Text(string="Bias Indicators")
+    significant_risk_estimate = fields.Boolean(string="Significant Risk Estimate")
+    planned_audit_approach = fields.Text(string="Planned Audit Approach")
+
+
+class QacoRelatedPartyLine(models.Model):
+    _name = "qaco.related.party.line"
+    _description = "Related Party Transaction"
+    _order = "party_name"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    party_name = fields.Char(string="Related Party", required=True)
+    relationship = fields.Char(string="Relationship")
+    transaction_description = fields.Text(string="Transaction Description", required=True)
+    transaction_value = fields.Monetary(string="Transaction Value", currency_field="currency_id")
+    currency_id = fields.Many2one("res.currency", default=lambda self: self.env.company.currency_id)
+    approval_reference = fields.Char(string="Approval Reference")
+    comments = fields.Text(string="Notes")
+
+
+class QacoGroupComponentLine(models.Model):
+    _name = "qaco.group.component.line"
+    _description = "Group Component Line"
+    _order = "component_name"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    component_name = fields.Char(string="Component", required=True)
+    country = fields.Char(string="Country")
+    component_materiality = fields.Monetary(string="Component Materiality", currency_field="currency_id")
+    currency_id = fields.Many2one("res.currency", default=lambda self: self.env.company.currency_id)
+    component_risk_level = fields.Selection(FS_RISK_LEVELS, string="Component Risk Level", default="moderate")
+    component_auditor = fields.Char(string="Component Auditor / Firm")
+    type_of_work = fields.Selection(COMPONENT_WORK_TYPES, string="Type of Work", default="full_scope")
+    key_findings = fields.Text(string="Key Areas / Notes")
+
+
+class QacoAuditExpertLine(models.Model):
+    _name = "qaco.audit.expert.line"
+    _description = "Audit Expert Engagement"
+    _order = "expert_name"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    expert_type = fields.Selection(EXPERT_TYPES, string="Expert Type", required=True)
+    expert_name = fields.Char(string="Expert / Firm", required=True)
+    objective = fields.Text(string="Objective of Work")
+    competence_assessment = fields.Text(string="Competence / Objectivity Assessment")
+    planned_use = fields.Text(string="Planned Use in Audit")
+    expected_completion = fields.Date(string="Expected Completion")
+
+
+class QacoAuditTeamMixLine(models.Model):
+    _name = "qaco.audit.team.mix.line"
+    _description = "Audit Team Mix"
+    _order = "sequence, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    sequence = fields.Integer(default=10)
+    staff_level = fields.Selection(TEAM_LEVELS, string="Team Level", required=True)
+    assigned_user_id = fields.Many2one("res.users", string="Assigned User")
+    planned_hours = fields.Float(string="Planned Hours")
+    key_responsibilities = fields.Text(string="Key Responsibilities")
+
+
+class QacoRiskStrategyChecklist(models.Model):
+    _name = "qaco.risk.strategy.checklist"
+    _description = "Risk & Strategy Checklist"
+    _order = "category, sequence, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    category = fields.Selection(CHECKLIST_CATEGORIES, string="Checklist Category", required=True)
+    sequence = fields.Integer(default=10)
+    question = fields.Text(string="Checklist Question", required=True)
+    answer = fields.Selection(IC_CHECKLIST_ANSWERS, string="Answer", default="yes")
+    comments = fields.Text(string="Comments / Evidence")
+    completed_by = fields.Many2one("res.users", string="Completed By")
+    completed_on = fields.Date(string="Completed On")
+
+
+class QacoRiskAttachmentIndex(models.Model):
+    _name = "qaco.risk.attachment.index"
+    _description = "Risk Attachment Index"
+    _order = "sequence, id"
+
+    planning_id = fields.Many2one("qaco.planning.phase", required=True, ondelete="cascade")
+    sequence = fields.Integer(default=10)
+    attachment_type = fields.Selection(ATTACHMENT_TYPES, string="Attachment Type", required=True)
+    description = fields.Char(string="Description", required=True)
+    attachment = fields.Binary(string="File", attachment=True)
+    filename = fields.Char(string="File Name")
+    notes = fields.Text(string="Notes")
 
 
 class QacoRiskMatrixFS(models.Model):
