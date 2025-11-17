@@ -275,12 +275,5 @@
                 </p>
             </field>
         </record>
-
-        <!-- Menu Item -->
-        <menuitem id="menu_deliverables"
-                  name="Deliverables"
-                  parent="qaco_audit.menu_audit_root"
-                  action="action_deliverables"
-                  sequence="75"/>
     </data>
 </odoo>

@@ -333,12 +333,5 @@
                 </p>
             </field>
         </record>
-
-        <!-- Menu Item -->
-        <menuitem id="menu_client_onboarding"
-                  name="Client Onboarding"
-                  parent="qaco_audit.menu_audit_root"
-                  action="action_client_onboarding"
-                  sequence="5"/>
     </data>
 </odoo>

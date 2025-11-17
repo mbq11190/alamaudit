@@ -322,12 +322,5 @@
                 </p>
             </field>
         </record>
-
-        <!-- Menu Item -->
-        <menuitem id="menu_quality_review"
-                  name="Quality Review"
-                  parent="qaco_audit.menu_audit_root"
-                  action="action_quality_review"
-                  sequence="80"/>
     </data>
 </odoo>
