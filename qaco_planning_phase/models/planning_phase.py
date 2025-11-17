@@ -189,30 +189,226 @@ class PlanningPhase(models.Model):
         default=lambda self: self.env.company.currency_id
     )
 
-    # ISA 210/220: Ethics & Acceptance
+    # ISA 210/220: Ethics & Compliance
     engagement_letter_obtained = fields.Boolean(
         string="Engagement Letter Obtained (ISA 210)",
         tracking=True
     )
     engagement_letter_signed = fields.Boolean(
-        string='Engagement Letter Signed (Legacy)', 
+        string="Engagement Letter Signed (Legacy)",
         tracking=True
     )
-    engagement_letter_date = fields.Date(string="Engagement Letter Date")
+    engagement_letter_date = fields.Date(
+        string="Engagement Letter Date",
+        tracking=True
+    )
+    scope_agreement_confirmed = fields.Boolean(
+        string="Scope Agreement Confirmed",
+        tracking=True
+    )
+    management_responsibility_ack = fields.Boolean(
+        string="Management Responsibilities Acknowledged",
+        tracking=True
+    )
+    preconditions_for_audit_assessed = fields.Boolean(
+        string="Preconditions for Audit Assessed",
+        tracking=True
+    )
+    framework_acceptability_assessed = fields.Boolean(
+        string="Acceptability of Accounting Framework Assessed",
+        tracking=True
+    )
+    continuing_client_evaluation_done = fields.Boolean(
+        string="Continuing Client Evaluation Completed",
+        tracking=True
+    )
+    acceptance_continuance_reason = fields.Text(string="Reasons for Acceptance / Continuance")
     
     independence_confirmed = fields.Boolean(
         string="Independence Confirmed (IESBA Code)",
         tracking=True
     )
-    independence_date = fields.Date(string="Independence Confirmation Date")
+    independence_confirmation_date = fields.Date(
+        string="Independence Confirmation Date",
+        tracking=True
+    )
+    independence_team_confirmed = fields.Boolean(
+        string="All Team Members Confirmed Independence",
+        tracking=True
+    )
+    independence_supporting_doc = fields.Binary(
+        string="Independence Confirmation Attachment",
+        attachment=True
+    )
+    threat_self_interest = fields.Text(string="Self-Interest Threat")
+    threat_self_review = fields.Text(string="Self-Review Threat")
+    threat_advocacy = fields.Text(string="Advocacy Threat")
+    threat_familiarity = fields.Text(string="Familiarity Threat")
+    threat_intimidation = fields.Text(string="Intimidation Threat")
+    safeguards_applied = fields.Text(string="Safeguards Applied")
+    eqcr_required = fields.Boolean(
+        string="Engagement Quality Control Review (EQCR) Required",
+        tracking=True
+    )
+    eqcr_reviewer_id = fields.Many2one(
+        "res.users",
+        string="EQCR Reviewer",
+        tracking=True
+    )
+    rotation_required = fields.Boolean(
+        string="Partner Rotation Required",
+        tracking=True
+    )
+    last_rotation_date = fields.Date(
+        string="Last Rotation Date",
+        tracking=True
+    )
+    partner_tenure_years = fields.Integer(
+        string="Current Engagement Partner Tenure (Years)",
+        tracking=True
+    )
     
     ethical_requirements_met = fields.Boolean(
         string="Ethical Requirements Met (ISA 220)",
         tracking=True
     )
+    integrity_confirmed = fields.Boolean(
+        string="Integrity Confirmed",
+        tracking=True
+    )
+    objectivity_confirmed = fields.Boolean(
+        string="Objectivity Confirmed",
+        tracking=True
+    )
+    professional_competence_due_care = fields.Boolean(
+        string="Professional Competence & Due Care Confirmed",
+        tracking=True
+    )
+    confidentiality_confirmed = fields.Boolean(
+        string="Confidentiality Requirements Met",
+        tracking=True
+    )
+    professional_behavior_confirmed = fields.Boolean(
+        string="Professional Behaviour Requirements Met",
+        tracking=True
+    )
+    noclar_risk_identified = fields.Boolean(
+        string="NOCLAR Risk Identified",
+        tracking=True
+    )
+    noclar_actions_required = fields.Text(string="NOCLAR – Actions Required / Taken")
+    
+    conflict_of_interest_identified = fields.Boolean(
+        string="Conflict of Interest Identified",
+        tracking=True
+    )
+    conflict_of_interest_nature = fields.Text(string="Nature of Conflict")
+    conflict_resolution_action = fields.Text(string="Conflict Resolution / Safeguards")
+    conflict_client_notified = fields.Boolean(
+        string="Client Notified of Conflict & Safeguards",
+        tracking=True
+    )
+    
+    engagement_partner_review_done = fields.Boolean(
+        string="Engagement Partner Review Form Completed",
+        tracking=True
+    )
+    aob_independence_checklist = fields.Binary(
+        string="AOB Independence Checklist (Attachment)",
+        attachment=True
+    )
+    qcr_compliance_checklist = fields.Binary(
+        string="QCR Compliance Checklist (Attachment)",
+        attachment=True
+    )
+    rotation_cooling_off_consent = fields.Boolean(
+        string="Rotation & Cooling-Off Requirements Confirmed",
+        tracking=True
+    )
+    
+    aml_kyc_performed = fields.Boolean(
+        string="AML / KYC Performed",
+        tracking=True
+    )
+    beneficial_ownership_obtained = fields.Boolean(
+        string="Beneficial Ownership Information Obtained",
+        tracking=True
+    )
+    aml_risk_rating = fields.Selection(
+        [
+            ("low", "Low"),
+            ("medium", "Medium"),
+            ("high", "High"),
+        ],
+        string="AML Risk Rating",
+        tracking=True
+    )
+    dnfbp_compliance_checked = fields.Boolean(
+        string="DNFBP Compliance Check Completed",
+        tracking=True
+    )
+    suspicious_transaction_risk = fields.Boolean(
+        string="Suspicious Transaction Risk Identified",
+        tracking=True
+    )
+    pep_screening_done = fields.Boolean(
+        string="PEP (Politically Exposed Person) Screening Done",
+        tracking=True
+    )
+    
+    companies_act_compliance = fields.Boolean(
+        string="Companies Act 2017 Compliance Verified",
+        tracking=True
+    )
+    secp_rules_applicable = fields.Boolean(
+        string="SECP Rules / Regulations Applicable & Considered",
+        tracking=True
+    )
+    tax_laws_compliance = fields.Boolean(
+        string="Tax Laws Compliance Verified",
+        tracking=True
+    )
+    industry_regulation_notes = fields.Text(string="Industry-Specific Regulations / Notes")
+    
+    fraud_risk_factors_identified = fields.Boolean(
+        string="Fraud Risk Factors Identified",
+        tracking=True
+    )
+    management_attitude_fraud = fields.Text(string="Management Attitude Towards Fraud")
+    ethical_concerns_identified = fields.Boolean(
+        string="Ethical Concerns Identified",
+        tracking=True
+    )
+    whistleblower_policy_exists = fields.Boolean(
+        string="Whistleblower Policy Exists",
+        tracking=True
+    )
+    
+    related_party_list_obtained = fields.Boolean(
+        string="Related Party List Obtained",
+        tracking=True
+    )
+    management_related_party_decl = fields.Boolean(
+        string="Management Declaration on Related Parties Obtained",
+        tracking=True
+    )
+    related_party_conflict = fields.Boolean(
+        string="Conflict with Related Parties Identified",
+        tracking=True
+    )
+    related_party_conflict_notes = fields.Text(string="Related Party Conflict Notes / Safeguards")
+    
+    eqcr_review_completed = fields.Boolean(
+        string="EQCR Review Completed",
+        tracking=True
+    )
+    eqcr_review_date = fields.Date(
+        string="EQCR Review Date",
+        tracking=True
+    )
     
     previous_auditor_communication = fields.Boolean(
-        string='Previous Auditor Communication', 
+        string="Previous Auditor Communication",
         tracking=True
     )
 
