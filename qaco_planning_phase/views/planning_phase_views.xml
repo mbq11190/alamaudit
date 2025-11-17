@@ -550,10 +550,10 @@
             <field name="arch" type="xml">
                 <form string="Materiality Worksheet">
                     <header>
-                        <button name="button_apply_defaults" string="Apply Defaults" type="object" attrs="{'invisible': [('status', 'in', ['approved','archived'])]}"/>
-                        <button name="button_approve" string="Approve" type="object" class="btn-primary" attrs="{'invisible': [('status', '!=', 'draft')]}"/>
-                        <button name="button_supersede" string="Supersede" type="object" attrs="{'invisible': [('status', '!=', 'approved')]}"/>
-                        <button name="button_reset_to_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('status', '!=', 'superseded')]}"/>
+                        <button name="button_apply_defaults" string="Apply Defaults" type="object" modifiers="{'invisible': [('status', 'in', ['approved','archived'])]}"/>
+                        <button name="button_approve" string="Approve" type="object" class="btn-primary" modifiers="{'invisible': [('status', '!=', 'draft')]}"/>
+                        <button name="button_supersede" string="Supersede" type="object" modifiers="{'invisible': [('status', '!=', 'approved')]}"/>
+                        <button name="button_reset_to_draft" string="Reset to Draft" type="object" modifiers="{'invisible': [('status', '!=', 'superseded')]}"/>
                         <field name="status" widget="statusbar" statusbar_visible="draft,approved,superseded,archived"/>
                     </header>
                     <sheet>
