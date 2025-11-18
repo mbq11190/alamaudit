@@ -18,18 +18,47 @@
         </record>
 
         <!-- Planning Phase Form View -->
-                                                            <field name="question"/>
-                                                            <field name="answer"/>
-                                                            <field name="risk_rating"/>
-                                                            <field name="evidence_attached"/>
-                                                            <field name="wp_ref"/>
-                                                        </tree>
-                                                    </field>
-                                                </group>
-                                                <group string="Attachments">
-                                                    <field name="itgc_attachment_ids" widget="many2many_binary"/>
-                                                </group>
-                                            </page>
+        <record id="view_planning_phase_form" model="ir.ui.view">
+            <field name="name">qaco.planning.phase.form</field>
+            <field name="model">qaco.planning.phase</field>
+            <field name="arch" type="xml">
+                <form string="Planning Phase" create="1" edit="1">
+                    <header>
+                        <button name="action_start" type="object" string="Start" class="btn-primary"
+                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_submit_review" type="object" string="Submit for Review" class="btn-secondary"
+                            modifiers="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                        <button name="action_approve" type="object" string="Approve" class="btn-success"
+                            modifiers="{'invisible': [('state', '!=', 'review')]}"/>
+                        <button name="action_mark_ready_for_fieldwork" type="object" string="Move to Fieldwork" class="btn-info"
+                            modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
+                        <button name="action_reset_draft" type="object" string="Reset" class="btn-outline-secondary"
+                            modifiers="{'invisible': [('state', 'not in', ['review', 'approved', 'fieldwork'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,review,approved,fieldwork,finalisation"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h2><field name="audit_id" readonly="1"/></h2>
+                        </div>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_risks" type="object" class="oe_stat_button" icon="fa-exclamation-triangle">
+                                <field name="risk_count" widget="statinfo" string="Risks"/>
+                            </button>
+                            <button name="action_view_significant_risks" type="object" class="oe_stat_button" icon="fa-fire">
+                                <field name="significant_risk_count" widget="statinfo" string="Significant"/>
+                            </button>
+                            <button name="action_view_materiality" type="object" class="oe_stat_button" icon="fa-balance-scale">
+                                <field name="materiality_count" widget="statinfo" string="Materiality"/>
+                            </button>
+                            <button name="action_view_pbc" type="object" class="oe_stat_button" icon="fa-envelope">
+                                <field name="pbc_count" widget="statinfo" string="PBC"/>
+                            </button>
+                            <button name="action_view_milestones" type="object" class="oe_stat_button" icon="fa-calendar">
+                                <field name="milestone_count" widget="statinfo" string="Milestones"/>
+                            </button>
+                        </div>
+                        <notebook>
                                             <page name="ic_control_activities" string="Control Activities">
                                                 <group>
                                                     <field name="control_activity_ids" context="{'default_planning_id': active_id}">
