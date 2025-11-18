@@ -73,28 +73,6 @@
                                                         <field name="going_concern_indicators"/>
                                                         <field name="going_concern_comments" placeholder="Explain going concern assessment."/>
                                                     </group>
-                                                            <form string="Fraud Risk Assessment">
-                                                                <sheet>
-                                                                    <group>
-                                                                        <group>
-                                                                            <field name="name" readonly="1"/>
-                                                                            <field name="assessment_level"/>
-                                                                            <field name="risk_statement"/>
-                                                                        </group>
-                                                                        <group>
-                                                                            <field name="overall_assessment"/>
-                                                                            <field name="mgmt_override_risk"/>
-                                                                            <field name="revenue_fraud_risk"/>
-                                                                        </group>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="planned_response"/>
-                                                                        <field name="fraud_schemes_identified"/>
-                                                                    </group>
-                                                                </sheet>
-                                                            </form>
-                                                        </field>
-                                                    </group>
                                                     <group string="Fraud Documentation">
                                                         <field name="fraud_attachment_ids" widget="many2many_binary"/>
                                                     </group>
