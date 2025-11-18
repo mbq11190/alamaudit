@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <template id="adjustment_approval_success" name="Adjustment Approval Success">
         <t t-call="website.layout">
             <div class="container my-5">
@@ -164,5 +166,6 @@
             </div>
         </t>
     </template>
+    </data>
 </odoo>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <record id="view_leave_adjustment_reject_wizard_form" model="ir.ui.view">
         <field name="name">leave.adjustment.reject.wizard.form</field>
         <field name="model">leave.adjustment.reject.wizard</field>
@@ -33,4 +34,5 @@
             </form>
         </field>
     </record>
+    </data>
 </odoo>

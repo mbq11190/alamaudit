@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <record id="view_leave_summary_tree" model="ir.ui.view">
         <field name="name">leave.summary.tree</field>
         <field name="model">leave.summary</field>
@@ -430,4 +431,5 @@
 
 
 
+    </data>
 </odoo>

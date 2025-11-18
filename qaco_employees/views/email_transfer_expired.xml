@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="email_transfer_expired">
+    <data>
+        <template id="email_transfer_expired">
         <html>
             <head>
                 <style>
@@ -33,4 +35,5 @@
             </body>
         </html>
     </template>
+    </data>
 </odoo>
