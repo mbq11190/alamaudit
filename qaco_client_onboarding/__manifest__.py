@@ -26,6 +26,7 @@ Comprehensive client acceptance and onboarding workflow including:
         'data/onboarding_status_data.xml',
         'views/client_onboarding_views.xml',
         'views/audit_extension_views.xml',
+        'views/audit_engagement_onboarding_views.xml',
     ],
     'installable': True,
     'application': True,

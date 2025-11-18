@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_qaco_audit_engagement_onboarding_button" model="ir.ui.view">
+            <field name="name">qaco.audit.engagement.form.onboarding.button</field>
+            <field name="model">qaco.audit.engagement</field>
+            <field name="inherit_id" ref="qaco_audit.view_qaco_audit_engagement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_open_onboarding"
+                            type="object"
+                            string="Open Onboarding"
+                            class="oe_highlight"
+                            attrs="{ 'invisible': [('onboarding_in_progress','=',False)] }"/>
+                    <button name="action_open_onboarding"
+                            type="object"
+                            string="Create Onboarding"
+                            attrs="{ 'invisible': [('onboarding_in_progress','=',True)] }"
+                            icon="fa-plus"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

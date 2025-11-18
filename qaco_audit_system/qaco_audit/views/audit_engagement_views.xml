@@ -21,6 +21,8 @@
             <form string="Audit Engagement">
                 <header>
                     <button name="action_accept_engagement" type="object" string="Accept" class="oe_highlight" states="draft"/>
+                    <button name="action_request_partner_review" type="object" string="Request Partner Review" states="draft,onboarding,planning"/>
+                    <button name="action_mark_partner_review_complete" type="object" string="Partner Review Complete" states="onboarding,planning,execution"/>
                     <button name="action_reject_engagement" type="object" string="Reject" states="draft,onboarding"/>
                     <button name="action_send_professional_clearance" type="object" string="Request Professional Clearance" states="onboarding,planning"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,onboarding,planning,execution,finalisation,completed,cancelled"/>
@@ -29,6 +31,9 @@
                     <group>
                         <field name="name"/>
                         <field name="client_id"/>
+                        <field name="partner_review_required" readonly="1"/>
+                        <field name="partner_review_completed"/>
+                        <field name="safeguards_documentation_required" readonly="1"/>
                         <field name="risk_rating"/>
                     </group>
                     <notebook>
@@ -37,6 +42,13 @@
                                 <field name="legal_name"/>
                                 <field name="trade_name"/>
                                 <field name="date_incorporation"/>
+                            </group>
+                            <group>
+                                <field name="sector_code"/>
+                                <field name="group_structure"/>
+                            </group>
+                            <group>
+                                <field name="holding_subsidiaries"/>
                             </group>
                             <group>
                                 <field name="ntn"/>
@@ -87,6 +99,9 @@
                                         <field name="inspection_date"/>
                                     </tree>
                                 </field>
+                            </group>
+                            <group>
+                                <field name="corporate_compliance_summary"/>
                             </group>
                         </page>
                         <page string="1.3 Ownership & Governance">
@@ -190,6 +205,38 @@
                                 <field name="doc_professional_clearance"/>
                                 <field name="doc_engagement_letter_signed"/>
                                 <field name="doc_conflict_declarations"/>
+                            </group>
+                        </page>
+                        <page string="1.9 Onboarding Checklists">
+                            <group>
+                                <field name="acceptance_checklist_ids">
+                                    <tree editable="bottom">
+                                        <field name="question"/>
+                                        <field name="status"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                                <field name="acceptance_checklist_complete" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="independence_checklist_ids">
+                                    <tree editable="bottom">
+                                        <field name="question"/>
+                                        <field name="status"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                                <field name="independence_checklist_complete" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="isqm_checklist_ids">
+                                    <tree editable="bottom">
+                                        <field name="question"/>
+                                        <field name="status"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                                <field name="isqm_checklist_complete" readonly="1"/>
                             </group>
                         </page>
                     </notebook>

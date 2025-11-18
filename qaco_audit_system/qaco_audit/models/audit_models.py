@@ -66,3 +66,22 @@ class QacoPep(models.Model):
         for record in self:
             if record.cnic and (not record.cnic.isdigit() or len(record.cnic) != 13):
                 raise ValidationError(_('CNIC for PEP must be 13 digits.'))
+
+
+class QacoAuditChecklist(models.Model):
+    _name = 'qaco.audit.checklist'
+    _description = 'Engagement Checklist Item'
+
+    engagement_id = fields.Many2one('qaco.audit.engagement', string='Engagement', required=True, ondelete='cascade')
+    checklist_type = fields.Selection([
+        ('acceptance', 'Acceptance & Continuance'),
+        ('independence', 'Independence & Ethics'),
+        ('isqm', 'ISQM Firm Risk Assessment'),
+    ], string='Checklist Type', required=True)
+    question = fields.Char(string='Checklist Question', required=True)
+    status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+        ('not_applicable', 'Not Applicable'),
+    ], string='Status', default='pending')
+    note = fields.Text(string='Notes')
