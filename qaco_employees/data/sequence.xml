@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data noupdate="0"/>
+    <data noupdate="0">
         <record id="sequence_transfer" model="ir.sequence">
             <field name="name">Transfer Sequence</field>
             <field name="code">transfer.sequence</field>
@@ -30,4 +31,5 @@
             <field name="implementation">no_gap</field>
             <field name="company_id" eval="False"/>
         </record>
-    </odoo>
+    </data>
+</odoo>
