@@ -882,3 +882,9 @@ class QacoMateriality(models.Model):
         symbol = self.currency_id.symbol or ""
         amount = int(self.materiality_amount or 0.0)
         return "%s - %s%s" % ((self.name or "/"), symbol, amount)
+
+
+class PlanningPhaseMateriality(models.Model):
+    _inherit = "qaco.planning.phase"
+
+    materiality_ids = fields.One2many("qaco.materiality", "planning_id", string="Materiality Worksheets")

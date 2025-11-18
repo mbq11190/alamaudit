@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 from datetime import datetime, timedelta
+from typing import Any
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -1760,7 +1761,7 @@ class PlanningPhase(models.Model):
     estimated_hours = fields.Float(string='Estimated Hours', tracking=True)
 
     # Related records
-    materiality_ids = fields.One2many("qaco.materiality", "planning_id", string="Materiality Worksheets")
+    materiality_ids: Any
     risk_ids = fields.One2many("qaco.planning.risk", "planning_id", string="Identified Risks")
     risk_assessment_ids = fields.One2many("qaco.risk.assessment", "planning_id", string="Risk Assessments")
     checklist_ids = fields.One2many("qaco.planning.checklist", "planning_id", string="Planning Checklist")
