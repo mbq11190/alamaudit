@@ -582,30 +582,31 @@
 
                                     <page name="materiality_main" string="Materiality">
                                         <group>
-                                            <group string="Materiality Calculations">
-                                                <field name="materiality_base"/>
-                                                <field name="materiality_basis"/>
-                                                <field name="materiality_base_amount" widget="monetary"/>
-                                                <field name="materiality_percentage"/>
+                                            <group class="o_box o_box_secondary" string="Materiality Snapshot" col="2">
                                                 <field name="materiality_amount" widget="monetary"/>
                                                 <field name="performance_materiality" widget="monetary"/>
-                                                <field name="trivial_misstatement" widget="monetary"/>
+                                                <field name="trivial_misstatement" widget="monetary" string="Clearly Trivial Threshold"/>
                                                 <field name="clearly_trivial_threshold" widget="monetary"/>
                                             </group>
-                                            <group string="ISA 320 Requirements">
-                                                <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
-                                                <field name="scope" placeholder="Define audit scope and components..."/>
-                                                <field name="materiality_notes" placeholder="Document materiality rationale and judgments..."/>
+                                            <group class="o_box o_box_secondary" string="Calculated Details" col="2">
+                                                <field name="materiality_base"/>
+                                                <field name="materiality_percentage" string="Materiality %"/>
+                                                <field name="overall_materiality_amount_calc" readonly="1" string="Calculated Overall"/>
+                                                <field name="performance_materiality_amount_calc" readonly="1" string="Calculated Performance"/>
                                             </group>
                                         </group>
+                                        <group class="o_box o_box_secondary" string="ISA 320 Requirements">
+                                            <field name="overall_strategy" placeholder="Summarize the overall audit strategy (ISA 300)..."/>
+                                            <field name="scope" placeholder="Define audit scope, components, and key reporting units..."/>
+                                        </group>
                                         <group>
-                                            <group string="Additional Considerations">
+                                            <group class="o_box" string="Additional Considerations">
                                                 <field name="use_of_experts"/>
                                                 <field name="rely_on_internal_audit"/>
                                             </group>
-                                            <group string="Approach">
+                                            <group class="o_box" string="Execution Approach">
                                                 <field name="audit_approach"/>
-                                                <field name="significant_components" placeholder="Document significant components and areas..."/>
+                                                <field name="significant_components" placeholder="Document significant components and areas subject to the audit plan..."/>
                                             </group>
                                         </group>
                                         <group string="Materiality Worksheets">
