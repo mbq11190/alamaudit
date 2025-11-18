@@ -581,6 +581,46 @@
                                     </page>
 
                                     <page name="materiality_main" string="Materiality &amp; Performance Materiality">
+                                        <group>
+                                            <group string="Materiality Calculations">
+                                                <field name="materiality_base"/>
+                                                <field name="materiality_basis"/>
+                                                <field name="materiality_base_amount" widget="monetary"/>
+                                                <field name="materiality_percentage"/>
+                                                <field name="materiality_amount" widget="monetary"/>
+                                                <field name="performance_materiality" widget="monetary"/>
+                                                <field name="trivial_misstatement" widget="monetary"/>
+                                                <field name="clearly_trivial_threshold" widget="monetary"/>
+                                            </group>
+                                            <group string="ISA 320 Requirements">
+                                                <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
+                                                <field name="scope" placeholder="Define audit scope and components..."/>
+                                                <field name="materiality_notes" placeholder="Document materiality rationale and judgments..."/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Additional Considerations">
+                                                <field name="use_of_experts"/>
+                                                <field name="rely_on_internal_audit"/>
+                                            </group>
+                                            <group string="Approach">
+                                                <field name="audit_approach"/>
+                                                <field name="significant_components" placeholder="Document significant components and areas..."/>
+                                            </group>
+                                        </group>
+                                        <group string="Materiality Worksheets">
+                                            <field name="materiality_ids">
+                                                <tree>
+                                                    <field name="name"/>
+                                                    <field name="benchmark_type"/>
+                                                    <field name="benchmark_amount"/>
+                                                    <field name="applied_percent"/>
+                                                    <field name="materiality_amount"/>
+                                                    <field name="performance_materiality_amount"/>
+                                                    <field name="status"/>
+                                                </tree>
+                                            </field>
+                                        </group>
                                         <notebook>
                                             <page name="materiality_section_a" string="Section A – Benchmark &amp; Context">
                                                 <group string="Benchmark &amp; Context">
@@ -1177,50 +1217,6 @@
                                                     </page>
                                                 </notebook>
                                             </page>
-
-                                    <!-- 5. Materiality -->
-                                    <page name="materiality" string="Materiality">
-                                        <group>
-                                            <group string="Materiality Calculations">
-                                                <field name="materiality_base"/>
-                                                <field name="materiality_basis"/>
-                                                <field name="materiality_base_amount" widget="monetary"/>
-                                                <field name="materiality_percentage"/>
-                                                <field name="materiality_amount" widget="monetary"/>
-                                                <field name="performance_materiality" widget="monetary"/>
-                                                <field name="trivial_misstatement" widget="monetary"/>
-                                                <field name="clearly_trivial_threshold" widget="monetary"/>
-                                            </group>
-                                            <group string="ISA 320 Requirements">
-                                                <field name="overall_strategy" placeholder="Document overall audit strategy (ISA 300)..."/>
-                                                <field name="scope" placeholder="Define audit scope and components..."/>
-                                                <field name="materiality_notes" placeholder="Document materiality rationale and judgments..."/>
-                                            </group>
-                                        </group>
-                                        <group>
-                                            <group string="Additional Considerations">
-                                                <field name="use_of_experts"/>
-                                                <field name="rely_on_internal_audit"/>
-                                            </group>
-                                            <group string="Approach">
-                                                <field name="audit_approach"/>
-                                                <field name="significant_components" placeholder="Document significant components and areas..."/>
-                                            </group>
-                                        </group>
-                                        <group string="Materiality Worksheets">
-                                            <field name="materiality_ids">
-                                                <tree>
-                                                    <field name="name"/>
-                                                    <field name="benchmark_type"/>
-                                                    <field name="benchmark_amount"/>
-                                                    <field name="applied_percent"/>
-                                                    <field name="materiality_amount"/>
-                                                    <field name="performance_materiality_amount"/>
-                                                    <field name="status"/>
-                                                </tree>
-                                            </field>
-                                        </group>
-                                    </page>
 
                                     <!-- 6. Audit Guide -->
                                     <page name="audit_guide" string="Audit Guide">
