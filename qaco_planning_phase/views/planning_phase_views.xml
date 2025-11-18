@@ -729,6 +729,8 @@
                                                     </group>
                                                 </group>
                                             </page>
+                                        </notebook>
+                                    </page>
                                                             <field name="planned_response_type"/>
                                                             <field name="planned_timing"/>
                                                             <field name="responsible_team_member_id" optional="show"/>
