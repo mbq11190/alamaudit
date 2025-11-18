@@ -26,6 +26,58 @@ MATERIALITY_BENCHMARKS = [
     ("custom", "Custom"),
 ]
 
+BENCHMARK_SELECTIONS = [
+    ("pbt", "Profit Before Tax"),
+    ("revenue", "Revenue"),
+    ("total_assets", "Total Assets"),
+    ("equity", "Equity"),
+    ("total_expenses", "Total Expenses"),
+    ("net_assets", "Net Assets"),
+    ("custom", "Custom"),
+]
+
+MATERIALITY_BENCHMARK_SOURCES = [
+    ("current_year", "Current Year"),
+    ("prior_year", "Prior Year"),
+    ("budget", "Budget / Forecast"),
+    ("average", "Average / Multiple Years"),
+    ("other", "Other"),
+]
+
+PM_RISK_FACTORS = [
+    ("high", "High"),
+    ("medium", "Medium"),
+    ("low", "Low"),
+]
+
+MISSTATEMENT_METHODS = [
+    ("factual", "Factual"),
+    ("judgmental", "Judgmental"),
+    ("projected", "Projected"),
+]
+
+SPECIFIC_MATERIALITY_AREAS = [
+    ("related_parties", "Related Parties"),
+    ("regulatory_capital", "Regulatory Capital"),
+    ("grants", "Grants"),
+    ("revenue_streams", "Revenue Streams"),
+    ("investments", "Investments"),
+    ("loans", "Loans"),
+    ("other", "Other"),
+]
+
+BIAS_INDICATORS = [
+    ("overstatement", "Overstatement Patterns"),
+    ("understatement", "Understatement Patterns"),
+    ("selective_corrections", "Selective Corrections"),
+    ("estimation_manipulation", "Estimate Manipulation"),
+]
+
+ISA_PERCENTAGE_MIN = 3.0
+ISA_PERCENTAGE_MAX = 8.0
+DEFAULT_PM_PERCENTAGE = 60.0
+DEFAULT_CTT_PERCENTAGE = 3.0
+
 IC_CHECKLIST_ANSWERS = [
     ("yes", "Yes"),
     ("no", "No"),
@@ -299,318 +351,323 @@ class PlanningPhase(models.Model):
     ], string="Overall Audit Approach", default="combined", tracking=True)
 
     # ISA 320 / ISA 450: Materiality & Performance Materiality
-    materiality_guidance_html = fields.Html(
-        string="Materiality Guidance",
-        compute="_compute_materiality_guidance",
-        sanitize=False,
-        readonly=True,
-    )
-    materiality_basis = fields.Selection(
-        MATERIALITY_BENCHMARKS,
-        default="profit_before_tax",
+    selected_benchmark = fields.Selection(
+        BENCHMARK_SELECTIONS,
+        string="Selected Benchmark",
         tracking=True,
-        string="Materiality Benchmark (ISA 320)",
+        default="pbt",
+        required=True,
     )
-    materiality_base = fields.Selection(
-        MATERIALITY_BENCHMARKS,
-        default="profit_before_tax",
+    benchmark_value = fields.Float(
+        string="Benchmark Value",
+        digits="Account",
         tracking=True,
-        string="Materiality Base (Legacy)",
+        help="Primary value pulled from FS/TB import that drives OM.",
     )
-    materiality_benchmark_source = fields.Selection(
-        [
-            ("current_year_fs", "Current Year FS / TB"),
-            ("prior_year", "Prior Year Audited FS"),
-            ("budget_forecast", "Budget / Forecast"),
-            ("multi_year_average", "Multi-year Average"),
-            ("other", "Other Source"),
-        ],
-        string="Benchmark Source",
+    benchmark_amount = fields.Float(
+        string="Benchmark Amount",
+        compute="_compute_benchmark_amount",
+        store=True,
+    )
+    benchmark_range_info = fields.Char(
+        string="Benchmark Range Guidance",
+        compute="_compute_benchmark_guidance",
+        store=True,
+    )
+    benchmark_selection_reason = fields.Text(
+        string="Benchmark Selection Reason",
         tracking=True,
-        help="Document where the benchmark figure has been sourced from (ISA 320).",
+        required=True,
     )
-    benchmark_source_other = fields.Char(
-        string="Benchmark Source (Other)",
-        help="Use when the benchmark source selection is 'Other'.",
-    )
-    materiality_base_amount = fields.Monetary(
-        string="Benchmark Base Amount",
-        tracking=True,
-        currency_field="currency_id",
-        help="Enter the base financial metric used to derive overall materiality",
-    )
-    materiality_benchmark_rationale = fields.Text(
-        string="Benchmark Rationale",
-        tracking=True,
-        help="Explain why this benchmark is appropriate (ISA 320 / ICAP policy).",
-    )
-    materiality_percentage = fields.Float(
+    percentage_used = fields.Float(
         string="Overall Materiality Percentage (%)",
+        digits=(6, 2),
         default=5.0,
         tracking=True,
-        help="Percentage applied to the benchmark amount (ISA 320).",
     )
-    overall_materiality_amount_calc = fields.Monetary(
-        string="Overall Materiality (Calculated)",
-        currency_field="currency_id",
-        compute="_compute_materiality_amounts",
+    overall_materiality_amount = fields.Float(
+        string="Overall Materiality Amount",
+        compute="_compute_overall_materiality",
         store=True,
-        readonly=True,
-        help="Benchmark base amount multiplied by the selected percentage.",
     )
-    overall_materiality_override = fields.Boolean(
-        string="Override Overall Materiality",
-        tracking=True,
-        help="Tick if firm policy or engagement partner approved an override to the automated calculation.",
-    )
-    overall_materiality_amount_override = fields.Monetary(
-        string="Override Overall Materiality Amount",
-        currency_field="currency_id",
-        help="Enter the partner-approved overall materiality where it differs from the calculated amount.",
-    )
-    overall_materiality_override_reason = fields.Text(
-        string="Overall Materiality Override Rationale",
-        help="Document the reason for overriding the automated calculation (ISA 320 / ISA 450).",
-    )
-    overall_materiality_approved_by = fields.Many2one(
-        "res.users",
-        string="Overall Materiality Approved By",
-        tracking=True,
-        help="Typically the engagement partner / manager approving the override.",
-    )
-    overall_materiality_approved_date = fields.Date(
-        string="Overall Materiality Approval Date",
-        tracking=True,
-    )
-    materiality_amount = fields.Monetary(
-        string="Effective Overall Materiality",
-        currency_field="currency_id",
-        tracking=True,
-        compute="_compute_materiality_amounts",
+    overall_percentage_outside_range = fields.Boolean(
+        string="ISA Range Alert",
+        compute="_compute_overall_materiality",
         store=True,
-        readonly=True,
-        help="Final overall materiality applied in planning (override if provided).",
     )
-    overall_materiality = fields.Monetary(
-        string="Overall Materiality (Legacy)",
-        currency_field="currency_id",
+    om_override_reason = fields.Text(
+        string="Override Rationale",
+        help="Required when overall percentage falls outside ISA guidelines.",
+    )
+    default_pm_percentage = fields.Float(
+        string="Default PM Percentage (%)",
+        digits=(6, 2),
+        default=DEFAULT_PM_PERCENTAGE,
         tracking=True,
     )
-    performance_materiality_percentage = fields.Float(
-        string="Performance Materiality Percentage (%)",
-        default=70.0,
+    pm_risk_factor = fields.Selection(
+        PM_RISK_FACTORS,
+        string="PM Risk Factor",
+        default="medium",
         tracking=True,
-        help="Typically 50-75% of overall materiality, based on control effectiveness and misstatement history.",
     )
-    performance_materiality_amount_calc = fields.Monetary(
-        string="Performance Materiality (Calculated)",
-        currency_field="currency_id",
-        compute="_compute_materiality_amounts",
+    performance_materiality_amount = fields.Float(
+        string="Performance Materiality Amount",
+        compute="_compute_performance_materiality",
         store=True,
-        readonly=True,
     )
-    performance_materiality_override = fields.Boolean(
-        string="Override Performance Materiality",
+    pm_justification = fields.Text(string="PM Justification", tracking=True)
+    ctt_percentage = fields.Float(
+        string="Clearly Trivial Threshold (%)",
+        digits=(6, 2),
+        default=DEFAULT_CTT_PERCENTAGE,
         tracking=True,
+        help="Default 2-5% of OM",
     )
-    performance_materiality_amount_override = fields.Monetary(
-        string="Override Performance Materiality Amount",
-        currency_field="currency_id",
-    )
-    performance_materiality_override_reason = fields.Text(
-        string="Performance Materiality Override Rationale",
-    )
-    performance_materiality_approved_by = fields.Many2one(
-        "res.users",
-        string="Performance Materiality Approved By",
-        tracking=True,
-    )
-    performance_materiality_approved_date = fields.Date(
-        string="Performance Materiality Approval Date",
-        tracking=True,
-    )
-    performance_materiality = fields.Monetary(
-        string="Effective Performance Materiality",
-        currency_field="currency_id",
-        tracking=True,
-        compute="_compute_materiality_amounts",
+    ctt_amount = fields.Float(
+        string="CTT Amount",
+        compute="_compute_ctt",
         store=True,
-        readonly=True,
     )
-    trivial_threshold_percentage = fields.Float(
-        string="Clearly Trivial Threshold Percentage (%)",
-        default=3.0,
-        tracking=True,
-        help="2-5% of overall materiality communicated to management (ISA 450).",
+    ctt_override_reason = fields.Text(
+        string="CTT Override Reason",
+        help="Required when overriding default percentage or amount.",
     )
-    trivial_threshold_amount_calc = fields.Monetary(
-        string="Clearly Trivial Threshold (Calculated)",
-        currency_field="currency_id",
-        compute="_compute_materiality_amounts",
-        store=True,
-        readonly=True,
-    )
-    trivial_threshold_override = fields.Boolean(
-        string="Override Clearly Trivial Threshold",
-        tracking=True,
-    )
-    trivial_threshold_amount_override = fields.Monetary(
-        string="Override Clearly Trivial Threshold Amount",
-        currency_field="currency_id",
-    )
-    trivial_threshold_override_reason = fields.Text(
-        string="Clearly Trivial Override Rationale",
-    )
-    trivial_misstatement = fields.Monetary(
-        string="Clearly Trivial Threshold (Effective)",
-        currency_field="currency_id",
-        tracking=True,
-        compute="_compute_materiality_amounts",
-        store=True,
-        readonly=True,
-    )
-    trivial_threshold = fields.Monetary(
-        string="Trivial Threshold (Legacy)",
-        currency_field="currency_id",
-        tracking=True,
-    )
-    clearly_trivial_threshold = fields.Monetary(
-        string="Clearly Trivial Threshold (Legacy Field)",
-        currency_field="currency_id",
-        tracking=True,
-        help="Legacy field retained for backward compatibility.",
-    )
-    materiality_notes = fields.Text(string="Materiality Rationale and Key Judgements")
     specific_materiality_ids = fields.One2many(
-        "qaco.materiality.specific",
+        "qaco.specific.materiality",
         "planning_id",
-        string="Specific Materiality Areas",
+        string="Specific Materiality Adjustments",
     )
-    materiality_attachment_ids = fields.Many2many(
-        "ir.attachment",
-        "qaco_planning_materiality_attachment_rel",
-        "planning_id",
-        "attachment_id",
-        string="Materiality Working Papers",
-        help="Attach TB extracts, firm templates, approvals, and ISA 450 misstatements summaries.",
+    accumulation_threshold = fields.Float(
+        string="Accumulation Threshold",
+        compute="_compute_accumulation_threshold",
+        store=True,
     )
-    materiality_template_url = fields.Char(
-        string="Materiality Template Link",
-        help="Optional reference to the firm's standard materiality calculation template.",
+    misstatement_method = fields.Selection(
+        MISSTATEMENT_METHODS,
+        string="Dominant Misstatement Method",
     )
-    specific_materiality_template_url = fields.Char(
-        string="Specific Materiality Template Link",
+    misstatement_log_template = fields.Binary(
+        string="Misstatement Log",
+        attachment=True,
     )
-    misstatement_summary_template_url = fields.Char(
-        string="Misstatements Summary Template (ISA 450)",
+    bias_indicators = fields.Many2many(
+        "qaco.materiality.bias.indicator",
+        string="Bias Indicators",
     )
-    materiality_reassessed = fields.Boolean(
-        string="Materiality Reassessed During Audit?",
-        tracking=True,
+    bias_impact = fields.Text(string="Management Bias Impact", tracking=True)
+    bias_adjustment_to_pm_recommended = fields.Float(
+        string="Bias Adjustment to PM Recommended",
+        compute="_compute_bias_recommendation",
+        store=True,
     )
-    materiality_reassessment_triggers = fields.Text(
-        string="Reassessment Triggers",
-        help="Describe triggers such as significant changes in results, scope, or subsequent events.",
-    )
-    materiality_reassessment_date = fields.Date(
-        string="Reassessment Date",
-        tracking=True,
-    )
-    materiality_reassessment_approved_by = fields.Many2one(
+    bias_adjustment_to_pm = fields.Float(string="Bias Adjustment to PM", tracking=True)
+    prepared_by = fields.Many2one(
         "res.users",
-        string="Reassessment Approved By",
+        string="Prepared By",
+        default=lambda self: self.env.user,
+        readonly=True,
         tracking=True,
     )
-    revised_overall_materiality = fields.Monetary(
-        string="Revised Overall Materiality",
-        currency_field="currency_id",
+    reviewed_by_partner = fields.Many2one(
+        "res.users",
+        string="Reviewed by Partner",
         tracking=True,
     )
-    revised_performance_materiality = fields.Monetary(
-        string="Revised Performance Materiality",
-        currency_field="currency_id",
-        tracking=True,
+    review_date = fields.Date(string="Review Date", tracking=True)
+    partner_comments = fields.Text(string="Partner Review Comments")
+    prior_year_fs = fields.Binary(string="Prior Year FS", attachment=True)
+    trial_balance_current_year = fields.Binary(string="Current Year TB", attachment=True)
+    benchmark_computation_pdf = fields.Binary(
+        string="Benchmark Computation",
+        attachment=True,
     )
-    revised_trivial_threshold = fields.Monetary(
-        string="Revised Clearly Trivial Threshold",
-        currency_field="currency_id",
-        tracking=True,
+    materiality_memo = fields.Binary(string="Materiality Memo", attachment=True)
+    materiality_tab_ready = fields.Boolean(
+        string="Materiality Tab Ready",
+        compute="_compute_materiality_tab_ready",
+        store=True,
     )
-    chk_users_and_needs_identified = fields.Boolean(
-        string="Users of FS and needs identified",
-        tracking=True,
-    )
-    comment_users_and_needs = fields.Text(string="Users & Needs Comments")
-    chk_benchmark_selected_and_justified = fields.Boolean(
-        string="Benchmark selected & justified",
-        tracking=True,
-    )
-    comment_benchmark_selected = fields.Text(string="Benchmark Selection Comments")
-    chk_benchmark_agrees_to_fs = fields.Boolean(
-        string="Benchmark agrees to FS / TB",
-        tracking=True,
-    )
-    comment_benchmark_agrees_to_fs = fields.Text(string="Benchmark Tie-out Comments")
-    chk_overall_materiality_approved = fields.Boolean(
-        string="Overall materiality approved",
-        tracking=True,
-    )
-    comment_overall_materiality_approved = fields.Text(string="Overall Materiality Approval Comments")
-    chk_performance_materiality_justified = fields.Boolean(
-        string="Performance materiality justified",
-        tracking=True,
-    )
-    comment_performance_materiality_justified = fields.Text(string="Performance Materiality Comments")
-    chk_trivial_threshold_set_and_communicated = fields.Boolean(
-        string="Clearly trivial threshold set & communicated",
-        tracking=True,
-    )
-    comment_trivial_threshold = fields.Text(string="Clearly Trivial Threshold Comments")
-    chk_specific_materiality_considered = fields.Selection(
-        IC_CHECKLIST_ANSWERS,
-        string="Specific materiality considered",
-        tracking=True,
-    )
-    comment_specific_materiality = fields.Text(string="Specific Materiality Comments")
-    chk_materiality_reassessment_considered = fields.Boolean(
-        string="Materiality reassessment considered",
-        tracking=True,
-    )
-    comment_materiality_reassessment = fields.Text(string="Materiality Reassessment Comments")
-    chk_consistency_prior_year_explained = fields.Boolean(
-        string="Consistency with prior year explained",
-        tracking=True,
-    )
-    comment_consistency_prior_year = fields.Text(string="Prior Year Consistency Comments")
+
     materiality_tab_complete = fields.Boolean(
         string="Materiality Tab Complete",
         compute="_compute_materiality_tab_complete",
         store=True,
     )
+    materiality_basis = fields.Selection(
+        MATERIALITY_BENCHMARKS,
+        string="Materiality Basis",
+        default="profit_before_tax",
+        tracking=True,
+    )
+    materiality_base = fields.Selection(
+        MATERIALITY_BENCHMARKS,
+        string="Materiality Base",
+        tracking=True,
+    )
+    materiality_benchmark_source = fields.Selection(
+        MATERIALITY_BENCHMARK_SOURCES,
+        string="Benchmark Source",
+        tracking=True,
+    )
+    benchmark_source_other = fields.Char(
+        string="Benchmark Source Detail",
+        help="Describe the source when the benchmark is custom or other.",
+    )
+    materiality_base_amount = fields.Float(
+        string="Benchmark Amount",
+        digits="Account",
+        tracking=True,
+    )
+    materiality_percentage = fields.Float(
+        string="Materiality Percentage (%)",
+        digits=(6, 2),
+        default=5.0,
+        tracking=True,
+    )
+    materiality_benchmark_rationale = fields.Text(
+        string="Benchmark Rationale",
+        tracking=True,
+    )
+    materiality_notes = fields.Text(string="Materiality Notes / Assumptions")
+    overall_materiality_amount_calc = fields.Float(
+        string="Calculated Overall Materiality",
+        compute="_compute_materiality_amounts",
+        store=True,
+    )
+    overall_materiality_override = fields.Boolean(
+        string="Override Overall Materiality",
+        default=False,
+        tracking=True,
+    )
+    overall_materiality_amount_override = fields.Float(
+        string="Override Amount",
+        digits="Account",
+    )
+    overall_materiality_override_reason = fields.Text(string="Override Rationale")
+    overall_materiality_approved_by = fields.Many2one(
+        "res.users",
+        string="Overall Materiality Approved By",
+    )
+    overall_materiality_approved_date = fields.Date(string="Overall Materiality Approval Date")
+    materiality_amount = fields.Float(
+        string="Materiality Amount",
+        digits="Account",
+        tracking=True,
+    )
+    performance_materiality_percentage = fields.Float(
+        string="Performance Materiality Percentage (%)",
+        digits=(6, 2),
+        default=DEFAULT_PM_PERCENTAGE,
+        tracking=True,
+    )
+    performance_materiality_amount_calc = fields.Float(
+        string="Calculated Performance Materiality",
+        compute="_compute_materiality_amounts",
+        store=True,
+    )
+    performance_materiality_override = fields.Boolean(
+        string="Override Performance Materiality",
+        default=False,
+        tracking=True,
+    )
+    performance_materiality_amount_override = fields.Float(
+        string="Override Amount",
+        digits="Account",
+    )
+    performance_materiality_override_reason = fields.Text(string="Override Rationale")
+    performance_materiality_approved_by = fields.Many2one(
+        "res.users",
+        string="Performance Materiality Approved By",
+    )
+    performance_materiality_approved_date = fields.Date(string="Performance Materiality Approval Date")
+    performance_materiality = fields.Float(
+        string="Performance Materiality",
+        digits="Account",
+        tracking=True,
+    )
+    trivial_threshold_percentage = fields.Float(
+        string="Trivial Threshold Percentage (%)",
+        digits=(6, 2),
+        default=DEFAULT_CTT_PERCENTAGE,
+        tracking=True,
+    )
+    trivial_threshold_amount_calc = fields.Float(
+        string="Calculated Trivial Threshold",
+        compute="_compute_materiality_amounts",
+        store=True,
+    )
+    trivial_threshold_override = fields.Boolean(
+        string="Override Trivial Threshold",
+        default=False,
+        tracking=True,
+    )
+    trivial_threshold_amount_override = fields.Float(
+        string="Override Amount",
+        digits="Account",
+    )
+    trivial_threshold_override_reason = fields.Text(string="Override Rationale")
+    trivial_misstatement = fields.Float(
+        string="Clearly Trivial Threshold",
+        digits="Account",
+        tracking=True,
+    )
+    clearly_trivial_threshold = fields.Float(
+        string="Clearly Trivial Threshold (Alias)",
+        digits="Account",
+        tracking=True,
+    )
+    materiality_reassessed = fields.Boolean(string="Materiality Reassessed", tracking=True)
+    materiality_reassessment_triggers = fields.Text(string="Materiality Reassessment Triggers")
+    materiality_reassessment_date = fields.Date(string="Materiality Reassessment Date")
+    materiality_reassessment_approved_by = fields.Many2one(
+        "res.users",
+        string="Materiality Reassessment Approved By",
+    )
+    revised_overall_materiality = fields.Float(
+        string="Revised Overall Materiality",
+        digits="Account",
+    )
+    revised_performance_materiality = fields.Float(
+        string="Revised Performance Materiality",
+        digits="Account",
+    )
+    revised_trivial_threshold = fields.Float(
+        string="Revised Trivial Threshold",
+        digits="Account",
+    )
+    chk_users_and_needs_identified = fields.Boolean(string="Users & Needs Identified")
+    comment_users_and_needs = fields.Text(string="Users & Needs Notes")
+    chk_benchmark_selected_and_justified = fields.Boolean(string="Benchmark Selected & Justified")
+    comment_benchmark_selected = fields.Text(string="Benchmark Justification Notes")
+    chk_benchmark_agrees_to_fs = fields.Boolean(string="Benchmark Agrees to FS/TB")
+    comment_benchmark_agrees_to_fs = fields.Text(string="Benchmark Reconciliation Notes")
+    chk_overall_materiality_approved = fields.Boolean(string="Overall Materiality Approved")
+    comment_overall_materiality_approved = fields.Text(string="Overall Materiality Approval Notes")
+    chk_performance_materiality_justified = fields.Boolean(string="Performance Materiality Justified")
+    comment_performance_materiality_justified = fields.Text(string="Performance Materiality Justification Notes")
+    chk_trivial_threshold_set_and_communicated = fields.Boolean(string="Trivial Threshold Set & Communicated")
+    comment_trivial_threshold = fields.Text(string="Trivial Threshold Communication Notes")
+    chk_specific_materiality_considered = fields.Boolean(string="Specific Materiality Considered")
+    comment_specific_materiality = fields.Text(string="Specific Materiality Notes")
+    chk_materiality_reassessment_considered = fields.Boolean(string="Materiality Reassessment Considered")
+    comment_materiality_reassessment = fields.Text(string="Materiality Reassessment Notes")
+    chk_consistency_prior_year_explained = fields.Boolean(string="Consistency with Prior Year Explained")
+    comment_consistency_prior_year = fields.Text(string="Consistency/Variance Notes")
+    materiality_attachment_ids = fields.Many2many(
+        "ir.attachment",
+        "planning_phase_materiality_attachment_rel",
+        "planning_id",
+        "attachment_id",
+        string="Materiality Attachments",
+        help="Upload files that support the materiality analysis.",
+    )
+
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
         default=lambda self: self._get_default_currency(),
     )
-
-    def _compute_materiality_guidance(self):
-        guidance = _(
-            """
-            <div class="alert alert-info">
-                <p><strong>Objective:</strong> Set overall materiality, performance materiality, clearly trivial thresholds, and specific materiality for sensitive classes of transactions/disclosures in line with ISA 320 &amp; ISA 450 as practiced under ICAP / AOB expectations.</p>
-                <ul>
-                    <li>Select an appropriate benchmark (e.g., PBT, revenue, assets, equity, custom) and document the rationale, especially for loss-making entities.</li>
-                    <li>Capture the benchmark source (current year, prior year, budgets, averages) and ensure it agrees to the supporting FS / TB.</li>
-                    <li>Set overall materiality, calculate performance materiality (50-75%), and define a clearly trivial threshold (typically 2-5%).</li>
-                    <li>Consider specific materiality for particular balances/disclosures (e.g., related parties, regulatory capital, donor-funded grants) and document reasoning.</li>
-                    <li>Override calculations only with documented approval; the system keeps automated calculations while allowing justified overrides.</li>
-                    <li>Reassess materiality when results or scope change and capture approvals per ISA 320/450.</li>
-                </ul>
-            </div>
-            """
-        )
-        for rec in self:
-            rec.materiality_guidance_html = guidance
 
        # ISA 210/220: Ethics & Compliance
     engagement_letter_obtained = fields.Boolean(
