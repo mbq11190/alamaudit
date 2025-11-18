@@ -4,3 +4,12 @@ access_qaco_client_onboarding_supervisor,access.qaco.client.onboarding.superviso
 access_qaco_client_onboarding_manager,access.qaco.client.onboarding.manager,model_qaco_client_onboarding,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_client_onboarding_partner,access.qaco.client.onboarding.partner,model_qaco_client_onboarding,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_client_onboarding_admin,access.qaco.client.onboarding.admin,model_qaco_client_onboarding,qaco_audit.group_audit_administrator,1,1,1,1
+access_qaco_industry,qaco.industry,model_qaco_industry,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_branch,qaco.branch.office,model_qaco_branch_office,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_ubo,qaco.ubo,model_qaco_ubo,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_inspection,qaco.regulatory.inspection,model_qaco_regulatory_inspection,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_pep,qaco.pep,model_qaco_pep,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_engagement_user,qaco.audit.engagement,model_qaco_audit_engagement,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_engagement_manager,qaco.audit.engagement,model_qaco_audit_engagement,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_engagement_partner,qaco.audit.engagement,model_qaco_audit_engagement,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_checklist,qaco.audit.checklist,model_qaco_audit_checklist,qaco_audit.group_audit_trainee,1,1,1,0
