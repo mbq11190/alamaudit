@@ -7,6 +7,17 @@
                   action="action_planning_phase"
                   sequence="15"/>
 
+      <menuitem id="menu_pre_planning"
+              name="Pre-Planning"
+              parent="qaco_audit.menu_root"
+              sequence="12"/>
+
+      <menuitem id="menu_client_acceptance"
+              name="Client Acceptance & Continuance"
+              parent="menu_pre_planning"
+              action="action_qaco_client_acceptance"
+              sequence="5"/>
+
       <menuitem id="menu_engagement_details"
               name="Engagement Details"
               parent="menu_planning_phase"
