@@ -1,5 +1,5 @@
 <odoo>
-    <data noupdate="0"/>
+    <data noupdate="0">
         <record id="sequence_audit" model="ir.sequence">
             <field name="name">Audit Sequence</field>
             <field name="code">audit.sequence</field>
@@ -10,4 +10,5 @@
             <field name="implementation">no_gap</field>
             <field name="company_id" eval="False"/>
         </record>
+    </data>
 </odoo>
