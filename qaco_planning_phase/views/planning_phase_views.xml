@@ -59,7 +59,7 @@
                             </button>
                         </div>
                         <notebook>
-                                    <!-- 1. Understanding the Entity & Environment -->
+                                    <!-- 1. Understanding the Entity &amp; Environment -->
                                     <page string="Understanding the Entity &amp; Environment">
                                         <notebook>
                                             <page name="engagement_understanding" string="Engagement Info – Current Year">
@@ -1434,7 +1434,7 @@
                                         </field>
                                     </page>
 
-                                    <!-- 11. Documents & Notes -->
+                                    <!-- 11. Documents &amp; Notes -->
                                     <page name="documents" string="Documents &amp; Notes">
                                         <group>
                                             <field name="planning_notes" placeholder="Enter planning notes and observations..."/>
