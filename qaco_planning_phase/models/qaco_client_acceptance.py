@@ -253,4 +253,4 @@ class QacoClientAcceptance(models.Model):
                             "Partner approval requires a partner decision date and partner assignment."
                         )
                     )
-*** End of File***/
+

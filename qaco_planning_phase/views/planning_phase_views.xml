@@ -731,48 +731,6 @@
                                             </page>
                                         </notebook>
                                     </page>
-                                                            <field name="planned_response_type"/>
-                                                            <field name="planned_timing"/>
-                                                            <field name="responsible_team_member_id" optional="show"/>
-                                                        </tree>
-                                                        <form string="Risk Register Line">
-                                                            <sheet>
-                                                                <group col="2" string="Risk Overview">
-                                                                    <group>
-                                                                        <field name="risk_code" readonly="1"/>
-                                                                        <field name="planning_id" options="{'no_open': True}" readonly="1"/>
-                                                                        <field name="account_cycle"/>
-                                                                        <field name="fs_item"/>
-                                                                        <field name="assertion_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                                                                        <field name="risk_type"/>
-                                                                        <field name="risk_category"/>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="risk_rating"/>
-                                                                        <field name="significant_risk"/>
-                                                                        <field name="responsible_team_member_id"/>
-                                                                        <field name="planned_response_type"/>
-                                                                        <field name="planned_timing"/>
-                                                                        <field name="linked_work_programme_id"/>
-                                                                    </group>
-                                                                </group>
-                                                                <group col="2" string="Narrative">
-                                                                    <group>
-                                                                        <field name="risk_description" placeholder="Describe the RoMM at the assertion level."/>
-                                                                        <field name="risk_cause" placeholder="Root cause / driver."/>
-                                                                        <field name="linked_controls_note" placeholder="Document linkage to key controls."/>
-                                                                        <field name="notes" placeholder="Other considerations (ISA 315/330)."/>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="linked_control_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                                                                        <field name="key_audit_procedures" placeholder="Summarise tailored procedures."/>
-                                                                    </group>
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
-                                                </group>
-                                            </page>
 
                                             <page name="fraud_section" string="2.3 Fraud (ISA 240)">
                                                 <group col="2" string="Fraud Brainstorming">
@@ -912,172 +870,313 @@
 
 
 
-                                            <page name="checklists_section" string="4. Risk &amp; Strategy Checklists">
+                                            <page name="risk_strategy_main" string="Risk Assessment &amp; Audit Strategy">
                                                 <notebook>
-                                                    <page name="checklist_fs" string="4.1 ISA 315/330">
-                                                        <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'fs_risk')]" context="{'default_category': 'fs_risk', 'default_planning_id': active_id}">
-                                                            <tree editable="bottom" string="FS &amp; Assertion Checks">
-                                                                <field name="sequence" widget="handle" optional="hide"/>
-                                                                <field name="question"/>
-                                                                <field name="answer"/>
-                                                                <field name="comments" optional="show"/>
-                                                                <field name="completed_by" optional="show"/>
-                                                                <field name="completed_on" optional="show"/>
+                                                    <page string="FS-level Risk Summary">
+                                                        <group>
+                                                            <group>
+                                                                <field name="fs_risk_overall_level"/>
+                                                                <field name="use_of_controls"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="fs_risk_summary"/>
+                                                            </group>
+                                                        </group>
+                                                        <group>
+                                                            <field name="significant_areas_summary"/>
+                                                            <field name="prior_year_findings_impact"/>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Risk Register">
+                                                        <field name="risk_register_ids" context="{'default_planning_id': active_id}">
+                                                            <tree editable="bottom" string="Risk Register">
+                                                                <field name="risk_code"/>
+                                                                <field name="account_cycle"/>
+                                                                <field name="fs_item"/>
+                                                                <field name="assertion_ids"/>
+                                                                <field name="risk_type"/>
+                                                                <field name="risk_category"/>
+                                                                <field name="risk_rating"/>
+                                                                <field name="significant_risk"/>
+                                                                <field name="planned_response_type"/>
+                                                                <field name="responsible_team_member_id"/>
+                                                                <field name="planned_timing"/>
                                                             </tree>
+                                                            <form string="Risk" context="{'default_planning_id': active_id}">
+                                                                <sheet>
+                                                                    <group>
+                                                                        <field name="risk_code" readonly="1"/>
+                                                                        <field name="account_cycle"/>
+                                                                        <field name="fs_item"/>
+                                                                        <field name="assertion_ids"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="risk_type"/>
+                                                                        <field name="risk_category"/>
+                                                                        <field name="risk_rating"/>
+                                                                        <field name="significant_risk"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="risk_description"/>
+                                                                        <field name="risk_cause"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="linked_control_ids" widget="many2many_tags"/>
+                                                                        <field name="planned_response_type"/>
+                                                                        <field name="key_audit_procedures"/>
+                                                                        <field name="linked_work_programme_id"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="responsible_team_member_id"/>
+                                                                        <field name="planned_timing"/>
+                                                                    </group>
+                                                                </sheet>
+                                                            </form>
                                                         </field>
                                                     </page>
-                                                    <page name="checklist_fraud" string="4.2 ISA 240">
-                                                        <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'fraud')]" context="{'default_category': 'fraud', 'default_planning_id': active_id}">
-                                                            <tree editable="bottom" string="Fraud Checklist">
-                                                                <field name="sequence" widget="handle" optional="hide"/>
-                                                                <field name="question"/>
-                                                                <field name="answer"/>
-                                                                <field name="comments" optional="show"/>
+                                                    <page string="Fraud Risk">
+                                                        <group>
+                                                            <field name="fraud_brainstorming_held"/>
+                                                            <field name="fraud_brainstorming_date"/>
+                                                            <field name="fraud_brainstorming_participant_ids"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="fraud_incentives_pressures"/>
+                                                            <field name="fraud_opportunities"/>
+                                                            <field name="fraud_attitudes_rationalisation"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="presumed_fraud_risk_revenue"/>
+                                                            <field name="fraud_risk_revenue_description"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="management_override_risk"/>
+                                                            <field name="management_override_response"/>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Estimates &amp; Judgemental Areas">
+                                                        <field name="estimate_assessment_ids" context="{'default_planning_id': active_id}">
+                                                            <tree editable="bottom" string="Estimate Assessments">
+                                                                <field name="estimate_name"/>
+                                                                <field name="related_account"/>
+                                                                <field name="estimation_uncertainty_level"/>
+                                                                <field name="significant_risk_estimate"/>
                                                             </tree>
+                                                            <form string="Estimate Assessment">
+                                                                <sheet>
+                                                                    <group>
+                                                                        <field name="estimate_name"/>
+                                                                        <field name="related_account"/>
+                                                                        <field name="estimation_uncertainty_level"/>
+                                                                        <field name="significant_risk_estimate"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="management_methodology_summary"/>
+                                                                        <field name="management_bias_indicators"/>
+                                                                        <field name="planned_audit_approach"/>
+                                                                    </group>
+                                                                </sheet>
+                                                            </form>
                                                         </field>
                                                     </page>
-                                                    <page name="checklist_estimates" string="4.3 Estimates &amp; GC">
-                                                        <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'estimates_gc')]" context="{'default_category': 'estimates_gc', 'default_planning_id': active_id}">
-                                                            <tree editable="bottom" string="Estimates / GC">
-                                                                <field name="sequence" widget="handle" optional="hide"/>
-                                                                <field name="question"/>
-                                                                <field name="answer"/>
-                                                                <field name="comments" optional="show"/>
+                                                    <page string="Related Parties">
+                                                        <group>
+                                                            <field name="related_party_risk_level"/>
+                                                            <field name="completeness_of_related_parties_risk"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="related_party_transactions_summary"/>
+                                                            <field name="controls_over_related_party_approval"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="planned_procedures_related_parties"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="related_party_transaction_ids" context="{'default_planning_id': active_id}">
+                                                                <tree editable="bottom">
+                                                                    <field name="party_name"/>
+                                                                    <field name="relationship"/>
+                                                                    <field name="transaction_description"/>
+                                                                    <field name="transaction_value"/>
+                                                                    <field name="approval_reference"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Going Concern">
+                                                        <group>
+                                                            <field name="going_concern_indicator"/>
+                                                            <field name="management_gc_assessment_obtained"/>
+                                                            <field name="gc_assessment_period_end"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="key_gc_risks"/>
+                                                            <field name="planned_gc_procedures"/>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Compliance &amp; Regulatory Risks">
+                                                        <group>
+                                                            <field name="key_compliance_risks"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="statutory_reporting_risks"/>
+                                                            <field name="tax_litigation_risks"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="planned_compliance_procedures"/>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Group &amp; Components" attrs="{'invisible': [('is_group_audit','=',False)]}">
+                                                        <group>
+                                                            <field name="is_group_audit"/>
+                                                            <field name="group_structure_summary"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="group_consolidation_risks"/>
+                                                            <field name="planned_group_procedures"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="group_component_ids" context="{'default_planning_id': active_id}">
+                                                                <tree editable="bottom">
+                                                                    <field name="component_name"/>
+                                                                    <field name="country"/>
+                                                                    <field name="component_materiality"/>
+                                                                    <field name="component_risk_level"/>
+                                                                    <field name="component_auditor"/>
+                                                                    <field name="type_of_work"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Use of Experts">
+                                                        <field name="expert_usage_ids" context="{'default_planning_id': active_id}">
+                                                            <tree editable="bottom" string="Expert Engagements">
+                                                                <field name="expert_type"/>
+                                                                <field name="expert_name"/>
+                                                                <field name="objective"/>
+                                                                <field name="expected_completion"/>
                                                             </tree>
                                                         </field>
+                                                        <group>
+                                                            <field name="use_of_expert_required"/>
+                                                            <field name="expert_type" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
+                                                            <field name="expert_name" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
+                                                            <field name="objective_of_expert_work" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
+                                                            <field name="assessment_of_expert_competence" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
+                                                        </group>
                                                     </page>
-                                                    <page name="checklist_compliance" string="4.4 Compliance / Group / Experts">
-                                                        <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'compliance_group_expert')]" context="{'default_category': 'compliance_group_expert', 'default_planning_id': active_id}">
-                                                            <tree editable="bottom" string="Compliance &amp; Experts">
+                                                    <page string="Overall Audit Strategy">
+                                                        <group>
+                                                            <field name="overall_strategy_summary"/>
+                                                            <field name="audit_scope_summary"/>
+                                                            <field name="planned_analytics_level"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="timeline_key_milestones"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="reliance_on_internal_audit_level"/>
+                                                            <field name="reliance_on_internal_audit_notes"/>
+                                                            <field name="eqcr_required"/>
+                                                            <field name="eqcr_user_id" attrs="{'invisible': [('eqcr_required', '=', False)]}"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="component_auditor_coordination_plan"/>
+                                                            <field name="tcwg_communications_plan"/>
+                                                        </group>
+                                                        <group string="Team Mix">
+                                                            <field name="team_mix_line_ids" context="{'default_planning_id': active_id}">
+                                                                <tree editable="bottom" string="Team Mix">
+                                                                    <field name="sequence" widget="handle" optional="hide"/>
+                                                                    <field name="staff_level"/>
+                                                                    <field name="assigned_user_id"/>
+                                                                    <field name="planned_hours"/>
+                                                                    <field name="key_responsibilities"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group string="Timeline">
+                                                            <field name="strategy_timeline_ids" context="{'default_planning_id': active_id}">
+                                                                <tree editable="bottom" string="Timeline">
+                                                                    <field name="phase"/>
+                                                                    <field name="milestone"/>
+                                                                    <field name="planned_start_date"/>
+                                                                    <field name="planned_end_date"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </page>
+                                                    <page string="Checklists">
+                                                        <notebook>
+                                                            <page string="ISA 315/330">
+                                                                <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'fs_risk')]" context="{'default_category': 'fs_risk', 'default_planning_id': active_id}">
+                                                                    <tree editable="bottom" string="FS &amp; Assertion Checks">
+                                                                        <field name="sequence" widget="handle" optional="hide"/>
+                                                                        <field name="question"/>
+                                                                        <field name="answer"/>
+                                                                        <field name="comments" optional="show"/>
+                                                                        <field name="completed_by" optional="show"/>
+                                                                        <field name="completed_on" optional="show"/>
+                                                                    </tree>
+                                                                </field>
+                                                            </page>
+                                                            <page string="ISA 240">
+                                                                <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'fraud')]" context="{'default_category': 'fraud', 'default_planning_id': active_id}">
+                                                                    <tree editable="bottom" string="Fraud Checklist">
+                                                                        <field name="sequence" widget="handle" optional="hide"/>
+                                                                        <field name="question"/>
+                                                                        <field name="answer"/>
+                                                                        <field name="comments" optional="show"/>
+                                                                    </tree>
+                                                                </field>
+                                                            </page>
+                                                            <page string="Estimates / GC">
+                                                                <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'estimates_gc')]" context="{'default_category': 'estimates_gc', 'default_planning_id': active_id}">
+                                                                    <tree editable="bottom" string="Estimates / GC">
+                                                                        <field name="sequence" widget="handle" optional="hide"/>
+                                                                        <field name="question"/>
+                                                                        <field name="answer"/>
+                                                                        <field name="comments" optional="show"/>
+                                                                    </tree>
+                                                                </field>
+                                                            </page>
+                                                            <page string="Compliance / Group / Experts">
+                                                                <field name="risk_strategy_checklist_ids" domain="[('category', '=', 'compliance_group_expert')]" context="{'default_category': 'compliance_group_expert', 'default_planning_id': active_id}">
+                                                                    <tree editable="bottom" string="Compliance &amp; Experts">
+                                                                        <field name="sequence" widget="handle" optional="hide"/>
+                                                                        <field name="question"/>
+                                                                        <field name="answer"/>
+                                                                        <field name="comments" optional="show"/>
+                                                                    </tree>
+                                                                </field>
+                                                            </page>
+                                                        </notebook>
+                                                    </page>
+                                                    <page string="Attachments">
+                                                        <field name="risk_attachment_index_ids" context="{'default_planning_id': active_id}">
+                                                            <tree editable="bottom" string="Attachments">
                                                                 <field name="sequence" widget="handle" optional="hide"/>
-                                                                <field name="question"/>
-                                                                <field name="answer"/>
-                                                                <field name="comments" optional="show"/>
+                                                                <field name="attachment_type"/>
+                                                                <field name="description"/>
+                                                                <field name="filename" optional="show"/>
                                                             </tree>
+                                                            <form string="Attachment">
+                                                                <sheet>
+                                                                    <group>
+                                                                        <field name="attachment_type"/>
+                                                                        <field name="description"/>
+                                                                        <field name="attachment" filename="filename"/>
+                                                                        <field name="filename"/>
+                                                                    </group>
+                                                                    <group>
+                                                                        <field name="notes" placeholder="Provide linkage to memo / WP reference."/>
+                                                                    </group>
+                                                                </sheet>
+                                                            </form>
                                                         </field>
                                                     </page>
                                                 </notebook>
                                             </page>
-
-                                            <page name="attachments_section" string="5. Attachments &amp; Templates">
-                                                <group string="Attachment Index">
-                                                    <field name="risk_attachment_index_ids" context="{'default_planning_id': active_id}">
-                                                        <tree editable="bottom" string="Attachments">
-                                                            <field name="sequence" widget="handle" optional="hide"/>
-                                                            <field name="attachment_type"/>
-                                                            <field name="description"/>
-                                                            <field name="filename" optional="show"/>
-                                                            <field name="attachment" filename="filename"/>
-                                                            <field name="notes" optional="show"/>
-                                                        </tree>
-                                                        <form string="Attachment">
-                                                            <sheet>
-                                                                <group>
-                                                                    <field name="attachment_type"/>
-                                                                    <field name="description"/>
-                                                                    <field name="attachment" filename="filename"/>
-                                                                    <field name="filename"/>
-                                                                </group>
-                                                                <group>
-                                                                    <field name="notes" placeholder="Provide linkage to memo / WP reference."/>
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
-                                                </group>
-                                            </page>
-                                        </notebook>
-                                    </page>
-
-                                    <!-- 2. Risk Assessment -->
-                                    <page name="risk" string="Risk Assessment">
-                                        <group>
-                                            <group string="Risk Levels">
-                                                <field name="inherent_risk"/>
-                                                <field name="control_risk"/>
-                                                <field name="detection_risk"/>
-                                            </group>
-                                            <group string="Risk Analysis">
-                                                <field name="key_risk_areas" placeholder="Identify key risk areas..."/>
-                                                <field name="fraud_risk_assessment" placeholder="Document fraud risk assessment..."/>
-                                            </group>
-                                        </group>
-                                        <group string="Internal Controls (ISA 315)">
-                                            <group>
-                                                <field name="control_environment_notes" placeholder="Describe tone at the top, governance, and ethics..."/>
-                                                <field name="risk_assessment_process_notes" placeholder="How does management identify and respond to risks?"/>
-                                                <field name="information_systems_notes" placeholder="Summarize IT systems and communication processes..."/>
-                                            </group>
-                                            <group>
-                                                <field name="control_activities_notes" placeholder="Key control activities relied on (authorization, reconciliations, etc.)..."/>
-                                                <field name="monitoring_controls_notes" placeholder="Monitoring controls, internal audit, oversight..."/>
-                                            </group>
-                                        </group>
-                                        <group string="Risk Assessment Matrix">
-                                            <field name="risk_assessment_ids" context="{'default_planning_id': active_id}">
-                                                <tree string="Risk Assessments">
-                                                    <field name="name"/>
-                                                    <field name="overall_risk"/>
-                                                    <field name="inherent_risk"/>
-                                                    <field name="control_risk"/>
-                                                    <field name="detection_risk"/>
-                                                    <field name="mgmt_override_risk"/>
-                                                    <field name="listed_entity_flag"/>
-                                                    <field name="pie_flag"/>
-                                                </tree>
-                                                <form string="Risk Assessment">
-                                                    <sheet>
-                                                        <group>
-                                                            <group string="Linkage">
-                                                                <field name="planning_id" options="{'no_create': True}"/>
-                                                                <field name="name" readonly="1"/>
-                                                            </group>
-                                                            <group string="Risk Ratings">
-                                                                <field name="overall_risk"/>
-                                                                <field name="inherent_risk"/>
-                                                                <field name="control_risk"/>
-                                                                <field name="detection_risk"/>
-                                                            </group>
-                                                        </group>
-                                                        <group>
-                                                            <group string="Fraud &amp; Compliance">
-                                                                <field name="mgmt_override_risk"/>
-                                                                <field name="revenue_fraud_risk"/>
-                                                                <field name="listed_entity_flag"/>
-                                                                <field name="pie_flag"/>
-                                                                <field name="aob_registration"/>
-                                                            </group>
-                                                            <group string="Notes">
-                                                                <field name="fraud_schemes_identified"/>
-                                                                <field name="planned_responses"/>
-                                                                <field name="key_audit_judgements"/>
-                                                            </group>
-                                                        </group>
-                                                    </sheet>
-                                                </form>
-                                            </field>
-                                            <div class="oe_link">
-                                                <a type="action" name="action_risk_assessment">Open Full Risk Assessment View</a>
-                                            </div>
-                                        </group>
-                                    </page>
-
-                                    <!-- 4. Risks -->
-                                    <page name="risks" string="Risks">
-                                        <field name="risk_ids">
-                                            <tree decoration-danger="significant == True">
-                                                <field name="name"/>
-                                                <field name="risk_type"/>
-                                                <field name="assertion"/>
-                                                <field name="account_area"/>
-                                                <field name="likelihood"/>
-                                                <field name="impact"/>
-                                                <field name="risk_score"/>
-                                                <field name="significant"/>
-                                                <field name="response"/>
-                                            </tree>
-                                        </field>
-                                    </page>
 
                                     <!-- 5. Materiality -->
                                     <page name="materiality" string="Materiality">
@@ -1121,168 +1220,6 @@
                                                 </tree>
                                             </field>
                                         </group>
-                                    </page>
-
-                                    <page name="audit_strategy_main" string="Audit Strategy">
-                                        <notebook>
-                                            <page name="strategy_overview" string="Strategy Overview">
-                                                <group col="2" string="ISA 300 Overview">
-                                                    <group>
-                                                        <field name="overall_strategy_summary" placeholder="Summarise scope, timing, direction."/>
-                                                        <field name="audit_scope_summary" placeholder="Locations, branches, SEZ units, components."/>
-                                                        <field name="planned_analytics_level" placeholder="Planned substantive analytics coverage."/>
-                                                    </group>
-                                                    <group>
-                                                        <field name="reliance_on_internal_audit_level"/>
-                                                        <field name="reliance_on_internal_audit_notes" placeholder="Document linkage to ISA 610 work."/>
-                                                        <field name="eqcr_required"/>
-                                                        <field name="eqcr_user_id" modifiers="{'invisible': [('eqcr_required', '=', False)]}"/>
-                                                    </group>
-                                                </group>
-                                            </page>
-                                            <page name="strategy_team_mix" string="Team Mix">
-                                                <group>
-                                                    <field name="team_mix_line_ids" context="{'default_planning_id': active_id}">
-                                                        <tree editable="bottom" string="Team Mix">
-                                                            <field name="sequence" widget="handle" optional="hide"/>
-                                                            <field name="staff_level"/>
-                                                            <field name="assigned_user_id" optional="show"/>
-                                                            <field name="planned_hours"/>
-                                                            <field name="key_responsibilities" optional="show"/>
-                                                        </tree>
-                                                        <form string="Team Mix">
-                                                            <sheet>
-                                                                <group>
-                                                                    <field name="staff_level"/>
-                                                                    <field name="assigned_user_id"/>
-                                                                    <field name="planned_hours"/>
-                                                                </group>
-                                                                <group>
-                                                                    <field name="key_responsibilities" placeholder="Document responsibilities / tasks"/>
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
-                                                </group>
-                                            </page>
-                                            <page name="strategy_experts" string="Use of Experts">
-                                                <group col="2" string="ISA 620">
-                                                    <group>
-                                                        <field name="use_of_expert_required"/>
-                                                        <field name="expert_type" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
-                                                        <field name="expert_name" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
-                                                    </group>
-                                                    <group>
-                                                        <field name="objective_of_expert_work" placeholder="Objective / scope" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
-                                                        <field name="assessment_of_expert_competence" placeholder="Competence, capabilities, objectivity" modifiers="{'invisible': [('use_of_expert_required', '=', False)]}"/>
-                                                    </group>
-                                                </group>
-                                                <group string="Expert Engagements">
-                                                    <field name="expert_usage_ids" context="{'default_planning_id': active_id}">
-                                                        <tree editable="bottom" string="Experts">
-                                                            <field name="expert_type"/>
-                                                            <field name="expert_name"/>
-                                                            <field name="objective"/>
-                                                            <field name="expected_completion"/>
-                                                        </tree>
-                                                        <form string="Expert Engagement">
-                                                            <sheet>
-                                                                <group>
-                                                                    <field name="expert_type"/>
-                                                                    <field name="expert_name"/>
-                                                                    <field name="objective"/>
-                                                                    <field name="planned_use"/>
-                                                                    <field name="expected_completion"/>
-                                                                </group>
-                                                                <group>
-                                                                    <field name="competence_assessment" placeholder="Evaluate competence / objectivity."/>
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
-                                                </group>
-                                            </page>
-                                            <page name="strategy_components" string="Component Auditors">
-                                                <group col="2" string="Group / Component Overview">
-                                                    <group>
-                                                        <field name="is_group_audit"/>
-                                                        <field name="group_structure_summary" placeholder="Summarise group structure &amp; key components."/>
-                                                        <field name="group_consolidation_risks" placeholder="Consolidation process risks."/>
-                                                    </group>
-                                                    <group>
-                                                        <field name="group_structure_attachment" filename="group_structure_attachment_name"/>
-                                                        <field name="planned_group_procedures" placeholder="Coordination, reviews, consolidation procedures."/>
-                                                        <field name="component_auditor_coordination_plan" placeholder="Coordination plan with component auditors."/>
-                                                    </group>
-                                                </group>
-                                                <group string="Component Matrix" modifiers="{'invisible': [('is_group_audit', '=', False)]}">
-                                                    <field name="group_component_ids" context="{'default_planning_id': active_id}">
-                                                        <tree editable="bottom" string="Components">
-                                                            <field name="component_name"/>
-                                                            <field name="country"/>
-                                                            <field name="component_materiality"/>
-                                                            <field name="component_risk_level"/>
-                                                            <field name="component_auditor"/>
-                                                            <field name="type_of_work"/>
-                                                        </tree>
-                                                        <form string="Group Component">
-                                                            <sheet>
-                                                                <group>
-                                                                    <field name="component_name"/>
-                                                                    <field name="country"/>
-                                                                    <field name="component_materiality"/>
-                                                                    <field name="component_risk_level"/>
-                                                                    <field name="component_auditor"/>
-                                                                    <field name="type_of_work"/>
-                                                                </group>
-                                                                <group>
-                                                                    <field name="key_findings" placeholder="Component specific risks / instructions."/>
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
-                                                </group>
-                                            </page>
-                                            <page name="strategy_timeline" string="Timeline &amp; Communications">
-                                                <group col="2">
-                                                    <group>
-                                                        <field name="timeline_key_milestones" placeholder="Summarise planning, interim, year-end, reporting milestones."/>
-                                                        <field name="tcwg_communications_plan" placeholder="Planned TCWG communications &amp; topics."/>
-                                                    </group>
-                                                    <group>
-                                                        <field name="overall_strategy" placeholder="Link to high-level ISA 300 strategy memo."/>
-                                                        <field name="scope" placeholder="Legacy scope notes"/>
-                                                    </group>
-                                                </group>
-                                                <group string="Timeline Schedule">
-                                                    <field name="strategy_timeline_ids" context="{'default_planning_id': active_id}">
-                                                        <tree editable="bottom" string="Timeline">
-                                                            <field name="phase"/>
-                                                            <field name="milestone"/>
-                                                            <field name="planned_start_date"/>
-                                                            <field name="planned_end_date"/>
-                                                            <field name="owner_id" optional="show"/>
-                                                            <field name="key_deliverables" optional="show"/>
-                                                        </tree>
-                                                        <form string="Timeline Milestone">
-                                                            <sheet>
-                                                                <group>
-                                                                    <field name="phase"/>
-                                                                    <field name="milestone"/>
-                                                                    <field name="planned_start_date"/>
-                                                                    <field name="planned_end_date"/>
-                                                                    <field name="owner_id"/>
-                                                                </group>
-                                                                <group>
-                                                                    <field name="key_deliverables" placeholder="Deliverables / outputs"/>
-                                                                    <field name="notes" placeholder="Dependencies, risks, coordination items"/>
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
-                                                </group>
-                                            </page>
-                                        </notebook>
                                     </page>
 
                                     <!-- 6. Audit Guide -->
