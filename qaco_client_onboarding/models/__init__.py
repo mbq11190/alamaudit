@@ -2,5 +2,4 @@
 from . import client_onboarding
 from . import qaco_audit_extension
 from . import audit_engagement_extension
-from . import qaco_audit_engagement
 from . import res_partner_extension
