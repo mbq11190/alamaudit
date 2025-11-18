@@ -1,5 +1,6 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <data>
     <record id="view_qaco_audit_kanban" model="ir.ui.view">
         <field name="name">qaco.audit.kanban</field>
         <field name="model">qaco.audit</field>
@@ -109,5 +110,6 @@
               </templates>
             </kanban>
         </field>
-    </record>
-</odoo>
+      </record>
+    </data>
+  </odoo>

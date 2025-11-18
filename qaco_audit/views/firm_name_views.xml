@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <!-- Tree View -->
     <record id="view_audit_firm_name_tree" model="ir.ui.view">
         <field name="name">audit.firm.name.tree</field>
@@ -60,4 +61,5 @@
         parent="qaco_audit.menu_2"
         action="action_audit_firm_name"
         sequence="5"/>
+    </data>
 </odoo>

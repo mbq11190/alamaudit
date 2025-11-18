@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_unallocated_employee_recipient_tree" model="ir.ui.view">
+    <data>
+        <record id="view_unallocated_employee_recipient_tree" model="ir.ui.view">
         <field name="name">unallocated.employee.recipient.tree</field>
         <field name="model">unallocated.employee.recipient</field>
         <field name="arch" type="xml">
@@ -29,10 +31,11 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_unallocated_employee_recipient"
+        <menuitem id="menu_unallocated_employee_recipient"
               name="Unallocated Recipients"
               parent="hr.menu_hr_root"
               action="action_unallocated_employee_recipient"
               sequence="16"/>
+    </data>
 </odoo>
 

@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="leave_adjustment_approval_email_template">
+  <data>
+    <template id="leave_adjustment_approval_email_template">
     <html>
       <head>
         <style>
@@ -107,4 +109,5 @@
       </body>
     </html>
   </template>
+  </data>
 </odoo>
