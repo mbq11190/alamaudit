@@ -179,10 +179,10 @@
             <field name="view_id" ref="view_client_law_mapping_tree"/>
         </record>
 
-        <!-- Menus -->
-        <menuitem id="menu_law_environment" name="Laws &amp; Compliance" parent="menu_planning_phase" sequence="60"/>
-        <menuitem id="menu_law_master" name="Law Master" parent="menu_law_environment" action="action_law_master" sequence="1"/>
-        <menuitem id="menu_law_checklist" name="Law Checklists" parent="menu_law_environment" action="action_law_checklist" sequence="2"/>
-        <menuitem id="menu_client_law_mapping" name="Client Law Mapping" parent="menu_law_environment" action="action_client_law_mapping" sequence="3"/>
+        <!-- Menus - Commented out, accessible via smart button only -->
+        <!-- <menuitem id="menu_law_environment" name="Laws &amp; Compliance" parent="menu_planning_phase" sequence="60"/> -->
+        <!-- <menuitem id="menu_law_master" name="Law Master" parent="menu_law_environment" action="action_law_master" sequence="1"/> -->
+        <!-- <menuitem id="menu_law_checklist" name="Law Checklists" parent="menu_law_environment" action="action_law_checklist" sequence="2"/> -->
+        <!-- <menuitem id="menu_client_law_mapping" name="Client Law Mapping" parent="menu_law_environment" action="action_client_law_mapping" sequence="3"/> -->
     </data>
 </odoo>
