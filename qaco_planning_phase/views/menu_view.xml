@@ -1,11 +1,11 @@
 <odoo>
     <data>
-        <!-- Main Planning Phase Menu under Audit -->
-        <menuitem id="menu_planning_phase"
+        <!-- Main Planning Phase Menu - REMOVED from top menu (accessible via smart button only) -->
+        <!-- <menuitem id="menu_planning_phase"
                   name="Planning Phase"
                   parent="qaco_audit.menu_root"
                   action="action_planning_phase"
-                  sequence="15"/>
+                  sequence="15"/> -->
 
       <menuitem id="menu_pre_planning"
               name="Pre-Planning"
