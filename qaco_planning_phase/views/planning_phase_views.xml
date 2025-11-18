@@ -1,5 +1,4 @@
 <odoo>
-    <data>
         <!-- Planning Phase Tree View -->
         <record id="view_planning_phase_tree" model="ir.ui.view">
             <field name="name">qaco.planning.phase.tree</field>
@@ -2064,6 +2063,4 @@
                 </form>
             </field>
         </record>
-
-    </data>
-</odoo>
+    </odoo>
