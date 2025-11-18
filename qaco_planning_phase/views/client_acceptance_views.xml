@@ -1,5 +1,5 @@
-<odoo>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
         <record id="action_qaco_client_acceptance" model="ir.actions.act_window">
             <field name="name">Client Acceptance &amp; Continuance</field>
             <field name="res_model">qaco.client.acceptance</field>
@@ -207,5 +207,4 @@
                 </form>
             </field>
         </record>
-    </data>
-</odoo>
+</data></odoo>
