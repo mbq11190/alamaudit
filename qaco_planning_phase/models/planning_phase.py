@@ -495,6 +495,74 @@ class PlanningPhase(models.Model):
         compute="_compute_materiality_tab_complete",
         store=True,
     )
+
+    @api.depends("benchmark_value")
+    def _compute_benchmark_amount(self):
+        for rec in self:
+            rec.benchmark_amount = (rec.benchmark_value or 0.0)
+
+    @api.depends("selected_benchmark")
+    def _compute_benchmark_guidance(self):
+        mapping = {
+            "pbt": _("Profit before tax (ISA range 3-5% of PBT)."),
+            "revenue": _("Revenue (0.5-1% of Revenue)."),
+            "total_assets": _("Total assets (1-2% of assets)."),
+            "equity": _("Equity (3-5% of equity)."),
+            "total_expenses": _("Total expenses (0.5-1% of expenses)."),
+            "net_assets": _("Net assets (1-3% of net assets)."),
+            "custom": _("Custom benchmark; document rationale in the narrative."),
+        }
+        for rec in self:
+            rec.benchmark_range_info = mapping.get(rec.selected_benchmark, "")
+
+    @api.depends("benchmark_amount", "percentage_used")
+    def _compute_overall_materiality(self):
+        for rec in self:
+            base = rec.benchmark_amount or 0.0
+            perc = rec.percentage_used or 0.0
+            rec.overall_materiality_amount = base * perc / 100.0 if base and perc else 0.0
+            rec.overall_percentage_outside_range = not (
+                ISA_PERCENTAGE_MIN <= perc <= ISA_PERCENTAGE_MAX
+            ) if perc else False
+
+    @api.depends("overall_materiality_amount", "performance_materiality_percentage")
+    def _compute_performance_materiality(self):
+        for rec in self:
+            base = rec.overall_materiality_amount or 0.0
+            perc = rec.performance_materiality_percentage or rec.default_pm_percentage or 0.0
+            rec.performance_materiality_amount = base * perc / 100.0 if base and perc else 0.0
+
+    @api.depends("overall_materiality_amount", "ctt_percentage")
+    def _compute_ctt(self):
+        for rec in self:
+            rec.ctt_amount = (
+                (rec.overall_materiality_amount or 0.0) * (rec.ctt_percentage or 0.0) / 100.0
+            )
+
+    @api.depends("overall_materiality_amount")
+    def _compute_accumulation_threshold(self):
+        for rec in self:
+            rec.accumulation_threshold = (rec.overall_materiality_amount or 0.0) * 0.05
+
+    @api.depends("bias_indicators", "performance_materiality_amount")
+    def _compute_bias_recommendation(self):
+        for rec in self:
+            if rec.bias_indicators and rec.performance_materiality_amount:
+                rec.bias_adjustment_to_pm_recommended = 0.0
+            else:
+                rec.bias_adjustment_to_pm_recommended = 0.0
+
+    @api.depends(
+        "materiality_basis",
+        "materiality_base_amount",
+        "benchmark_amount",
+        "materiality_amount",
+    )
+    def _compute_materiality_tab_ready(self):
+        for rec in self:
+            rec.materiality_tab_ready = bool(
+                rec.materiality_basis and rec.materiality_base_amount and rec.materiality_amount
+            )
     materiality_basis = fields.Selection(
         MATERIALITY_BENCHMARKS,
         string="Materiality Basis",
