@@ -12,54 +12,55 @@
               parent="qaco_audit.menu_root"
               sequence="12"/>
 
-      <menuitem id="menu_engagement_details"
+      <!-- All Planning Phase menu items commented out - accessible via smart button only -->
+      <!-- <menuitem id="menu_engagement_details"
               name="Engagement Details"
               parent="menu_planning_phase"
               action="action_engagement_details"
-              sequence="5"/>
+              sequence="5"/> -->
         <!-- Sub-menus for Planning Phase components -->
-        <menuitem id="menu_planning_risks"
+        <!-- <menuitem id="menu_planning_risks"
                   name="Risks"
                   parent="menu_planning_phase"
                   action="action_planning_risk"
-                  sequence="10"/>
+                  sequence="10"/> -->
 
-      <menuitem id="menu_risk_assessments"
+      <!-- <menuitem id="menu_risk_assessments"
               name="Risk Assessments"
               parent="menu_planning_phase"
               action="action_risk_assessment"
-              sequence="15"/>
+              sequence="15"/> -->
         
-        <menuitem id="menu_planning_checklist"
+        <!-- <menuitem id="menu_planning_checklist"
                   name="Checklist"
                   parent="menu_planning_phase"
                   action="action_planning_checklist"
-                  sequence="20"/>
+                  sequence="20"/> -->
         
-        <menuitem id="menu_planning_materiality"
+        <!-- <menuitem id="menu_planning_materiality"
               name="Materiality"
               parent="menu_planning_phase"
               action="action_planning_materiality"
-              sequence="25"/>
+              sequence="25"/> -->
         
-        <menuitem id="menu_planning_pbc"
+        <!-- <menuitem id="menu_planning_pbc"
                   name="Information Requisitions"
                   parent="menu_planning_phase"
                   action="action_planning_pbc"
-                  sequence="30"/>
+                  sequence="30"/> -->
 
-        <menuitem id="menu_planning_pbc_templates"
+        <!-- <menuitem id="menu_planning_pbc_templates"
               name="Information Requisition Templates"
               parent="menu_planning_phase"
               action="action_planning_pbc_templates"
               sequence="35"
-              groups="qaco_audit.group_audit_partner"/>
+              groups="qaco_audit.group_audit_partner"/> -->
         
-        <menuitem id="menu_planning_milestones"
+        <!-- <menuitem id="menu_planning_milestones"
                   name="Milestones"
                   parent="menu_planning_phase"
                   action="action_planning_milestone"
-                  sequence="40"/>
+                  sequence="40"/> -->
 
         <!-- Industry & Sector Configuration under Configurations -->
             <menuitem id="menu_industry_sector"
