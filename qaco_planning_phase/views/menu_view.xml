@@ -12,11 +12,11 @@
               parent="qaco_audit.menu_root"
               sequence="12"/>
 
-      <menuitem id="menu_client_acceptance"
-              name="Client Acceptance & Continuance"
-              parent="menu_pre_planning"
-              action="action_qaco_client_acceptance"
-              sequence="5"/>
+            <menuitem id="menu_client_acceptance"
+                  name="Client Acceptance &amp; Continuance"
+                  parent="menu_pre_planning"
+                  action="action_qaco_client_acceptance"
+                  sequence="5"/>
 
       <menuitem id="menu_engagement_details"
               name="Engagement Details"
@@ -68,9 +68,9 @@
                   sequence="40"/>
 
         <!-- Industry & Sector Configuration under Configurations -->
-        <menuitem id="menu_industry_sector"
-                  name="Industry &amp; Sector"
-                  parent="qaco_audit.menu_2"
+            <menuitem id="menu_industry_sector"
+                    name="Industry &amp; Sector"
+                    parent="qaco_audit.menu_2"
                   action="action_industry_sector"
                   sequence="25"/>
     </data>
