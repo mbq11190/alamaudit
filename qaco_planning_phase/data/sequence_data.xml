@@ -49,7 +49,7 @@
       <field name="implementation">no_gap</field>
     </record>
     <record id="seq_client_acceptance" model="ir.sequence">
-      <field name="name">Client Acceptance & Continuance</field>
+      <field name="name">Client Acceptance &amp; Continuance</field>
       <field name="code">qaco.client.acceptance</field>
       <field name="prefix">CAC-%(y)s-</field>
       <field name="padding">5</field>
