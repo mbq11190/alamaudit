@@ -27,7 +27,6 @@ access_planning_pbc_template_partner,access.planning.pbc.template.partner,model_
 access_planning_pbc_reminder_user,access.planning.pbc.reminder.user,model_qaco_planning_pbc_reminder,base.group_user,1,0,0,0
 access_client_profile_user,access.client.profile.user,model_qaco_client_profile,base.group_user,1,1,1,0
 access_client_beneficial_owner_user,access.client.beneficial.owner.user,model_qaco_client_beneficial_owner,base.group_user,1,1,1,0
-access_client_acceptance_user,access.client.acceptance.user,model_qaco_client_acceptance,base.group_user,1,1,1,0
 access_independence_check_user,access.independence.check.user,model_qaco_independence_check,base.group_user,1,1,1,0
 access_letter_template_user,access.letter.template.user,model_qaco_letter_template,base.group_user,1,0,0,0
 access_letter_template_partner,access.letter.template.partner,model_qaco_letter_template,qaco_audit.group_audit_partner,1,1,1,1

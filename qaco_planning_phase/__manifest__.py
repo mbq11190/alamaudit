@@ -23,7 +23,6 @@
         "views/risk_assessment_views.xml",
         "views/res_partner_views.xml",
         "views/law_mapping_views.xml",
-        "views/client_acceptance_views.xml",
         "views/menu_view.xml",
     ],
     "assets": {
