@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="industry_manufacturing" model="qaco.industry">
+            <field name="name">Manufacturing</field>
+            <field name="code">MANU</field>
+        </record>
+        <record id="industry_trading" model="qaco.industry">
+            <field name="name">Trading</field>
+            <field name="code">TRAD</field>
+        </record>
+        <record id="industry_services" model="qaco.industry">
+            <field name="name">Services</field>
+            <field name="code">SERV</field>
+        </record>
+        <record id="industry_banking" model="qaco.industry">
+            <field name="name">Banking</field>
+            <field name="code">BANK</field>
+        </record>
+        <record id="industry_insurance" model="qaco.industry">
+            <field name="name">Insurance</field>
+            <field name="code">INSU</field>
+        </record>
+        <record id="industry_npo" model="qaco.industry">
+            <field name="name">Non-Profit Organization</field>
+            <field name="code">NPO</field>
+        </record>
+    </data>
+</odoo>

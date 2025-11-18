@@ -1,0 +1,8 @@
+.oe_form_sheet .oe_notebook_page h5 {
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+}
+.qaco-risk-indicator .o_field_widget {
+    font-weight: 600;
+}

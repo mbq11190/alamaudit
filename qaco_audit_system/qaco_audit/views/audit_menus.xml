@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_qaco_audit_engagements" model="ir.actions.act_window">
+        <field name="name">Audit Engagements</field>
+        <field name="res_model">qaco.audit.engagement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_state': 'draft'}</field>
+    </record>
+
+    <menuitem id="menu_qaco_audit_root" name="QACO Audit" sequence="10"/>
+    <menuitem id="menu_qaco_audit_engagements" name="Engagements" parent="menu_qaco_audit_root" action="action_qaco_audit_engagements" sequence="1"/>
+</odoo>

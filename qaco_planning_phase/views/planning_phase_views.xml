@@ -59,6 +59,8 @@
                             </button>
                         </div>
                         <notebook>
+                            <page string="Understanding the Entity &amp; Environment">
+                                <notebook>
                                             <page name="ic_control_activities" string="Control Activities">
                                                 <group>
                                                     <field name="control_activity_ids" context="{'default_planning_id': active_id}">
@@ -152,8 +154,8 @@
                                                     </field>
                                                 </group>
                                             </page>
-                                        </notebook>
-                                        <group string="Overall Internal Control Conclusion" class="o_box">
+                                    </notebook>
+                                    <group string="Overall Internal Control Conclusion" class="o_box">
                                             <group>
                                                 <field name="overall_ic_assessment"/>
                                                 <field name="toc_strategy"/>
@@ -161,10 +163,9 @@
                                             <group>
                                                 <field name="ic_assessment_conclusion" colspan="2" placeholder="Narrative linking ISA 315 assessment with ISA 330 response."/>
                                             </group>
-                                        </group>
-                                        </page>
-
-                                            <page name="risk_strategy_main" string="Risk Assessment">
+                                </group>
+                            </page>
+                            <page name="risk_strategy_main" string="Risk Assessment">
                                                 <notebook>
                                                     <page string="FS-level Risk Summary">
                                                         <group>
