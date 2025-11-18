@@ -367,13 +367,9 @@ class PlanningPhase(models.Model):
     )
     benchmark_amount = fields.Float(
         string="Benchmark Amount",
-        compute="_compute_benchmark_amount",
-        store=True,
     )
     benchmark_range_info = fields.Char(
         string="Benchmark Range Guidance",
-        compute="_compute_benchmark_guidance",
-        store=True,
     )
     benchmark_selection_reason = fields.Text(
         string="Benchmark Selection Reason",
@@ -388,13 +384,9 @@ class PlanningPhase(models.Model):
     )
     overall_materiality_amount = fields.Float(
         string="Overall Materiality Amount",
-        compute="_compute_overall_materiality",
-        store=True,
     )
     overall_percentage_outside_range = fields.Boolean(
         string="ISA Range Alert",
-        compute="_compute_overall_materiality",
-        store=True,
     )
     om_override_reason = fields.Text(
         string="Override Rationale",
@@ -414,8 +406,6 @@ class PlanningPhase(models.Model):
     )
     performance_materiality_amount = fields.Float(
         string="Performance Materiality Amount",
-        compute="_compute_performance_materiality",
-        store=True,
     )
     pm_justification = fields.Text(string="PM Justification", tracking=True)
     ctt_percentage = fields.Float(
@@ -427,22 +417,18 @@ class PlanningPhase(models.Model):
     )
     ctt_amount = fields.Float(
         string="CTT Amount",
-        compute="_compute_ctt",
-        store=True,
     )
     ctt_override_reason = fields.Text(
         string="CTT Override Reason",
         help="Required when overriding default percentage or amount.",
     )
     specific_materiality_ids = fields.One2many(
-        "qaco.specific.materiality",
+        "qaco.materiality.specific",
         "planning_id",
         string="Specific Materiality Adjustments",
     )
     accumulation_threshold = fields.Float(
         string="Accumulation Threshold",
-        compute="_compute_accumulation_threshold",
-        store=True,
     )
     misstatement_method = fields.Selection(
         MISSTATEMENT_METHODS,
@@ -459,8 +445,6 @@ class PlanningPhase(models.Model):
     bias_impact = fields.Text(string="Management Bias Impact", tracking=True)
     bias_adjustment_to_pm_recommended = fields.Float(
         string="Bias Adjustment to PM Recommended",
-        compute="_compute_bias_recommendation",
-        store=True,
     )
     bias_adjustment_to_pm = fields.Float(string="Bias Adjustment to PM", tracking=True)
     prepared_by = fields.Many2one(
@@ -486,8 +470,6 @@ class PlanningPhase(models.Model):
     materiality_memo = fields.Binary(string="Materiality Memo", attachment=True)
     materiality_tab_ready = fields.Boolean(
         string="Materiality Tab Ready",
-        compute="_compute_materiality_tab_ready",
-        store=True,
     )
 
     materiality_tab_complete = fields.Boolean(
@@ -1829,7 +1811,6 @@ class PlanningPhase(models.Model):
     estimated_hours = fields.Float(string='Estimated Hours', tracking=True)
 
     # Related records
-    materiality_ids: Any
     risk_ids = fields.One2many("qaco.planning.risk", "planning_id", string="Identified Risks")
     risk_assessment_ids = fields.One2many("qaco.risk.assessment", "planning_id", string="Risk Assessments")
     checklist_ids = fields.One2many("qaco.planning.checklist", "planning_id", string="Planning Checklist")
