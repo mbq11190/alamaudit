@@ -579,7 +579,7 @@
                                         </group>
                                     </page>
 
-                                    <page name="materiality_main" string="Materiality &amp; Performance Materiality">
+                                    <page name="materiality_main" string="Materiality">
                                         <group>
                                             <group string="Materiality Calculations">
                                                 <field name="materiality_base"/>
@@ -909,7 +909,7 @@
 
 
 
-                                            <page name="risk_strategy_main" string="Risk Assessment &amp; Audit Strategy">
+                                            <page name="risk_strategy_main" string="Risk Assessment">
                                                 <notebook>
                                                     <page string="FS-level Risk Summary">
                                                         <group>
@@ -925,53 +925,6 @@
                                                             <field name="significant_areas_summary"/>
                                                             <field name="prior_year_findings_impact"/>
                                                         </group>
-                                                    </page>
-                                                    <page string="Risk Register">
-                                                        <field name="risk_register_ids" context="{'default_planning_id': active_id}">
-                                                            <tree editable="bottom" string="Risk Register">
-                                                                <field name="risk_code"/>
-                                                                <field name="account_cycle"/>
-                                                                <field name="fs_item"/>
-                                                                <field name="assertion_ids"/>
-                                                                <field name="risk_type"/>
-                                                                <field name="risk_category"/>
-                                                                <field name="risk_rating"/>
-                                                                <field name="significant_risk"/>
-                                                                <field name="planned_response_type"/>
-                                                                <field name="responsible_team_member_id"/>
-                                                                <field name="planned_timing"/>
-                                                            </tree>
-                                                            <form string="Risk" context="{'default_planning_id': active_id}">
-                                                                <sheet>
-                                                                    <group>
-                                                                        <field name="risk_code" readonly="1"/>
-                                                                        <field name="account_cycle"/>
-                                                                        <field name="fs_item"/>
-                                                                        <field name="assertion_ids"/>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="risk_type"/>
-                                                                        <field name="risk_category"/>
-                                                                        <field name="risk_rating"/>
-                                                                        <field name="significant_risk"/>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="risk_description"/>
-                                                                        <field name="risk_cause"/>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="linked_control_ids" widget="many2many_tags"/>
-                                                                        <field name="planned_response_type"/>
-                                                                        <field name="key_audit_procedures"/>
-                                                                        <field name="linked_work_programme_id"/>
-                                                                    </group>
-                                                                    <group>
-                                                                        <field name="responsible_team_member_id"/>
-                                                                        <field name="planned_timing"/>
-                                                                    </group>
-                                                                </sheet>
-                                                            </form>
-                                                        </field>
                                                     </page>
                                                     <page string="Fraud Risk">
                                                         <group>
@@ -1215,6 +1168,54 @@
                                                         </field>
                                                     </page>
                                                 </notebook>
+                                            </page>
+
+                                            <page name="risk_register_page" string="Risks">
+                                                <field name="risk_register_ids" context="{'default_planning_id': active_id}">
+                                                    <tree editable="bottom" string="Risk Register">
+                                                        <field name="risk_code"/>
+                                                        <field name="account_cycle"/>
+                                                        <field name="fs_item"/>
+                                                        <field name="assertion_ids"/>
+                                                        <field name="risk_type"/>
+                                                        <field name="risk_category"/>
+                                                        <field name="risk_rating"/>
+                                                        <field name="significant_risk"/>
+                                                        <field name="planned_response_type"/>
+                                                        <field name="responsible_team_member_id"/>
+                                                        <field name="planned_timing"/>
+                                                    </tree>
+                                                    <form string="Risk" context="{'default_planning_id': active_id}">
+                                                        <sheet>
+                                                            <group>
+                                                                <field name="risk_code" readonly="1"/>
+                                                                <field name="account_cycle"/>
+                                                                <field name="fs_item"/>
+                                                                <field name="assertion_ids"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="risk_type"/>
+                                                                <field name="risk_category"/>
+                                                                <field name="risk_rating"/>
+                                                                <field name="significant_risk"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="risk_description"/>
+                                                                <field name="risk_cause"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="linked_control_ids" widget="many2many_tags"/>
+                                                                <field name="planned_response_type"/>
+                                                                <field name="key_audit_procedures"/>
+                                                                <field name="linked_work_programme_id"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="responsible_team_member_id"/>
+                                                                <field name="planned_timing"/>
+                                                            </group>
+                                                        </sheet>
+                                                    </form>
+                                                </field>
                                             </page>
 
                                     <!-- 6. Audit Guide -->
