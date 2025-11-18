@@ -6,12 +6,3 @@ access_audit_year,audit.year,model_audit_year,base.group_user,1,1,1,1
 access_audit_firm_name,audit.firm.name,model_audit_firm_name,base.group_user,1,1,1,1
 access_audit_done,audit.done,model_audit_done,base.group_user,1,1,1,1
 access_qaco_audit_auto_follower,qaco_audit.auto.follower,model_qaco_audit_auto_follower,base.group_user,1,1,1,1
-access_qaco_recurring_annual_audit,qaco.recurring.annual.audit,model_qaco_recurring_annual_audit,base.group_user,1,1,1,1
-access_annual_audit_year,annual.audit.year,model_annual_audit_year,base.group_user,1,1,1,1
-access_annual_audit_stages,annual.audit.stages,model_annual_audit_stages,base.group_user,1,1,1,1
-access_monthly_audit_month,monthly.audit.month,model_monthly_audit_month,base.group_user,1,1,1,1
-access_monthly_audit_stages,monthly.audit.stages,model_monthly_audit_stages,base.group_user,1,1,1,1
-access_qaco_monthly_internal_audit,qaco.monthly.internal.audit,model_qaco_monthly_internal_audit,base.group_user,1,1,1,1
-access_audit_quarter,audit.quarter,model_audit_quarter,base.group_user,1,1,1,1
-access_audit_quarter_stage,audit.quarter.stages,model_audit_quarter_stages,base.group_user,1,1,1,1
-access_qaco_quarterly_audit,qaco.quarterly.audit,model_qaco_quarterly_audit,base.group_user,1,1,1,1

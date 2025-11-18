@@ -24,45 +24,13 @@
 
 <!--     menu categories -->
 
-    <menuitem name="Audit Work" id="qaco_audit.menu_1" parent="qaco_audit.menu_root" sequence="1"/>
+    <menuitem name="Audit" id="qaco_audit.menu_1" parent="qaco_audit.menu_root" sequence="1" action="qaco_audit.action_window"/>
     <menuitem name="Configurations" id="qaco_audit.menu_2" parent="qaco_audit.menu_root" groups="qaco_audit.group_audit_administrator" sequence="5"/>
 
-    <!-- actions -->
-
-    <menuitem name="Audit" id="qaco_audit.menu_1_list" parent="qaco_audit.menu_1"
-              action="qaco_audit.action_window"/>
-
-    <!-- Quarterly Audit Action -->
-    <record model="ir.actions.act_window" id="action_qaco_quarterly_audit">
-        <field name="name">Quarterly Audit</field>
-        <field name="res_model">qaco.quarterly.audit</field>
-        <field name="view_mode">tree,form,kanban</field>
-        <field name="context">{'group_by': ['work_quarter', 'stage_id'], 'group_by_no_leaf': 1}</field>
-    </record>
-
-    <menuitem id="menu_qaco_quarterly_audit" name="Quarterly Audit" parent="qaco_audit.menu_root"
-              action="action_qaco_quarterly_audit" sequence="3"/>
-
-    <!-- Manage Audit Quarters -->
-    <record id="action_audit_quarters" model="ir.actions.act_window">
-        <field name="name">Manage Quarters</field>
-        <field name="res_model">audit.quarter</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-    <menuitem id="menu_audit_quarters" name="Manage Quarters" action="action_audit_quarters"
-              parent="qaco_audit.menu_2" sequence="10"/>
-
-    <!-- Manage Audit Quarter Stages -->
-    <record id="action_audit_quarter_stages" model="ir.actions.act_window">
-        <field name="name">Quarter Stages</field>
-        <field name="res_model">audit.quarter.stages</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-    <menuitem id="menu_audit_quarter_stages" name="Manage Quarter Stages" action="action_audit_quarter_stages"
-              parent="qaco_audit.menu_2" sequence="15"/>
+    <!-- Configuration submenus -->
 
     <record model="ir.actions.act_window" id="qaco_audit.action_window_stage">
-        <field name="name">Audit Tax Stages</field>
+        <field name="name">Audit Stages</field>
         <field name="res_model">audit.stages</field>
         <field name="view_mode">tree,form</field>
       </record>
