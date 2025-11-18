@@ -884,7 +884,3 @@ class QacoMateriality(models.Model):
         return "%s - %s%s" % ((self.name or "/"), symbol, amount)
 
 
-class PlanningPhaseMateriality(models.Model):
-    _inherit = "qaco.planning.phase"
-
-    materiality_ids = fields.One2many("qaco.materiality", "planning_id", string="Materiality Worksheets")
