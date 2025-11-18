@@ -1066,7 +1066,7 @@
                                                             <field name="planned_compliance_procedures"/>
                                                         </group>
                                                     </page>
-                                                    <page string="Group &amp; Components" attrs="{'invisible': [('is_group_audit','=',False)]}">
+                                                    <page string="Group &amp; Components" modifiers="{'invisible': [('is_group_audit','=',False)]}">
                                                         <group>
                                                             <field name="is_group_audit"/>
                                                             <field name="group_structure_summary"/>
@@ -1118,7 +1118,7 @@
                                                             <field name="reliance_on_internal_audit_level"/>
                                                             <field name="reliance_on_internal_audit_notes"/>
                                                             <field name="eqcr_required"/>
-                                                            <field name="eqcr_user_id" attrs="{'invisible': [('eqcr_required', '=', False)]}"/>
+                                                            <field name="eqcr_user_id" modifiers="{'invisible': [('eqcr_required', '=', False)]}"/>
                                                         </group>
                                                         <group>
                                                             <field name="component_auditor_coordination_plan"/>
