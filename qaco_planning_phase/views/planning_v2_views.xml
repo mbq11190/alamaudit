@@ -474,65 +474,65 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Menus -->
-        <menuitem id="menu_planning_onboarding"
+        <!-- Menus - All commented out, accessible via smart button only -->
+        <!-- <menuitem id="menu_planning_onboarding"
                   name="Client Onboarding"
                   parent="qaco_planning_phase.menu_planning_phase"
-                  sequence="5"/>
+                  sequence="5"/> -->
 
-        <menuitem id="menu_client_profiles"
+        <!-- <menuitem id="menu_client_profiles"
                   name="Client Profiles"
                   parent="menu_planning_onboarding"
                   action="action_client_profile"
-                  sequence="5"/>
+                  sequence="5"/> -->
 
-        <menuitem id="menu_client_acceptance"
+        <!-- <menuitem id="menu_client_acceptance"
                   name="Client Acceptance"
                   parent="menu_planning_onboarding"
                   action="action_client_acceptance"
-                  sequence="10"/>
+                  sequence="10"/> -->
 
-        <menuitem id="menu_independence_checks"
+        <!-- <menuitem id="menu_independence_checks"
                   name="Independence Checks"
                   parent="menu_planning_onboarding"
                   action="action_independence_check"
-                  sequence="15"/>
+                  sequence="15"/> -->
 
-        <menuitem id="menu_engagement_letters"
+        <!-- <menuitem id="menu_engagement_letters"
                   name="Engagement Letters"
                   parent="menu_planning_onboarding"
                   action="action_engagement_letter"
-                  sequence="20"/>
+                  sequence="20"/> -->
 
-        <menuitem id="menu_letter_templates"
+        <!-- <menuitem id="menu_letter_templates"
                   name="Engagement Letter Templates"
                   parent="menu_planning_onboarding"
                   action="action_letter_template"
                   sequence="25"
-                  groups="qaco_audit.group_audit_partner"/>
+                  groups="qaco_audit.group_audit_partner"/> -->
 
-        <menuitem id="menu_risk_matrix_fs"
+        <!-- <menuitem id="menu_risk_matrix_fs"
                   name="FS Risk Matrix"
                   parent="qaco_planning_phase.menu_planning_phase"
                   action="action_risk_matrix_fs"
-                  sequence="45"/>
+                  sequence="45"/> -->
 
-        <menuitem id="menu_risk_matrix_assertion"
+        <!-- <menuitem id="menu_risk_matrix_assertion"
                   name="Assertion Risk Matrix"
                   parent="qaco_planning_phase.menu_planning_phase"
                   action="action_risk_matrix_assertion"
-                  sequence="50"/>
+                  sequence="50"/> -->
 
-        <menuitem id="menu_internal_controls"
+        <!-- <menuitem id="menu_internal_controls"
                   name="Internal Controls"
                   parent="qaco_planning_phase.menu_planning_phase"
                   action="action_internal_control"
-                  sequence="55"/>
+                  sequence="55"/> -->
 
-        <menuitem id="menu_analytical_reviews"
+        <!-- <menuitem id="menu_analytical_reviews"
                   name="Analytical Reviews"
                   parent="qaco_planning_phase.menu_planning_phase"
                   action="action_analytical_review"
-                  sequence="60"/>
+                  sequence="60"/> -->
     </data>
 </odoo>
