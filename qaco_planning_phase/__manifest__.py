@@ -9,6 +9,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/planning_phase_form.xml",
+        "views/planning_phase_views.xml",
         "views/audit_smart_button.xml",
     ],
     "installable": True,

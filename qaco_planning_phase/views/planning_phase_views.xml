@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qaco_planning_phase_form_extended" model="ir.ui.view">
+        <field name="name">qaco.planning.phase.form.extended</field>
+        <field name="model">qaco.planning.phase</field>
+        <field name="inherit_id" ref="qaco_planning_phase.view_qaco_planning_phase_form"/>
+        <field name="arch" type="xml">
+			<xpath expr="//header" position="inside">
+				<button name="action_manager_sign" type="object" string="Manager Sign"
+					class="btn-primary"
+					attrs="{'invisible': ['|', ('manager_signed_user_id', '!=', False), ('planning_complete', '=', True)]}"/>
+				<button name="action_partner_sign" type="object" string="Partner Sign"
+					class="btn-secondary"
+					attrs="{'invisible': ['|', ('partner_signed_user_id', '!=', False), ('planning_complete', '=', True)]}"/>
+				<button name="action_mark_planning_complete" type="object" string="Mark Planning Complete"
+					class="btn-success"
+					attrs="{'invisible': [('planning_complete', '=', True)], 'readonly': [('can_finalize_planning', '=', False)]}"/>
+				<button name="action_generate_planning_memo" type="object" string="Generate Planning Memo"
+					class="btn-link"/>
+				<field name="planning_complete" widget="statusbar"/>
+			</xpath>
+			<xpath expr="//sheet/notebook" position="replace">
+				<notebook>
+					<page string="Status Dashboard">
+						<group>
+							<field name="understanding_status" widget="statusbar"/>
+							<field name="analytics_status" widget="statusbar"/>
+							<field name="materiality_status" widget="statusbar"/>
+							<field name="control_status" widget="statusbar"/>
+							<field name="risk_status" widget="statusbar"/>
+							<field name="completion_status" widget="statusbar"/>
+							<field name="missing_requirements_note" readonly="1"/>
+						</group>
+					</page>
+					<page string="Understanding & Environment">
+						<group>
+							<field name="industry_id"/>
+							<field name="business_model"/>
+						</group>
+						<group>
+							<field name="organizational_structure"/>
+							<field name="operational_locations"/>
+						</group>
+						<group>
+							<field name="key_contracts"/>
+							<field name="applicable_regulators" widget="many2many_tags"/>
+						</group>
+						<group>
+							<field name="regulatory_filings_status"/>
+							<field name="regulatory_penalties"/>
+						</group>
+						<group>
+							<field name="related_parties_summary"/>
+							<field name="group_structure"/>
+						</group>
+						<group string="Fraud Brainstorming">
+							<field name="fraud_incentives"/>
+							<field name="fraud_opportunities"/>
+							<field name="fraud_attitudes"/>
+						</group>
+					</page>
+					<page string="Analytical Procedures">
+						<group>
+							<field name="prior_year_fs_attachment_ids" widget="many2many_binary"/>
+							<field name="current_year_tb_attachment_ids" widget="many2many_binary"/>
+						</group>
+						<group>
+							<field name="significant_fluctuations"/>
+							<field name="ratio_analysis_summary"/>
+						</group>
+						<group>
+							<field name="going_concern_assessment"/>
+						</group>
+					</page>
+					<page string="Materiality">
+						<group>
+							<field name="materiality_benchmark"/>
+							<field name="materiality_percentage"/>
+							<field name="materiality_justification"/>
+						</group>
+						<group>
+							<field name="overall_materiality" readonly="1"/>
+							<field name="performance_materiality" readonly="1"/>
+							<field name="clearly_trivial_threshold" readonly="1"/>
+						</group>
+						<group>
+							<field name="materiality_worksheet_attachment_ids" widget="many2many_binary"/>
+						</group>
+					</page>
+					<page string="Internal Controls">
+						<group>
+							<field name="control_environment_rating"/>
+							<field name="entity_level_controls_rating"/>
+							<field name="risk_assessment_rating"/>
+						</group>
+						<group>
+							<field name="control_activities_rating"/>
+							<field name="monitoring_controls_rating"/>
+							<field name="itgc_rating"/>
+						</group>
+						<group>
+							<field name="reliance_on_controls" readonly="1"/>
+							<field name="control_assessment_summary"/>
+						</group>
+						<group>
+							<field name="internal_control_attachment_ids" widget="many2many_binary"/>
+						</group>
+					</page>
+					<page string="Risk & Strategy">
+						<group>
+							<field name="risk_register_line_ids" nolabel="1" context="{'default_planning_phase_id': active_id}">
+								<tree editable="bottom">
+									<field name="sequence"/>
+									<field name="account_cycle"/>
+									<field name="risk_description"/>
+									<field name="assertion_type"/>
+									<field name="risk_rating"/>
+									<field name="is_significant_risk"/>
+								</tree>
+								<form string="Risk Register Line">
+									<group>
+										<field name="account_cycle"/>
+										<field name="risk_description"/>
+									</group>
+									<group>
+										<field name="risk_rating"/>
+										<field name="is_significant_risk"/>
+										<field name="fs_level_risk"/>
+										<field name="assertion_type"/>
+									</group>
+									<group string="ISA Flags">
+										<field name="isa_240_risk"/>
+										<field name="isa_540_risk"/>
+										<field name="isa_550_risk"/>
+										<field name="isa_570_risk"/>
+									</group>
+									<group>
+										<field name="root_cause"/>
+										<field name="impact_on_fs"/>
+										<field name="planned_procedures"/>
+										<field name="link_to_audit_program"/>
+									</group>
+								</form>
+							</field>
+						</group>
+						<group>
+							<field name="audit_approach"/>
+							<field name="use_of_experts"/>
+							<field name="experts_details" attrs="{'invisible': [('use_of_experts', '=', False)]}"/>
+						</group>
+						<group>
+							<field name="use_of_caats"/>
+							<field name="caats_details" attrs="{'invisible': [('use_of_caats', '=', False)]}"/>
+						</group>
+						<group>
+							<field name="component_auditors_involved"/>
+							<field name="component_auditors_details" attrs="{'invisible': [('component_auditors_involved', '=', False)]}"/>
+						</group>
+						<group>
+							<field name="staffing_plan"/>
+							<field name="risk_register_attachment_ids" widget="many2many_binary"/>
+							<field name="audit_strategy_attachment_ids" widget="many2many_binary"/>
+						</group>
+					</page>
+					<page string="Documentation & Checklist">
+						<group>
+							<field name="planning_memo_summary"/>
+							<field name="analytical_summary_attachment_ids" widget="many2many_binary"/>
+						</group>
+						<group string="Mandatory Attachments">
+							<field name="organogram_attachment_ids" widget="many2many_binary"/>
+							<field name="engagement_letter_attachment_ids" widget="many2many_binary"/>
+							<field name="board_minutes_attachment_ids" widget="many2many_binary"/>
+							<field name="process_flow_attachment_ids" widget="many2many_binary"/>
+							<field name="related_party_attachment_ids" widget="many2many_binary"/>
+						</group>
+						<group string="Master Checklist" col="4">
+							<field name="checklist_engagement_letter"/>
+							<field name="checklist_entity_understanding"/>
+							<field name="checklist_fraud_brainstormed"/>
+							<field name="checklist_analytics_performed"/>
+							<field name="checklist_materiality_finalized"/>
+							<field name="checklist_controls_assessed"/>
+							<field name="checklist_risks_linked"/>
+							<field name="checklist_strategy_signed"/>
+							<field name="checklist_independence_confirmed"/>
+							<field name="checklist_partner_manager_review"/>
+						</group>
+						<group string="Sign-offs">
+							<field name="manager_signed_user_id"/>
+							<field name="manager_signed_on"/>
+							<field name="partner_signed_user_id"/>
+							<field name="partner_signed_on"/>
+						</group>
+					</page>
+				</notebook>
+			</xpath>
+        </field>
+    </record>
+</odoo>
