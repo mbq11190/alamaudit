@@ -325,3 +325,19 @@ class Qacoaudit(models.Model):
             'context': {'create': False},
         }
 
+    def action_open_client_onboarding(self):
+        """Open or create client onboarding record for this audit"""
+        self.ensure_one()
+        onboarding = self.env['qaco.client.onboarding'].search([('audit_id', '=', self.id)], limit=1)
+        if not onboarding:
+            onboarding = self.env['qaco.client.onboarding'].create({
+                'audit_id': self.id,
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Client Onboarding',
+            'res_model': 'qaco.client.onboarding',
+            'res_id': onboarding.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }

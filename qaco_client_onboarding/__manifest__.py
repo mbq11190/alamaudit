@@ -13,6 +13,7 @@ Client onboarding phase with smart button access from audit.
     'website': 'https://www.qaco.com',
     'depends': ['qaco_audit'],
     'data': [
+        'security/ir.model.access.csv',
         'views/client_onboarding_form.xml',
         'views/audit_smart_button.xml',
     ],

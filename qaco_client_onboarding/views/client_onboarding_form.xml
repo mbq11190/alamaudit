@@ -8,20 +8,12 @@
             <form string="Client Onboarding">
                 <sheet>
                     <group>
-                        <field name="audit_id" invisible="1" force_save="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="audit_id"/>
                         <field name="client_id"/>
                     </group>
                 </sheet>
             </form>
         </field>
-    </record>
-
-    <!-- Update action to use this form -->
-    <record id="action_client_onboarding" model="ir.actions.act_window">
-        <field name="name">Client Onboarding</field>
-        <field name="res_model">qaco.audit</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_client_onboarding_form"/>
-        <field name="target">current</field>
     </record>
 </odoo>

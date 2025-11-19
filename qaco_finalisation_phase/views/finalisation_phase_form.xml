@@ -15,13 +15,4 @@
             </form>
         </field>
     </record>
-
-    <!-- Update action to use this form -->
-    <record id="action_finalisation_phase" model="ir.actions.act_window">
-        <field name="name">Finalisation Phase</field>
-        <field name="res_model">qaco.audit</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_finalisation_phase_form"/>
-        <field name="target">current</field>
-    </record>
 </odoo>
