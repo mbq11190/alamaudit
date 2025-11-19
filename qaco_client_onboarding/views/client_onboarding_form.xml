@@ -43,7 +43,7 @@
                         <page string="Section 1: Legal Identity" name="section_1">
                             <group>
                                 <field name="entity_type" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
-                                <field name="other_entity_description" attrs="{'invisible':[('entity_type','!=','other')]}"/>
+                                <field name="other_entity_description" modifiers="{'invisible':[('entity_type','!=','other')]}"/>
                             </group>
                             <group>
                                 <field name="legal_name" help="The name exactly as on the Certificate of Incorporation or registration document."/>
@@ -52,7 +52,7 @@
                             <group>
                                 <field name="principal_business_address" help="Enter the registered office as stated in legal filings."/>
                                 <field name="primary_regulator" help="Select the principal regulator overseeing this entity."/>
-                                <field name="regulator_other" attrs="{'invisible':[('primary_regulator','!=','other')]}"/>
+                                <field name="regulator_other" modifiers="{'invisible':[('primary_regulator','!=','other')]}"/>
                             </group>
                             <group>
                                 <field name="ntn" help="NTN must follow the NNNNNNN-N format for validation."/>
@@ -87,7 +87,7 @@
                         <page string="Section 2: Regulatory &amp; Compliance" name="section_2">
                             <group>
                                 <field name="financial_framework" help="Choose the accounting framework that governs audit procedures."/>
-                                <field name="financial_framework_other" attrs="{'invisible':[('financial_framework','!=','other_framework')]}"/>
+                                <field name="financial_framework_other" modifiers="{'invisible':[('financial_framework','!=','other_framework')]}"/>
                             </group>
                             <group>
                                 <field name="annual_return_last_filed"/>
@@ -126,8 +126,8 @@
                                 <field name="fit_proper_confirmed"/>
                                 <field name="fit_proper_document" widget="binary"/>
                                 <field name="enhanced_due_diligence_required" readonly="1"/>
-                                <field name="enhanced_due_diligence_details" attrs="{'invisible':[('enhanced_due_diligence_required','=',False)]}"/>
-                                <field name="enhanced_due_diligence_attachment" attrs="{'invisible':[('enhanced_due_diligence_required','=',False)]}" widget="binary"/>
+                                  <field name="enhanced_due_diligence_details" modifiers="{'invisible':[('enhanced_due_diligence_required','=',False)]}"/>
+                                  <field name="enhanced_due_diligence_attachment" modifiers="{'invisible':[('enhanced_due_diligence_required','=',False)]}" widget="binary"/>
                             </group>
                         </page>
                         <page string="Section 4: Pre-Acceptance Risk" name="section_4">
@@ -138,12 +138,12 @@
                             <group>
                                 <field name="litigation_history"/>
                                 <field name="fraud_history"/>
-                                <field name="fraud_explanation" attrs="{'invisible':[('fraud_history','=','no')]}"/>
+                                    <field name="fraud_explanation" modifiers="{'invisible':[('fraud_history','=','no')]}"/>
                                 <field name="aml_risk_rating" readonly="1"/>
                             </group>
                             <group>
                                 <field name="business_risk_profile"/>
-                                <field name="risk_mitigation_plan" attrs="{'required':[('eqcr_required','=',True)]}"/>
+                                    <field name="risk_mitigation_plan" modifiers="{'required':[('eqcr_required','=',True)]}"/>
                             </group>
                         </page>
                         <page string="Section 5: Independence &amp; Ethics" name="section_5">
@@ -209,10 +209,10 @@
                             <group>
                                 <field name="engagement_partner_id"/>
                                 <field name="engagement_partner_signature" widget="binary"/>
-                                <field name="eqcr_partner_id" attrs="{'invisible':[('eqcr_required','=',False)]}"/>
-                                <field name="eqcr_partner_signature" attrs="{'invisible':[('eqcr_required','=',False)]}" widget="binary"/>
-                                <field name="managing_partner_id" attrs="{'invisible':[('managing_partner_escalation','=',False)]}"/>
-                                <field name="managing_partner_signature" attrs="{'invisible':[('managing_partner_escalation','=',False)]}" widget="binary"/>
+                                <field name="eqcr_partner_id" modifiers="{'invisible':[('eqcr_required','=',False)]}"/>
+                                <field name="eqcr_partner_signature" modifiers="{'invisible':[('eqcr_required','=',False)]}" widget="binary"/>
+                                <field name="managing_partner_id" modifiers="{'invisible':[('managing_partner_escalation','=',False)]}"/>
+                                <field name="managing_partner_signature" modifiers="{'invisible':[('managing_partner_escalation','=',False)]}" widget="binary"/>
                             </group>
                         </page>
                         <page string="Document Vault" name="documents">
