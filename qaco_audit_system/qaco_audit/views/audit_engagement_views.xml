@@ -20,11 +20,11 @@
         <field name="arch" type="xml">
             <form string="Audit Engagement">
                 <header>
-                    <button name="action_accept_engagement" type="object" string="Accept" class="oe_highlight" states="draft"/>
-                    <button name="action_request_partner_review" type="object" string="Request Partner Review" states="draft,onboarding,planning"/>
-                    <button name="action_mark_partner_review_complete" type="object" string="Partner Review Complete" states="onboarding,planning,execution"/>
-                    <button name="action_reject_engagement" type="object" string="Reject" states="draft,onboarding"/>
-                    <button name="action_send_professional_clearance" type="object" string="Request Professional Clearance" states="onboarding,planning"/>
+                    <button name="action_accept_engagement" type="object" string="Accept" class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_request_partner_review" type="object" string="Request Partner Review" modifiers="{'invisible': [('state', 'not in', ['draft','onboarding','planning'])]}"/>
+                    <button name="action_mark_partner_review_complete" type="object" string="Partner Review Complete" modifiers="{'invisible': [('state', 'not in', ['onboarding','planning','execution'])]}"/>
+                    <button name="action_reject_engagement" type="object" string="Reject" modifiers="{'invisible': [('state', 'not in', ['draft','onboarding'])]}"/>
+                    <button name="action_send_professional_clearance" type="object" string="Request Professional Clearance" modifiers="{'invisible': [('state', 'not in', ['onboarding','planning'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,onboarding,planning,execution,finalisation,completed,cancelled"/>
                 </header>
                 <sheet>
