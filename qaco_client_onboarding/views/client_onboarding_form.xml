@@ -84,7 +84,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 2: Regulatory & Compliance" name="section_2">
+                        <page string="Section 2: Regulatory &amp; Compliance" name="section_2">
                             <group>
                                 <field name="financial_framework" help="Choose the accounting framework that governs audit procedures."/>
                                 <field name="financial_framework_other" attrs="{'invisible':[('financial_framework','!=','other_framework')]}"/>
@@ -100,7 +100,7 @@
                                 <field name="regulatory_inspection_attachment" filename="Regulatory Inspection Report" widget="binary"/>
                             </group>
                         </page>
-                        <page string="Section 3: Ownership & Governance" name="section_3">
+                        <page string="Section 3: Ownership &amp; Governance" name="section_3">
                             <group>
                                 <field name="shareholder_ids">
                                     <tree editable="bottom">
@@ -146,7 +146,7 @@
                                 <field name="risk_mitigation_plan" attrs="{'required':[('eqcr_required','=',True)]}"/>
                             </group>
                         </page>
-                        <page string="Section 5: Independence & Ethics" name="section_5">
+                        <page string="Section 5: Independence &amp; Ethics" name="section_5">
                             <group>
                                 <field name="independence_threat_ids">
                                     <tree editable="bottom">
