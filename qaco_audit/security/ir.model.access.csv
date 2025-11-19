@@ -6,3 +6,9 @@ access_audit_year,audit.year,model_audit_year,base.group_user,1,1,1,1
 access_audit_firm_name,audit.firm.name,model_audit_firm_name,base.group_user,1,1,1,1
 access_audit_done,audit.done,model_audit_done,base.group_user,1,1,1,1
 access_qaco_audit_auto_follower,qaco_audit.auto.follower,model_qaco_audit_auto_follower,base.group_user,1,1,1,1
+access_qaco_industry,qaco.industry,model_qaco_industry,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_branch,qaco.branch.office,model_qaco_branch_office,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_ubo,qaco.ubo,model_qaco_ubo,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_inspection,qaco.regulatory.inspection,model_qaco_regulatory_inspection,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_pep,qaco.pep,model_qaco_pep,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_checklist,qaco.audit.checklist,model_qaco_audit_checklist,qaco_audit.group_audit_trainee,1,1,1,0
