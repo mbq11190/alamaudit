@@ -7,6 +7,7 @@
     "category": "Accounting/Auditing",
     "depends": ["qaco_audit", "qaco_deliverables"],
     "data": [
+        "security/ir.model.access.csv",
         "views/quality_review_form.xml",
         "views/audit_smart_button.xml",
     ],
