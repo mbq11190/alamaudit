@@ -92,7 +92,7 @@
                 </t>
                 <h3>Approvals</h3>
                 <p>
-                    <strong>Engagement Partner:</strong> <t t-esc="doc.engagement_partner_id.name or '—'"/> &nbsp;
+                    <strong>Engagement Partner:</strong> <t t-esc="doc.engagement_partner_id.name or '—'"/> &#160;
                     <strong>EQCR:</strong> <t t-esc="doc.eqcr_partner_id.name or '—'"/>
                 </p>
                 <p>
