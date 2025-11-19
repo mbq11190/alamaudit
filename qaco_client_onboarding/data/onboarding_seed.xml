@@ -9,7 +9,7 @@
         <field name="risk_category">high</field>
     </record>
     <record id="industry_it" model="qaco.onboarding.industry">
-        <field name="name">Services (IT & Consulting)</field>
+        <field name="name">Services (IT &amp; Consulting)</field>
         <field name="risk_category">medium</field>
     </record>
     <record id="industry_trading" model="qaco.onboarding.industry">
@@ -22,7 +22,7 @@
     </record>
 
     <record id="checklist_acceptance" model="qaco.onboarding.checklist.template">
-        <field name="question">Acceptance & Continuance documentation confirmed per ISA 210 & ISQM 1</field>
+        <field name="question">Acceptance &amp; Continuance documentation confirmed per ISA 210 &amp; ISQM 1</field>
         <field name="category">Acceptance</field>
         <field name="critical">True</field>
     </record>
