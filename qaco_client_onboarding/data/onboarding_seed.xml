@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="industry_manufacturing" model="qaco.onboarding.industry">
+        <field name="name">Manufacturing (Textile)</field>
+        <field name="risk_category">medium</field>
+    </record>
+    <record id="industry_financial" model="qaco.onboarding.industry">
+        <field name="name">Financial Services (Banking)</field>
+        <field name="risk_category">high</field>
+    </record>
+    <record id="industry_it" model="qaco.onboarding.industry">
+        <field name="name">Services (IT & Consulting)</field>
+        <field name="risk_category">medium</field>
+    </record>
+    <record id="industry_trading" model="qaco.onboarding.industry">
+        <field name="name">Trading</field>
+        <field name="risk_category">low</field>
+    </record>
+    <record id="industry_npo" model="qaco.onboarding.industry">
+        <field name="name">Not-for-Profit Organization</field>
+        <field name="risk_category">medium</field>
+    </record>
+
+    <record id="checklist_acceptance" model="qaco.onboarding.checklist.template">
+        <field name="question">Acceptance & Continuance documentation confirmed per ISA 210 & ISQM 1</field>
+        <field name="category">Acceptance</field>
+        <field name="critical">True</field>
+    </record>
+    <record id="checklist_independence" model="qaco.onboarding.checklist.template">
+        <field name="question">Independence confirmation completed for engagement team</field>
+        <field name="category">Independence</field>
+        <field name="critical">True</field>
+    </record>
+    <record id="checklist_documentation" model="qaco.onboarding.checklist.template">
+        <field name="question">Document vault contains required statutory registrations and PCL</field>
+        <field name="category">Documentation</field>
+        <field name="critical">False</field>
+    </record>
+
+    <record id="precondition_responsibilities" model="qaco.onboarding.precondition.template">
+        <field name="description">Management acknowledges responsibility for the financial statements and internal control.</field>
+    </record>
+    <record id="precondition_audit_information" model="qaco.onboarding.precondition.template">
+        <field name="description">Management will provide the firm with unrestricted access to records and personnel.</field>
+    </record>
+    <record id="precondition_prior_knowledge" model="qaco.onboarding.precondition.template">
+        <field name="description">Predecessor auditor clearance has been obtained, and no residual issues remain.</field>
+    </record>
+</odoo>

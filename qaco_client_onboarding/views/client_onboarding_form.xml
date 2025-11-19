@@ -1,5 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_client_onboarding_tree" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.tree</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="arch" type="xml">
+            <tree string="Client Onboarding Records">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="overall_status"/>
+                <field name="progress_percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_client_onboarding_form" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.form</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="arch" type="xml">
+            <form string="Client Onboarding">
+                <header>
+                    <field name="overall_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                    <field name="progress_percentage" widget="progressbar" options="{'format':'percent'}" readonly="1"/>
+                    <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" class="btn-primary"/>
+                    <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="audit_id" readonly="1"/>
+                        <field name="client_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="section1_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section2_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section3_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section4_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section5_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section6_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section7_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Section 1: Legal Identity" name="section_1">
+                            <group>
+                                <field name="entity_type" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
+                                <field name="other_entity_description" attrs="{'invisible':[('entity_type','!=','other')]}"/>
+                            </group>
+                            <group>
+                                <field name="legal_name" help="The name exactly as on the Certificate of Incorporation or registration document."/>
+                                <field name="trading_name" help="Enter the trading name if it differs from the legal name."/>
+                            </group>
+                            <group>
+                                <field name="principal_business_address" help="Enter the registered office as stated in legal filings."/>
+                                <field name="primary_regulator" help="Select the principal regulator overseeing this entity."/>
+                                <field name="regulator_other" attrs="{'invisible':[('primary_regulator','!=','other')]}"/>
+                            </group>
+                            <group>
+                                <field name="ntn" help="NTN must follow the NNNNNNN-N format for validation."/>
+                                <field name="strn" help="Provide the Sales Tax Registration Number if applicable."/>
+                                <field name="business_registration_number" help="Enter the number assigned by SECP or relevant authority."/>
+                                <field name="industry_id" help="Select the primary industry; it auto-populates the risk profile."/>
+                            </group>
+                            <group>
+                                <field name="org_chart_attachment" filename="org_chart_name" widget="binary"/>
+                                <field name="org_chart_name" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="branch_location_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="address"/>
+                                        <field name="country_id"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="ubo_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="cnic_passport"/>
+                                        <field name="nationality"/>
+                                        <field name="ownership_percent"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Section 2: Regulatory & Compliance" name="section_2">
+                            <group>
+                                <field name="financial_framework" help="Choose the accounting framework that governs audit procedures."/>
+                                <field name="financial_framework_other" attrs="{'invisible':[('financial_framework','!=','other_framework')]}"/>
+                            </group>
+                            <group>
+                                <field name="annual_return_last_filed"/>
+                                <field name="annual_return_overdue"/>
+                                <field name="fbr_compliance_rating"/>
+                            </group>
+                            <group>
+                                <field name="tax_assessment_history" help="Summarize tax assessments, litigations or disputes."/>
+                                <field name="regulatory_inspection_notes" help="Detail any inspections by SECP, SBP, FBR or other regulators."/>
+                                <field name="regulatory_inspection_attachment" filename="Regulatory Inspection Report" widget="binary"/>
+                            </group>
+                        </page>
+                        <page string="Section 3: Ownership & Governance" name="section_3">
+                            <group>
+                                <field name="shareholder_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="share_class"/>
+                                        <field name="percentage"/>
+                                        <field name="voting_rights"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="board_member_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="cnic"/>
+                                        <field name="din"/>
+                                        <field name="role"/>
+                                        <field name="is_pep"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="fit_proper_confirmed"/>
+                                <field name="fit_proper_document" widget="binary"/>
+                                <field name="enhanced_due_diligence_required" readonly="1"/>
+                                <field name="enhanced_due_diligence_details" attrs="{'invisible':[('enhanced_due_diligence_required','=',False)]}"/>
+                                <field name="enhanced_due_diligence_attachment" attrs="{'invisible':[('enhanced_due_diligence_required','=',False)]}" widget="binary"/>
+                            </group>
+                        </page>
+                        <page string="Section 4: Pre-Acceptance Risk" name="section_4">
+                            <group>
+                                <field name="management_integrity_rating" widget="radio"/>
+                                <field name="management_integrity_comment" placeholder="Explain the rating referencing reputation, background and documentation."/>
+                            </group>
+                            <group>
+                                <field name="litigation_history"/>
+                                <field name="fraud_history"/>
+                                <field name="fraud_explanation" attrs="{'invisible':[('fraud_history','=','no')]}"/>
+                                <field name="aml_risk_rating" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="business_risk_profile"/>
+                                <field name="risk_mitigation_plan" attrs="{'required':[('eqcr_required','=',True)]}"/>
+                            </group>
+                        </page>
+                        <page string="Section 5: Independence & Ethics" name="section_5">
+                            <group>
+                                <field name="independence_threat_ids">
+                                    <tree editable="bottom">
+                                        <field name="threat_type"/>
+                                        <field name="answer"/>
+                                        <field name="details"/>
+                                        <field name="safeguards"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="non_audit_services_confirmed"/>
+                                <field name="non_audit_services_attachment" widget="binary"/>
+                            </group>
+                            <group>
+                                <field name="currency_id" readonly="1"/> 
+                                <field name="proposed_audit_fee"/>
+                                <field name="total_fee_income"/>
+                                <field name="fee_dependency_percent" readonly="1" help="Calculated as proposed audit fee divided by total firm income."/>
+                                <field name="fee_dependency_flag" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="independence_declaration_ids">
+                                    <tree editable="bottom">
+                                        <field name="user_id"/>
+                                        <field name="state"/>
+                                        <field name="confirmation_date"/>
+                                        <field name="reminder_sent"/>
+                                    </tree>
+                                </field>
+                                <field name="independence_status_feedback" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Section 6: Predecessor Auditor" name="section_6">
+                            <group>
+                                <field name="predecessor_auditor_name"/>
+                                <field name="predecessor_contact"/>
+                                <field name="pcl_requested"/>
+                                <field name="pcl_received"/>
+                                <field name="pcl_document" filename="pcl_document_name" widget="binary"/>
+                                <field name="pcl_no_outstanding_fees"/>
+                                <field name="pcl_no_disputes"/>
+                                <field name="pcl_no_ethics_issues"/>
+                            </group>
+                        </page>
+                        <page string="Section 7: Final Authorization" name="section_7">
+                            <group>
+                                <field name="precondition_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="description" readonly="1"/>
+                                        <field name="confirmed"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="engagement_summary" readonly="1"/>
+                                <field name="engagement_decision"/>
+                                <field name="engagement_justification"/>
+                            </group>
+                            <group>
+                                <field name="engagement_partner_id"/>
+                                <field name="engagement_partner_signature" widget="binary"/>
+                                <field name="eqcr_partner_id" attrs="{'invisible':[('eqcr_required','=',False)]}"/>
+                                <field name="eqcr_partner_signature" attrs="{'invisible':[('eqcr_required','=',False)]}" widget="binary"/>
+                                <field name="managing_partner_id" attrs="{'invisible':[('managing_partner_escalation','=',False)]}"/>
+                                <field name="managing_partner_signature" attrs="{'invisible':[('managing_partner_escalation','=',False)]}" widget="binary"/>
+                            </group>
+                        </page>
+                        <page string="Document Vault" name="documents">
+                            <field name="document_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="doc_type"/>
+                                    <field name="state"/>
+                                    <field name="file_name"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Smart Checklists" name="checklists">
+                            <field name="checklist_line_ids">
+                                <tree editable="bottom">
+                                    <field name="question" readonly="1"/>
+                                    <field name="answer"/>
+                                    <field name="remarks"/>
+                                    <field name="critical" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Audit Trail" name="audit_trail">
+                            <field name="audit_trail_ids">
+                                <tree>
+                                    <field name="create_date"/>
+                                    <field name="user_id"/>
+                                    <field name="action"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo><?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- Client Onboarding Form View -->
     <record id="view_client_onboarding_form" model="ir.ui.view">
         <field name="name">qaco.client.onboarding.form</field>
@@ -16,4 +268,12 @@
             </form>
         </field>
     </record>
+    <record id="action_client_onboarding_menu" model="ir.actions.act_window">
+        <field name="name">Client Onboarding</field>
+        <field name="res_model">qaco.client.onboarding</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_client_onboarding_tree"/>
+        <field name="target">current</field>
+    </record>
+    <menuitem id="menu_client_onboarding_root" name="Client Onboarding" parent="qaco_audit.menu_1" action="action_client_onboarding_menu" sequence="20"/>
 </odoo>

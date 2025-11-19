@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="report_client_onboarding_pdf"
+        model="qaco.client.onboarding"
+        string="Client Acceptance Report"
+        report_type="qweb-pdf"
+        name="qaco_client_onboarding.report_client_onboarding_template"
+        file="qaco_client_onboarding.report_client_onboarding_template"
+        attachment_use="True"
+    />
+</odoo>

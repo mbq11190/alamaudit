@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_client_onboarding_template">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <h2>Client Acceptance Report</h2>
+                <p>
+                    <strong>Audit:</strong> <t t-esc="doc.audit_id.name or 'N/A'"/> &nbsp;
+                    <strong>Client:</strong> <t t-esc="doc.client_id.name or 'N/A'"/>
+                </p>
+                <p>
+                    <strong>Entity Type:</strong> <t t-esc="doc.entity_type_label or doc.entity_type"/> &nbsp;
+                    <strong>Overall Status:</strong> <t t-esc="doc.overall_status_label or doc.overall_status"/>
+                </p>
+                <h3>Section 1 – Legal Identity</h3>
+                <table class="table table-sm">
+                    <tr><th>Legal Name</th><td><t t-esc="doc.legal_name or '—'"/></td></tr>
+                    <tr><th>Trading Name</th><td><t t-esc="doc.trading_name or '—'"/></td></tr>
+                    <tr><th>Business Address</th><td><t t-esc="doc.principal_business_address or '—'"/></td></tr>
+                    <tr><th>Primary Regulator</th><td><t t-esc="doc.primary_regulator_label or '—'"/></td></tr>
+                    <tr><th>Industry</th><td><t t-esc="doc.industry_id.name or '—'"/></td></tr>
+                </table>
+                <h4>Branches & UBOs</h4>
+                <t t-if="doc.branch_location_ids">
+                    <ul>
+                        <t t-foreach="doc.branch_location_ids" t-as="branch">
+                            <li><t t-esc="branch.name"/> – <t t-esc="branch.address"/> (<t t-esc="branch.country_id.name or '—'"/>)</li>
+                        </t>
+                    </ul>
+                </t>
+                <t t-if="doc.ubo_ids">
+                    <strong>Ultimate Beneficial Owners:</strong>
+                    <ul>
+                        <t t-foreach="doc.ubo_ids" t-as="ubo">
+                            <li><t t-esc="ubo.name"/> – <t t-esc="ubo.ownership_percent"/>% (<t t-esc="ubo.cnic_passport"/>)</li>
+                        </t>
+                    </ul>
+                </t>
+                <h3>Section 2 – Regulatory & Compliance</h3>
+                <p><strong>Financial Framework:</strong> <t t-esc="doc.financial_framework_label or doc.financial_framework"/></p>
+                <p><strong>Tax & Regulatory Notes:</strong> <t t-esc="doc.tax_assessment_history or '—'"/></p>
+                <h3>Section 3 – Governance</h3>
+                <t t-if="doc.shareholder_ids">
+                    <strong>Shareholders:</strong>
+                    <ul>
+                        <t t-foreach="doc.shareholder_ids" t-as="share">
+                            <li><t t-esc="share.name"/> – <t t-esc="share.percentage"/>% (<t t-esc="share.share_class or '—'"/>)</li>
+                        </t>
+                    </ul>
+                </t>
+                <t t-if="doc.board_member_ids">
+                    <strong>Board & Key Personnel:</strong>
+                    <ul>
+                        <t t-foreach="doc.board_member_ids" t-as="member">
+                            <li><t t-esc="member.name"/> – <t t-esc="member.role"/> (<t t-esc="'PEP' if member.is_pep else 'Non-PEP'"/>)</li>
+                        </t>
+                    </ul>
+                </t>
+                <h3>Section 4 – Pre-Acceptance Risk</h3>
+                <p><strong>Management Integrity:</strong> <t t-esc="doc.management_integrity_label or doc.management_integrity_rating"/></p>
+                <p><strong>AML Risk:</strong> <t t-esc="doc.aml_risk_label or doc.aml_risk_rating"/></p>
+                <p><strong>Business Risk Profile:</strong> <t t-esc="doc.business_risk_profile or '—'"/></p>
+                <h3>Section 5 – Independence & Ethics</h3>
+                <p><strong>Fee Dependency:</strong> <t t-esc="doc.fee_dependency_percent"/>% (<t t-esc="'Flagged' if doc.fee_dependency_flag else 'Within Limits'"/>)</p>
+                <p><strong>Declaration Status:</strong> <t t-esc="doc.independence_status_feedback or 'Pending'"/></p>
+                <h3>Section 6 – Predecessor Auditor</h3>
+                <p><strong>Predecessor:</strong> <t t-esc="doc.predecessor_auditor_name or '—'"/> (<t t-esc="doc.predecessor_contact or '—'"/>)</p>
+                <p>
+                    <strong>PCL Affirmations:</strong>
+                    Fees: <t t-esc="'Yes' if doc.pcl_no_outstanding_fees else 'Pending'"/>,
+                    Disputes: <t t-esc="'Yes' if doc.pcl_no_disputes else 'Pending'"/>,
+                    Ethics: <t t-esc="'Yes' if doc.pcl_no_ethics_issues else 'Pending'"/>
+                </p>
+                <h3>Section 7 – Final Decision</h3>
+                <p><strong>Decision:</strong> <t t-esc="doc.engagement_decision_label or 'Pending'"/></p>
+                <p><strong>Justification:</strong> <t t-esc="doc.engagement_justification or '—'"/></p>
+                <h3>Document Vault & Checklists</h3>
+                <t t-if="doc.document_ids">
+                    <ul>
+                        <t t-foreach="doc.document_ids" t-as="doc_item">
+                            <li><t t-esc="doc_item.name"/> – <t t-esc="doc_item.doc_type_label or doc_item.doc_type"/> (<t t-esc="doc_item.state"/>)</li>
+                        </t>
+                    </ul>
+                </t>
+                <t t-if="doc.checklist_line_ids">
+                    <strong>Checklist Highlights:</strong>
+                    <ul>
+                        <t t-foreach="doc.checklist_line_ids" t-as="line">
+                            <li><t t-esc="line.question"/> — <t t-esc="line.answer_label or '—'"/></li>
+                        </t>
+                    </ul>
+                </t>
+                <h3>Approvals</h3>
+                <p>
+                    <strong>Engagement Partner:</strong> <t t-esc="doc.engagement_partner_id.name or '—'"/> &nbsp;
+                    <strong>EQCR:</strong> <t t-esc="doc.eqcr_partner_id.name or '—'"/>
+                </p>
+                <p>
+                    <strong>Managing Partner:</strong> <t t-esc="doc.managing_partner_id.name or '—'"/>
+                </p>
+            </div>
+        </t>
+    </template>
+</odoo>
