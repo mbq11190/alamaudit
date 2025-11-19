@@ -5,7 +5,7 @@
             <div class="page">
                 <h2>Client Acceptance Report</h2>
                 <p>
-                    <strong>Audit:</strong> <t t-esc="doc.audit_id.name or 'N/A'"/> &nbsp;
+                    <strong>Audit:</strong> <t t-esc="doc.audit_id.name or 'N/A'"/> &#160;
                     <strong>Client:</strong> <t t-esc="doc.client_id.name or 'N/A'"/>
                 </p>
                 <p>
