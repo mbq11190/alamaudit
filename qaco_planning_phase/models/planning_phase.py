@@ -105,8 +105,20 @@ class PlanningPhase(models.Model):
 	fraud_attitudes = fields.Html(string='Attitudes/Rationalizations for Fraud')
 	fraud_risk_assessment = fields.Html(string='Overall Fraud Risk Assessment')
 
-	prior_year_fs_attachment_ids = fields.Many2many('ir.attachment', string='Prior Year Financial Statements')
-	current_year_tb_attachment_ids = fields.Many2many('ir.attachment', string='Current Year Trial Balance & Draft FS')
+	prior_year_fs_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_prior_fs_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Prior Year Financial Statements'
+	)
+	current_year_tb_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_current_tb_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Current Year Trial Balance & Draft FS'
+	)
 	industry_benchmarks = fields.Html(string='Industry Benchmarks & Comparisons')
 	significant_fluctuations = fields.Html(string='Significant Fluctuations Analysis (>10% or Materiality)')
 	ratio_analysis_summary = fields.Html(string='Ratio Analysis Summary')
@@ -156,18 +168,90 @@ class PlanningPhase(models.Model):
 	secp_requirements_met = fields.Boolean(string='SECP Requirements Addressed', default=False)
 	aob_guidelines_considered = fields.Boolean(string='AOB Guidelines Considered', default=False)
 
-	organogram_attachment_ids = fields.Many2many('ir.attachment', string='Organogram Files')
-	engagement_letter_attachment_ids = fields.Many2many('ir.attachment', string='Signed Engagement Letters')
-	board_minutes_attachment_ids = fields.Many2many('ir.attachment', string='BOD/Audit Committee Minutes')
-	process_flow_attachment_ids = fields.Many2many('ir.attachment', string='Process Flowcharts')
-	related_party_attachment_ids = fields.Many2many('ir.attachment', string='Related Party Schedules')
-	materiality_worksheet_attachment_ids = fields.Many2many('ir.attachment', string='Materiality Worksheets')
-	analytical_summary_attachment_ids = fields.Many2many('ir.attachment', string='Analytical Summary Sheets')
-	risk_register_attachment_ids = fields.Many2many('ir.attachment', string='Risk Register Files')
-	audit_strategy_attachment_ids = fields.Many2many('ir.attachment', string='Audit Strategy Documentation')
-	internal_control_attachment_ids = fields.Many2many('ir.attachment', string='Internal Control Documentation')
-	legal_compliance_attachment_ids = fields.Many2many('ir.attachment', string='Legal & Compliance Documents')
-	previous_audit_reports_attachment_ids = fields.Many2many('ir.attachment', string='Previous Audit Reports')
+	organogram_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_organogram_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Organogram Files'
+	)
+	engagement_letter_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_engagement_letter_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Signed Engagement Letters'
+	)
+	board_minutes_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_board_minutes_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='BOD/Audit Committee Minutes'
+	)
+	process_flow_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_process_flow_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Process Flowcharts'
+	)
+	related_party_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_related_party_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Related Party Schedules'
+	)
+	materiality_worksheet_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_materiality_worksheet_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Materiality Worksheets'
+	)
+	analytical_summary_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_analytical_summary_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Analytical Summary Sheets'
+	)
+	risk_register_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_risk_register_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Risk Register Files'
+	)
+	audit_strategy_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_audit_strategy_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Audit Strategy Documentation'
+	)
+	internal_control_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_internal_control_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Internal Control Documentation'
+	)
+	legal_compliance_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_legal_compliance_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Legal & Compliance Documents'
+	)
+	previous_audit_reports_attachment_ids = fields.Many2many(
+		'ir.attachment',
+		'qaco_planning_phase_previous_audit_reports_rel',
+		'planning_phase_id',
+		'attachment_id',
+		string='Previous Audit Reports'
+	)
 
 	checklist_engagement_letter = fields.Boolean(string='✓ Engagement Letter Executed & Uploaded', tracking=True)
 	checklist_entity_understanding = fields.Boolean(string='✓ Entity Understanding Complete (ISA 315)', tracking=True)
