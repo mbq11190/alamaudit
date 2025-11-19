@@ -81,7 +81,7 @@ class ExecutionPhase(models.Model):
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
     client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=True)
     planning_phase_id = fields.Many2one('qaco.planning.phase', string='Planning Phase', compute='_compute_planning_phase', store=True, readonly=False)
-    company_currency_id = fields.Many2one('res.currency', string='Company Currency', related='audit_id.company_id.currency_id', store=True, readonly=True)
+    company_currency_id = fields.Many2one('res.currency', string='Company Currency', related='audit_id.currency_id', store=True, readonly=True)
 
     # Status dashboard
     control_status = fields.Selection(SUBTAB_STATUS, default='red', tracking=True)
