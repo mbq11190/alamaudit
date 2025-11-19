@@ -212,6 +212,7 @@
                                 <field name="engagement_partner_signature" widget="binary"/>
                                 <field name="eqcr_partner_id" invisible="not eqcr_required"/>
                                 <field name="eqcr_partner_signature" invisible="not eqcr_required" widget="binary"/>
+                                <field name="managing_partner_escalation" readonly="1" invisible="1"/>
                                 <field name="managing_partner_id" invisible="not managing_partner_escalation"/>
                                 <field name="managing_partner_signature" invisible="not managing_partner_escalation" widget="binary"/>
                             </group>
