@@ -140,6 +140,7 @@
                                 <field name="fraud_history"/>
                                 <field name="fraud_explanation" invisible="fraud_history == 'no'"/>
                                 <field name="aml_risk_rating" readonly="1"/>
+                                <field name="eqcr_required" readonly="1" invisible="1"/>
                             </group>
                             <group>
                                 <field name="business_risk_profile"/>
