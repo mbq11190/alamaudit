@@ -5,16 +5,16 @@
         <field name="model">qaco.planning.phase</field>
         <field name="inherit_id" ref="qaco_planning_phase.view_qaco_planning_phase_form"/>
         <field name="arch" type="xml">
-			<xpath expr="//header" position="inside">
-				<button name="action_manager_sign" type="object" string="Manager Sign"
-					class="btn-primary"
-					attrs="{'invisible': ['|', ('manager_signed_user_id', '!=', False), ('planning_complete', '=', True)]}"/>
-				<button name="action_partner_sign" type="object" string="Partner Sign"
-					class="btn-secondary"
-					attrs="{'invisible': ['|', ('partner_signed_user_id', '!=', False), ('planning_complete', '=', True)]}"/>
-				<button name="action_mark_planning_complete" type="object" string="Mark Planning Complete"
-					class="btn-success"
-					attrs="{'invisible': [('planning_complete', '=', True)], 'readonly': [('can_finalize_planning', '=', False)]}"/>
+				<xpath expr="//header" position="inside">
+					<button name="action_manager_sign" type="object" string="Manager Sign"
+						class="btn-primary"
+						modifiers="{'invisible': ['|', ('manager_signed_user_id', '!=', False), ('planning_complete', '=', True)]}"/>
+					<button name="action_partner_sign" type="object" string="Partner Sign"
+						class="btn-secondary"
+						modifiers="{'invisible': ['|', ('partner_signed_user_id', '!=', False), ('planning_complete', '=', True)]}"/>
+					<button name="action_mark_planning_complete" type="object" string="Mark Planning Complete"
+						class="btn-success"
+						modifiers="{'invisible': [('planning_complete', '=', True)], 'readonly': [('can_finalize_planning', '=', False)]}"/>
 				<button name="action_generate_planning_memo" type="object" string="Generate Planning Memo"
 					class="btn-link"/>
 				<field name="planning_complete" widget="statusbar"/>
@@ -146,15 +146,15 @@
 						<group>
 							<field name="audit_approach"/>
 							<field name="use_of_experts"/>
-							<field name="experts_details" attrs="{'invisible': [('use_of_experts', '=', False)]}"/>
+							<field name="experts_details" modifiers="{'invisible': [('use_of_experts', '=', False)]}"/>
 						</group>
 						<group>
 							<field name="use_of_caats"/>
-							<field name="caats_details" attrs="{'invisible': [('use_of_caats', '=', False)]}"/>
+							<field name="caats_details" modifiers="{'invisible': [('use_of_caats', '=', False)]}"/>
 						</group>
 						<group>
 							<field name="component_auditors_involved"/>
-							<field name="component_auditors_details" attrs="{'invisible': [('component_auditors_involved', '=', False)]}"/>
+							<field name="component_auditors_details" modifiers="{'invisible': [('component_auditors_involved', '=', False)]}"/>
 						</group>
 						<group>
 							<field name="staffing_plan"/>
