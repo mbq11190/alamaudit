@@ -30,15 +30,6 @@
                         <field name="audit_id" readonly="1"/>
                         <field name="client_id" readonly="1"/>
                     </group>
-                    <group>
-                        <field name="section1_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section2_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section3_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section4_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section5_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section6_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section7_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                    </group>
                     <notebook>
                         <page string="Section 1: Legal Identity" name="section_1">
                             <group>
@@ -236,6 +227,15 @@
                                     <field name="critical" readonly="1"/>
                                 </tree>
                             </field>
+                            <group>
+                                <field name="section1_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                <field name="section2_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                <field name="section3_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                <field name="section4_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                <field name="section5_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                <field name="section6_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                <field name="section7_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                            </group>
                         </page>
                         <page string="Audit Trail" name="audit_trail">
                             <field name="audit_trail_ids">
