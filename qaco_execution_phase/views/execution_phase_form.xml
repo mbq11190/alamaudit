@@ -1,16 +1,411 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Execution Phase Form View -->
+    <!-- Tree/List View -->
+    <record id="view_execution_phase_tree" model="ir.ui.view">
+        <field name="name">qaco.execution.phase.tree</field>
+        <field name="model">qaco.execution.phase</field>
+        <field name="arch" type="xml">
+            <tree string="Execution Phases" create="false">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="control_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="substantive_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="completion_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="risk_coverage_percent" widget="percentage"/>
+                <field name="open_critical_risk_count"/>
+                <field name="execution_complete"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_execution_phase_search" model="ir.ui.view">
+        <field name="name">qaco.execution.phase.search</field>
+        <field name="model">qaco.execution.phase</field>
+        <field name="arch" type="xml">
+            <search string="Execution Phases">
+                <field name="name"/>
+                <field name="client_id"/>
+                <filter name="filter_open" string="Open" domain="[('execution_complete', '=', False)]"/>
+                <filter name="filter_closed" string="Completed" domain="[('execution_complete', '=', True)]"/>
+                <group expand="0" string="Status">
+                    <filter string="Red" domain="['|', '|', ('control_status', '=', 'red'), ('substantive_status', '=', 'red'), ('workpaper_status', '=', 'red')]"/>
+                    <filter string="Amber" domain="['|', '|', ('control_status', '=', 'amber'), ('substantive_status', '=', 'amber'), ('workpaper_status', '=', 'amber')]"/>
+                    <filter string="Green" domain="[('completion_status', '=', 'green')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_execution_phase" model="ir.actions.act_window">
+        <field name="name">Execution Phase</field>
+        <field name="res_model">qaco.execution.phase</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_execution_phase_tree"/>
+        <field name="context">{"search_default_filter_open": 1}</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <!-- Form View -->
     <record id="view_execution_phase_form" model="ir.ui.view">
         <field name="name">qaco.execution.phase.form</field>
         <field name="model">qaco.execution.phase</field>
         <field name="arch" type="xml">
-            <form string="Execution Phase">
-                <sheet>
+            <form string="Execution Phase" class="o_qaco_execution_form" create="false">
+                <header>
+                    <button name="action_manager_sign" type="object" string="Manager Sign" class="btn-primary"
+                        modifiers="{'invisible': ['|', ('manager_signed_user_id', '!=', False), ('execution_complete', '=', True)]}"/>
+                    <button name="action_partner_sign" type="object" string="Partner Sign" class="btn-primary"
+                        modifiers="{'invisible': ['|', ('partner_signed_user_id', '!=', False), ('execution_complete', '=', True)]}"/>
+                    <button name="action_quality_review" type="object" string="Quality Review" class="btn-secondary"
+                        modifiers="{'invisible': [('execution_complete', '=', True)]}"/>
+                    <button name="action_mark_execution_complete" type="object" string="Mark Complete" class="btn-success"
+                        modifiers="{'invisible': [('execution_complete', '=', True)]}"/>
+                    <button name="action_generate_phase_certificate" type="object" string="Generate Certificate" class="btn-secondary"
+                        modifiers="{'invisible': [('execution_complete', '=', False)]}"/>
+                    <button name="action_export_execution_file" type="object" string="Export File" class="btn-secondary"
+                        modifiers="{'invisible': [('execution_complete', '=', False)]}"/>
+                    <field name="completion_status" widget="statusbar" class="oe_inline" readonly="1"
+                        modifiers="{'readonly': True}"/>
+                </header>
+                <sheet string="Execution Phase">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="1" class="oe_inline"/>
+                        </h1>
+                        <h2>
+                            <field name="client_id" readonly="1" class="oe_inline"/>
+                        </h2>
+                    </div>
                     <group>
-                        <field name="audit_id" invisible="1" force_save="1"/>
-                        <field name="client_id"/>
+                        <group>
+                            <field name="audit_id" readonly="1"/>
+                            <field name="planning_phase_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="risk_coverage_percent" widget="percentage" readonly="1"/>
+                            <field name="open_critical_risk_count" readonly="1"/>
+                            <field name="compliance_beacon_state" widget="badge" readonly="1"/>
+                        </group>
                     </group>
+                    <group string="Status Heatmap">
+                        <field name="control_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="substantive_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="sampling_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="evidence_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="workpaper_status" widget="statusbar" options="{'clickable': False}"/>
+                    </group>
+                    <div class="o_execution_alert" modifiers="{'invisible': [('compliance_alert_message', '=', False)]}">
+                        <field name="compliance_alert_message" readonly="1" widget="html"/>
+                    </div>
+                    <notebook>
+                        <page string="Risk Dashboard">
+                            <field name="execution_risk_line_ids" context="{'default_execution_phase_id': active_id}" mode="tree" colspan="4">
+                                <tree string="Risk Coverage" editable="bottom">
+                                    <field name="risk_description"/>
+                                    <field name="risk_rating"/>
+                                    <field name="assertion_type"/>
+                                    <field name="is_significant" widget="boolean_toggle"/>
+                                    <field name="coverage_percent" widget="progressbar"/>
+                                    <field name="is_fully_addressed"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Controls">
+                            <group>
+                                <field name="checklist_controls_linked" widget="boolean_toggle"/>
+                                <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
+                                <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
+                            </group>
+                            <field name="control_test_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                <tree string="Tests of Controls" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="control_name"/>
+                                    <field name="process_name"/>
+                                    <field name="risk_line_id"/>
+                                    <field name="frequency"/>
+                                    <field name="design_effectiveness"/>
+                                    <field name="operating_effectiveness"/>
+                                    <field name="exception_count"/>
+                                    <field name="test_status" widget="statusbar"/>
+                                </tree>
+                                <form string="Control Test">
+                                    <group>
+                                        <group>
+                                            <field name="execution_phase_id" readonly="1"/>
+                                            <field name="risk_line_id"/>
+                                            <field name="assertion_type"/>
+                                            <field name="control_name"/>
+                                            <field name="process_name"/>
+                                            <field name="control_owner"/>
+                                            <field name="frequency"/>
+                                            <field name="population_description"/>
+                                        </group>
+                                        <group>
+                                            <field name="design_effectiveness"/>
+                                            <field name="design_comment" widget="text"/>
+                                            <field name="operating_effectiveness"/>
+                                            <field name="planned_reliance_level"/>
+                                            <field name="tolerable_deviation_rate"/>
+                                            <field name="expected_deviation_rate"/>
+                                            <field name="recommended_sample_size" readonly="1"/>
+                                            <field name="selected_sample_size"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <group>
+                                            <field name="testing_period_start"/>
+                                            <field name="testing_period_end"/>
+                                            <field name="sampling_request_id" context="{'default_execution_phase_id': parent.id}"/>
+                                        </group>
+                                        <group>
+                                            <field name="walkthrough_narrative" widget="html" colspan="2"/>
+                                        </group>
+                                    </group>
+                                    <group string="Evidence">
+                                        <field name="documentation_attachment_ids" widget="many2many_binary" filename="data"/>
+                                        <field name="walkthrough_attachment_ids" widget="many2many_binary" filename="data"/>
+                                    </group>
+                                    <group string="Exceptions">
+                                        <field name="exception_ids" context="{'default_control_test_id': active_id}">
+                                            <tree editable="bottom">
+                                                <field name="description"/>
+                                                <field name="root_cause"/>
+                                                <field name="isa265_communicated"/>
+                                            </tree>
+                                            <form string="Exception">
+                                                <group>
+                                                    <field name="description"/>
+                                                    <field name="root_cause"/>
+                                                    <field name="impact" widget="text"/>
+                                                    <field name="isa265_communicated"/>
+                                                    <field name="communication_reference"/>
+                                                    <field name="remediation_plan" widget="text"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                    <group>
+                                        <field name="conclusion" readonly="1"/>
+                                        <field name="test_status" widget="statusbar"/>
+                                        <field name="checklist_signed" widget="boolean_toggle"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Substantive">
+                            <group>
+                                <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
+                                <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
+                            </group>
+                            <field name="substantive_area_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="area_code"/>
+                                    <field name="status" widget="statusbar"/>
+                                    <field name="exception_count"/>
+                                    <field name="conclusion"/>
+                                </tree>
+                                <form string="Substantive Area">
+                                    <group>
+                                        <field name="area_code"/>
+                                        <field name="risk_line_ids" widget="many2many_tags"/>
+                                        <field name="status" widget="statusbar"/>
+                                        <field name="conclusion"/>
+                                    </group>
+                                    <field name="focus_note" widget="html" colspan="4"/>
+                                    <group string="Procedures">
+                                        <field name="procedure_ids" context="{'default_execution_phase_id': parent.execution_phase_id}" colspan="4">
+                                            <tree editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="name"/>
+                                                <field name="assertion_type"/>
+                                                <field name="risk_line_id"/>
+                                                <field name="sample_size_planned"/>
+                                                <field name="sample_size_tested"/>
+                                                <field name="result"/>
+                                                <field name="status" widget="statusbar"/>
+                                            </tree>
+                                            <form string="Substantive Procedure">
+                                                <group>
+                                                    <field name="name"/>
+                                                    <field name="assertion_type"/>
+                                                    <field name="risk_line_id"/>
+                                                    <field name="methodology_step" widget="html"/>
+                                                </group>
+                                                <group>
+                                                    <field name="sample_size_planned"/>
+                                                    <field name="sample_size_tested"/>
+                                                    <field name="sampling_request_id" context="{'default_execution_phase_id': parent.execution_phase_id}"/>
+                                                </group>
+                                                <group>
+                                                    <field name="prepared_by"/>
+                                                    <field name="prepared_on"/>
+                                                    <field name="reviewed_by"/>
+                                                    <field name="reviewed_on"/>
+                                                </group>
+                                                <group>
+                                                    <field name="result"/>
+                                                    <field name="exception_note" widget="text"/>
+                                                    <field name="status" widget="statusbar"/>
+                                                </group>
+                                                <group string="Evidence">
+                                                    <field name="evidence_attachment_ids" widget="many2many_binary" filename="data"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Sampling">
+                            <group>
+                                <field name="checklist_sampling_signed" widget="boolean_toggle"/>
+                            </group>
+                            <field name="sampling_request_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                <tree string="Sampling" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="method"/>
+                                    <field name="risk_level"/>
+                                    <field name="population_size"/>
+                                    <field name="sample_size"/>
+                                    <field name="state"/>
+                                </tree>
+                                <form string="Sampling Request">
+                                    <sheet>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="execution_phase_id" readonly="1"/>
+                                            <field name="control_test_id"/>
+                                            <field name="substantive_procedure_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="population_description"/>
+                                            <field name="population_amount"/>
+                                            <field name="population_size"/>
+                                            <field name="tolerable_error"/>
+                                            <field name="expected_error"/>
+                                            <field name="risk_level"/>
+                                            <field name="method"/>
+                                            <field name="sample_size" readonly="1"/>
+                                            <field name="sample_seed"/>
+                                        </group>
+                                        <group>
+                                            <field name="memo" widget="html" colspan="4"/>
+                                        </group>
+                                        <group>
+                                            <field name="sample_file_id" widget="many2one_binary" filename="datas"/>
+                                        </group>
+                                        <footer>
+                                            <button name="action_lock_sampling" type="object" string="Lock" class="btn-primary"/>
+                                        </footer>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Evidence">
+                            <group>
+                                <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
+                            </group>
+                            <field name="evidence_item_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                <tree string="Evidence Items" editable="bottom">
+                                    <field name="description"/>
+                                    <field name="assertion_type"/>
+                                    <field name="evidence_type"/>
+                                    <field name="reliability_score"/>
+                                    <field name="collected_by"/>
+                                    <field name="collected_on"/>
+                                </tree>
+                                <form string="Evidence Item">
+                                    <group>
+                                        <field name="description"/>
+                                        <field name="assertion_type"/>
+                                        <field name="evidence_type"/>
+                                        <field name="reliability_score" readonly="1"/>
+                                        <field name="control_test_id"/>
+                                        <field name="substantive_procedure_id"/>
+                                        <field name="isa_reference" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="collected_by"/>
+                                        <field name="collected_on"/>
+                                        <field name="locked" widget="boolean_toggle"/>
+                                    </group>
+                                    <group string="Attachments">
+                                        <field name="attachment_ids" widget="many2many_binary" filename="data"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Workpapers">
+                            <group>
+                                <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
+                            </group>
+                            <field name="workpaper_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="workpaper_type"/>
+                                    <field name="balance_amount"/>
+                                    <field name="preparer_id"/>
+                                    <field name="reviewer_id"/>
+                                    <field name="has_open_notes"/>
+                                    <field name="locked"/>
+                                </tree>
+                                <form string="Workpaper">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="workpaper_type"/>
+                                        <field name="template_reference"/>
+                                        <field name="balance_amount"/>
+                                    </group>
+                                    <group>
+                                        <field name="preparer_id"/>
+                                        <field name="prepared_on"/>
+                                        <field name="reviewer_id"/>
+                                        <field name="reviewed_on"/>
+                                    </group>
+                                    <group>
+                                        <field name="attachment_ids" widget="many2many_binary" filename="data"/>
+                                    </group>
+                                    <group string="Review Notes">
+                                        <field name="review_note_ids" context="{'default_workpaper_id': active_id}"/>
+                                    </group>
+                                    <footer>
+                                        <button name="toggle_lock" type="object" string="Toggle Lock" class="btn-secondary"/>
+                                    </footer>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Sign-off">
+                            <group string="Checklist">
+                                <field name="checklist_controls_linked" widget="boolean_toggle"/>
+                                <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
+                                <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
+                                <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
+                                <field name="checklist_sampling_signed" widget="boolean_toggle"/>
+                                <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
+                                <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
+                            </group>
+                            <group string="Sign-offs">
+                                <field name="manager_signed_user_id" readonly="1"/>
+                                <field name="manager_signed_on" readonly="1"/>
+                                <field name="partner_signed_user_id" readonly="1"/>
+                                <field name="partner_signed_on" readonly="1"/>
+                                <field name="quality_reviewer_id" readonly="1"/>
+                                <field name="quality_reviewed_on" readonly="1"/>
+                            </group>
+                            <group string="Completion">
+                                <field name="execution_complete" readonly="1"/>
+                                <field name="execution_completed_on" readonly="1"/>
+                                <field name="phase_completion_certificate" readonly="1"/>
+                                <field name="can_finalize_execution" readonly="1"/>
+                            </group>
+                            <field name="missing_requirements_note" widget="html" readonly="1"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
