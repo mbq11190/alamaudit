@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Finalisation Phase Form View -->
+    <record id="view_finalisation_phase_form" model="ir.ui.view">
+        <field name="name">qaco.finalisation.phase.form</field>
+        <field name="model">qaco.finalisation.phase</field>
+        <field name="arch" type="xml">
+            <form string="Finalisation Phase">
+                <sheet>
+                    <group>
+                        <field name="audit_id" invisible="1" force_save="1"/>
+                        <field name="client_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Update action to use this form -->
+    <record id="action_finalisation_phase" model="ir.actions.act_window">
+        <field name="name">Finalisation Phase</field>
+        <field name="res_model">qaco.audit</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_finalisation_phase_form"/>
+        <field name="target">current</field>
+    </record>
+</odoo>

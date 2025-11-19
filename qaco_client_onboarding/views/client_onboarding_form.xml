@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Client Onboarding Form View -->
+    <record id="view_client_onboarding_form" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.form</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="arch" type="xml">
+            <form string="Client Onboarding">
+                <sheet>
+                    <group>
+                        <field name="audit_id" invisible="1" force_save="1"/>
+                        <field name="client_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Update action to use this form -->
+    <record id="action_client_onboarding" model="ir.actions.act_window">
+        <field name="name">Client Onboarding</field>
+        <field name="res_model">qaco.audit</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_client_onboarding_form"/>
+        <field name="target">current</field>
+    </record>
+</odoo>

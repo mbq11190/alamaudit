@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <!-- This file can contain seed data for onboarding statuses if needed -->
-        <!-- Currently, states are defined in the model -->
-    </data>
-</odoo>

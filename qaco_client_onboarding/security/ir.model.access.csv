@@ -1,9 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_qaco_client_onboarding_trainee,access.qaco.client.onboarding.trainee,model_qaco_client_onboarding,qaco_audit.group_audit_trainee,1,0,0,0
-access_qaco_client_onboarding_supervisor,access.qaco.client.onboarding.supervisor,model_qaco_client_onboarding,qaco_audit.group_audit_supervisor,1,1,1,0
-access_qaco_client_onboarding_manager,access.qaco.client.onboarding.manager,model_qaco_client_onboarding,qaco_audit.group_audit_manager,1,1,1,0
-access_qaco_client_onboarding_partner,access.qaco.client.onboarding.partner,model_qaco_client_onboarding,qaco_audit.group_audit_partner,1,1,1,1
-access_qaco_client_onboarding_admin,access.qaco.client.onboarding.admin,model_qaco_client_onboarding,qaco_audit.group_audit_administrator,1,1,1,1
-access_qaco_engagement_user,qaco.audit.engagement,model_qaco_audit_engagement,qaco_audit.group_audit_trainee,1,1,1,0
-access_qaco_engagement_manager,qaco.audit.engagement,model_qaco_audit_engagement,qaco_audit.group_audit_manager,1,1,1,1
-access_qaco_engagement_partner,qaco.audit.engagement,model_qaco_audit_engagement,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_client_onboarding_user,qaco.client.onboarding.user,model_qaco_client_onboarding,qaco_audit.group_audit_user,1,1,1,1
+access_qaco_client_onboarding_partner,qaco.client.onboarding.partner,model_qaco_client_onboarding,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_client_onboarding_manager,qaco.client.onboarding.manager,model_qaco_client_onboarding,qaco_audit.group_audit_manager,1,1,1,1

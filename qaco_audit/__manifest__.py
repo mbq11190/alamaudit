@@ -16,15 +16,17 @@
     'depends': ['base', 'mail', 'hr', 'project', 'web', 'qaco_employees'],
 
     'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
 
     'data': [
-        'security/ir.model.access.csv',
         'security/security_groups.xml',
+        'security/ir.model.access.csv',
+        'views/auto_follower_views.xml',
+        'views/menu_view.xml',
         'data/firm_name_data.xml',
         'views/tree_view.xml',
-        'views/auto_follower_views.xml',
         'views/firm_name_views.xml',
-        'views/menu_view.xml',
         'views/form_view.xml',
         'views/kanban_view.xml',
         'views/audit_attachment_views.xml',

@@ -1,34 +1,16 @@
 {
-    'name': 'QACO Finalisation Phase',
-    'version': '17.0.1.0.0',
-    'category': 'Services/Audit',
-    'summary': 'Audit Finalisation Phase - Reporting, Review, Quality Control & Sign-off',
-    'description': """
-        Comprehensive Audit Finalisation Phase Management
-        ==============================================
-        
-        This module manages the finalisation phase of audit engagements including:
-        * Audit report drafting and review
-        * Quality control and review process
-        * Client discussions and meetings
-        * Adjustments and corrections
-        * Management representation letters
-        * Report sign-off and approval
-        * Deliverables tracking
-        * Post-audit file completion
-        * Archiving and documentation
-    """,
-    'author': 'QACO',
-    'website': 'https://www.qaco.com',
-    'depends': ['qaco_audit', 'qaco_execution_phase', 'hr'],
-    'data': [
-        'security/ir.model.access.csv',
-        'data/report_type_data.xml',
-        'views/finalisation_phase_views.xml',
-        'views/qaco_audit_form_extend.xml',
+    "name": "QACO Finalisation Phase",
+    "summary": "Finalisation Phase",
+    "version": "17.0.1.0",
+    "author": "QACO",
+    "license": "LGPL-3",
+    "category": "Accounting/Auditing",
+    "depends": ["qaco_audit", "qaco_execution_phase"],
+    "data": [
+        "views/finalisation_phase_form.xml",
+        "views/audit_smart_button.xml",
     ],
-    'installable': True,
-    'application': True,
-    'auto_install': False,
-    'license': 'LGPL-3',
+    "installable": True,
+    "application": False,
+    "auto_install": True,
 }

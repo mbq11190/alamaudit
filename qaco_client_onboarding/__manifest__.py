@@ -3,35 +3,21 @@
     'name': 'QACO Client Onboarding',
     'version': '17.0.1.0.0',
     'category': 'Audit',
-    'summary': 'Client acceptance, KYC, due diligence, and engagement process',
+    'summary': 'Client Onboarding Phase',
     'description': """
 Client Onboarding Module
 ========================
-Comprehensive client acceptance and onboarding workflow including:
-- Client acceptance evaluation
-- KYC (Know Your Client) documentation
-- Due diligence and background checks
-- Conflict of interest checks
-- Independence assessment
-- Engagement letter generation and acceptance
-- Terms and conditions agreement
-- Fee proposal and approval
+Client onboarding phase with smart button access from audit.
     """,
     'author': 'QACO',
     'website': 'https://www.qaco.com',
-    'depends': ['qaco_audit', 'mail'],
+    'depends': ['qaco_audit'],
     'data': [
-        'security/ir.model.access.csv',
-        'data/audit_engagement_data.xml',
-        'data/onboarding_sequence.xml',
-        'data/onboarding_status_data.xml',
-        'views/audit_engagement_views.xml',
-        'views/client_onboarding_views.xml',
-        'views/audit_extension_views.xml',
-        'views/audit_engagement_onboarding_views.xml',
+        'views/client_onboarding_form.xml',
+        'views/audit_smart_button.xml',
     ],
     'installable': True,
-    'application': True,
-    'auto_install': False,
+    'application': False,
+    'auto_install': True,
     'license': 'LGPL-3',
 }

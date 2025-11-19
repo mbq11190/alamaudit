@@ -1,11 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_qaco_deliverables_trainee,access.qaco.deliverables.trainee,model_qaco_deliverables,qaco_audit.group_audit_trainee,1,0,0,0
-access_qaco_deliverables_supervisor,access.qaco.deliverables.supervisor,model_qaco_deliverables,qaco_audit.group_audit_supervisor,1,1,1,0
-access_qaco_deliverables_manager,access.qaco.deliverables.manager,model_qaco_deliverables,qaco_audit.group_audit_manager,1,1,1,0
-access_qaco_deliverables_partner,access.qaco.deliverables.partner,model_qaco_deliverables,qaco_audit.group_audit_partner,1,1,1,1
-access_qaco_deliverables_admin,access.qaco.deliverables.admin,model_qaco_deliverables,qaco_audit.group_audit_administrator,1,1,1,1
-access_qaco_deliverable_item_trainee,access.qaco.deliverable.item.trainee,model_qaco_deliverable_item,qaco_audit.group_audit_trainee,1,0,0,0
-access_qaco_deliverable_item_supervisor,access.qaco.deliverable.item.supervisor,model_qaco_deliverable_item,qaco_audit.group_audit_supervisor,1,1,1,0
-access_qaco_deliverable_item_manager,access.qaco.deliverable.item.manager,model_qaco_deliverable_item,qaco_audit.group_audit_manager,1,1,1,0
-access_qaco_deliverable_item_partner,access.qaco.deliverable.item.partner,model_qaco_deliverable_item,qaco_audit.group_audit_partner,1,1,1,1
-access_qaco_deliverable_item_admin,access.qaco.deliverable.item.admin,model_qaco_deliverable_item,qaco_audit.group_audit_administrator,1,1,1,1
+access_qaco_deliverables_user,qaco.deliverables.user,model_qaco_deliverables,qaco_audit.group_audit_user,1,1,1,1
+access_qaco_deliverables_partner,qaco.deliverables.partner,model_qaco_deliverables,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_deliverables_manager,qaco.deliverables.manager,model_qaco_deliverables,qaco_audit.group_audit_manager,1,1,1,1

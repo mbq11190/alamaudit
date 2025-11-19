@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Window action for Finalisation Phase -->
+    <record id="action_finalisation_phase" model="ir.actions.act_window">
+        <field name="name">Finalisation Phase</field>
+        <field name="res_model">qaco.finalisation.phase</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_finalisation_phase_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_audit_id': active_id}</field>
+        <field name="domain">[('audit_id', '=', active_id)]</field>
+    </record>
+
+    <!-- Smart button on qaco.audit form -->
+    <record id="view_qaco_audit_form_finalisation_button" model="ir.ui.view">
+        <field name="name">qaco.audit.form.finalisation.button</field>
+        <field name="model">qaco.audit</field>
+        <field name="inherit_id" ref="qaco_execution_phase.view_qaco_audit_form_execution_button"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(qaco_execution_phase.action_execution_phase)d']" position="after">
+                <button class="oe_stat_button" type="action"
+                        name="%(action_finalisation_phase)d"
+                        icon="fa-check-circle">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Finalisation</span>
+                        <span class="o_stat_text">Phase</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
