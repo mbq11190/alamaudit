@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_qaco_client_onboarding_user,qaco.client.onboarding.user,model_qaco_client_onboarding,qaco_audit.group_audit_user,1,1,1,1
+access_qaco_client_onboarding_user,qaco.client.onboarding.user,model_qaco_client_onboarding,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_client_onboarding_partner,qaco.client.onboarding.partner,model_qaco_client_onboarding,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_client_onboarding_manager,qaco.client.onboarding.manager,model_qaco_client_onboarding,qaco_audit.group_audit_manager,1,1,1,1

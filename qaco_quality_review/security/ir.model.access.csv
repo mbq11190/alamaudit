@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_qaco_quality_review_user,qaco.quality.review.user,model_qaco_quality_review,qaco_audit.group_audit_user,1,1,1,1
+access_qaco_quality_review_user,qaco.quality.review.user,model_qaco_quality_review,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_quality_review_partner,qaco.quality.review.partner,model_qaco_quality_review,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_quality_review_manager,qaco.quality.review.manager,model_qaco_quality_review,qaco_audit.group_audit_manager,1,1,1,1

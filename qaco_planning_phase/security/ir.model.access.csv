@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_qaco_planning_phase_user,qaco.planning.phase.user,model_qaco_planning_phase,qaco_audit.group_audit_user,1,1,1,1
+access_qaco_planning_phase_user,qaco.planning.phase.user,model_qaco_planning_phase,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_planning_phase_partner,qaco.planning.phase.partner,model_qaco_planning_phase,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_planning_phase_manager,qaco.planning.phase.manager,model_qaco_planning_phase,qaco_audit.group_audit_manager,1,1,1,1
