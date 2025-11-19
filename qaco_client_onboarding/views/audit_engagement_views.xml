@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <form string="Audit Engagement">
                 <header>
-                    <button name="action_accept_engagement" type="object" string="Accept" class="oe_highlight" states="draft"/>
+                    <button name="action_accept_engagement" type="object" string="Accept" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_request_partner_review" type="object" string="Request Partner Review"/>
                     <button name="action_mark_partner_review_complete" type="object" string="Mark Partner Review Complete"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,onboarding,planning,execution,finalisation,completed,cancelled"/>
