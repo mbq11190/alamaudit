@@ -15,7 +15,7 @@
                     <notebook>
                         <page string="Overview">
                             <group>
-                                <label string="This placeholder tab is replaced by the extended view definition."/>
+                                <label string="This placeholder tab is replaced by the extended view definition." class="o_form_label"/>
                             </group>
                         </page>
                     </notebook>

@@ -32,7 +32,7 @@
 							<field name="missing_requirements_note" readonly="1"/>
 						</group>
 					</page>
-					<page string="Understanding & Environment">
+					<page string="Understanding &amp; Environment">
 						<group>
 							<field name="industry_id"/>
 							<field name="business_model"/>
@@ -106,7 +106,7 @@
 							<field name="internal_control_attachment_ids" widget="many2many_binary"/>
 						</group>
 					</page>
-					<page string="Risk & Strategy">
+					<page string="Risk &amp; Strategy">
 						<group>
 							<field name="risk_register_line_ids" nolabel="1" context="{'default_planning_phase_id': active_id}">
 								<tree editable="bottom">
@@ -162,7 +162,7 @@
 							<field name="audit_strategy_attachment_ids" widget="many2many_binary"/>
 						</group>
 					</page>
-					<page string="Documentation & Checklist">
+					<page string="Documentation &amp; Checklist">
 						<group>
 							<field name="planning_memo_summary"/>
 							<field name="analytical_summary_attachment_ids" widget="many2many_binary"/>
