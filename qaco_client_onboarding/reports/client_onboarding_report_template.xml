@@ -9,7 +9,7 @@
                     <strong>Client:</strong> <t t-esc="doc.client_id.name or 'N/A'"/>
                 </p>
                 <p>
-                    <strong>Entity Type:</strong> <t t-esc="doc.entity_type_label or doc.entity_type"/> &nbsp;
+                    <strong>Entity Type:</strong> <t t-esc="doc.entity_type_label or doc.entity_type"/> &#160;
                     <strong>Overall Status:</strong> <t t-esc="doc.overall_status_label or doc.overall_status"/>
                 </p>
                 <h3>Section 1 – Legal Identity</h3>
@@ -26,8 +26,7 @@
                         <t t-foreach="doc.branch_location_ids" t-as="branch">
                             <li><t t-esc="branch.name"/> – <t t-esc="branch.address"/> (<t t-esc="branch.country_id.name or '—'"/>)</li>
                         </t>
-                        <p><strong>Entity Type:</strong> <t t-esc="doc.entity_type_label or doc.entity_type"/> &#160;
-                </t>
+                    </t>
                 <t t-if="doc.ubo_ids">
                     <strong>Ultimate Beneficial Owners:</strong>
                     <ul>
