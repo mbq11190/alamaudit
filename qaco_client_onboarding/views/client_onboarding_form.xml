@@ -250,30 +250,4 @@
             </form>
         </field>
     </record>
-</odoo><?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <!-- Client Onboarding Form View -->
-    <record id="view_client_onboarding_form" model="ir.ui.view">
-        <field name="name">qaco.client.onboarding.form</field>
-        <field name="model">qaco.client.onboarding</field>
-        <field name="arch" type="xml">
-            <form string="Client Onboarding">
-                <sheet>
-                    <group>
-                        <field name="name" readonly="1"/>
-                        <field name="audit_id"/>
-                        <field name="client_id"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    <record id="action_client_onboarding_menu" model="ir.actions.act_window">
-        <field name="name">Client Onboarding</field>
-        <field name="res_model">qaco.client.onboarding</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_client_onboarding_tree"/>
-        <field name="target">current</field>
-    </record>
-    <menuitem id="menu_client_onboarding_root" name="Client Onboarding" parent="qaco_audit.menu_1" action="action_client_onboarding_menu" sequence="20"/>
 </odoo>
