@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="regulator_secp" model="qaco.regulator">
+        <field name="name">Securities and Exchange Commission of Pakistan</field>
+        <field name="code">SECP</field>
+        <field name="jurisdiction">federal</field>
+        <field name="website">https://www.secp.gov.pk</field>
+        <field name="description">Primary corporate regulator overseeing companies, NBFCs, and capital markets.</field>
+        <field name="key_regulations"><![CDATA[
+            <ul>
+                <li>Companies Act 2017</li>
+                <li>Listed Companies (Code of Corporate Governance) Regulations 2019</li>
+                <li>AOB Audit Regulations</li>
+            </ul>
+        ]]></field>
+        <field name="filing_deadlines"><![CDATA[
+            <ul>
+                <li>Annual financial statements: within 30 days of AGM</li>
+                <li>Quarterly interim reports: within 30 days of quarter close</li>
+            </ul>
+        ]]></field>
+        <field name="contact_information">111-772-772</field>
+    </record>
+
+    <record id="regulator_sbp" model="qaco.regulator">
+        <field name="name">State Bank of Pakistan</field>
+        <field name="code">SBP</field>
+        <field name="jurisdiction">federal</field>
+        <field name="website">https://www.sbp.org.pk</field>
+        <field name="description">Central bank regulating banks, DFIs, and microfinance institutions.</field>
+        <field name="key_regulations"><![CDATA[
+            <ul>
+                <li>Prudential Regulations for Corporate/Commercial Banking</li>
+                <li>AML/CFT Regulations</li>
+                <li>Foreign Exchange Manual</li>
+            </ul>
+        ]]></field>
+        <field name="filing_deadlines"><![CDATA[
+            <ul>
+                <li>Monthly statements of position</li>
+                <li>Quarterly stress testing reports</li>
+            </ul>
+        ]]></field>
+        <field name="contact_information">111-727-111</field>
+    </record>
+</odoo>

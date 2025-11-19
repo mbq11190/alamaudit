@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="industry_manufacturing" model="qaco.industry">
+        <field name="name">Manufacturing</field>
+        <field name="code">MANU</field>
+        <field name="description">Manufacturing entities including textile, automotive, pharmaceutical, food processing, and industrial manufacturing sectors.</field>
+        <field name="common_risks"><![CDATA[
+            <ul>
+                <li>Inventory valuation and existence</li>
+                <li>Cost of goods sold accuracy</li>
+                <li>Fixed assets capitalization and depreciation</li>
+                <li>Revenue recognition for long-term contracts</li>
+                <li>Related party transactions with group companies</li>
+            </ul>
+        ]]></field>
+        <field name="applicable_regulations"><![CDATA[
+            <ul>
+                <li>SECP Companies Act 2017</li>
+                <li>Pakistan Income Tax Ordinance 2001</li>
+                <li>Sales Tax Act 1990</li>
+                <li>Factory Act 1934</li>
+                <li>Environmental Protection Regulations</li>
+            </ul>
+        ]]></field>
+    </record>
+
+    <record id="industry_financial" model="qaco.industry">
+        <field name="name">Financial Services</field>
+        <field name="code">FINS</field>
+        <field name="description">Banks, DFIs, microfinance institutions, insurance companies, and other financial services entities.</field>
+        <field name="common_risks"><![CDATA[
+            <ul>
+                <li>Loan loss provisioning and impairment</li>
+                <li>Investment valuation and classification</li>
+                <li>Compliance with SBP regulations</li>
+                <li>Related party lending</li>
+                <li>Capital adequacy and regulatory requirements</li>
+            </ul>
+        ]]></field>
+        <field name="applicable_regulations"><![CDATA[
+            <ul>
+                <li>State Bank of Pakistan Prudential Regulations</li>
+                <li>SECP Insurance Ordinance 2000</li>
+                <li>Anti-Money Laundering Act 2010</li>
+                <li>Basel III capital framework</li>
+            </ul>
+        ]]></field>
+    </record>
+</odoo>

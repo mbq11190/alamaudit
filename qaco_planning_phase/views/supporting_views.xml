@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qaco_industry_tree" model="ir.ui.view">
+        <field name="name">qaco.industry.tree</field>
+        <field name="model">qaco.industry</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_qaco_industry_form" model="ir.ui.view">
+        <field name="name">qaco.industry.form</field>
+        <field name="model">qaco.industry</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="description" nolabel="1"/>
+                        <field name="common_risks" nolabel="1"/>
+                        <field name="applicable_regulations" nolabel="1"/>
+                        <field name="key_performance_indicators" nolabel="1"/>
+                        <field name="icap_guidance" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qaco_regulator_tree" model="ir.ui.view">
+        <field name="name">qaco.regulator.tree</field>
+        <field name="model">qaco.regulator</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="jurisdiction"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_qaco_regulator_form" model="ir.ui.view">
+        <field name="name">qaco.regulator.form</field>
+        <field name="model">qaco.regulator</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="website"/>
+                        <field name="jurisdiction"/>
+                        <field name="description" nolabel="1"/>
+                        <field name="key_regulations" nolabel="1"/>
+                        <field name="filing_deadlines" nolabel="1"/>
+                        <field name="contact_information" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

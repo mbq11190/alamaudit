@@ -1,7 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_qaco_planning_phase_user,qaco.planning.phase.user,model_qaco_planning_phase,qaco_audit.group_audit_trainee,1,1,1,1
-access_qaco_planning_phase_partner,qaco.planning.phase.partner,model_qaco_planning_phase,qaco_audit.group_audit_partner,1,1,1,1
-access_qaco_planning_phase_manager,qaco.planning.phase.manager,model_qaco_planning_phase,qaco_audit.group_audit_manager,1,1,1,1
-access_qaco_risk_register_line_user,qaco.risk.register.line,model_qaco_risk_register_line,base.group_user,1,1,1,1
-access_qaco_industry_user,qaco.industry,model_qaco_industry,base.group_user,1,1,1,1
-access_qaco_regulator_user,qaco.regulator,model_qaco_regulator,base.group_user,1,1,1,1
+access_qaco_planning_phase_audit_staff,qaco.planning.phase.audit.staff,model_qaco_planning_phase,base.group_user,1,1,1,0
+access_qaco_planning_phase_audit_manager,qaco.planning.phase.audit.manager,model_qaco_planning_phase,base.group_manager,1,1,1,0
+access_qaco_planning_phase_audit_partner,qaco.planning.phase.audit.partner,model_qaco_planning_phase,base.group_system,1,1,1,1
+access_qaco_risk_register_line_audit_staff,qaco.risk.register.line.audit.staff,model_qaco_risk_register_line,base.group_user,1,1,1,0
+access_qaco_risk_register_line_audit_manager,qaco.risk.register.line.audit.manager,model_qaco_risk_register_line,base.group_manager,1,1,1,1
+access_qaco_industry_readonly,qaco.industry.readonly,model_qaco_industry,base.group_user,1,0,0,0
+access_qaco_industry_manager,qaco.industry.manager,model_qaco_industry,base.group_manager,1,1,1,1
+access_qaco_regulator_readonly,qaco.regulator.readonly,model_qaco_regulator,base.group_user,1,0,0,0
+access_qaco_regulator_manager,qaco.regulator.manager,model_qaco_regulator,base.group_manager,1,1,1,1

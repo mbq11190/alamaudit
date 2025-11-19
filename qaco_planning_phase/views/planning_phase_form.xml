@@ -1,27 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <!-- Planning Phase Form View -->
-    <record id="view_qaco_planning_phase_form" model="ir.ui.view">
-        <field name="name">qaco.planning.phase.form</field>
-        <field name="model">qaco.planning.phase</field>
-        <field name="arch" type="xml">
-            <form string="Planning Phase">
-                <header/>
-                <sheet>
-                    <group>
-                        <field name="audit_id" invisible="1" force_save="1"/>
-                        <field name="client_id"/>
-                    </group>
-                    <notebook>
-                        <page string="Overview">
-                            <group>
-                                <field name="name" readonly="1"/>
-                                <field name="planning_complete" readonly="1"/>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-</odoo>
+<odoo/>

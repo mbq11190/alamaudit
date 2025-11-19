@@ -1,0 +1,8 @@
+.o_planning_form .o_form_label {
+    font-weight: 600;
+}
+
+.o_planning_form .o_stat_text {
+    text-transform: uppercase;
+    font-size: 12px;
+}

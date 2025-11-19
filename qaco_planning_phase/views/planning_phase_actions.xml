@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_qaco_planning_phase" model="ir.actions.act_window">
+        <field name="name">Planning Phases</field>
+        <field name="res_model">qaco.planning.phase</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="qaco_planning_phase.view_qaco_planning_phase_tree"/>
+        <field name="search_view_id" ref="qaco_planning_phase.view_qaco_planning_phase_search"/>
+        <field name="context">{'search_default_completed': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a new planning phase</p>
+            <p>
+                The Planning Phase module ensures comprehensive audit planning compliance with
+                ICAP standards, SECP requirements, and AOB guidelines for statutory audits in Pakistan.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_open_planning_phase_from_audit" model="ir.actions.act_window">
+        <field name="name">Open Planning Phase</field>
+        <field name="res_model">qaco.planning.phase</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="qaco_planning_phase.view_qaco_planning_phase_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_audit_id': active_id}</field>
+        <field name="domain">[('audit_id', '=', active_id)]</field>
+    </record>
+
+    <menuitem id="menu_qaco_planning_phase" name="Planning Phases"
+              parent="qaco_audit.menu_qaco_audit_main"
+              action="action_qaco_planning_phase" sequence="20"/>
+</odoo>
