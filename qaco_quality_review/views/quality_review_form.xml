@@ -1,27 +1,325 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Quality Review Form View -->
+    <data noupdate="0">
+        <record id="view_quality_review_tree" model="ir.ui.view">
+        <field name="name">qaco.quality.review.tree</field>
+        <field name="model">qaco.quality.review</field>
+        <field name="arch" type="xml">
+            <tree default_order="audit_id,name">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <field name="eqr_required" widget="boolean_toggle"/>
+                <field name="eqr_partner_employee_id"/>
+                <field name="overall_status" widget="badge" options="{'clickable': False}"/>
+                <field name="open_review_note_count"/>
+                <field name="open_finding_count"/>
+                <field name="file_lock_date"/>
+                <field name="archiving_completed"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_quality_review_search" model="ir.ui.view">
+        <field name="name">qaco.quality.review.search</field>
+        <field name="model">qaco.quality.review</field>
+        <field name="arch" type="xml">
+            <search string="Quality Reviews">
+                <field name="audit_id"/>
+                <field name="client_id" filter_domain="[('client_id', '=', self)]"/>
+                <field name="eqr_partner_employee_id"/>
+                <filter name="filter_eqr_required" string="EQR Mandatory" domain="[('eqr_required', '=', True)]"/>
+                <filter name="filter_open_findings" string="Open Findings" domain="[('open_finding_count', '>', 0)]"/>
+                <filter name="filter_open_notes" string="Open Review Notes" domain="[('open_review_note_count', '>', 0)]"/>
+                <filter name="filter_not_locked" string="Unlock pending" domain="['|', ('file_lock_date', '=', False), ('archiving_completed', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_partner" string="EQR Partner" context="{'group_by': 'eqr_partner_employee_id'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by': 'overall_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="view_quality_review_form" model="ir.ui.view">
         <field name="name">qaco.quality.review.form</field>
         <field name="model">qaco.quality.review</field>
         <field name="arch" type="xml">
-            <form string="Quality Review">
+            <form string="Quality Review" create="0">
+                <header>
+                    <button name="action_run_trigger_engine" type="object" string="Run Trigger Engine" class="oe_secondary"/>
+                    <button name="action_finalize_eqr" type="object" string="Finalize EQR" class="oe_highlight" attrs="{'invisible': [('eqr_required', '=', False), ('eqr_concluded', '=', True)]}"/>
+                    <button name="action_validate_quality_gate" type="object" string="Validate Quality Gate" attrs="{'invisible': [('overall_status', '=', 'green')]}"/>
+                    <button name="action_lock_file" type="object" string="Lock File" attrs="{'invisible': [('file_lock_date', '!=', False)]}"/>
+                    <button name="action_mark_archived" type="object" string="Mark Archived" attrs="{'invisible': [('archiving_completed', '=', True)]}"/>
+                    <field name="overall_status" widget="statusbar" statusbar_visible="red,amber,green"/>
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_validate_quality_gate">
+                            <field name="quality_gate_passed" widget="boolean_button"/>
+                            <span class="o_stat_text">Quality Gate</span>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_open_review_notes">
+                            <field name="open_review_note_count" string="Review Notes" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_open_findings">
+                            <field name="open_finding_count" string="Findings" widget="statinfo"/>
+                        </button>
+                    </div>
                     <group>
-                        <field name="audit_id" invisible="1" force_save="1"/>
-                        <field name="client_id"/>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="audit_id" readonly="1"/>
+                            <field name="client_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="eqr_engine_reason" readonly="1" widget="text"/>
+                            <field name="eqr_required" readonly="1"/>
+                            <field name="trigger_status" widget="badge"/>
+                            <field name="procedures_status" widget="badge"/>
+                            <field name="monitoring_status" widget="badge"/>
+                            <field name="locking_status" widget="badge"/>
+                        </group>
                     </group>
+                    <notebook>
+                        <page string="Triggers & Scope" icon="fa-bolt">
+                            <group class="o_phase_banner" colspan="2">
+                                <field name="trigger_status" widget="badge" options="{'clickable': False}"/>
+                                <div class="o_phase_banner_note">
+                                    <strong>Trigger engine</strong><span> evaluates regulatory, independence, and risk signals.</span>
+                                </div>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="eqr_override_option"/>
+                                    <field name="eqr_override_reason" attrs="{'required': [('eqr_override_option', '=', 'force_off')]}"/>
+                                </group>
+                                <group>
+                                    <field name="eqr_partner_employee_id"/>
+                                    <field name="eqr_scope_definition" widget="html"/>
+                                </group>
+                            </group>
+                            <field name="eqr_scope_line_ids" nolabel="1">
+                                <tree editable="bottom" string="Scope Areas">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="focus_area"/>
+                                    <field name="risk_rating"/>
+                                    <field name="procedures" widget="html"/>
+                                    <field name="status"/>
+                                    <field name="reviewer_notes"/>
+                                </tree>
+                            </field>
+                            <group string="Checklist – Triggers" colspan="2">
+                                <field name="checklist_line_ids" domain="[('checklist_type', '=', 'eqr_trigger')]" context="{'default_checklist_type': 'eqr_trigger'}" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="question"/>
+                                        <field name="blocking"/>
+                                        <field name="response" widget="radio"/>
+                                        <field name="comments"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Procedures & Conclusion" icon="fa-clipboard-list">
+                            <group class="o_phase_banner" colspan="2">
+                                <field name="procedures_status" widget="badge" options="{'clickable': False}"/>
+                                <div class="o_phase_banner_note">
+                                    <strong>Procedures</strong><span> need complete scope, judgments, and checklist validation.</span>
+                                </div>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="significant_judgments_reviewed"/>
+                                    <field name="financial_statements_eval"/>
+                                    <field name="opinion_appropriate"/>
+                                </group>
+                                <group>
+                                    <field name="kams_description_adequate"/>
+                                    <field name="compliance_confirmed"/>
+                                    <field name="eqr_concluded" readonly="1"/>
+                                </group>
+                            </group>
+                            <group colspan="2">
+                                <field name="eqr_review_note_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="reference"/>
+                                        <field name="description"/>
+                                        <field name="raised_by_id"/>
+                                        <field name="assigned_to_id"/>
+                                        <field name="status"/>
+                                        <field name="cleared_on"/>
+                                    </tree>
+                                    <form string="Review Note">
+                                        <sheet>
+                                            <group>
+                                                <field name="reference"/>
+                                                <field name="status"/>
+                                            </group>
+                                            <group>
+                                                <field name="raised_by_id"/>
+                                                <field name="assigned_to_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="description"/>
+                                                <field name="response"/>
+                                                <field name="attachment_ids" widget="many2many_binary"/>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="eqr_conclusion_text" widget="html" colspan="2"/>
+                                <field name="eqr_conclusion_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Checklist – Completion">
+                                <field name="checklist_line_ids" domain="[('checklist_type', '=', 'eqr_completion')]" context="{'default_checklist_type': 'eqr_completion'}" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="question"/>
+                                        <field name="blocking"/>
+                                        <field name="response" widget="radio"/>
+                                        <field name="comments"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Monitoring & Findings" icon="fa-shield-alt">
+                            <group class="o_phase_banner" colspan="2">
+                                <field name="monitoring_status" widget="badge" options="{'clickable': False}"/>
+                                <div class="o_phase_banner_note">
+                                    <strong>Monitoring</strong><span> tracks remediation progress and outstanding findings.</span>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="monitoring_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Checklist – Remediation">
+                                <field name="checklist_line_ids" domain="[('checklist_type', '=', 'remediation')]" context="{'default_checklist_type': 'remediation'}" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="question"/>
+                                        <field name="response" widget="radio"/>
+                                        <field name="comments"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <field name="finding_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="source"/>
+                                    <field name="description"/>
+                                    <field name="severity"/>
+                                    <field name="status"/>
+                                    <field name="action_owner_id"/>
+                                    <field name="due_date"/>
+                                </tree>
+                                <form string="Finding">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="source"/>
+                                                <field name="severity"/>
+                                                <field name="status"/>
+                                            </group>
+                                            <group>
+                                                <field name="action_owner_id"/>
+                                                <field name="due_date"/>
+                                                <field name="recurrence_flag"/>
+                                            </group>
+                                            <group colspan="2">
+                                                <field name="description"/>
+                                                <field name="root_cause_category"/>
+                                                <field name="root_cause_notes"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="attachment_ids" widget="many2many_binary"/>
+                                            <field name="action_ids" nolabel="1">
+                                                <tree editable="bottom">
+                                                    <field name="task"/>
+                                                    <field name="responsible_id"/>
+                                                    <field name="due_date"/>
+                                                    <field name="status"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Locking & Archiving" icon="fa-lock">
+                            <group class="o_phase_banner" colspan="2">
+                                <field name="locking_status" widget="badge" options="{'clickable': False}"/>
+                                <div class="o_phase_banner_note">
+                                    <strong>Locking</strong><span> verifies assembly, quality gate, and archive evidence.</span>
+                                </div>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="file_completion_date"/>
+                                    <field name="file_assembly_date"/>
+                                    <field name="file_lock_date"/>
+                                    <field name="file_lock_user_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="archiving_location"/>
+                                    <field name="archiving_link" widget="url"/>
+                                    <field name="retention_years"/>
+                                    <field name="retention_expiry_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="archiving_completed"/>
+                                <field name="archiving_completed_on" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="eqr_checklist_attachment_ids" widget="many2many_binary"/>
+                                <field name="file_lock_certificate_attachment_ids" widget="many2many_binary"/>
+                                <field name="archiving_evidence_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Checklist – Pre Lock">
+                                <field name="checklist_line_ids" domain="[('checklist_type', '=', 'pre_lock')]" context="{'default_checklist_type': 'pre_lock'}" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="question"/>
+                                        <field name="response" widget="radio"/>
+                                        <field name="comments"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Checklist – Archiving">
+                                <field name="checklist_line_ids" domain="[('checklist_type', '=', 'archiving')]" context="{'default_checklist_type': 'archiving'}" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="question"/>
+                                        <field name="response" widget="radio"/>
+                                        <field name="comments"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="locking_alerts_html" widget="html" readonly="1" class="o_quality_lock_alerts"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
+                <chatter>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </chatter>
             </form>
         </field>
     </record>
 
-    <!-- Update action to use this form -->
     <record id="action_quality_review" model="ir.actions.act_window">
-        <field name="name">Quality Review</field>
-        <field name="res_model">qaco.audit</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_quality_review_form"/>
-        <field name="target">current</field>
+        <field name="name">Quality Reviews</field>
+        <field name="res_model">qaco.quality.review</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_quality_review_search"/>
+        <field name="view_id" ref="view_quality_review_tree"/>
+        <field name="context">{'create': False}</field>
     </record>
+    </data>
 </odoo>

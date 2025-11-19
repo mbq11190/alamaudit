@@ -1,16 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Finalisation Phase Form View -->
+    <record id="view_finalisation_phase_tree" model="ir.ui.view">
+        <field name="name">qaco.finalisation.phase.tree</field>
+        <field name="model">qaco.finalisation.phase</field>
+        <field name="arch" type="xml">
+            <tree string="Finalisation Phases">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="audit_report_date"/>
+                <field name="misstatement_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="subsequent_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="going_concern_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="related_party_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="representation_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="analytics_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="completion_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="final_file_locked"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_finalisation_phase_search" model="ir.ui.view">
+        <field name="name">qaco.finalisation.phase.search</field>
+        <field name="model">qaco.finalisation.phase</field>
+        <field name="arch" type="xml">
+            <search string="Finalisation Phases">
+                <field name="name"/>
+                <field name="client_id"/>
+                <filter name="filter_incomplete" string="Open" domain="[('final_file_locked','=',False)]"/>
+                <filter name="filter_locked" string="Locked" domain="[('final_file_locked','=',True)]"/>
+                <group expand="0" string="Status Flags">
+                    <filter string="Misstatements" domain="[('misstatement_status','!=','green')]"/>
+                    <filter string="Sign-off" domain="[('signoff_unlocked','=',False)]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_finalisation_phase" model="ir.actions.act_window">
+        <field name="name">Finalisation Phase</field>
+        <field name="res_model">qaco.finalisation.phase</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_finalisation_phase_tree"/>
+        <field name="context">{"search_default_filter_incomplete": 1}</field>
+    </record>
+
     <record id="view_finalisation_phase_form" model="ir.ui.view">
         <field name="name">qaco.finalisation.phase.form</field>
         <field name="model">qaco.finalisation.phase</field>
         <field name="arch" type="xml">
-            <form string="Finalisation Phase">
+            <form string="Finalisation Phase" class="o_qaco_finalisation_form">
+                <header>
+                    <button name="action_sync_misstatements" type="object" string="Sync Misstatements"
+                        class="btn-secondary" modifiers="{'invisible': [('final_file_locked','=',True)]}"/>
+                    <button name="action_run_compliance_scan" type="object" string="Run Compliance Scan"
+                        class="btn-secondary" modifiers="{'invisible': [('final_file_locked','=',True)]}"/>
+                    <button name="action_run_readiness_check" type="object" string="Readiness Check"
+                        class="btn-light" modifiers="{'invisible': [('final_file_locked','=',True)]}"/>
+                    <button name="action_manager_sign" type="object" string="Manager Sign" class="btn-primary"
+                        modifiers="{'invisible': ['|', ('manager_signed_user_id','!=',False), ('final_file_locked','=',True)]}"/>
+                    <button name="action_partner_sign" type="object" string="Partner Sign" class="btn-primary"
+                        modifiers="{'invisible': ['|', ('partner_signed_user_id','!=',False), ('final_file_locked','=',True)]}"/>
+                    <button name="action_lock_final_file" type="object" string="Lock File" class="btn-success"
+                        modifiers="{'invisible': [('final_file_locked','=',True)]}"/>
+                    <button name="action_trigger_archive_alert" type="object" string="Archive Alert" class="btn-secondary"
+                        modifiers="{'invisible': [('final_file_locked','=',False)]}"/>
+                    <field name="completion_status" widget="statusbar" class="oe_inline" modifiers="{'readonly': True}"/>
+                </header>
                 <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <div class="text-muted">
+                            <span>
+                                <field name="client_id" readonly="1"/>
+                            </span>
+                            <span class="ms-3">
+                                <field name="audit_report_date"/>
+                            </span>
+                        </div>
+                    </div>
                     <group>
-                        <field name="audit_id" invisible="1" force_save="1"/>
-                        <field name="client_id"/>
+                        <group>
+                            <field name="audit_id" readonly="1"/>
+                            <field name="planning_phase_id" readonly="1"/>
+                            <field name="execution_phase_id" readonly="1"/>
+                            <field name="audit_report_date"/>
+                            <field name="final_opinion"/>
+                        </group>
+                        <group>
+                            <field name="overall_materiality_ref" widget="monetary" readonly="1"/>
+                            <field name="performance_materiality_ref" widget="monetary" readonly="1"/>
+                            <field name="uncorrected_total" widget="monetary" readonly="1"/>
+                            <field name="threshold_breached" readonly="1"/>
+                            <field name="signoff_unlocked" readonly="1"/>
+                            <field name="final_file_locked" readonly="1"/>
+                        </group>
                     </group>
+                    <group string="Status Heatmap">
+                        <field name="misstatement_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="subsequent_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="going_concern_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="related_party_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="representation_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="analytics_status" widget="statusbar" options="{'clickable': False}"/>
+                    </group>
+                    <group string="Attachments Snapshot">
+                        <field name="misstatement_summary_attachment_ids" widget="many2many_binary" filename="datas"/>
+                        <field name="subsequent_checklist_attachment_ids" widget="many2many_binary" filename="datas"/>
+                        <field name="going_concern_assessment_attachment_ids" widget="many2many_binary" filename="datas"/>
+                        <field name="related_party_register_attachment_ids" widget="many2many_binary" filename="datas"/>
+                        <field name="representation_letter_attachment_ids" widget="many2many_binary" filename="datas"/>
+                        <field name="analytics_workbook_attachment_ids" widget="many2many_binary" filename="datas"/>
+                        <field name="completion_certificate_attachment_ids" widget="many2many_binary" filename="datas"/>
+                    </group>
+                    <div class="o_alert" modifiers="{'invisible': [('compliance_scan_log','=',False)]}">
+                        <field name="compliance_scan_log" readonly="1" widget="html"/>
+                    </div>
+                    <notebook>
+                        <page string="4.1 Misstatements (ISA 450)">
+                            <group>
+                                <group>
+                                    <field name="misstatement_status" widget="statusbar" options="{'clickable': False}"/>
+                                    <field name="misstatement_threshold_percent"/>
+                                    <field name="corrected_total" widget="monetary" readonly="1"/>
+                                    <field name="uncorrected_total" widget="monetary" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="pervasiveness_memo" widget="html"/>
+                                    <field name="partner_override_note" widget="html"/>
+                                    <field name="management_followup_note" widget="html"/>
+                                </group>
+                            </group>
+                            <group string="Smart Checklist">
+                                <field name="checklist_misstatement_evaluated" widget="boolean_toggle"/>
+                                <field name="checklist_cumulative_below_materiality" widget="boolean_toggle"/>
+                                <field name="checklist_qualitative_considered" widget="boolean_toggle"/>
+                                <field name="checklist_disclosures_reassessed" widget="boolean_toggle"/>
+                            </group>
+                            <field name="misstatement_line_ids" context="{'default_finalisation_phase_id': active_id}" colspan="4">
+                                <tree editable="bottom">
+                                    <field name="area"/>
+                                    <field name="assertion"/>
+                                    <field name="misstatement_type"/>
+                                    <field name="status"/>
+                                    <field name="amount"/>
+                                    <field name="is_significant"/>
+                                </tree>
+                                <form string="Misstatement">
+                                    <group>
+                                        <field name="area"/>
+                                        <field name="assertion"/>
+                                        <field name="misstatement_type"/>
+                                        <field name="status"/>
+                                        <field name="amount"/>
+                                        <field name="is_significant"/>
+                                    </group>
+                                    <group>
+                                        <field name="rationale" widget="text"/>
+                                        <field name="impact_notes" widget="text"/>
+                                        <field name="management_response" widget="text"/>
+                                        <field name="attachments_ids" widget="many2many_binary" filename="datas"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="4.2 Subsequent Events (ISA 560)">
+                            <group>
+                                <field name="subsequent_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="subsequent_minutes_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                <field name="subsequent_legal_attachment_ids" widget="many2many_binary" filename="datas"/>
+                            </group>
+                            <group string="Procedure Checklist">
+                                <field name="checklist_sub_events_period_covered" widget="boolean_toggle"/>
+                                <field name="checklist_sub_events_adjusting" widget="boolean_toggle"/>
+                                <field name="checklist_sub_events_disclosure" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="subsequent_procedure_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="procedure_code"/>
+                                        <field name="performed_by"/>
+                                        <field name="performed_on"/>
+                                        <field name="status" widget="statusbar"/>
+                                    </tree>
+                                </field>
+                                <field name="subsequent_event_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="event_date"/>
+                                        <field name="classification"/>
+                                        <field name="resolved"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="4.3 Going Concern (ISA 570)">
+                            <group>
+                                <group>
+                                    <field name="going_concern_status" widget="statusbar" options="{'clickable': False}"/>
+                                    <field name="going_concern_conclusion"/>
+                                    <field name="emphasis_matter_required" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="going_concern_assessment_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="going_concern_forecast_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="going_concern_covenant_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="going_concern_memo_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </group>
+                            </group>
+                            <group string="Scenario & Covenants">
+                                <field name="going_concern_scenario_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="revenue_growth"/>
+                                        <field name="gross_margin"/>
+                                        <field name="interest_rate"/>
+                                        <field name="liquidity_buffer_months"/>
+                                        <field name="indicates_failure"/>
+                                    </tree>
+                                </field>
+                                <field name="going_concern_covenant_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="covenant_name"/>
+                                        <field name="ratio_required"/>
+                                        <field name="ratio_actual"/>
+                                        <field name="result"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Smart Checklist">
+                                <field name="checklist_gc_assessment_challenged" widget="boolean_toggle"/>
+                                <field name="checklist_gc_future_info_considered" widget="boolean_toggle"/>
+                                <field name="checklist_gc_basis_appropriate" widget="boolean_toggle"/>
+                                <field name="checklist_gc_reporting_impact" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                        <page string="4.4 Related Parties & Laws">
+                            <group>
+                                <field name="related_party_status" widget="statusbar" options="{'clickable': False}"/>
+                            </group>
+                            <group>
+                                <field name="related_party_line_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="party_name"/>
+                                        <field name="relationship"/>
+                                        <field name="transaction_nature"/>
+                                        <field name="balance_amount"/>
+                                        <field name="authorised"/>
+                                    </tree>
+                                </field>
+                                <field name="non_compliance_log_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="description"/>
+                                        <field name="law_reference"/>
+                                        <field name="severity"/>
+                                        <field name="financial_impact"/>
+                                        <field name="communicated_tcwg"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Smart Checklist">
+                                <field name="checklist_related_complete" widget="boolean_toggle"/>
+                                <field name="checklist_related_authorised" widget="boolean_toggle"/>
+                                <field name="checklist_related_disclosures_ok" widget="boolean_toggle"/>
+                                <field name="checklist_noncompliance_communicated" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                        <page string="4.5 Management Representations">
+                            <group>
+                                <field name="representation_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="representation_letter_template" widget="html" readonly="1"/>
+                                <field name="representation_letter_signed_on"/>
+                            </group>
+                            <group string="Smart Checklist">
+                                <field name="checklist_rep_obtained" widget="boolean_toggle"/>
+                                <field name="checklist_rep_content_complete" widget="boolean_toggle"/>
+                                <field name="checklist_rep_date_valid" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                        <page string="4.6 Final Analytics & Conclusion">
+                            <group>
+                                <field name="analytics_status" widget="statusbar" options="{'clickable': False}"/>
+                            </group>
+                            <group>
+                                <field name="analytics_ratio_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="metric"/>
+                                        <field name="current_value"/>
+                                        <field name="prior_value"/>
+                                        <field name="variance_percent"/>
+                                        <field name="resolved"/>
+                                    </tree>
+                                </field>
+                                <field name="analytics_variance_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="description"/>
+                                        <field name="threshold_trigger"/>
+                                        <field name="resolved"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Smart Checklist">
+                                <field name="checklist_analytics_corrob" widget="boolean_toggle"/>
+                                <field name="checklist_variances_resolved" widget="boolean_toggle"/>
+                                <field name="checklist_fs_compliant" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                        <page string="4.7 Completion & Sign-off" modifiers="{'invisible': [('signoff_unlocked','=',False)]}">
+                            <group>
+                                <field name="completion_status" widget="statusbar" options="{'clickable': False}"/>
+                            </group>
+                            <group>
+                                <field name="review_note_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="description"/>
+                                        <field name="assigned_to"/>
+                                        <field name="due_date"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                                <field name="regulatory_alert_ids" context="{'default_finalisation_phase_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="regulator"/>
+                                        <field name="reference_code"/>
+                                        <field name="summary"/>
+                                        <field name="severity"/>
+                                        <field name="effective_date"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Checklist">
+                                <field name="checklist_review_notes_cleared" widget="boolean_toggle"/>
+                                <field name="checklist_compliance_scan" widget="boolean_toggle" readonly="1"/>
+                                <field name="checklist_partner_approval" widget="boolean_toggle" readonly="1"/>
+                                <field name="checklist_archive_ready" widget="boolean_toggle"/>
+                            </group>
+                            <group string="Signatures">
+                                <field name="manager_signed_user_id" readonly="1"/>
+                                <field name="manager_signed_on" readonly="1"/>
+                                <field name="partner_signed_user_id" readonly="1"/>
+                                <field name="partner_signed_on" readonly="1"/>
+                                <field name="final_file_locked" readonly="1"/>
+                                <field name="final_locked_on" readonly="1"/>
+                                <field name="archive_deadline_date" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Regulatory Updates">
+                            <field name="regulatory_news" widget="html" readonly="1"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

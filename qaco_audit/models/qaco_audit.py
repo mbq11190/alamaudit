@@ -341,3 +341,4 @@ class Qacoaudit(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+

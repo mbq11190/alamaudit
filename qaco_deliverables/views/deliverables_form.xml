@@ -1,27 +1,302 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Deliverables Form View -->
+    <record id="view_deliverables_tree" model="ir.ui.view">
+        <field name="name">qaco.deliverables.tree</field>
+        <field name="model">qaco.deliverables</field>
+        <field name="arch" type="xml">
+            <tree string="Deliverables" default_order="id desc">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="central_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="audit_report_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="management_letter_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="tcwg_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="other_info_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="dispatch_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="deliverables_locked"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_deliverables_search" model="ir.ui.view">
+        <field name="name">qaco.deliverables.search</field>
+        <field name="model">qaco.deliverables</field>
+        <field name="arch" type="xml">
+            <search string="Deliverables">
+                <field name="name"/>
+                <field name="client_id"/>
+                <filter name="filter_ready" string="Ready" domain="[('ready_for_dispatch','=',True)]"/>
+                <filter name="filter_locked" string="Locked" domain="[('deliverables_locked','=',True)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="view_deliverables_form" model="ir.ui.view">
         <field name="name">qaco.deliverables.form</field>
         <field name="model">qaco.deliverables</field>
         <field name="arch" type="xml">
-            <form string="Deliverables">
+            <form string="Deliverables" class="o_qaco_deliverables_form">
+                <header>
+                    <button name="action_run_gateway_check" type="object" string="Gateway Check"
+                            class="btn-secondary" modifiers="{'invisible': [('deliverables_locked','=',True)]}"/>
+                    <button name="action_validate_deliverables" type="object" string="Validate Deliverables"
+                            class="btn-primary" modifiers="{'invisible': [('deliverables_locked','=',True)]}"/>
+                    <button name="action_lock_deliverables" type="object" string="Lock"
+                            class="btn-success" modifiers="{'invisible': [('deliverables_locked','=',True)]}"/>
+                    <field name="deliverables_locked" widget="boolean_toggle" readonly="1"/>
+                    <field name="ready_for_dispatch" widget="boolean_toggle" readonly="1"/>
+                </header>
                 <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2>
+                            <field name="client_id" readonly="1" class="oe_inline"/>
+                            <span class="ms-3">
+                                <field name="audit_id" readonly="1"/>
+                            </span>
+                        </h2>
+                    </div>
                     <group>
-                        <field name="audit_id" invisible="1" force_save="1"/>
-                        <field name="client_id"/>
+                        <group>
+                            <field name="finalisation_phase_id" readonly="1"/>
+                            <field name="final_partner_id"/>
+                            <field name="final_manager_id"/>
+                        </group>
+                        <group string="Status Dashboard">
+                            <field name="central_status" widget="statusbar" options="{'clickable': False}"/>
+                            <field name="audit_report_status" widget="statusbar" options="{'clickable': False}"/>
+                            <field name="management_letter_status" widget="statusbar" options="{'clickable': False}"/>
+                            <field name="tcwg_status" widget="statusbar" options="{'clickable': False}"/>
+                            <field name="other_info_status" widget="statusbar" options="{'clickable': False}"/>
+                            <field name="dispatch_status" widget="statusbar" options="{'clickable': False}"/>
+                        </group>
                     </group>
+                    <group string="Gateway Findings" modifiers="{'invisible': [('outstanding_items_log','=',False)]}">
+                        <field name="outstanding_items_log" widget="html" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="5.0 Central Dashboard & Pre-Issuance">
+                            <group>
+                                <group>
+                                    <field name="review_notes_cleared" widget="boolean_toggle"/>
+                                    <field name="final_fs_received" widget="boolean_toggle"/>
+                                    <field name="eqcr_required" widget="boolean_toggle"/>
+                                    <field name="eqcr_completed" widget="boolean_toggle"/>
+                                    <field name="eqcr_reviewer_id"/>
+                                    <field name="eqcr_signed_on"/>
+                                </group>
+                                <group>
+                                    <field name="independence_confirmed" widget="boolean_toggle"/>
+                                    <field name="independence_note" widget="text"/>
+                                    <field name="completion_checklist_signed" widget="boolean_toggle"/>
+                                    <field name="audit_completion_scan_passed" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            <group string="Final FS">
+                                <field name="final_fs_attachment_ids" widget="many2many_binary" filename="datas" colspan="4"/>
+                            </group>
+                        </page>
+                        <page string="5.1 Auditor's Report (ISA 700/701/705/706)">
+                            <group>
+                                <field name="audit_report_status" widget="statusbar" options="{'clickable': False}"/>
+                            </group>
+                            <field name="audit_report_ids" colspan="4" context="{'default_deliverables_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="framework"/>
+                                    <field name="entity_type"/>
+                                    <field name="opinion_type"/>
+                                    <field name="kam_required"/>
+                                    <field name="eom_required"/>
+                                    <field name="readiness_flag" widget="boolean_toggle"/>
+                                </tree>
+                                <form string="Auditor's Report">
+                                    <group>
+                                        <field name="framework"/>
+                                        <field name="entity_type"/>
+                                        <field name="opinion_type"/>
+                                        <field name="period_end"/>
+                                    </group>
+                                    <group>
+                                        <field name="kam_required" widget="boolean_toggle"/>
+                                        <field name="kam_override_reason"/>
+                                        <field name="eom_required" widget="boolean_toggle"/>
+                                        <field name="eom_reason"/>
+                                        <field name="gc_uncertainty" widget="boolean_toggle"/>
+                                    </group>
+                                    <group>
+                                        <field name="template_recommendation" readonly="1"/>
+                                        <field name="basis_template" widget="html" readonly="1"/>
+                                        <field name="basis_text" widget="html"/>
+                                    </group>
+                                    <group string="Attachments">
+                                        <field name="final_report_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                        <field name="draft_report_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    </group>
+                                    <notebook>
+                                        <page string="Key Audit Matters">
+                                            <field name="kam_line_ids" context="{'default_audit_report_id': active_id}">
+                                                <tree editable="bottom">
+                                                    <field name="description"/>
+                                                    <field name="fs_reference"/>
+                                                </tree>
+                                                <form string="KAM">
+                                                    <field name="description" widget="text"/>
+                                                    <field name="response" widget="text"/>
+                                                    <field name="fs_reference"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                        <page string="EOM / OM">
+                                            <field name="eom_line_ids" context="{'default_audit_report_id': active_id}">
+                                                <tree editable="bottom">
+                                                    <field name="paragraph"/>
+                                                    <field name="fs_reference"/>
+                                                </tree>
+                                                <form string="EOM / OM">
+                                                    <field name="paragraph" widget="text"/>
+                                                    <field name="reason"/>
+                                                    <field name="fs_reference"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="5.2 Management Letter (ISA 265)">
+                            <group>
+                                <field name="management_letter_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="management_letter_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                <field name="management_response_attachment_ids" widget="many2many_binary" filename="datas"/>
+                            </group>
+                            <field name="deficiency_ids" context="{'default_deliverables_id': active_id}" colspan="4">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="classification"/>
+                                    <field name="severity"/>
+                                    <field name="action_owner"/>
+                                    <field name="action_due_date"/>
+                                </tree>
+                                <form string="Deficiency">
+                                    <group>
+                                        <field name="classification"/>
+                                        <field name="severity"/>
+                                        <field name="workpaper_reference"/>
+                                    </group>
+                                    <group col="2">
+                                        <field name="condition" widget="text"/>
+                                        <field name="criteria" widget="text"/>
+                                        <field name="cause" widget="text"/>
+                                        <field name="effect" widget="text"/>
+                                        <field name="root_cause" widget="text"/>
+                                        <field name="recommendation" widget="text"/>
+                                    </group>
+                                    <group>
+                                        <field name="action_owner"/>
+                                        <field name="action_due_date"/>
+                                    </group>
+                                    <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="5.3 Communication with TCWG (ISA 260)">
+                            <group>
+                                <field name="tcwg_status" widget="statusbar" options="{'clickable': False}"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="tcwg_meeting_date"/>
+                                    <field name="tcwg_attendees"/>
+                                    <field name="tcwg_auditor_attendees"/>
+                                </group>
+                                <group string="Mandatory Topics">
+                                    <field name="tcwg_topic_responsibilities" widget="boolean_toggle"/>
+                                    <field name="tcwg_topic_significant_findings" widget="boolean_toggle"/>
+                                    <field name="tcwg_topic_uncorrected" widget="boolean_toggle"/>
+                                    <field name="tcwg_topic_scope" widget="boolean_toggle"/>
+                                    <field name="tcwg_topic_independence" widget="boolean_toggle"/>
+                                    <field name="tcwg_topic_qualitative" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            <group string="Attachments">
+                                <field name="tcwg_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                <field name="tcwg_ack_attachment_ids" widget="many2many_binary" filename="datas"/>
+                            </group>
+                        </page>
+                        <page string="5.4 Other Information (ISA 720)">
+                            <group>
+                                <field name="other_info_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="other_info_attachment_ids" widget="many2many_binary" filename="datas"/>
+                            </group>
+                            <field name="other_info_line_ids" context="{'default_deliverables_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="document_name"/>
+                                    <field name="status"/>
+                                    <field name="reviewer_id"/>
+                                    <field name="reviewed_on"/>
+                                    <field name="escalated"/>
+                                </tree>
+                                <form string="Other Information">
+                                    <group>
+                                        <field name="document_name"/>
+                                        <field name="status"/>
+                                        <field name="reviewer_id"/>
+                                        <field name="reviewed_on"/>
+                                        <field name="escalated" widget="boolean_toggle"/>
+                                    </group>
+                                    <field name="inconsistency_note" widget="text"/>
+                                    <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="5.5 Final Attachments, Archiving & Dispatch">
+                            <group>
+                                <field name="dispatch_status" widget="statusbar" options="{'clickable': False}"/>
+                            </group>
+                            <group string="Final Pack">
+                                <field name="deliverable_pack_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                <field name="archive_confirmed" widget="boolean_toggle"/>
+                            </group>
+                            <field name="dispatch_log_ids" context="{'default_deliverables_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="recipient_name"/>
+                                    <field name="recipient_role"/>
+                                    <field name="method"/>
+                                    <field name="dispatch_date"/>
+                                    <field name="status"/>
+                                    <field name="ack_received"/>
+                                </tree>
+                                <form string="Dispatch Log">
+                                    <group>
+                                        <field name="recipient_name"/>
+                                        <field name="recipient_role"/>
+                                        <field name="method"/>
+                                        <field name="dispatch_date"/>
+                                        <field name="status" widget="statusbar"/>
+                                        <field name="ack_received" widget="boolean_toggle"/>
+                                    </group>
+                                    <field name="proof_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <chatter>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </chatter>
             </form>
         </field>
     </record>
 
-    <!-- Update action to use this form -->
     <record id="action_deliverables" model="ir.actions.act_window">
         <field name="name">Deliverables</field>
-        <field name="res_model">qaco.audit</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_deliverables_form"/>
+        <field name="res_model">qaco.deliverables</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_deliverables_tree"/>
+        <field name="context">{'default_audit_id': active_id}</field>
+        <field name="domain">[('audit_id', '=', active_id)]</field>
         <field name="target">current</field>
     </record>
 </odoo>

@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Window action for Quality Review -->
-    <record id="action_quality_review" model="ir.actions.act_window">
-        <field name="name">Quality Review</field>
-        <field name="res_model">qaco.quality.review</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_quality_review_form"/>
-        <field name="target">current</field>
-        <field name="context">{'default_audit_id': active_id}</field>
-        <field name="domain">[('audit_id', '=', active_id)]</field>
-    </record>
-
-    <!-- Smart button on qaco.audit form -->
-    <record id="view_qaco_audit_form_quality_button" model="ir.ui.view">
+    <data noupdate="0">
+        <!-- Smart button on qaco.audit form -->
+        <record id="view_qaco_audit_form_quality_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.quality.button</field>
         <field name="model">qaco.audit</field>
         <field name="inherit_id" ref="qaco_deliverables.view_qaco_audit_form_deliverables_button"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(qaco_deliverables.action_deliverables)d']" position="after">
-                <button class="oe_stat_button" type="action"
-                        name="%(action_quality_review)d"
+                <button class="oe_stat_button" type="object"
+                        name="action_open_quality_review"
                         icon="fa-star">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Quality</span>
@@ -29,4 +19,5 @@
             </xpath>
         </field>
     </record>
+    </data>
 </odoo>

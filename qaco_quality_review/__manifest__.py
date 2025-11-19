@@ -11,6 +11,11 @@
         "views/quality_review_form.xml",
         "views/audit_smart_button.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "qaco_quality_review/static/src/css/quality_review.css",
+        ],
+    },
     "installable": True,
     "application": False,
     "auto_install": True,

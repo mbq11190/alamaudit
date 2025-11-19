@@ -66,6 +66,7 @@
                         modifiers="{'invisible': [('execution_complete', '=', False)]}"/>
                     <button name="action_export_execution_file" type="object" string="Export File" class="btn-secondary"
                         modifiers="{'invisible': [('execution_complete', '=', False)]}"/>
+                    <button name="action_backfill_exception_amounts" type="object" string="Backfill Exceptions" class="btn-light"/>
                     <field name="completion_status" widget="statusbar" class="oe_inline" readonly="1"
                         modifiers="{'readonly': True}"/>
                 </header>
@@ -225,6 +226,7 @@
                                                 <field name="risk_line_id"/>
                                                 <field name="sample_size_planned"/>
                                                 <field name="sample_size_tested"/>
+                                                <field name="exception_amount"/>
                                                 <field name="result"/>
                                                 <field name="status" widget="statusbar"/>
                                             </tree>
@@ -238,6 +240,7 @@
                                                 <group>
                                                     <field name="sample_size_planned"/>
                                                     <field name="sample_size_tested"/>
+                                                    <field name="exception_amount"/>
                                                     <field name="sampling_request_id" context="{'default_execution_phase_id': parent.execution_phase_id}"/>
                                                 </group>
                                                 <group>

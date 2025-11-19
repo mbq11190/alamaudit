@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from typing import TYPE_CHECKING, Any
+
+from odoo import api, fields, models  # type: ignore
+from odoo.exceptions import UserError, ValidationError  # type: ignore[attr-defined]
+try:  # pragma: no cover - fallback for type checking environments
+    from odoo import _  # type: ignore
+except Exception:  # pragma: no cover
+    def _(message: str, *args: Any, **kwargs: Any) -> str:  # type: ignore
+        return message
 
 
 SUBTAB_STATUS = [
@@ -65,10 +72,16 @@ class ExecutionPhase(models.Model):
     _description = 'Execution Phase'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    if TYPE_CHECKING:
+        def activity_schedule(self, *args: Any, **kwargs: Any) -> Any: ...
+
+        def message_post(self, *args: Any, **kwargs: Any) -> Any: ...
+
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
     client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=True)
     planning_phase_id = fields.Many2one('qaco.planning.phase', string='Planning Phase', compute='_compute_planning_phase', store=True, readonly=False)
+    company_currency_id = fields.Many2one('res.currency', string='Company Currency', related='audit_id.company_id.currency_id', store=True, readonly=True)
 
     # Status dashboard
     control_status = fields.Selection(SUBTAB_STATUS, default='red', tracking=True)
@@ -336,6 +349,42 @@ class ExecutionPhase(models.Model):
             'target': 'new',
         }
 
+    def action_backfill_exception_amounts(self):
+        ir_model = self.env['ir.model']
+        if not ir_model._get('qaco.finalisation.phase'):
+            raise UserError('Install the finalisation phase module to backfill exceptions.')
+
+        finalisation_model = self.env['qaco.finalisation.phase']
+        SubProcedure = self.env['qaco.exec.substantive.procedure']
+        total_updates = 0
+        for record in self:
+            if not record.audit_id:
+                continue
+            finalisation = finalisation_model.search([('audit_id', '=', record.audit_id.id)], limit=1)
+            if not finalisation:
+                continue
+            updates = 0
+            for misstatement in finalisation.misstatement_line_ids:
+                if misstatement.source_model != 'qaco.exec.substantive.procedure' or not misstatement.source_reference:
+                    continue
+                _, _, proc_id_str = misstatement.source_reference.partition(':')
+                if not proc_id_str:
+                    continue
+                try:
+                    proc = SubProcedure.browse(int(proc_id_str))
+                except ValueError:
+                    continue
+                if not proc.exists() or proc.execution_phase_id.id != record.id:
+                    continue
+                if proc.exception_amount != misstatement.amount:
+                    proc.write({'exception_amount': misstatement.amount})
+                    updates += 1
+            if updates:
+                record.message_post(body='Backfilled %s procedure(s) with quantified exceptions.' % updates)
+                total_updates += updates
+        if not total_updates:
+            raise UserError('No linked misstatements were found to backfill. Run the finalisation sync first.')
+
 
 class ExecutionRiskCoverage(models.Model):
     _name = 'qaco.exec.risk.coverage'
@@ -494,6 +543,8 @@ class ExecutionSubstantiveProcedure(models.Model):
     methodology_step = fields.Html(string='Detailed Steps / Reference')
     sample_size_planned = fields.Integer(string='Planned Sample Size')
     sample_size_tested = fields.Integer(string='Actual Sample Size')
+    company_currency_id = fields.Many2one('res.currency', related='execution_phase_id.company_currency_id', store=True, readonly=True)
+    exception_amount = fields.Monetary(string='Exception Amount', currency_field='company_currency_id')
     sampling_request_id = fields.Many2one('qaco.exec.sampling.request', string='Sampling Request', ondelete='set null')
     evidence_attachment_ids = fields.Many2many(
         'ir.attachment', 'qaco_exec_substantive_evidence_rel', 'procedure_id', 'attachment_id',
