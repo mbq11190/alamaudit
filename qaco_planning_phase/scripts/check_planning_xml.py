@@ -2,7 +2,7 @@ import pathlib
 from lxml import etree
 
 errors = []
-for path in pathlib.Path('qaco_planning_phase').rglob('*.xml'):
+for path in pathlib.Path('.').rglob('*.xml'):
     try:
         doc = etree.parse(path)
         root = doc.getroot()
