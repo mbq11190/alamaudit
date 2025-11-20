@@ -23,10 +23,10 @@
         <field name="arch" type="xml">
             <form string="Audit Execution Phase">
                 <header>
-                    <button name="action_confirm_heads" type="object" string="Confirm Heads &amp; Start Execution" class="btn-primary" states="draft" attrs="{'invisible': [('selected_head_ids', '=', False)]}"/>
-                    <button name="action_mark_review" type="object" string="Send for Review" class="btn-warning" states="in_progress"/>
-                    <button name="action_complete" type="object" string="Complete Execution" class="btn-success" states="under_review"/>
-                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" states="in_progress,under_review"/>
+                    <button name="action_confirm_heads" type="object" string="Confirm Heads &amp; Start Execution" class="btn-primary" invisible="state != 'draft' or not selected_head_ids"/>
+                    <button name="action_mark_review" type="object" string="Send for Review" class="btn-warning" invisible="state != 'in_progress'"/>
+                    <button name="action_complete" type="object" string="Complete Execution" class="btn-success" invisible="state != 'under_review'"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" invisible="state not in ['in_progress', 'under_review']"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,under_review,completed" clickable="1"/>
                 </header>
                 <sheet>
@@ -145,9 +145,9 @@
                                 <field name="fully_tested" widget="boolean_toggle"/>
                                 <field name="state" widget="badge" options="{'classes': {'draft': 'secondary', 'in_progress': 'warning', 'under_review': 'info', 'completed': 'success'}}"/>
                                 <field name="progress" widget="progressbar" options="{'edit': False}"/>
-                                <button name="action_start_execution" type="object" string="Start" class="btn-sm btn-outline-warning" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                                <button name="action_complete_head" type="object" string="Complete" class="btn-sm btn-outline-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
-                                <button name="action_reset_head" type="object" string="Reset" class="btn-sm btn-outline-secondary" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <button name="action_start_execution" type="object" string="Start" class="btn-sm btn-outline-warning" invisible="state != 'draft'"/>
+                                <button name="action_complete_head" type="object" string="Complete" class="btn-sm btn-outline-success" invisible="state != 'in_progress'"/>
+                                <button name="action_reset_head" type="object" string="Reset" class="btn-sm btn-outline-secondary" invisible="state == 'draft'"/>
                             </tree>
                             <form>
                                 <sheet>
@@ -194,8 +194,8 @@
                                         </group>
                                         <group string="Control Reliance">
                                             <field name="relying_on_controls"/>
-                                            <field name="control_design_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
-                                            <field name="control_operating_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
+                                            <field name="control_design_effective" invisible="not relying_on_controls"/>
+                                            <field name="control_operating_effective" invisible="not relying_on_controls"/>
                                         </group>
                                     </group>
                                     <notebook>
@@ -249,8 +249,8 @@
                                                 </group>
                                                 <group string="Control Reliance">
                                                     <field name="relying_on_controls"/>
-                                                    <field name="control_design_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
-                                                    <field name="control_operating_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
+                                                    <field name="control_design_effective" invisible="not relying_on_controls"/>
+                                                    <field name="control_operating_effective" invisible="not relying_on_controls"/>
                                                 </group>
                                             </group>
                                         </page>
