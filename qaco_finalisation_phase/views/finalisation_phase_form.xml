@@ -212,7 +212,7 @@
                                     <field name="going_concern_memo_attachment_ids" widget="many2many_binary" filename="datas"/>
                                 </group>
                             </group>
-                            <group string="Scenario & Covenants">
+                            <group string="Scenario &amp; Covenants">
                                 <field name="going_concern_scenario_ids" context="{'default_finalisation_phase_id': active_id}">
                                     <tree editable="bottom">
                                         <field name="name"/>
