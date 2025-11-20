@@ -883,17 +883,29 @@ class ExecutionHeadDetails(models.Model):
         for record in self:
             record.fully_tested = record.tested_percentage >= 95.0
 
-    @api.depends('account_head_id.user_type_id.type')
+    @api.depends('account_head_id.account_type')
     def _compute_nature(self):
         mapping = {
             'income': 'revenue',
+            'income_other': 'revenue',
             'expense': 'expense',
-            'asset': 'asset',
-            'liability': 'liability',
+            'expense_depreciation': 'expense',
+            'expense_direct_cost': 'expense',
+            'asset_receivable': 'asset',
+            'asset_cash': 'asset',
+            'asset_current': 'asset',
+            'asset_non_current': 'asset',
+            'asset_prepayments': 'asset',
+            'asset_fixed': 'asset',
+            'liability_payable': 'liability',
+            'liability_credit_card': 'liability',
+            'liability_current': 'liability',
+            'liability_non_current': 'liability',
             'equity': 'equity',
+            'equity_unaffected': 'equity',
         }
         for record in self:
-            record.nature = mapping.get(record.account_head_id.user_type_id.type, False) if record.account_head_id else False
+            record.nature = mapping.get(record.account_head_id.account_type, False) if record.account_head_id else False
 
     @api.depends('inherent_risk', 'control_risk', 'detection_risk')
     def _compute_overall_risk(self):
