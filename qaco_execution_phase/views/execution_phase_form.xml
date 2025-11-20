@@ -8,9 +8,9 @@
             <tree string="Execution Phases" create="false">
                 <field name="name"/>
                 <field name="client_id"/>
-                <field name="control_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="substantive_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="completion_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="control_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="substantive_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="completion_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                 <field name="risk_coverage_percent" widget="percentage"/>
                 <field name="open_critical_risk_count"/>
                 <field name="execution_complete"/>
@@ -67,7 +67,7 @@
                     <button name="action_export_execution_file" type="object" string="Export File" class="btn-secondary"
                         modifiers="{'invisible': [('execution_complete', '=', False)]}"/>
                     <button name="action_backfill_exception_amounts" type="object" string="Backfill Exceptions" class="btn-light"/>
-                    <field name="completion_status" widget="statusbar" class="oe_inline" readonly="1"
+                    <field name="completion_status" widget="statusbar" statusbar_visible="red,amber,green" class="oe_inline" readonly="1"
                         modifiers="{'readonly': True}"/>
                 </header>
                 <sheet string="Execution Phase">
@@ -92,11 +92,11 @@
                         </group>
                     </group>
                     <group string="Status Heatmap">
-                        <field name="control_status" widget="statusbar" options="{'clickable': False}"/>
-                        <field name="substantive_status" widget="statusbar" options="{'clickable': False}"/>
-                        <field name="sampling_status" widget="statusbar" options="{'clickable': False}"/>
-                        <field name="evidence_status" widget="statusbar" options="{'clickable': False}"/>
-                        <field name="workpaper_status" widget="statusbar" options="{'clickable': False}"/>
+                        <field name="control_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                        <field name="substantive_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                        <field name="sampling_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                        <field name="evidence_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                        <field name="workpaper_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                     </group>
                     <div class="o_execution_alert" modifiers="{'invisible': [('compliance_alert_message', '=', False)]}">
                         <field name="compliance_alert_message" readonly="1" widget="html"/>
@@ -130,7 +130,7 @@
                                     <field name="design_effectiveness"/>
                                     <field name="operating_effectiveness"/>
                                     <field name="exception_count"/>
-                                    <field name="test_status" widget="statusbar"/>
+                                    <field name="test_status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                 </tree>
                                 <form string="Control Test">
                                     <group>
@@ -190,7 +190,7 @@
                                     </group>
                                     <group>
                                         <field name="conclusion" readonly="1"/>
-                                        <field name="test_status" widget="statusbar"/>
+                                        <field name="test_status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                         <field name="checklist_signed" widget="boolean_toggle"/>
                                     </group>
                                 </form>
@@ -205,7 +205,7 @@
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="area_code"/>
-                                    <field name="status" widget="statusbar"/>
+                                    <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                     <field name="exception_count"/>
                                     <field name="conclusion"/>
                                 </tree>
@@ -213,7 +213,7 @@
                                     <group>
                                         <field name="area_code"/>
                                         <field name="risk_line_ids" widget="many2many_tags"/>
-                                        <field name="status" widget="statusbar"/>
+                                        <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                         <field name="conclusion"/>
                                     </group>
                                     <field name="focus_note" widget="html" colspan="4"/>
@@ -228,7 +228,7 @@
                                                 <field name="sample_size_tested"/>
                                                 <field name="exception_amount"/>
                                                 <field name="result"/>
-                                                <field name="status" widget="statusbar"/>
+                                                <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                             </tree>
                                             <form string="Substantive Procedure">
                                                 <group>
@@ -252,7 +252,7 @@
                                                 <group>
                                                     <field name="result"/>
                                                     <field name="exception_note" widget="text"/>
-                                                    <field name="status" widget="statusbar"/>
+                                                    <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                                 </group>
                                                 <group string="Evidence">
                                                     <field name="evidence_attachment_ids" widget="many2many_binary" filename="data"/>
