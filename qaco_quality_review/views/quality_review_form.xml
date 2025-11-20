@@ -121,7 +121,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Procedures & Conclusion" icon="fa-clipboard-list">
+                        <page string="Procedures &amp; Conclusion" icon="fa-clipboard-list">
                             <group class="o_phase_banner" colspan="2">
                                 <field name="procedures_status" widget="badge" options="{'clickable': False}"/>
                                 <div class="o_phase_banner_note">
@@ -185,7 +185,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Monitoring & Findings" icon="fa-shield-alt">
+                        <page string="Monitoring &amp; Findings" icon="fa-shield-alt">
                             <group class="o_phase_banner" colspan="2">
                                 <field name="monitoring_status" widget="badge" options="{'clickable': False}"/>
                                 <div class="o_phase_banner_note">
@@ -248,7 +248,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Locking & Archiving" icon="fa-lock">
+                        <page string="Locking &amp; Archiving" icon="fa-lock">
                             <group class="o_phase_banner" colspan="2">
                                 <field name="locking_status" widget="badge" options="{'clickable': False}"/>
                                 <div class="o_phase_banner_note">

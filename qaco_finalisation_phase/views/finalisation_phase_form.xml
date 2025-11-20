@@ -239,7 +239,7 @@
                                 <field name="checklist_gc_reporting_impact" widget="boolean_toggle"/>
                             </group>
                         </page>
-                        <page string="4.4 Related Parties & Laws">
+                        <page string="4.4 Related Parties &amp; Laws">
                             <group>
                                 <field name="related_party_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
@@ -282,7 +282,7 @@
                                 <field name="checklist_rep_date_valid" widget="boolean_toggle"/>
                             </group>
                         </page>
-                        <page string="4.6 Final Analytics & Conclusion">
+                        <page string="4.6 Final Analytics &amp; Conclusion">
                             <group>
                                 <field name="analytics_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
@@ -310,7 +310,7 @@
                                 <field name="checklist_fs_compliant" widget="boolean_toggle"/>
                             </group>
                         </page>
-                        <page string="4.7 Completion & Sign-off" modifiers="{'invisible': [('signoff_unlocked','=',False)]}">
+                        <page string="4.7 Completion &amp; Sign-off" modifiers="{'invisible': [('signoff_unlocked','=',False)]}">
                             <group>
                                 <field name="completion_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
