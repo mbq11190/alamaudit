@@ -278,7 +278,7 @@
                                                             <field name="performed_date"/>
                                                         </group>
                                                     </group>
-                                                    <field name="description" nolabel="1"/>
+                                                    <field name="procedure_description" nolabel="1"/>
                                                     <field name="notes"/>
                                                 </form>
                                             </field>
