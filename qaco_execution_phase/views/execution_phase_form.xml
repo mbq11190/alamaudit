@@ -102,7 +102,7 @@
                         <field name="compliance_alert_message" readonly="1" widget="html"/>
                     </div>
                     <notebook>
-                        <page string="Risk Dashboard">
+                        <page string="Dashboard">
                             <field name="execution_risk_line_ids" context="{'default_execution_phase_id': active_id}" mode="tree" colspan="4">
                                 <tree string="Risk Coverage" editable="bottom">
                                     <field name="risk_description"/>
