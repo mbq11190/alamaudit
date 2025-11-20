@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
 from typing import TYPE_CHECKING, Any
 
 from odoo import api, fields, models  # type: ignore
@@ -945,15 +946,18 @@ class AuditProcedure(models.Model):
     _order = 'sequence'
 
     sequence = fields.Integer(string='Sequence', default=10)
-    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
+    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
+    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
+    procedure_template_id = fields.Many2one('audit.procedure.template', string='Procedure Template')
     procedure_name = fields.Char(string='Procedure Name', required=True)
+    procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=True)
     procedure_type = fields.Selection([
         ('risk_assessment', 'Risk Assessment'),
         ('test_of_controls', 'Test of Controls'),
         ('substantive', 'Substantive Procedure'),
         ('analytical', 'Analytical Procedure'),
     ], string='Procedure Type', required=True)
-    description = fields.Html(string='Description')
     risk_level = fields.Selection([
         ('low', 'Low'),
         ('medium', 'Medium'),
@@ -962,14 +966,20 @@ class AuditProcedure(models.Model):
     is_completed = fields.Boolean(string='Completed')
     performed_by = fields.Many2one('res.users', string='Performed By')
     performed_date = fields.Date(string='Performed Date')
-    notes = fields.Text(string='Procedure Notes')
+    result = fields.Selection([
+        ('satisfactory', 'Satisfactory'),
+        ('unsatisfactory', 'Unsatisfactory'),
+        ('not_applicable', 'Not Applicable'),
+    ], string='Result')
+    findings = fields.Html(string='Findings')
+    notes = fields.Text(string='Notes')
 
 
 class TestOfDetails(models.Model):
     _name = 'test.of.details'
     _description = 'Test of Details'
 
-    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
     test_objective = fields.Char(string='Test Objective', required=True)
     assertion_tested = fields.Selection([
         ('existence', 'Existence'),
@@ -987,6 +997,17 @@ class TestOfDetails(models.Model):
         ('analytical', 'Analytical Procedures'),
     ], string='Test Method', required=True)
     test_details = fields.Html(string='Test Details')
+    population_size = fields.Integer(string='Population Size')
+    sample_size = fields.Integer(string='Sample Size')
+    sampling_method = fields.Selection([
+        ('random', 'Random Sampling'),
+        ('systematic', 'Systematic Sampling'),
+        ('monetary', 'Monetary Unit Sampling'),
+        ('haphazard', 'Haphazard Sampling'),
+    ], string='Sampling Method')
+    population_amount = fields.Float(string='Population Amount', digits=(16, 2))
+    sample_amount = fields.Float(string='Sample Amount', digits=(16, 2))
+    coverage_percentage = fields.Float(string='Coverage %', compute='_compute_coverage_percentage', digits=(6, 2), store=True)
     sample_items_tested = fields.Integer(string='Sample Items Tested')
     exceptions_found = fields.Integer(string='Exceptions Found')
     test_result = fields.Selection([
@@ -1002,6 +1023,7 @@ class TestOfControls(models.Model):
     _description = 'Test of Controls'
 
     head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     control_objective = fields.Char(string='Control Objective', required=True)
     control_activity = fields.Text(string='Control Activity', required=True)
     frequency = fields.Selection([
@@ -1012,13 +1034,20 @@ class TestOfControls(models.Model):
         ('annually', 'Annually'),
     ], string='Frequency', required=True)
     control_testing_details = fields.Html(string='Testing Details')
-    samples_tested = fields.Integer(string='Samples Tested')
+    sample_size = fields.Integer(string='Sample Size')
+    sample_method = fields.Selection([
+        ('random', 'Random Sampling'),
+        ('systematic', 'Systematic Sampling'),
+        ('judgmental', 'Judgmental Sampling')
+    ], string='Sampling Method')
+    exceptions_found = fields.Integer(string='Exceptions Found')
     deviations = fields.Integer(string='Deviations Found')
     control_effectiveness = fields.Selection([
         ('effective', 'Effective'),
         ('partially_effective', 'Partially Effective'),
         ('ineffective', 'Ineffective'),
     ], string='Control Effectiveness')
+    control_effective = fields.Boolean(string='Control Effective')
     control_conclusion = fields.Text(string='Conclusion')
 
 
@@ -1026,7 +1055,8 @@ class AuditEvidence(models.Model):
     _name = 'audit.evidence'
     _description = 'Audit Evidence'
 
-    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
+    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     evidence_type = fields.Selection([
         ('physical', 'Physical Examination'),
         ('documentary', 'Documentary Evidence'),
@@ -1053,7 +1083,8 @@ class ExecutionAnalyticalProcedure(models.Model):
     _order = 'sequence'
 
     sequence = fields.Integer(string='Sequence', default=10)
-    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
+    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     procedure_description = fields.Char(string='Procedure Description', required=True)
     procedure_type = fields.Selection([
         ('ratio', 'Ratio Analysis'),
