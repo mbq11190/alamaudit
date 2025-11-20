@@ -25,10 +25,10 @@
         <field name="arch" type="xml">
             <form string="Audit Execution">
                 <header>
-                    <button name="action_start_execution" type="object" string="Start Execution" class="btn-warning" states="draft" attrs="{'invisible': [('assertion_ids', '=', False)]}"/>
-                    <button name="action_mark_review" type="object" string="Send for Review" class="btn-info" states="in_progress"/>
-                    <button name="action_complete_execution" type="object" string="Complete Execution" class="btn-success" states="under_review"/>
-                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" states="in_progress,under_review"/>
+                    <button name="action_start_execution" type="object" string="Start Execution" class="btn-warning" invisible="state != 'draft' or not assertion_ids"/>
+                    <button name="action_mark_review" type="object" string="Send for Review" class="btn-info" invisible="state != 'in_progress'"/>
+                    <button name="action_complete_execution" type="object" string="Complete Execution" class="btn-success" invisible="state != 'under_review'"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" invisible="state not in ['in_progress', 'under_review']"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,under_review,completed" clickable="True"/>
                 </header>
                 <sheet>
@@ -51,16 +51,16 @@
                         </group>
                     </group>
 
-                    <div class="alert alert-secondary" attrs="{'invisible': [('state', '!=', 'draft')]}" role="alert">
+                    <div class="alert alert-secondary" invisible="state != 'draft'" role="alert">
                         <strong>Draft:</strong> Configure assertions and account information before starting execution.
                     </div>
-                    <div class="alert alert-warning" attrs="{'invisible': [('state', '!=', 'in_progress')]}" role="alert">
+                    <div class="alert alert-warning" invisible="state != 'in_progress'" role="alert">
                         <strong>In Progress:</strong> Procedures are underway. Keep progress metrics updated.
                     </div>
-                    <div class="alert alert-info" attrs="{'invisible': [('state', '!=', 'under_review')]}" role="alert">
+                    <div class="alert alert-info" invisible="state != 'under_review'" role="alert">
                         <strong>Under Review:</strong> Awaiting review confirmation prior to completion.
                     </div>
-                    <div class="alert alert-success" attrs="{'invisible': [('state', '!=', 'completed')]}" role="alert">
+                    <div class="alert alert-success" invisible="state != 'completed'" role="alert">
                         <strong>Completed:</strong> Audit execution finalized and locked.
                     </div>
 
@@ -87,8 +87,8 @@
 
                     <group string="Control Reliance &amp; Financial Information">
                         <group string="Control Reliance">
-                            <field name="control_design_effective" widget="boolean_button" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
-                            <field name="control_operating_effective" widget="boolean_button" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
+                            <field name="control_design_effective" widget="boolean_button" invisible="not relying_on_controls"/>
+                            <field name="control_operating_effective" widget="boolean_button" invisible="not relying_on_controls"/>
                         </group>
                         <group string="Financial Information">
                             <field name="total_population_amount"/>
@@ -150,7 +150,7 @@
                             </field>
                         </page>
 
-                        <page string="Test of Controls" attrs="{'invisible': [('relying_on_controls', '=', False)]}">
+                        <page string="Test of Controls" invisible="not relying_on_controls">
                             <field name="test_of_controls_ids" nolabel="1">
                                 <tree editable="bottom" decoration-success="test_result=='effective'" decoration-warning="test_result=='partially_effective'" decoration-danger="test_result=='ineffective'">
                                     <field name="sequence" widget="handle"/>
@@ -267,6 +267,7 @@
                             <field name="analytical_procedure_ids" nolabel="1">
                                 <tree editable="bottom" decoration-success="expectation_met==True" decoration-warning="investigation_required==True" decoration-danger="unusual_fluctuation==True">
                                     <field name="sequence" widget="handle"/>
+                                    <field name="unusual_fluctuation" invisible="1"/>
                                     <field name="procedure_description"/>
                                     <field name="procedure_type" widget="badge" options="{'classes': {'ratio': 'primary', 'trend': 'success', 'comparison': 'warning', 'reasonableness': 'info'}}"/>
                                     <field name="current_year_amount"/>
