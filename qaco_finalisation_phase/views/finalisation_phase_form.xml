@@ -30,8 +30,8 @@
                 <filter name="filter_incomplete" string="Open" domain="[('final_file_locked','=',False)]"/>
                 <filter name="filter_locked" string="Locked" domain="[('final_file_locked','=',True)]"/>
                 <group expand="0" string="Status Flags">
-                    <filter string="Misstatements" domain="[('misstatement_status','!=','green')]"/>
-                    <filter string="Sign-off" domain="[('signoff_unlocked','=',False)]"/>
+                    <filter name="filter_misstatements" string="Misstatements" domain="[('misstatement_status','!=','green')]"/>
+                    <filter name="filter_signoff" string="Sign-off" domain="[('signoff_unlocked','=',False)]"/>
                 </group>
             </search>
         </field>

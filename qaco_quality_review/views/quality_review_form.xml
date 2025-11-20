@@ -47,10 +47,10 @@
             <form string="Quality Review" create="0">
                 <header>
                     <button name="action_run_trigger_engine" type="object" string="Run Trigger Engine" class="oe_secondary"/>
-                    <button name="action_finalize_eqr" type="object" string="Finalize EQR" class="oe_highlight" attrs="{'invisible': [('eqr_required', '=', False), ('eqr_concluded', '=', True)]}"/>
-                    <button name="action_validate_quality_gate" type="object" string="Validate Quality Gate" attrs="{'invisible': [('overall_status', '=', 'green')]}"/>
-                    <button name="action_lock_file" type="object" string="Lock File" attrs="{'invisible': [('file_lock_date', '!=', False)]}"/>
-                    <button name="action_mark_archived" type="object" string="Mark Archived" attrs="{'invisible': [('archiving_completed', '=', True)]}"/>
+                    <button name="action_finalize_eqr" type="object" string="Finalize EQR" class="oe_highlight" invisible="eqr_required == False or eqr_concluded == True"/>
+                    <button name="action_validate_quality_gate" type="object" string="Validate Quality Gate" invisible="overall_status == 'green'"/>
+                    <button name="action_lock_file" type="object" string="Lock File" invisible="file_lock_date != False"/>
+                    <button name="action_mark_archived" type="object" string="Mark Archived" invisible="archiving_completed == True"/>
                     <field name="overall_status" widget="statusbar" statusbar_visible="red,amber,green"/>
                 </header>
                 <sheet>
@@ -92,7 +92,7 @@
                             <group>
                                 <group>
                                     <field name="eqr_override_option"/>
-                                    <field name="eqr_override_reason" attrs="{'required': [('eqr_override_option', '=', 'force_off')]}"/>
+                                    <field name="eqr_override_reason" required="eqr_override_option == 'force_off'"/>
                                 </group>
                                 <group>
                                     <field name="eqr_partner_employee_id"/>
