@@ -76,7 +76,7 @@
                         <field name="outstanding_items_log" widget="html" readonly="1"/>
                     </group>
                     <notebook>
-                        <page string="5.0 Central Dashboard & Pre-Issuance">
+                        <page string="5.0 Central Dashboard &amp; Pre-Issuance">
                             <group>
                                 <group>
                                     <field name="review_notes_cleared" widget="boolean_toggle"/>
@@ -250,7 +250,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="5.5 Final Attachments, Archiving & Dispatch">
+                        <page string="5.5 Final Attachments, Archiving &amp; Dispatch">
                             <group>
                                 <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
