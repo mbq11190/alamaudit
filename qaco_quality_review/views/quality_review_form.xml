@@ -82,7 +82,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Triggers & Scope" icon="fa-bolt">
+                        <page string="Triggers &amp; Scope" icon="fa-bolt">
                             <group class="o_phase_banner" colspan="2">
                                 <field name="trigger_status" widget="badge" options="{'clickable': False}"/>
                                 <div class="o_phase_banner_note">
