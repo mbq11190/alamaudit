@@ -948,7 +948,6 @@ class AuditProcedure(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
     head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
-    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     procedure_template_id = fields.Many2one('audit.procedure.template', string='Procedure Template')
     procedure_name = fields.Char(string='Procedure Name', required=True)
     procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=True)
