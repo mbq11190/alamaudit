@@ -225,7 +225,7 @@
 								<field name="aob_guidelines_considered" string="AOB Guidelines Considered"/>
 							</group>
 							<group string="Mandatory Attachments - Zero Deficiency" colspan="2">
-								<label string="The following attachments are mandatory for ICAP/AOB compliance:" class="o_form_label"/>
+								<label string="The following attachments are mandatory for ICAP/AOB compliance:" class="o_form_label" for="organogram_attachment_ids"/>
 								<field name="organogram_attachment_ids" widget="many2many_binary" string="Organogram"/>
 								<field name="engagement_letter_attachment_ids" widget="many2many_binary" string="Engagement Letter"/>
 								<field name="board_minutes_attachment_ids" widget="many2many_binary" string="BOD/Audit Committee Minutes"/>
@@ -235,7 +235,7 @@
 								<field name="previous_audit_reports_attachment_ids" widget="many2many_binary" string="Previous Audit Reports"/>
 							</group>
 							<group string="Master Checklist - Zero Deficiency Target" colspan="4">
-								<label string="Complete ALL checklist items for zero deficiency compliance:" class="o_form_label"/>
+								<label string="Complete ALL checklist items for zero deficiency compliance:" class="o_form_label" for="checklist_engagement_letter"/>
 								<group col="4">
 									<field name="checklist_engagement_letter" readonly="1"/>
 									<field name="checklist_entity_understanding" readonly="1"/>
