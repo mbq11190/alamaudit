@@ -211,6 +211,7 @@
                                 </tree>
                                 <form string="Substantive Area">
                                     <group>
+                                        <field name="execution_phase_id" readonly="1"/>
                                         <field name="area_code"/>
                                         <field name="risk_line_ids" widget="many2many_tags"/>
                                         <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
