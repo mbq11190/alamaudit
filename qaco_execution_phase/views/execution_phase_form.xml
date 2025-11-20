@@ -26,12 +26,12 @@
             <search string="Execution Phases">
                 <field name="name"/>
                 <field name="client_id"/>
-                <filter name="filter_open" string="Open" domain="[('execution_complete', '=', False)]"/>
-                <filter name="filter_closed" string="Completed" domain="[('execution_complete', '=', True)]"/>
+                <filter name="filter_open" string="Open" domain="[('execution_complete','=',False)]"/>
+                <filter name="filter_closed" string="Completed" domain="[('execution_complete','=',True)]"/>
                 <group expand="0" string="Status">
-                    <filter string="Red" domain="['|', '|', ('control_status', '=', 'red'), ('substantive_status', '=', 'red'), ('workpaper_status', '=', 'red')]"/>
-                    <filter string="Amber" domain="['|', '|', ('control_status', '=', 'amber'), ('substantive_status', '=', 'amber'), ('workpaper_status', '=', 'amber')]"/>
-                    <filter string="Green" domain="[('completion_status', '=', 'green')]"/>
+                    <filter string="Red" domain="['|','|',('control_status','=','red'),('substantive_status','=','red'),('workpaper_status','=','red')]"/>
+                    <filter string="Amber" domain="['|','|',('control_status','=','amber'),('substantive_status','=','amber'),('workpaper_status','=','amber')]"/>
+                    <filter string="Green" domain="[('completion_status','=','green')]"/>
                 </group>
             </search>
         </field>
