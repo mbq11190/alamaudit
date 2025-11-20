@@ -14,7 +14,7 @@
         </field>
     </record>
 
-    <record id="action_execution_phase" model="ir.actions.act_window">
+    <record id="action_open_execution_phase_from_audit" model="ir.actions.act_window">
         <field name="name">Open Execution Phase</field>
         <field name="res_model">qaco.execution.phase</field>
         <field name="view_mode">form</field>
