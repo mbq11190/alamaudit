@@ -77,6 +77,7 @@
                     </group>
                     <notebook>
                         <page string="5.0 Central Dashboard &amp; Pre-Issuance">
+                            <!-- Central dashboard with pre-issuance gateway steps -->
                             <group>
                                 <group>
                                     <field name="review_notes_cleared" widget="boolean_toggle"/>
@@ -251,6 +252,7 @@
                             </field>
                         </page>
                         <page string="5.5 Final Attachments, Archiving &amp; Dispatch">
+                            <!-- Final pack references and dispatch logs -->
                             <group>
                                 <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
