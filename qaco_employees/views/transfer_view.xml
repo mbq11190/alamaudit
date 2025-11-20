@@ -49,7 +49,7 @@
                         <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state != 'submitted'"/>
                         <button name="action_reject" type="object" string="Reject" class="oe_highlight" invisible="state != 'submitted'"/>
                         <button name="action_set_unallocated" type="object" string="Intimate Return to Office" class="oe_highlight" invisible="state != 'approved'"/>
-                        <field name="state" widget="statusbar" options="{'clickable': '0'}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected,returned" options="{'clickable': '0'}"/>
                     </header>
 
                     <sheet>

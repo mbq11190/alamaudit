@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <form string="Client Onboarding">
                 <header>
-                    <field name="overall_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                    <field name="overall_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
                     <field name="progress_percentage" widget="progressbar" options="{'format':'percent'}" readonly="1"/>
                     <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" class="btn-primary"/>
                     <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn-secondary"/>
@@ -31,13 +31,13 @@
                         <field name="client_id" readonly="1"/>
                     </group>
                     <group>
-                        <field name="section1_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section2_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section3_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section4_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section5_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section6_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                        <field name="section7_status" widget="statusbar" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section1_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section2_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section3_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section4_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section5_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section6_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                        <field name="section7_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
                     </group>
                     <notebook>
                         <page string="Section 1: Legal Identity" name="section_1">

@@ -115,7 +115,7 @@
                 <header>
                     <button name="action_validate" string="Validate" type="object" class="oe_highlight" invisible="state == 'approved'"/>
                     <button name="action_reset_to_draft" string="Reset to Draft" type="object" class="oe_highlight" invisible="state == 'draft'" groups="qaco_employees.group_qaco_employee_hr_manager,qaco_employees.group_qaco_employee_administrator,base.group_system"/>
-                    <field name="state" widget="statusbar" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
                 </header>
                 <sheet>
                     <group>
@@ -192,9 +192,7 @@
                             invisible="state != 'submitted' or not show_approval_buttons"/>
                     <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="oe_highlight" groups="base.group_system"
                             invisible="state == 'draft'"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,reverted,submitted,approved,rejected"
-                           options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
+                          <field name="state" widget="statusbar" statusbar_visible="draft,reverted,submitted,approved,rejected" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
                 </header>
                 <sheet>
                 <group>
@@ -402,7 +400,7 @@
             <header>
                 <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state == 'approved'"/>
                 <button name="action_reset_to_draft" string="Reset to Draft" type="object" invisible="state == 'draft'"/>
-                <field name="state" widget="statusbar"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
             </header>
             <sheet>
                 <group>
