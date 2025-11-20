@@ -5,9 +5,9 @@
         <record id="view_qaco_audit_form_quality_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.quality.button</field>
         <field name="model">qaco.audit</field>
-        <field name="inherit_id" ref="qaco_finalisation_phase.view_qaco_audit_form_finalisation_button"/>
+        <field name="inherit_id" ref="qaco_deliverables.view_qaco_audit_form_deliverables_button"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='%(qaco_finalisation_phase.action_open_finalisation_phase_from_audit)d']" position="after">
+            <xpath expr="//button[@icon='fa-file-text-o']" position="after">
                 <button class="oe_stat_button" type="object"
                         name="action_open_quality_review"
                         icon="fa-star">

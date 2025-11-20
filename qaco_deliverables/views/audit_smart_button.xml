@@ -11,15 +11,13 @@
         <field name="domain">[('audit_id', '=', active_id)]</field>
     </record>
 
-    <!-- Smart button on qaco.audit form - TEMPORARILY DISABLED to fix view hierarchy issues -->
-    <!-- Re-enable after finalisation_phase module is fully stable -->
-    <!--
+    <!-- Smart button on qaco.audit form -->
     <record id="view_qaco_audit_form_deliverables_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.deliverables.button</field>
         <field name="model">qaco.audit</field>
         <field name="inherit_id" ref="qaco_finalisation_phase.view_qaco_audit_form_finalisation_button"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[contains(@class, 'oe_stat_button')][last()]" position="after">
+            <xpath expr="//button[@icon='fa-check-circle']" position="after">
                 <button class="oe_stat_button" type="action"
                         name="%(qaco_deliverables.action_open_deliverables_from_audit)d"
                         icon="fa-file-text-o">
@@ -31,5 +29,4 @@
             </xpath>
         </field>
     </record>
-    -->
 </odoo>
