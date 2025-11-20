@@ -14,7 +14,7 @@
         </field>
     </record>
 
-    <record id="action_deliverables" model="ir.actions.act_window">
+    <record id="action_open_deliverables_from_audit" model="ir.actions.act_window">
         <field name="name">Open Deliverables</field>
         <field name="res_model">qaco.deliverables</field>
         <field name="view_mode">form</field>
