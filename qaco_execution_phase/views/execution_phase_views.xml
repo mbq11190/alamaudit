@@ -343,6 +343,8 @@
                                             <field name="analytical_procedure_ids" nolabel="1">
                                                 <tree editable="bottom" decoration-danger="unusual_fluctuation==True" decoration-warning="investigation_required==True">
                                                     <field name="sequence" widget="handle"/>
+                                                    <field name="unusual_fluctuation" invisible="1"/>
+                                                    <field name="investigation_required" invisible="1"/>
                                                     <field name="procedure_description"/>
                                                     <field name="procedure_type" widget="badge" options="{'classes': {'ratio': 'primary', 'trend': 'success', 'comparison': 'warning', 'reasonableness': 'info'}}"/>
                                                     <field name="current_year_amount"/>
