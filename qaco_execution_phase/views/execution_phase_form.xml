@@ -218,7 +218,7 @@
                                     </group>
                                     <field name="focus_note" widget="html" colspan="4"/>
                                     <group string="Procedures">
-                                        <field name="procedure_ids" context="{'default_execution_phase_id': parent.execution_phase_id}" colspan="4">
+                                        <field name="procedure_ids" context="{'default_execution_phase_id': parent.parent.id}" colspan="4">
                                             <tree editable="bottom">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="name"/>
@@ -241,7 +241,7 @@
                                                     <field name="sample_size_planned"/>
                                                     <field name="sample_size_tested"/>
                                                     <field name="exception_amount"/>
-                                                    <field name="sampling_request_id" context="{'default_execution_phase_id': parent.execution_phase_id}"/>
+                                                    <field name="sampling_request_id" context="{'default_execution_phase_id': parent.parent.id}"/>
                                                 </group>
                                                 <group>
                                                     <field name="prepared_by"/>
