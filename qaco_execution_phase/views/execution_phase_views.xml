@@ -66,6 +66,37 @@
                         </div>
                     </div>
 
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="border rounded-3 p-3 h-100 shadow-sm bg-white">
+                                <div class="text-uppercase text-muted small">Step 1 · Engage</div>
+                                <div class="h5 mt-2">Set the engagement context</div>
+                                <p class="text-muted mb-0">Confirm client, dates and planning links before you select accounting heads.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border rounded-3 p-3 h-100 shadow-sm bg-white">
+                                <div class="text-uppercase text-muted small">Step 2 · Prepare</div>
+                                <div class="h5 mt-2">Select accounting heads</div>
+                                <p class="text-muted mb-0">Pick the faces you will cover, tag risks and raise initial coverage targets.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border rounded-3 p-3 h-100 shadow-sm bg-white">
+                                <div class="text-uppercase text-muted small">Step 3 · Execute</div>
+                                <div class="h5 mt-2">Run tests &amp; capture evidence</div>
+                                <p class="text-muted mb-0">Use the head details notebook to capture procedures, sampling, analytics and evidence.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border rounded-3 p-3 h-100 shadow-sm bg-white">
+                                <div class="text-uppercase text-muted small">Step 4 · Close</div>
+                                <div class="h5 mt-2">Review &amp; finalize</div>
+                                <p class="text-muted mb-0">Lock heads when testing is complete and send the execution phase for review.</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="alert alert-secondary" attrs="{'invisible': [('state', '!=', 'draft')]}" role="alert">
                         <strong>Draft:</strong> Select accounting heads and configure baseline risks before kickoff.
                     </div>
