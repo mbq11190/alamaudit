@@ -1,0 +1,9 @@
+/* Lightweight helpers for the audit execution dashboard widgets. */
+.o_form_view .alert h4 {
+    margin-bottom: 0.5rem;
+}
+
+.o_form_view .alert .row .h4,
+.o_form_view .alert .row .h3 {
+    margin: 0.25rem 0;
+}
