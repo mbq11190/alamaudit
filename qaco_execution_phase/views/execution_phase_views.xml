@@ -21,7 +21,7 @@
         <field name="name">execution.phase.form</field>
         <field name="model">execution.phase</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Audit Execution Phase">
                 <header>
                     <button name="action_confirm_heads" type="object" string="Confirm Heads &amp; Start Execution" class="btn-primary" states="draft" attrs="{'invisible': [('selected_head_ids', '=', False)]}"/>
                     <button name="action_mark_review" type="object" string="Send for Review" class="btn-warning" states="in_progress"/>
@@ -30,43 +30,56 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,under_review,completed" clickable="1"/>
                 </header>
                 <sheet>
-                    <div class="oe_title mb-4">
+                    <div class="oe_title mb-3">
                         <h1>
                             <field name="name" placeholder="Execution Reference..." class="col-6"/>
                         </h1>
-                        <div class="row mt-2">
-                            <div class="col-12">
-                                <div class="alert alert-info" role="alert">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <strong>Overall Progress:</strong>
-                                            <field name="overall_progress" widget="progressbar" options="{'edit': False}" class="mt-1"/>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Completed Heads:</strong>
-                                            <div class="h5 mt-1">
-                                                <field name="completed_heads_count"/> / <field name="total_heads_count"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Fiscal Year:</strong>
-                                            <div class="h5 mt-1">
-                                                <field name="fiscal_year"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Audit Lead:</strong>
-                                            <div class="h5 mt-1">
-                                                <field name="audit_lead_id"/>
-                                            </div>
-                                        </div>
+                        <div class="text-muted">
+                            <field name="client_id"/> • <field name="fiscal_year" readonly="1"/>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="row text-center text-md-start gy-3">
+                                <div class="col-md-3">
+                                    <strong class="text-uppercase text-muted small">Overall Progress</strong>
+                                    <field name="overall_progress" widget="progressbar" options="{'edit': False}" class="mt-1"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong class="text-uppercase text-muted small">Completed Heads</strong>
+                                    <div class="h5 mt-1 mb-0">
+                                        <field name="completed_heads_count"/> / <field name="total_heads_count"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong class="text-uppercase text-muted small">Current Status</strong>
+                                    <field name="state" widget="badge" readonly="1" options="{'classes': {'draft': 'secondary', 'in_progress': 'warning', 'under_review': 'info', 'completed': 'success'}}" class="mt-1"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong class="text-uppercase text-muted small">Audit Lead</strong>
+                                    <div class="h5 mt-1 mb-0">
+                                        <field name="audit_lead_id"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <group>
+                    <div class="alert alert-secondary" attrs="{'invisible': [('state', '!=', 'draft')]}" role="alert">
+                        <strong>Draft:</strong> Select accounting heads and configure baseline risks before kickoff.
+                    </div>
+                    <div class="alert alert-warning" attrs="{'invisible': [('state', '!=', 'in_progress')]}" role="alert">
+                        <strong>In Progress:</strong> Track coverage, risk responses, and evidence completion for each head.
+                    </div>
+                    <div class="alert alert-info" attrs="{'invisible': [('state', '!=', 'under_review')]}" role="alert">
+                        <strong>Under Review:</strong> Heads are locked for reviewer sign-off; update outstanding notes.
+                    </div>
+                    <div class="alert alert-success" attrs="{'invisible': [('state', '!=', 'completed')]}" role="alert">
+                        <strong>Completed:</strong> Execution artifacts are finalized and ready for finalisation.
+                    </div>
+
+                    <group string="Engagement Details">
                         <group>
                             <field name="client_id" widget="many2one" options="{'no_create': True, 'no_create_edit': True}"/>
                             <field name="date_start"/>
@@ -80,7 +93,7 @@
 
                     <group string="Accounting Heads Selection" attrs="{'invisible': [('state', '!=', 'draft')]}">
                         <div class="alert alert-warning">
-                            <strong>Note:</strong> Select all accounting heads you want to include in this audit execution. You can select multiple heads.
+                            <strong>Tip:</strong> Use tags to highlight high-risk heads before confirming and generating execution detail lines.
                         </div>
                         <field name="selected_head_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select accounting heads..." class="col-12"/>
                     </group>
@@ -90,14 +103,15 @@
                             <strong>Execution Completed:</strong> All selected accounting heads have been processed.
                         </div>
                         <field name="head_details_ids" mode="tree,form" nolabel="1">
-                            <tree decoration-success="state=='completed'" decoration-warning="state=='in_progress'" decoration-muted="state=='draft'" editable="bottom">
+                            <tree decoration-success="state=='completed'" decoration-warning="state=='in_progress'" decoration-muted="state=='draft'" decoration-danger="significant_risk==True" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="account_head_id"/>
-                                <field name="current_year_amount"/>
-                                <field name="previous_year_amount"/>
-                                <field name="variance_amount"/>
-                                <field name="variance_percentage"/>
-                                <field name="state" widget="badge" options="{'classes': {'draft': 'secondary', 'in_progress': 'warning', 'completed': 'success'}}"/>
+                                <field name="nature" widget="badge" options="{'classes': {'revenue': 'success', 'expense': 'danger', 'asset': 'primary', 'liability': 'warning', 'equity': 'info'}}"/>
+                                <field name="risk_rating" widget="badge" options="{'classes': {'low': 'success', 'medium': 'warning', 'high': 'danger', 'significant': 'danger'}}"/>
+                                <field name="coverage_percentage" widget="progressbar" options="{'edit': False}"/>
+                                <field name="tested_percentage" widget="progressbar" options="{'edit': False}"/>
+                                <field name="fully_tested" widget="boolean_toggle"/>
+                                <field name="state" widget="badge" options="{'classes': {'draft': 'secondary', 'in_progress': 'warning', 'under_review': 'info', 'completed': 'success'}}"/>
                                 <field name="progress" widget="progressbar" options="{'edit': False}"/>
                                 <button name="action_start_execution" type="object" string="Start" class="btn-sm btn-outline-warning" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                                 <button name="action_complete_head" type="object" string="Complete" class="btn-sm btn-outline-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
@@ -105,13 +119,55 @@
                             </tree>
                             <form>
                                 <sheet>
-                                    <div class="oe_title">
+                                    <div class="oe_title mb-3">
                                         <h1>
                                             <field name="name"/>
                                         </h1>
+                                        <div class="text-muted">
+                                            <field name="account_head_id"/> • <field name="nature" readonly="1"/>
+                                        </div>
                                     </div>
+                                    <group>
+                                        <group string="Account Snapshot">
+                                            <field name="account_head_id"/>
+                                            <field name="account_code" readonly="1"/>
+                                            <field name="nature" readonly="1" widget="badge" options="{'classes': {'revenue': 'success', 'expense': 'danger', 'asset': 'primary', 'liability': 'warning', 'equity': 'info'}}"/>
+                                            <field name="assertion_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_create_edit': True}" placeholder="Tag relevant assertions"/>
+                                        </group>
+                                        <group string="Execution Status">
+                                            <field name="state" widget="radio" options="{'horizontal': True}"/>
+                                            <field name="progress" widget="progressbar" options="{'edit': False}"/>
+                                            <field name="coverage_percentage" widget="progressbar" options="{'edit': False}"/>
+                                            <field name="tested_percentage" widget="percentpie" options="{'edit': False}" readonly="1"/>
+                                            <field name="fully_tested" widget="boolean_button"/>
+                                        </group>
+                                    </group>
+                                    <group string="Risk Overview">
+                                        <group>
+                                            <field name="risk_nature"/>
+                                            <field name="risk_rating"/>
+                                            <field name="significant_risk"/>
+                                            <field name="overall_risk_assessment" readonly="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="inherent_risk"/>
+                                            <field name="control_risk"/>
+                                            <field name="detection_risk"/>
+                                            <field name="risk_strength"/>
+                                        </group>
+                                    </group>
+                                    <group string="Narrative &amp; Controls">
+                                        <group>
+                                            <field name="risk_description" nolabel="1" placeholder="Summarize the key risk drivers for this head..."/>
+                                        </group>
+                                        <group string="Control Reliance">
+                                            <field name="relying_on_controls"/>
+                                            <field name="control_design_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
+                                            <field name="control_operating_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
+                                        </group>
+                                    </group>
                                     <notebook>
-                                        <page string="Lead Schedule">
+                                        <page string="Overview &amp; Lead Schedule">
                                             <group>
                                                 <group string="Financial Information">
                                                     <field name="current_year_amount"/>
@@ -119,9 +175,11 @@
                                                     <field name="variance_amount" readonly="1"/>
                                                     <field name="variance_percentage" readonly="1"/>
                                                 </group>
-                                                <group string="Progress &amp; Status">
-                                                    <field name="state" widget="radio"/>
-                                                    <field name="progress" widget="progressbar" options="{'edit': False}"/>
+                                                <group string="Progress Metrics">
+                                                    <field name="population_amount"/>
+                                                    <field name="sample_amount_tested"/>
+                                                    <field name="tolerable_error"/>
+                                                    <field name="confidence_level"/>
                                                 </group>
                                             </group>
                                         </page>
@@ -131,13 +189,11 @@
                                                     <field name="population_size"/>
                                                     <field name="sample_size"/>
                                                     <field name="sampling_method"/>
-                                                    <field name="confidence_level"/>
                                                 </group>
-                                                <group string="Amount Details">
-                                                    <field name="population_amount"/>
-                                                    <field name="sample_amount_tested"/>
+                                                <group string="Coverage">
                                                     <field name="coverage_percentage" readonly="1"/>
-                                                    <field name="tolerable_error"/>
+                                                    <field name="tested_percentage" readonly="1"/>
+                                                    <field name="fully_tested" readonly="1"/>
                                                 </group>
                                             </group>
                                         </page>
@@ -145,13 +201,24 @@
                                             <group>
                                                 <group string="Risk Levels">
                                                     <field name="risk_nature"/>
+                                                    <field name="risk_rating"/>
+                                                    <field name="significant_risk"/>
+                                                </group>
+                                                <group string="Component Risks">
                                                     <field name="inherent_risk"/>
                                                     <field name="control_risk"/>
                                                     <field name="detection_risk"/>
                                                 </group>
-                                                <group string="Assessment">
+                                            </group>
+                                            <group>
+                                                <group>
                                                     <field name="risk_strength"/>
                                                     <field name="overall_risk_assessment" readonly="1"/>
+                                                </group>
+                                                <group string="Control Reliance">
+                                                    <field name="relying_on_controls"/>
+                                                    <field name="control_design_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
+                                                    <field name="control_operating_effective" attrs="{'invisible': [('relying_on_controls', '=', False)]}"/>
                                                 </group>
                                             </group>
                                         </page>
@@ -237,6 +304,48 @@
                                                     </group>
                                                     <field name="control_testing_details" nolabel="1"/>
                                                     <field name="control_conclusion"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                        <page string="Analytical Procedures">
+                                            <field name="analytical_procedure_ids" nolabel="1">
+                                                <tree editable="bottom" decoration-danger="unusual_fluctuation==True" decoration-warning="investigation_required==True">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="procedure_description"/>
+                                                    <field name="procedure_type" widget="badge" options="{'classes': {'ratio': 'primary', 'trend': 'success', 'comparison': 'warning', 'reasonableness': 'info'}}"/>
+                                                    <field name="current_year_amount"/>
+                                                    <field name="previous_year_amount"/>
+                                                    <field name="variance_percentage" widget="percentpie"/>
+                                                    <field name="expectation_met" widget="boolean_toggle"/>
+                                                    <field name="investigation_required" widget="boolean_toggle"/>
+                                                </tree>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="procedure_description"/>
+                                                            <field name="procedure_type"/>
+                                                        </group>
+                                                        <group string="Financial Inputs">
+                                                            <field name="current_year_amount"/>
+                                                            <field name="previous_year_amount"/>
+                                                            <field name="budget_amount"/>
+                                                            <field name="industry_average"/>
+                                                        </group>
+                                                    </group>
+                                                    <group string="Variance Analysis">
+                                                        <field name="variance_cy_py" readonly="1"/>
+                                                        <field name="variance_cy_budget" readonly="1"/>
+                                                        <field name="variance_percentage" readonly="1"/>
+                                                    </group>
+                                                    <group string="Conclusions">
+                                                        <field name="expectation_met"/>
+                                                        <field name="unusual_fluctuation"/>
+                                                        <field name="investigation_required"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="analysis_notes" nolabel="1"/>
+                                                        <field name="follow_up_actions" nolabel="1"/>
+                                                    </group>
                                                 </form>
                                             </field>
                                         </page>

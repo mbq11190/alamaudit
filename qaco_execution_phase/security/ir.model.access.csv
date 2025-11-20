@@ -43,3 +43,4 @@ access_test_controls_detail,test.of.controls.detail.user,model_test_of_controls_
 access_test_details_detail,test.of.details.detail.user,model_test_of_details_detail,base.group_user,1,1,1,1
 access_analytical_procedure_detail,analytical.procedure.detail.user,model_analytical_procedure_detail,base.group_user,1,1,1,1
 access_audit_evidence_detail,audit.evidence.detail.user,model_audit_evidence_detail,base.group_user,1,1,1,1
+access_execution_analytical_procedure,execution.analytical.procedure.user,model_execution_analytical_procedure,base.group_user,1,1,1,1

@@ -764,6 +764,7 @@ class ExecutionHeadDetails(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     execution_phase_id = fields.Many2one('execution.phase', string='Execution Phase', required=True, ondelete='cascade')
     account_head_id = fields.Many2one('account.account', string='Accounting Head', required=True)
+    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=True)
     current_year_amount = fields.Float(string='Current Year Amount', digits=(16, 2))
     previous_year_amount = fields.Float(string='Previous Year Amount', digits=(16, 2))
     variance_amount = fields.Float(string='Variance Amount', compute='_compute_variance', digits=(16, 2))
@@ -779,14 +780,30 @@ class ExecutionHeadDetails(models.Model):
     population_amount = fields.Float(string='Population Amount', digits=(16, 2))
     sample_amount_tested = fields.Float(string='Sample Amount Tested', digits=(16, 2))
     coverage_percentage = fields.Float(string='Coverage Percentage', compute='_compute_coverage', digits=(16, 2))
+    tested_percentage = fields.Float(string='Tested Percentage', compute='_compute_tested_percentage', digits=(16, 2), store=True)
+    fully_tested = fields.Boolean(string='Fully Tested', compute='_compute_fully_tested', store=True)
     tolerable_error = fields.Float(string='Tolerable Error', digits=(16, 2))
     confidence_level = fields.Float(string='Confidence Level', default=95.0)
+    nature = fields.Selection([
+        ('revenue', 'Revenue'),
+        ('expense', 'Expense'),
+        ('asset', 'Asset'),
+        ('liability', 'Liability'),
+        ('equity', 'Equity'),
+    ], string='Nature', compute='_compute_nature', store=True)
     risk_nature = fields.Selection([
         ('low', 'Low Risk'),
         ('medium', 'Medium Risk'),
         ('high', 'High Risk'),
         ('significant', 'Significant Risk'),
     ], string='Risk Nature')
+    risk_rating = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('significant', 'Significant'),
+    ], string='Risk Rating', default='medium')
+    significant_risk = fields.Boolean(string='Significant Risk Flag')
     inherent_risk = fields.Selection([
         ('low', 'Low'),
         ('medium', 'Medium'),
@@ -812,6 +829,17 @@ class ExecutionHeadDetails(models.Model):
         ('medium', 'Medium'),
         ('high', 'High'),
     ], string='Overall Risk Assessment', compute='_compute_overall_risk')
+    assertion_ids = fields.Many2many(
+        'audit.assertion',
+        'execution_head_assertion_rel',
+        'head_id',
+        'assertion_id',
+        string='Assertions'
+    )
+    risk_description = fields.Html(string='Risk Description')
+    relying_on_controls = fields.Boolean(string='Relying on Controls')
+    control_design_effective = fields.Boolean(string='Control Design Effective')
+    control_operating_effective = fields.Boolean(string='Control Operating Effective')
     state = fields.Selection([
         ('draft', 'Not Started'),
         ('in_progress', 'In Progress'),
@@ -822,6 +850,7 @@ class ExecutionHeadDetails(models.Model):
     test_of_details_ids = fields.One2many('test.of.details', 'head_details_id', string='Test of Details')
     test_of_controls_ids = fields.One2many('test.of.controls', 'head_details_id', string='Test of Controls')
     evidence_ids = fields.One2many('audit.evidence', 'head_details_id', string='Evidences')
+    analytical_procedure_ids = fields.One2many('execution.analytical.procedure', 'head_details_id', string='Analytical Procedures')
 
     @api.depends('current_year_amount', 'previous_year_amount')
     def _compute_variance(self):
@@ -840,6 +869,31 @@ class ExecutionHeadDetails(models.Model):
                 record.coverage_percentage = (record.sample_amount_tested / record.population_amount) * 100
             else:
                 record.coverage_percentage = 0.0
+
+    @api.depends('sample_amount_tested', 'population_amount')
+    def _compute_tested_percentage(self):
+        for record in self:
+            if record.population_amount:
+                record.tested_percentage = (record.sample_amount_tested / record.population_amount) * 100
+            else:
+                record.tested_percentage = 0.0
+
+    @api.depends('tested_percentage')
+    def _compute_fully_tested(self):
+        for record in self:
+            record.fully_tested = record.tested_percentage >= 95.0
+
+    @api.depends('account_head_id.user_type_id.type')
+    def _compute_nature(self):
+        mapping = {
+            'income': 'revenue',
+            'expense': 'expense',
+            'asset': 'asset',
+            'liability': 'liability',
+            'equity': 'equity',
+        }
+        for record in self:
+            record.nature = mapping.get(record.account_head_id.user_type_id.type, False) if record.account_head_id else False
 
     @api.depends('inherent_risk', 'control_risk', 'detection_risk')
     def _compute_overall_risk(self):
@@ -980,3 +1034,41 @@ class AuditEvidence(models.Model):
     collection_date = fields.Date(string='Collection Date', default=fields.Date.today)
     attachment_id = fields.Many2one('ir.attachment', string='Attachment')
     evidence_notes = fields.Text(string='Notes')
+
+
+class ExecutionAnalyticalProcedure(models.Model):
+    _name = 'execution.analytical.procedure'
+    _description = 'Execution Analytical Procedure'
+    _order = 'sequence'
+
+    sequence = fields.Integer(string='Sequence', default=10)
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    procedure_description = fields.Char(string='Procedure Description', required=True)
+    procedure_type = fields.Selection([
+        ('ratio', 'Ratio Analysis'),
+        ('trend', 'Trend Analysis'),
+        ('comparison', 'Comparison Analysis'),
+        ('reasonableness', 'Reasonableness Test'),
+    ], string='Procedure Type', required=True)
+    current_year_amount = fields.Float(string='Current Year Amount', digits=(16, 2))
+    previous_year_amount = fields.Float(string='Previous Year Amount', digits=(16, 2))
+    budget_amount = fields.Float(string='Budget Amount', digits=(16, 2))
+    industry_average = fields.Float(string='Industry Average', digits=(16, 2))
+    variance_cy_py = fields.Float(string='Variance CY vs PY', compute='_compute_variances', digits=(16, 2))
+    variance_cy_budget = fields.Float(string='Variance CY vs Budget', compute='_compute_variances', digits=(16, 2))
+    variance_percentage = fields.Float(string='Variance %', compute='_compute_variances', digits=(16, 2))
+    expectation_met = fields.Boolean(string='Expectation Met')
+    unusual_fluctuation = fields.Boolean(string='Unusual Fluctuation')
+    investigation_required = fields.Boolean(string='Investigation Required')
+    analysis_notes = fields.Text(string='Analysis Notes')
+    follow_up_actions = fields.Text(string='Follow-up Actions')
+
+    @api.depends('current_year_amount', 'previous_year_amount', 'budget_amount')
+    def _compute_variances(self):
+        for record in self:
+            record.variance_cy_py = (record.current_year_amount - record.previous_year_amount) if record.previous_year_amount else 0.0
+            record.variance_cy_budget = (record.current_year_amount - record.budget_amount) if record.budget_amount else 0.0
+            if record.previous_year_amount:
+                record.variance_percentage = ((record.current_year_amount - record.previous_year_amount) / record.previous_year_amount) * 100
+            else:
+                record.variance_percentage = 0.0
