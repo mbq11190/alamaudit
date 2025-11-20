@@ -44,7 +44,7 @@ class AuditExecution(models.Model):
     control_design_effective = fields.Boolean(string='Control Design Effective')
     control_operating_effective = fields.Boolean(string='Control Operating Effective')
     coverage_percentage = fields.Float(string='Coverage %', compute='_compute_coverage_percentage')
-    fully_tested = fields.Boolean(string='Fully Tested', compute='_compute_fully_tested')
+    fully_tested = fields.Boolean(string='Fully Tested', compute='_compute_fully_tested', store=True)
     total_population_amount = fields.Float(string='Total Population Amount', digits=(16, 2))
     tested_amount = fields.Float(string='Tested Amount', digits=(16, 2))
     tested_percentage = fields.Float(string='Tested %', compute='_compute_tested_percentage')
