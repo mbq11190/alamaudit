@@ -198,29 +198,41 @@
                             </group>
                             <field name="deficiency_ids" context="{'default_deliverables_id': active_id}" colspan="4">
                                 <tree editable="bottom">
-                                    <field name="sequence" widget="handle"/>
                                     <field name="classification"/>
                                     <field name="severity"/>
                                     <field name="action_owner"/>
-                                    <field name="action_due_date"/>
+                                    <field name="target_date"/>
                                 </tree>
                                 <form string="Deficiency">
                                     <group>
+                                        <field name="reference" readonly="1"/>
                                         <field name="classification"/>
                                         <field name="severity"/>
-                                        <field name="workpaper_reference"/>
+                                    </group>
+                                    <group>
+                                        <field name="area"/>
+                                        <field name="control_ref"/>
+                                        <field name="wp_reference"/>
                                     </group>
                                     <group col="2">
-                                        <field name="condition" widget="text"/>
-                                        <field name="criteria" widget="text"/>
-                                        <field name="cause" widget="text"/>
-                                        <field name="effect" widget="text"/>
-                                        <field name="root_cause" widget="text"/>
-                                        <field name="recommendation" widget="text"/>
+                                        <field name="condition" widget="html"/>
+                                        <field name="criteria" widget="html"/>
+                                        <field name="cause" widget="html"/>
+                                        <field name="effect" widget="html"/>
+                                    </group>
+                                    <group col="2">
+                                        <field name="recommendation" widget="html"/>
+                                        <field name="management_response" widget="html"/>
                                     </group>
                                     <group>
                                         <field name="action_owner"/>
-                                        <field name="action_due_date"/>
+                                        <field name="action_plan" widget="text"/>
+                                        <field name="target_date"/>
+                                    </group>
+                                    <group>
+                                        <field name="status"/>
+                                        <field name="follow_up_required" widget="boolean_toggle"/>
+                                        <field name="follow_up_status"/>
                                     </group>
                                     <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
                                 </form>
@@ -258,20 +270,32 @@
                             <field name="other_info_line_ids" context="{'default_deliverables_id': active_id}">
                                 <tree editable="bottom">
                                     <field name="document_name"/>
+                                    <field name="doc_type"/>
                                     <field name="status"/>
                                     <field name="reviewer_id"/>
-                                    <field name="reviewed_on"/>
                                     <field name="escalated"/>
                                 </tree>
                                 <form string="Other Information">
                                     <group>
                                         <field name="document_name"/>
-                                        <field name="status"/>
-                                        <field name="reviewer_id"/>
-                                        <field name="reviewed_on"/>
-                                        <field name="escalated" widget="boolean_toggle"/>
+                                        <field name="doc_type"/>
+                                        <field name="responsible_person"/>
                                     </group>
-                                    <field name="inconsistency_note" widget="text"/>
+                                    <group>
+                                        <field name="status"/>
+                                        <field name="received_on"/>
+                                        <field name="review_completed_on"/>
+                                        <field name="reviewer_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="escalated" widget="boolean_toggle"/>
+                                        <field name="escalation_notes" widget="text"/>
+                                    </group>
+                                    <group>
+                                        <field name="misstatement_communicated" widget="boolean_toggle"/>
+                                        <field name="resolution_reference"/>
+                                    </group>
+                                    <field name="comments" widget="text"/>
                                     <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
                                 </form>
                             </field>
@@ -288,11 +312,10 @@
                             <field name="dispatch_log_ids" context="{'default_deliverables_id': active_id}">
                                 <tree editable="bottom">
                                     <field name="recipient_name"/>
-                                    <field name="recipient_role"/>
                                     <field name="method"/>
                                     <field name="dispatch_date"/>
                                     <field name="status"/>
-                                    <field name="ack_received"/>
+                                    <field name="acknowledged_date"/>
                                 </tree>
                                 <form string="Dispatch Log">
                                     <group>
@@ -300,10 +323,20 @@
                                         <field name="recipient_role"/>
                                         <field name="method"/>
                                         <field name="dispatch_date"/>
-                                        <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
-                                        <field name="ack_received" widget="boolean_toggle"/>
                                     </group>
-                                    <field name="proof_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <group>
+                                        <field name="status"/>
+                                        <field name="acknowledged_date"/>
+                                        <field name="tracking_reference"/>
+                                    </group>
+                                    <group>
+                                        <field name="portal_submission_reference"/>
+                                        <field name="notes" widget="text"/>
+                                    </group>
+                                    <group string="Attachments">
+                                        <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
+                                        <field name="acknowledgment_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    </group>
                                 </form>
                             </field>
                         </page>
