@@ -297,6 +297,7 @@
 				<field name="understanding_status" widget="progressbar"/>
 				<field name="risk_status" widget="progressbar"/>
 				<field name="planning_complete" widget="boolean_button"/>
+				<field name="can_finalize_planning" invisible="1"/>
 				<field name="manager_signed_user_id"/>
 				<field name="partner_signed_user_id"/>
 			</tree>
