@@ -29,3 +29,9 @@ access_qaco_exec_workpaper_partner,qaco.exec.workpaper.partner,model_qaco_exec_w
 access_qaco_exec_workpaper_note_user,qaco.exec.workpaper.note.user,model_qaco_exec_workpaper_note,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_exec_workpaper_note_manager,qaco.exec.workpaper.note.manager,model_qaco_exec_workpaper_note,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_exec_workpaper_note_partner,qaco.exec.workpaper.note.partner,model_qaco_exec_workpaper_note,qaco_audit.group_audit_partner,1,1,1,1
+access_execution_phase_simple,execution.phase.user,model_execution_phase,base.group_user,1,1,1,1
+access_execution_head_details_simple,execution.head.details.user,model_execution_head_details,base.group_user,1,1,1,1
+access_audit_procedure_simple,audit.procedure.user,model_audit_procedure,base.group_user,1,1,1,1
+access_test_of_details_simple,test.of.details.user,model_test_of_details,base.group_user,1,1,1,1
+access_test_of_controls_simple,test.of.controls.user,model_test_of_controls,base.group_user,1,1,1,1
+access_audit_evidence_simple,audit.evidence.user,model_audit_evidence,base.group_user,1,1,1,1

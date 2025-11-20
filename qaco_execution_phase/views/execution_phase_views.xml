@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_simple_execution_phase_tree" model="ir.ui.view">
+        <field name="name">execution.phase.tree</field>
+        <field name="model">execution.phase</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state=='completed'" decoration-warning="state=='under_review'" decoration-danger="state=='draft'">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="audit_lead_id"/>
+                <field name="date_start"/>
+                <field name="state" widget="statusbar"/>
+                <field name="overall_progress" widget="progressbar" options="{'edit': False}"/>
+                <field name="completed_heads_count"/>
+                <field name="total_heads_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_simple_execution_phase_form" model="ir.ui.view">
+        <field name="name">execution.phase.form</field>
+        <field name="model">execution.phase</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_heads" type="object" string="Confirm Heads &amp; Start Execution" class="btn-primary" states="draft" attrs="{'invisible': [('selected_head_ids', '=', False)]}"/>
+                    <button name="action_mark_review" type="object" string="Send for Review" class="btn-warning" states="in_progress"/>
+                    <button name="action_complete" type="object" string="Complete Execution" class="btn-success" states="under_review"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" states="in_progress,under_review"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,under_review,completed" clickable="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title mb-4">
+                        <h1>
+                            <field name="name" placeholder="Execution Reference..." class="col-6"/>
+                        </h1>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="alert alert-info" role="alert">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <strong>Overall Progress:</strong>
+                                            <field name="overall_progress" widget="progressbar" options="{'edit': False}" class="mt-1"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Completed Heads:</strong>
+                                            <div class="h5 mt-1">
+                                                <field name="completed_heads_count"/> / <field name="total_heads_count"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Fiscal Year:</strong>
+                                            <div class="h5 mt-1">
+                                                <field name="fiscal_year"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Audit Lead:</strong>
+                                            <div class="h5 mt-1">
+                                                <field name="audit_lead_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="client_id" widget="many2one" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="audit_lead_id"/>
+                            <field name="fiscal_year" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Accounting Heads Selection" attrs="{'invisible': [('state', '!=', 'draft')]}">
+                        <div class="alert alert-warning">
+                            <strong>Note:</strong> Select all accounting heads you want to include in this audit execution. You can select multiple heads.
+                        </div>
+                        <field name="selected_head_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select accounting heads..." class="col-12"/>
+                    </group>
+
+                    <group string="Head-wise Execution Details" attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <div class="alert alert-success" attrs="{'invisible': [('state', '!=', 'completed')]}">
+                            <strong>Execution Completed:</strong> All selected accounting heads have been processed.
+                        </div>
+                        <field name="head_details_ids" mode="tree,form" nolabel="1">
+                            <tree decoration-success="state=='completed'" decoration-warning="state=='in_progress'" decoration-muted="state=='draft'" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="account_head_id"/>
+                                <field name="current_year_amount"/>
+                                <field name="previous_year_amount"/>
+                                <field name="variance_amount"/>
+                                <field name="variance_percentage"/>
+                                <field name="state" widget="badge" options="{'classes': {'draft': 'secondary', 'in_progress': 'warning', 'completed': 'success'}}"/>
+                                <field name="progress" widget="progressbar" options="{'edit': False}"/>
+                                <button name="action_start_execution" type="object" string="Start" class="btn-sm btn-outline-warning" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                <button name="action_complete_head" type="object" string="Complete" class="btn-sm btn-outline-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                                <button name="action_reset_head" type="object" string="Reset" class="btn-sm btn-outline-secondary" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                    <div class="oe_title">
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                    </div>
+                                    <notebook>
+                                        <page string="Lead Schedule">
+                                            <group>
+                                                <group string="Financial Information">
+                                                    <field name="current_year_amount"/>
+                                                    <field name="previous_year_amount"/>
+                                                    <field name="variance_amount" readonly="1"/>
+                                                    <field name="variance_percentage" readonly="1"/>
+                                                </group>
+                                                <group string="Progress &amp; Status">
+                                                    <field name="state" widget="radio"/>
+                                                    <field name="progress" widget="progressbar" options="{'edit': False}"/>
+                                                </group>
+                                            </group>
+                                        </page>
+                                        <page string="Population &amp; Sampling">
+                                            <group>
+                                                <group string="Sampling Details">
+                                                    <field name="population_size"/>
+                                                    <field name="sample_size"/>
+                                                    <field name="sampling_method"/>
+                                                    <field name="confidence_level"/>
+                                                </group>
+                                                <group string="Amount Details">
+                                                    <field name="population_amount"/>
+                                                    <field name="sample_amount_tested"/>
+                                                    <field name="coverage_percentage" readonly="1"/>
+                                                    <field name="tolerable_error"/>
+                                                </group>
+                                            </group>
+                                        </page>
+                                        <page string="Risk Assessment">
+                                            <group>
+                                                <group string="Risk Levels">
+                                                    <field name="risk_nature"/>
+                                                    <field name="inherent_risk"/>
+                                                    <field name="control_risk"/>
+                                                    <field name="detection_risk"/>
+                                                </group>
+                                                <group string="Assessment">
+                                                    <field name="risk_strength"/>
+                                                    <field name="overall_risk_assessment" readonly="1"/>
+                                                </group>
+                                            </group>
+                                        </page>
+                                        <page string="Audit Procedures">
+                                            <field name="audit_procedure_ids" nolabel="1">
+                                                <tree decoration-success="is_completed==True" decoration-muted="is_completed==False" editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="procedure_name"/>
+                                                    <field name="procedure_type" widget="badge" options="{'classes': {'risk_assessment': 'warning', 'test_of_controls': 'info', 'substantive': 'primary', 'analytical': 'success'}}"/>
+                                                    <field name="risk_level" widget="badge" options="{'classes': {'low': 'success', 'medium': 'warning', 'high': 'danger'}}"/>
+                                                    <field name="is_completed" widget="boolean_toggle"/>
+                                                    <field name="performed_by"/>
+                                                    <field name="performed_date"/>
+                                                </tree>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="procedure_name"/>
+                                                            <field name="procedure_type"/>
+                                                            <field name="risk_level"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="is_completed"/>
+                                                            <field name="performed_by"/>
+                                                            <field name="performed_date"/>
+                                                        </group>
+                                                    </group>
+                                                    <field name="description" nolabel="1"/>
+                                                    <field name="notes"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                        <page string="Test of Details">
+                                            <field name="test_of_details_ids" nolabel="1">
+                                                <tree decoration-success="test_result=='satisfactory'" decoration-danger="test_result=='unsatisfactory'" decoration-warning="test_result=='qualified'" editable="bottom">
+                                                    <field name="test_objective"/>
+                                                    <field name="assertion_tested"/>
+                                                    <field name="test_method"/>
+                                                    <field name="sample_items_tested"/>
+                                                    <field name="exceptions_found"/>
+                                                    <field name="test_result" widget="badge" options="{'classes': {'satisfactory': 'success', 'unsatisfactory': 'danger', 'qualified': 'warning'}}"/>
+                                                </tree>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="test_objective"/>
+                                                            <field name="assertion_tested"/>
+                                                            <field name="test_method"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="sample_items_tested"/>
+                                                            <field name="exceptions_found"/>
+                                                            <field name="test_result"/>
+                                                        </group>
+                                                    </group>
+                                                    <field name="test_details" nolabel="1"/>
+                                                    <field name="conclusion"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                        <page string="Test of Controls">
+                                            <field name="test_of_controls_ids" nolabel="1">
+                                                <tree decoration-success="control_effectiveness=='effective'" decoration-warning="control_effectiveness=='partially_effective'" decoration-danger="control_effectiveness=='ineffective'" editable="bottom">
+                                                    <field name="control_objective"/>
+                                                    <field name="control_activity"/>
+                                                    <field name="frequency"/>
+                                                    <field name="samples_tested"/>
+                                                    <field name="deviations"/>
+                                                    <field name="control_effectiveness" widget="badge" options="{'classes': {'effective': 'success', 'partially_effective': 'warning', 'ineffective': 'danger'}}"/>
+                                                </tree>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="control_objective"/>
+                                                            <field name="control_activity"/>
+                                                            <field name="frequency"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="samples_tested"/>
+                                                            <field name="deviations"/>
+                                                            <field name="control_effectiveness"/>
+                                                        </group>
+                                                    </group>
+                                                    <field name="control_testing_details" nolabel="1"/>
+                                                    <field name="control_conclusion"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                        <page string="Evidence Collection">
+                                            <field name="evidence_ids" nolabel="1">
+                                                <tree decoration-success="reliability=='high'" decoration-warning="reliability=='medium'" decoration-danger="reliability=='low'" editable="bottom">
+                                                    <field name="evidence_type"/>
+                                                    <field name="description"/>
+                                                    <field name="reliability" widget="badge" options="{'classes': {'high': 'success', 'medium': 'warning', 'low': 'danger'}}"/>
+                                                    <field name="collected_by"/>
+                                                    <field name="collection_date"/>
+                                                    <field name="attachment_id" string="Attachment"/>
+                                                </tree>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="evidence_type"/>
+                                                            <field name="reliability"/>
+                                                            <field name="collected_by"/>
+                                                            <field name="collection_date"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="attachment_id"/>
+                                                        </group>
+                                                    </group>
+                                                    <field name="description"/>
+                                                    <field name="evidence_notes"/>
+                                                </form>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                                </sheet>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_simple_execution_phase_search" model="ir.ui.view">
+        <field name="name">execution.phase.search</field>
+        <field name="model">execution.phase</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="state"/>
+                <field name="audit_lead_id"/>
+                <field name="date_start"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="filter_in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Under Review" name="filter_under_review" domain="[('state', '=', 'under_review')]"/>
+                <filter string="Completed" name="filter_completed" domain="[('state', '=', 'completed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_by_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Audit Lead" name="group_by_lead" context="{'group_by': 'audit_lead_id'}"/>
+                    <filter string="Fiscal Year" name="group_by_year" context="{'group_by': 'fiscal_year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_simple_execution_phase" model="ir.actions.act_window">
+        <field name="name">Audit Execution Phase</field>
+        <field name="res_model">execution.phase</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_simple_execution_phase_tree"/>
+        <field name="search_view_id" ref="view_simple_execution_phase_search"/>
+        <field name="context">{'search_default_filter_draft': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new audit execution phase to begin the audit procedures.
+            </p>
+            <p>
+                Start by selecting the client and accounting heads you want to audit.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_simple_execution_phase" name="Audit Execution" parent="qaco_audit.menu_qaco_audit_main" action="action_simple_execution_phase" sequence="30"/>
+</odoo>

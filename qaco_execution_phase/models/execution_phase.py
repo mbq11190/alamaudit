@@ -67,7 +67,7 @@ WORKPAPER_TYPES = [
 ]
 
 
-class ExecutionPhase(models.Model):
+class QacoExecutionPhase(models.Model):
     _name = 'qaco.execution.phase'
     _description = 'Execution Phase'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -676,3 +676,307 @@ class ExecutionWorkpaperNote(models.Model):
         ('open', 'Open'),
         ('resolved', 'Resolved'),
     ], string='Status', default='open', tracking=True)
+
+
+class ExecutionPhase(models.Model):
+    _name = 'execution.phase'
+    _description = 'Audit Execution Phase'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'create_date desc'
+
+    name = fields.Char(
+        string='Reference',
+        required=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('execution.phase') or 'New'
+    )
+    client_id = fields.Many2one('res.partner', string='Client', required=True, domain=[('is_company', '=', True)])
+    audit_lead_id = fields.Many2one('res.users', string='Audit Lead', default=lambda self: self.env.user)
+    date_start = fields.Date(string='Start Date', default=fields.Date.today)
+    date_end = fields.Date(string='End Date')
+    fiscal_year = fields.Char(string='Fiscal Year', compute='_compute_fiscal_year', store=True)
+    selected_head_ids = fields.Many2many(
+        'account.account',
+        string='Selected Accounting Heads',
+        domain=[('deprecated', '=', False)]
+    )
+    head_details_ids = fields.One2many('execution.head.details', 'execution_phase_id', string='Head-wise Details')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
+        ('under_review', 'Under Review'),
+        ('completed', 'Completed'),
+    ], string='Status', default='draft', tracking=True)
+    overall_progress = fields.Float(string='Overall Progress', compute='_compute_overall_progress')
+    completed_heads_count = fields.Integer(string='Completed Heads', compute='_compute_progress_metrics')
+    total_heads_count = fields.Integer(string='Total Heads', compute='_compute_progress_metrics')
+
+    @api.depends('date_start')
+    def _compute_fiscal_year(self):
+        for record in self:
+            if record.date_start:
+                date_value = fields.Date.to_date(record.date_start)
+                record.fiscal_year = str(date_value.year) if date_value else False
+            else:
+                record.fiscal_year = False
+
+    @api.depends('head_details_ids.progress')
+    def _compute_overall_progress(self):
+        for record in self:
+            progresses = record.head_details_ids.mapped('progress')
+            record.overall_progress = (sum(progresses) / len(progresses)) if progresses else 0.0
+
+    @api.depends('head_details_ids', 'head_details_ids.state')
+    def _compute_progress_metrics(self):
+        for record in self:
+            record.total_heads_count = len(record.head_details_ids)
+            record.completed_heads_count = len(record.head_details_ids.filtered(lambda h: h.state == 'completed'))
+
+    def action_confirm_heads(self):
+        for record in self:
+            if not record.selected_head_ids:
+                raise UserError('Please select at least one accounting head to proceed.')
+            record.head_details_ids.unlink()
+            for head in record.selected_head_ids:
+                self.env['execution.head.details'].create({
+                    'execution_phase_id': record.id,
+                    'account_head_id': head.id,
+                    'name': f"{record.name} - {head.name}",
+                })
+            record.state = 'in_progress'
+
+    def action_mark_review(self):
+        self.write({'state': 'under_review'})
+
+    def action_complete(self):
+        self.write({'state': 'completed'})
+
+    def action_reset_draft(self):
+        self.write({'state': 'draft'})
+
+
+class ExecutionHeadDetails(models.Model):
+    _name = 'execution.head.details'
+    _description = 'Head-wise Execution Details'
+    _inherit = ['mail.thread']
+    _order = 'sequence'
+
+    name = fields.Char(string='Reference', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
+    execution_phase_id = fields.Many2one('execution.phase', string='Execution Phase', required=True, ondelete='cascade')
+    account_head_id = fields.Many2one('account.account', string='Accounting Head', required=True)
+    current_year_amount = fields.Float(string='Current Year Amount', digits=(16, 2))
+    previous_year_amount = fields.Float(string='Previous Year Amount', digits=(16, 2))
+    variance_amount = fields.Float(string='Variance Amount', compute='_compute_variance', digits=(16, 2))
+    variance_percentage = fields.Float(string='Variance Percentage', compute='_compute_variance', digits=(16, 2))
+    population_size = fields.Integer(string='Population Size')
+    sample_size = fields.Integer(string='Sample Size')
+    sampling_method = fields.Selection([
+        ('random', 'Random Sampling'),
+        ('systematic', 'Systematic Sampling'),
+        ('monetary', 'Monetary Unit Sampling'),
+        ('haphazard', 'Haphazard Sampling'),
+    ], string='Sampling Method')
+    population_amount = fields.Float(string='Population Amount', digits=(16, 2))
+    sample_amount_tested = fields.Float(string='Sample Amount Tested', digits=(16, 2))
+    coverage_percentage = fields.Float(string='Coverage Percentage', compute='_compute_coverage', digits=(16, 2))
+    tolerable_error = fields.Float(string='Tolerable Error', digits=(16, 2))
+    confidence_level = fields.Float(string='Confidence Level', default=95.0)
+    risk_nature = fields.Selection([
+        ('low', 'Low Risk'),
+        ('medium', 'Medium Risk'),
+        ('high', 'High Risk'),
+        ('significant', 'Significant Risk'),
+    ], string='Risk Nature')
+    inherent_risk = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Inherent Risk')
+    control_risk = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Control Risk')
+    detection_risk = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Detection Risk')
+    risk_strength = fields.Selection([
+        ('weak', 'Weak Controls'),
+        ('moderate', 'Moderate Controls'),
+        ('strong', 'Strong Controls'),
+    ], string='Control Strength')
+    overall_risk_assessment = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Overall Risk Assessment', compute='_compute_overall_risk')
+    state = fields.Selection([
+        ('draft', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ], string='Status', default='draft')
+    progress = fields.Float(string='Progress', compute='_compute_progress')
+    audit_procedure_ids = fields.One2many('audit.procedure', 'head_details_id', string='Audit Procedures')
+    test_of_details_ids = fields.One2many('test.of.details', 'head_details_id', string='Test of Details')
+    test_of_controls_ids = fields.One2many('test.of.controls', 'head_details_id', string='Test of Controls')
+    evidence_ids = fields.One2many('audit.evidence', 'head_details_id', string='Evidences')
+
+    @api.depends('current_year_amount', 'previous_year_amount')
+    def _compute_variance(self):
+        for record in self:
+            if record.previous_year_amount:
+                record.variance_amount = record.current_year_amount - record.previous_year_amount
+                record.variance_percentage = (record.variance_amount / record.previous_year_amount) * 100
+            else:
+                record.variance_amount = 0.0
+                record.variance_percentage = 0.0
+
+    @api.depends('population_amount', 'sample_amount_tested')
+    def _compute_coverage(self):
+        for record in self:
+            if record.population_amount:
+                record.coverage_percentage = (record.sample_amount_tested / record.population_amount) * 100
+            else:
+                record.coverage_percentage = 0.0
+
+    @api.depends('inherent_risk', 'control_risk', 'detection_risk')
+    def _compute_overall_risk(self):
+        for record in self:
+            risks = [record.inherent_risk, record.control_risk, record.detection_risk]
+            if 'high' in risks:
+                record.overall_risk_assessment = 'high'
+            elif 'medium' in risks:
+                record.overall_risk_assessment = 'medium'
+            else:
+                record.overall_risk_assessment = 'low'
+
+    @api.depends('state', 'audit_procedure_ids', 'audit_procedure_ids.is_completed')
+    def _compute_progress(self):
+        for record in self:
+            if record.state == 'completed':
+                record.progress = 100.0
+            elif record.state == 'in_progress' and record.audit_procedure_ids:
+                total = len(record.audit_procedure_ids)
+                completed = len(record.audit_procedure_ids.filtered(lambda p: p.is_completed))
+                record.progress = (completed / total) * 100 if total else 0.0
+            else:
+                record.progress = 0.0
+
+    def action_start_execution(self):
+        self.write({'state': 'in_progress'})
+
+    def action_complete_head(self):
+        self.write({'state': 'completed'})
+
+    def action_reset_head(self):
+        self.write({'state': 'draft'})
+
+
+class AuditProcedure(models.Model):
+    _name = 'audit.procedure'
+    _description = 'Audit Procedure'
+    _order = 'sequence'
+
+    sequence = fields.Integer(string='Sequence', default=10)
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    procedure_name = fields.Char(string='Procedure Name', required=True)
+    procedure_type = fields.Selection([
+        ('risk_assessment', 'Risk Assessment'),
+        ('test_of_controls', 'Test of Controls'),
+        ('substantive', 'Substantive Procedure'),
+        ('analytical', 'Analytical Procedure'),
+    ], string='Procedure Type', required=True)
+    description = fields.Html(string='Description')
+    risk_level = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Risk Level', default='medium')
+    is_completed = fields.Boolean(string='Completed')
+    performed_by = fields.Many2one('res.users', string='Performed By')
+    performed_date = fields.Date(string='Performed Date')
+    notes = fields.Text(string='Procedure Notes')
+
+
+class TestOfDetails(models.Model):
+    _name = 'test.of.details'
+    _description = 'Test of Details'
+
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    test_objective = fields.Char(string='Test Objective', required=True)
+    assertion_tested = fields.Selection([
+        ('existence', 'Existence'),
+        ('completeness', 'Completeness'),
+        ('valuation', 'Valuation'),
+        ('rights_obligations', 'Rights and Obligations'),
+        ('presentation', 'Presentation and Disclosure'),
+    ], string='Assertion Tested', required=True)
+    test_method = fields.Selection([
+        ('inspection', 'Inspection'),
+        ('observation', 'Observation'),
+        ('confirmation', 'Confirmation'),
+        ('recalculation', 'Recalculation'),
+        ('reperformance', 'Reperformance'),
+        ('analytical', 'Analytical Procedures'),
+    ], string='Test Method', required=True)
+    test_details = fields.Html(string='Test Details')
+    sample_items_tested = fields.Integer(string='Sample Items Tested')
+    exceptions_found = fields.Integer(string='Exceptions Found')
+    test_result = fields.Selection([
+        ('satisfactory', 'Satisfactory'),
+        ('unsatisfactory', 'Unsatisfactory'),
+        ('qualified', 'Qualified'),
+    ], string='Test Result')
+    conclusion = fields.Text(string='Conclusion')
+
+
+class TestOfControls(models.Model):
+    _name = 'test.of.controls'
+    _description = 'Test of Controls'
+
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    control_objective = fields.Char(string='Control Objective', required=True)
+    control_activity = fields.Text(string='Control Activity', required=True)
+    frequency = fields.Selection([
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+        ('quarterly', 'Quarterly'),
+        ('annually', 'Annually'),
+    ], string='Frequency', required=True)
+    control_testing_details = fields.Html(string='Testing Details')
+    samples_tested = fields.Integer(string='Samples Tested')
+    deviations = fields.Integer(string='Deviations Found')
+    control_effectiveness = fields.Selection([
+        ('effective', 'Effective'),
+        ('partially_effective', 'Partially Effective'),
+        ('ineffective', 'Ineffective'),
+    ], string='Control Effectiveness')
+    control_conclusion = fields.Text(string='Conclusion')
+
+
+class AuditEvidence(models.Model):
+    _name = 'audit.evidence'
+    _description = 'Audit Evidence'
+
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    evidence_type = fields.Selection([
+        ('physical', 'Physical Examination'),
+        ('documentary', 'Documentary Evidence'),
+        ('analytical', 'Analytical Evidence'),
+        ('oral', 'Oral Evidence'),
+        ('electronic', 'Electronic Evidence'),
+        ('confirmation', 'External Confirmation'),
+    ], string='Evidence Type', required=True)
+    description = fields.Text(string='Description', required=True)
+    reliability = fields.Selection([
+        ('high', 'High Reliability'),
+        ('medium', 'Medium Reliability'),
+        ('low', 'Low Reliability'),
+    ], string='Reliability', required=True)
+    collected_by = fields.Many2one('res.users', string='Collected By', default=lambda self: self.env.user)
+    collection_date = fields.Date(string='Collection Date', default=fields.Date.today)
+    attachment_id = fields.Many2one('ir.attachment', string='Attachment')
+    evidence_notes = fields.Text(string='Notes')
