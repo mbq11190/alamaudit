@@ -7,12 +7,12 @@
             <tree string="Deliverables" default_order="id desc">
                 <field name="name"/>
                 <field name="client_id"/>
-                <field name="central_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="audit_report_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="management_letter_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="tcwg_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="other_info_status" widget="statusbar" options="{'clickable': False}"/>
-                <field name="dispatch_status" widget="statusbar" options="{'clickable': False}"/>
+                <field name="central_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="audit_report_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="management_letter_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="tcwg_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="other_info_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                 <field name="deliverables_locked"/>
             </tree>
         </field>
@@ -64,12 +64,12 @@
                             <field name="final_manager_id"/>
                         </group>
                         <group string="Status Dashboard">
-                            <field name="central_status" widget="statusbar" options="{'clickable': False}"/>
-                            <field name="audit_report_status" widget="statusbar" options="{'clickable': False}"/>
-                            <field name="management_letter_status" widget="statusbar" options="{'clickable': False}"/>
-                            <field name="tcwg_status" widget="statusbar" options="{'clickable': False}"/>
-                            <field name="other_info_status" widget="statusbar" options="{'clickable': False}"/>
-                            <field name="dispatch_status" widget="statusbar" options="{'clickable': False}"/>
+                            <field name="central_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                            <field name="audit_report_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                            <field name="management_letter_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                            <field name="tcwg_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                            <field name="other_info_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                            <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                         </group>
                     </group>
                     <group string="Gateway Findings" modifiers="{'invisible': [('outstanding_items_log','=',False)]}">
@@ -99,7 +99,7 @@
                         </page>
                         <page string="5.1 Auditor's Report (ISA 700/701/705/706)">
                             <group>
-                                <field name="audit_report_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="audit_report_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
                             <field name="audit_report_ids" colspan="4" context="{'default_deliverables_id': active_id}">
                                 <tree editable="bottom">
@@ -166,7 +166,7 @@
                         </page>
                         <page string="5.2 Management Letter (ISA 265)">
                             <group>
-                                <field name="management_letter_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="management_letter_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                                 <field name="management_letter_attachment_ids" widget="many2many_binary" filename="datas"/>
                                 <field name="management_response_attachment_ids" widget="many2many_binary" filename="datas"/>
                             </group>
@@ -202,7 +202,7 @@
                         </page>
                         <page string="5.3 Communication with TCWG (ISA 260)">
                             <group>
-                                <field name="tcwg_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="tcwg_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
                             <group>
                                 <group>
@@ -226,7 +226,7 @@
                         </page>
                         <page string="5.4 Other Information (ISA 720)">
                             <group>
-                                <field name="other_info_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="other_info_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                                 <field name="other_info_attachment_ids" widget="many2many_binary" filename="datas"/>
                             </group>
                             <field name="other_info_line_ids" context="{'default_deliverables_id': active_id}">
@@ -252,7 +252,7 @@
                         </page>
                         <page string="5.5 Final Attachments, Archiving & Dispatch">
                             <group>
-                                <field name="dispatch_status" widget="statusbar" options="{'clickable': False}"/>
+                                <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
                             <group string="Final Pack">
                                 <field name="deliverable_pack_attachment_ids" widget="many2many_binary" filename="datas"/>
@@ -273,7 +273,7 @@
                                         <field name="recipient_role"/>
                                         <field name="method"/>
                                         <field name="dispatch_date"/>
-                                        <field name="status" widget="statusbar"/>
+                                        <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                         <field name="ack_received" widget="boolean_toggle"/>
                                     </group>
                                     <field name="proof_attachment_ids" widget="many2many_binary" filename="datas"/>
