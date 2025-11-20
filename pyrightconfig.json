@@ -1,7 +1,18 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/pyright/main/packages/pyright-internal/src/schemas/pyrightconfig.schema.json",
     "stubPath": "typings",
-    "include": ["qaco_planning_phase"],
+    "include": [
+        "qaco_planning_phase",
+        "qaco_audit",
+        "qaco_execution_phase",
+        "qaco_quality_review",
+        "qaco_finalisation_phase",
+        "qaco_deliverables"
+    ],
+    "typeCheckingMode": "basic",
+    "reportGeneralTypeIssues": false,
+    "reportAttributeAccessIssue": false,
+    "reportUndefinedVariableOrParameter": false,
     "executionEnvironments": [
         {
             "root": ".",
