@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_qaco_finalisation_phase" model="ir.actions.act_window">
+        <field name="name">Finalisation Phases</field>
+        <field name="res_model">qaco.finalisation.phase</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a new finalisation phase</p>
+            <p>
+                The Finalisation Phase module handles audit completion procedures,
+                subsequent events, going concern assessments, and final review processes.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_finalisation_phase" model="ir.actions.act_window">
+        <field name="name">Open Finalisation Phase</field>
+        <field name="res_model">qaco.finalisation.phase</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_audit_id': active_id}</field>
+        <field name="domain">[('audit_id', '=', active_id)]</field>
+    </record>
+
+    <menuitem id="menu_qaco_finalisation_phase" name="Finalisation Phases"
+              parent="qaco_audit.menu_qaco_audit_main"
+              action="action_qaco_finalisation_phase" sequence="40"/>
+</odoo>

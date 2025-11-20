@@ -6,7 +6,7 @@
         <field name="model">qaco.audit</field>
         <field name="inherit_id" ref="qaco_planning_phase.view_qaco_audit_form_planning_button"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='%(qaco_planning_phase.action_planning_phase)d']" position="after">
+            <xpath expr="//button[@name='%(qaco_planning_phase.action_open_planning_phase_from_audit)d']" position="after">
                 <button class="oe_stat_button" type="action"
                         name="%(qaco_execution_phase.action_execution_phase)d"
                         icon="fa-tasks">
