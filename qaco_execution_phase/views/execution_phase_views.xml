@@ -97,16 +97,16 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-secondary" attrs="{'invisible': [('state', '!=', 'draft')]}" role="alert">
+                    <div class="alert alert-secondary" invisible="state != 'draft'" role="alert">
                         <strong>Draft:</strong> Select accounting heads and configure baseline risks before kickoff.
                     </div>
-                    <div class="alert alert-warning" attrs="{'invisible': [('state', '!=', 'in_progress')]}" role="alert">
+                    <div class="alert alert-warning" invisible="state != 'in_progress'" role="alert">
                         <strong>In Progress:</strong> Track coverage, risk responses, and evidence completion for each head.
                     </div>
-                    <div class="alert alert-info" attrs="{'invisible': [('state', '!=', 'under_review')]}" role="alert">
+                    <div class="alert alert-info" invisible="state != 'under_review'" role="alert">
                         <strong>Under Review:</strong> Heads are locked for reviewer sign-off; update outstanding notes.
                     </div>
-                    <div class="alert alert-success" attrs="{'invisible': [('state', '!=', 'completed')]}" role="alert">
+                    <div class="alert alert-success" invisible="state != 'completed'" role="alert">
                         <strong>Completed:</strong> Execution artifacts are finalized and ready for finalisation.
                     </div>
 
@@ -122,15 +122,15 @@
                         </group>
                     </group>
 
-                    <group string="Accounting Heads Selection" attrs="{'invisible': [('state', '!=', 'draft')]}">
+                    <group string="Accounting Heads Selection" invisible="state != 'draft'">
                         <div class="alert alert-warning">
                             <strong>Tip:</strong> Use tags to highlight high-risk heads before confirming and generating execution detail lines.
                         </div>
                         <field name="selected_head_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select accounting heads..." class="col-12"/>
                     </group>
 
-                    <group string="Head-wise Execution Details" attrs="{'invisible': [('state', '=', 'draft')]}">
-                        <div class="alert alert-success" attrs="{'invisible': [('state', '!=', 'completed')]}">
+                    <group string="Head-wise Execution Details" invisible="state == 'draft'">
+                        <div class="alert alert-success" invisible="state != 'completed'">
                             <strong>Execution Completed:</strong> All selected accounting heads have been processed.
                         </div>
                         <field name="head_details_ids" mode="tree,form" nolabel="1">
