@@ -29,6 +29,12 @@ access_qaco_exec_workpaper_partner,qaco.exec.workpaper.partner,model_qaco_exec_w
 access_qaco_exec_workpaper_note_user,qaco.exec.workpaper.note.user,model_qaco_exec_workpaper_note,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_exec_workpaper_note_manager,qaco.exec.workpaper.note.manager,model_qaco_exec_workpaper_note,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_exec_workpaper_note_partner,qaco.exec.workpaper.note.partner,model_qaco_exec_workpaper_note,qaco_audit.group_audit_partner,1,1,1,1
+access_audit_execution_master_user,audit.execution.master.user,model_audit_execution_master,qaco_audit.group_audit_trainee,1,1,1,1
+access_audit_execution_master_manager,audit.execution.master.manager,model_audit_execution_master,qaco_audit.group_audit_manager,1,1,1,1
+access_audit_execution_master_partner,audit.execution.master.partner,model_audit_execution_master,qaco_audit.group_audit_partner,1,1,1,1
+access_audit_head_execution_user,audit.head.execution.user,model_audit_head_execution,qaco_audit.group_audit_trainee,1,1,1,1
+access_audit_head_execution_manager,audit.head.execution.manager,model_audit_head_execution,qaco_audit.group_audit_manager,1,1,1,1
+access_audit_head_execution_partner,audit.head.execution.partner,model_audit_head_execution,qaco_audit.group_audit_partner,1,1,1,1
 access_execution_phase_simple,execution.phase.user,model_execution_phase,base.group_user,1,1,1,1
 access_execution_head_details_simple,execution.head.details.user,model_execution_head_details,base.group_user,1,1,1,1
 access_audit_procedure_simple,audit.procedure.user,model_audit_procedure,base.group_user,1,1,1,1

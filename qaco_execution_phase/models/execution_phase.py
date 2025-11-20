@@ -1022,7 +1022,7 @@ class TestOfControls(models.Model):
     _name = 'test.of.controls'
     _description = 'Test of Controls'
 
-    head_details_id = fields.Many2one('execution.head.details', string='Head Details', required=True, ondelete='cascade')
+    head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
     head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     control_objective = fields.Char(string='Control Objective', required=True)
     control_activity = fields.Text(string='Control Activity', required=True)
@@ -1114,3 +1114,240 @@ class ExecutionAnalyticalProcedure(models.Model):
                 record.variance_percentage = ((record.current_year_amount - record.previous_year_amount) / record.previous_year_amount) * 100
             else:
                 record.variance_percentage = 0.0
+
+
+class AuditExecutionMaster(models.Model):
+    _name = 'audit.execution.master'
+    _description = 'Audit Execution Master Dashboard'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'sequence asc, create_date desc'
+
+    name = fields.Char(
+        string='Execution Reference',
+        required=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('audit.execution.master') or 'New',
+    )
+    sequence = fields.Integer(string='Sequence', default=10)
+    client_id = fields.Many2one('res.partner', string='Client', required=True, domain=[('is_company', '=', True)])
+    audit_engagement_id = fields.Many2one('qaco.audit.engagement', string='Audit Engagement')
+    audit_lead_id = fields.Many2one('res.users', string='Audit Lead', default=lambda self: self.env.user)
+    team_member_ids = fields.Many2many('res.users', string='Team Members')
+    date_start = fields.Date(string='Start Date', default=fields.Date.today)
+    date_end = fields.Date(string='End Date')
+    fiscal_year = fields.Char(string='Fiscal Year', compute='_compute_fiscal_year', store=True)
+    state = fields.Selection([
+        ('draft', '📝 Draft'),
+        ('planning', '📋 Planning'),
+        ('in_progress', '🔄 In Progress'),
+        ('under_review', '👀 Under Review'),
+        ('completed', '✅ Completed')
+    ], string='Status', default='draft', tracking=True)
+    overall_progress = fields.Float(string='Overall Progress', compute='_compute_overall_progress')
+    risk_coverage = fields.Float(string='Risk Coverage %', compute='_compute_risk_coverage')
+    testing_completion = fields.Float(string='Testing Completion %', compute='_compute_testing_completion')
+    selected_head_ids = fields.Many2many('account.account', string='Selected Accounting Heads', domain=[('deprecated', '=', False)])
+    head_execution_ids = fields.One2many('audit.head.execution', 'master_id', string='Head-wise Executions')
+    total_heads_count = fields.Integer(string='Total Heads', compute='_compute_summary_metrics')
+    completed_heads_count = fields.Integer(string='Completed Heads', compute='_compute_summary_metrics')
+    high_risk_heads_count = fields.Integer(string='High Risk Heads', compute='_compute_summary_metrics')
+    significant_risks_count = fields.Integer(string='Significant Risks', compute='_compute_summary_metrics')
+
+    @api.depends('date_start')
+    def _compute_fiscal_year(self):
+        for record in self:
+            if record.date_start:
+                record.fiscal_year = str(record.date_start.year)
+            else:
+                record.fiscal_year = str(date.today().year)
+
+    @api.depends('head_execution_ids.progress')
+    def _compute_overall_progress(self):
+        for record in self:
+            if record.head_execution_ids:
+                total_progress = sum(head.progress for head in record.head_execution_ids)
+                record.overall_progress = total_progress / len(record.head_execution_ids)
+            else:
+                record.overall_progress = 0.0
+
+    @api.depends('head_execution_ids.risk_coverage')
+    def _compute_risk_coverage(self):
+        for record in self:
+            if record.head_execution_ids:
+                total_coverage = sum(head.risk_coverage for head in record.head_execution_ids)
+                record.risk_coverage = total_coverage / len(record.head_execution_ids)
+            else:
+                record.risk_coverage = 0.0
+
+    @api.depends('head_execution_ids.testing_completion')
+    def _compute_testing_completion(self):
+        for record in self:
+            if record.head_execution_ids:
+                total_completion = sum(head.testing_completion for head in record.head_execution_ids)
+                record.testing_completion = total_completion / len(record.head_execution_ids)
+            else:
+                record.testing_completion = 0.0
+
+    @api.depends('head_execution_ids')
+    def _compute_summary_metrics(self):
+        for record in self:
+            record.total_heads_count = len(record.head_execution_ids)
+            record.completed_heads_count = len(record.head_execution_ids.filtered(lambda h: h.state == 'completed'))
+            record.high_risk_heads_count = len(record.head_execution_ids.filtered(lambda h: h.risk_rating in ['high', 'significant']))
+            record.significant_risks_count = len(record.head_execution_ids.filtered(lambda h: h.significant_risk))
+
+    def action_confirm_planning(self):
+        for record in self:
+            if not record.selected_head_ids:
+                raise UserError("Please select accounting heads before confirming planning!")
+            existing_heads = record.head_execution_ids.mapped('account_head_id')
+            for head in record.selected_head_ids:
+                if head not in existing_heads:
+                    self.env['audit.head.execution'].create({
+                        'master_id': record.id,
+                        'account_head_id': head.id,
+                        'name': f"{record.name} - {head.name}",
+                    })
+            record.state = 'planning'
+
+    def action_start_execution(self):
+        self.state = 'in_progress'
+
+    def action_send_review(self):
+        self.state = 'under_review'
+
+    def action_complete(self):
+        self.state = 'completed'
+
+    def action_reset_draft(self):
+        self.state = 'draft'
+
+
+class AuditHeadExecution(models.Model):
+    _name = 'audit.head.execution'
+    _description = 'Head-wise Audit Execution'
+    _inherit = ['mail.thread']
+    _order = 'sequence asc'
+
+    name = fields.Char(string='Reference', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
+    master_id = fields.Many2one('audit.execution.master', string='Master Execution', required=True, ondelete='cascade')
+    account_head_id = fields.Many2one('account.account', string='Accounting Head', required=True)
+    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=True)
+    nature = fields.Selection([
+        ('revenue', '💰 Revenue'),
+        ('expense', '💸 Expense'),
+        ('asset', '🏦 Asset'),
+        ('liability', '📋 Liability'),
+        ('equity', '📊 Equity')
+    ], string='Nature', compute='_compute_nature', store=True)
+    assertion_ids = fields.Many2many('audit.assertion', string='Assertions', required=True)
+    risk_rating = fields.Selection([
+        ('low', '🟢 Low'),
+        ('medium', '🟡 Medium'),
+        ('high', '🔴 High'),
+        ('significant', '⚠️ Significant')
+    ], string='Risk Rating', required=True, default='medium')
+    significant_risk = fields.Boolean(string='Significant Risk')
+    risk_description = fields.Html(string='Risk Description')
+    relying_on_controls = fields.Boolean(string='Relying on Entity Controls')
+    control_design_effective = fields.Boolean(string='Control Design Effective')
+    control_operating_effective = fields.Boolean(string='Control Operating Effective')
+    current_year_amount = fields.Float(string='Current Year Amount', digits=(16, 2))
+    previous_year_amount = fields.Float(string='Previous Year Amount', digits=(16, 2))
+    variance_amount = fields.Float(string='Variance Amount', compute='_compute_variance', digits=(16, 2))
+    variance_percentage = fields.Float(string='Variance %', compute='_compute_variance', digits=(16, 2))
+    population_size = fields.Integer(string='Population Size')
+    sample_size = fields.Integer(string='Sample Size')
+    sampling_method = fields.Selection([
+        ('random', '🎲 Random Sampling'),
+        ('systematic', '📊 Systematic Sampling'),
+        ('monetary', '💰 Monetary Unit Sampling'),
+        ('haphazard', '🎯 Haphazard Sampling')
+    ], string='Sampling Method')
+    population_amount = fields.Float(string='Population Amount', digits=(16, 2))
+    sample_amount_tested = fields.Float(string='Sample Amount Tested', digits=(16, 2))
+    coverage_percentage = fields.Float(string='Coverage %', compute='_compute_coverage_percentage')
+    state = fields.Selection([
+        ('draft', '📝 Not Started'),
+        ('in_progress', '🔄 In Progress'),
+        ('completed', '✅ Completed')
+    ], string='Status', default='draft')
+    progress = fields.Float(string='Progress %', compute='_compute_progress')
+    risk_coverage = fields.Float(string='Risk Coverage %', compute='_compute_risk_coverage')
+    testing_completion = fields.Float(string='Testing Completion %', compute='_compute_testing_completion')
+    procedure_ids = fields.One2many('audit.procedure', 'head_execution_id', string='Audit Procedures')
+    test_of_controls_ids = fields.One2many('test.of.controls', 'head_execution_id', string='Test of Controls')
+    test_of_details_ids = fields.One2many('test.of.details', 'head_execution_id', string='Test of Details')
+    analytical_ids = fields.One2many('execution.analytical.procedure', 'head_execution_id', string='Analytical Procedures')
+    evidence_ids = fields.One2many('audit.evidence', 'head_execution_id', string='Evidences')
+
+    @api.depends('account_head_id')
+    def _compute_nature(self):
+        mapping = {
+            'income': 'revenue',
+            'expense': 'expense',
+            'asset': 'asset',
+            'liability': 'liability',
+            'equity': 'equity',
+        }
+        for record in self:
+            record.nature = mapping.get(record.account_head_id.user_type_id.type, False) if record.account_head_id else False
+
+    @api.depends('current_year_amount', 'previous_year_amount')
+    def _compute_variance(self):
+        for record in self:
+            if record.previous_year_amount:
+                record.variance_amount = record.current_year_amount - record.previous_year_amount
+                record.variance_percentage = (record.variance_amount / record.previous_year_amount) * 100
+            else:
+                record.variance_amount = 0.0
+                record.variance_percentage = 0.0
+
+    @api.depends('population_amount', 'sample_amount_tested')
+    def _compute_coverage_percentage(self):
+        for record in self:
+            if record.population_amount:
+                record.coverage_percentage = (record.sample_amount_tested / record.population_amount) * 100
+            else:
+                record.coverage_percentage = 0.0
+
+    @api.depends('state', 'procedure_ids.is_completed')
+    def _compute_progress(self):
+        for record in self:
+            if record.state == 'completed':
+                record.progress = 100.0
+            elif record.procedure_ids:
+                completed = len(record.procedure_ids.filtered(lambda p: p.is_completed))
+                total = len(record.procedure_ids)
+                record.progress = (completed / total) * 100 if total > 0 else 0.0
+            else:
+                record.progress = 0.0
+
+    @api.depends('test_of_details_ids.coverage_percentage')
+    def _compute_risk_coverage(self):
+        for record in self:
+            if record.test_of_details_ids:
+                total_coverage = sum(test.coverage_percentage for test in record.test_of_details_ids)
+                record.risk_coverage = total_coverage / len(record.test_of_details_ids)
+            else:
+                record.risk_coverage = 0.0
+
+    @api.depends('procedure_ids.is_completed', 'test_of_details_ids', 'test_of_controls_ids')
+    def _compute_testing_completion(self):
+        for record in self:
+            total_tests = len(record.procedure_ids) + len(record.test_of_details_ids) + len(record.test_of_controls_ids)
+            if total_tests > 0:
+                completed_tests = (
+                    len(record.procedure_ids.filtered(lambda p: p.is_completed)) +
+                    len(record.test_of_details_ids.filtered(lambda t: t.test_result == 'satisfactory')) +
+                    len(record.test_of_controls_ids.filtered(lambda c: c.control_effectiveness == 'effective'))
+                )
+                record.testing_completion = (completed_tests / total_tests) * 100
+            else:
+                record.testing_completion = 0.0
+
+    def action_start_head(self):
+        self.state = 'in_progress'
+
+    def action_complete_head(self):
+        self.state = 'completed'
