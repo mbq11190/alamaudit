@@ -138,26 +138,51 @@
                                         <page string="Key Audit Matters">
                                             <field name="kam_line_ids" context="{'default_audit_report_id': active_id}">
                                                 <tree editable="bottom">
+                                                    <field name="title"/>
                                                     <field name="description"/>
-                                                    <field name="fs_reference"/>
+                                                    <field name="impact_on_fs"/>
                                                 </tree>
                                                 <form string="KAM">
-                                                    <field name="description" widget="text"/>
-                                                    <field name="response" widget="text"/>
-                                                    <field name="fs_reference"/>
+                                                    <group>
+                                                        <field name="title"/>
+                                                        <field name="risk_reference"/>
+                                                        <field name="isa701_reference"/>
+                                                        <field name="wp_reference"/>
+                                                        <field name="impact_on_fs"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="description" widget="html"/>
+                                                        <field name="audit_response" widget="html"/>
+                                                        <field name="conclusion"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="ready_for_report"/>
+                                                    </group>
                                                 </form>
                                             </field>
                                         </page>
                                         <page string="EOM / OM">
                                             <field name="eom_line_ids" context="{'default_audit_report_id': active_id}">
                                                 <tree editable="bottom">
-                                                    <field name="paragraph"/>
-                                                    <field name="fs_reference"/>
+                                                    <field name="type"/>
+                                                    <field name="narrative"/>
+                                                    <field name="disclosure_reference"/>
                                                 </tree>
                                                 <form string="EOM / OM">
-                                                    <field name="paragraph" widget="text"/>
-                                                    <field name="reason"/>
-                                                    <field name="fs_reference"/>
+                                                    <group>
+                                                        <field name="type"/>
+                                                        <field name="isa_reference"/>
+                                                        <field name="trigger"/>
+                                                        <field name="disclosure_reference"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="narrative" widget="html"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="include_in_report"/>
+                                                        <field name="regulator_mandated"/>
+                                                        <field name="ready_for_report"/>
+                                                    </group>
                                                 </form>
                                             </field>
                                         </page>
