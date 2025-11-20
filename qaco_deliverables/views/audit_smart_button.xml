@@ -11,7 +11,9 @@
         <field name="domain">[('audit_id', '=', active_id)]</field>
     </record>
 
-    <!-- Smart button on qaco.audit form -->
+    <!-- Smart button on qaco.audit form - TEMPORARILY DISABLED to fix view hierarchy issues -->
+    <!-- Re-enable after finalisation_phase module is fully stable -->
+    <!--
     <record id="view_qaco_audit_form_deliverables_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.deliverables.button</field>
         <field name="model">qaco.audit</field>
@@ -29,4 +31,5 @@
             </xpath>
         </field>
     </record>
+    -->
 </odoo>
