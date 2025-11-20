@@ -136,6 +136,7 @@
                         <field name="head_details_ids" mode="tree,form" nolabel="1">
                             <tree decoration-success="state=='completed'" decoration-warning="state=='in_progress'" decoration-muted="state=='draft'" decoration-danger="significant_risk==True" editable="bottom">
                                 <field name="sequence" widget="handle"/>
+                                <field name="significant_risk" invisible="1"/>
                                 <field name="account_head_id"/>
                                 <field name="nature" widget="badge" options="{'classes': {'revenue': 'success', 'expense': 'danger', 'asset': 'primary', 'liability': 'warning', 'equity': 'info'}}"/>
                                 <field name="risk_rating" widget="badge" options="{'classes': {'low': 'success', 'medium': 'warning', 'high': 'danger', 'significant': 'danger'}}"/>
