@@ -168,8 +168,10 @@ class QacoExecutionPhase(models.Model):
     def _compute_compliance_beacon(self):
         for record in self:
             alerts = []
-            statuses = [record.control_status, record.substantive_status, record.sampling_status,
-                        record.evidence_status, record.workpaper_status]
+            statuses = [
+                record.control_status, record.substantive_status, record.sampling_status,
+                record.evidence_status, record.workpaper_status
+            ]
             checklist_ok = all([
                 record.checklist_controls_linked,
                 record.checklist_walkthrough_documented,
@@ -179,20 +181,17 @@ class QacoExecutionPhase(models.Model):
                 record.checklist_evidence_sufficient,
                 record.checklist_workpapers_reviewed,
             ])
-            if any(status == 'red' for status in statuses) or not checklist_ok:
-                state = 'red'
-                if not record.checklist_evidence_sufficient:
-                    alerts.append(_('Evidence sufficiency meter still red.'))
-                if record.open_critical_risk_count:
-                    alerts.append(_('Open significant risks pending conclusion.'))
-                if not record.checklist_sampling_signed:
-                    alerts.append(_('Sampling rationales need documentation.'))
-            elif any(status == 'amber' for status in statuses):
-                state = 'amber'
-                alerts.append(_('Some execution sub-tabs still amber; finalize workpapers.'))
-            else:
+            if all(status == 'green' for status in statuses) and checklist_ok:
                 state = 'green'
                 alerts.append(_('All ISA checkpoints satisfied.'))
+            else:
+                if any(status == 'red' for status in statuses):
+                    alerts.append(_('Turn the red execution sub-tabs green before finalizing.'))
+                if not checklist_ok:
+                    alerts.append(_('Complete the mandatory execution checklists.'))
+                if not alerts:
+                    alerts.append(_('Execution compliance requirements are partially satisfied.'))
+                state = 'amber' if not any(status == 'red' for status in statuses) else 'red'
             record.compliance_beacon_state = state
             record.compliance_alert_message = '<br/>'.join(alerts)
 
