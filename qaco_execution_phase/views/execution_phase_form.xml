@@ -18,7 +18,7 @@
         </field>
     </record>
 
-    <!-- Search View -->
+    <!-- Search View - Execution Phase Filters -->
     <record id="view_execution_phase_search" model="ir.ui.view">
         <field name="name">qaco.execution.phase.search</field>
         <field name="model">qaco.execution.phase</field>
