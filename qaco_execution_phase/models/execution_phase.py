@@ -979,6 +979,7 @@ class TestOfDetails(models.Model):
     _description = 'Test of Details'
 
     head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
+    head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     test_objective = fields.Char(string='Test Objective', required=True)
     assertion_tested = fields.Selection([
         ('existence', 'Existence'),
