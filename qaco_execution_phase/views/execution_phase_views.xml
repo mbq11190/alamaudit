@@ -317,7 +317,7 @@
                                                     <field name="control_objective"/>
                                                     <field name="control_activity"/>
                                                     <field name="frequency"/>
-                                                    <field name="samples_tested"/>
+                                                    <field name="sample_size"/> 
                                                     <field name="deviations"/>
                                                     <field name="control_effectiveness" widget="badge" options="{'classes': {'effective': 'success', 'partially_effective': 'warning', 'ineffective': 'danger'}}"/>
                                                 </tree>
