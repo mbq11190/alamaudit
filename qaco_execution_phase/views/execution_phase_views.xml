@@ -329,7 +329,7 @@
                                                             <field name="frequency"/>
                                                         </group>
                                                         <group>
-                                                            <field name="samples_tested"/>
+                                                            <field name="sample_size"/>
                                                             <field name="deviations"/>
                                                             <field name="control_effectiveness"/>
                                                         </group>
