@@ -604,13 +604,11 @@
                                                     <field name="population_size"/>
                                                     <field name="sample_size"/>
                                                     <field name="sampling_method"/>
-                                                    <field name="confidence_level"/>
                                                 </group>
                                                 <group string="💰 Amount Details">
                                                     <field name="population_amount"/>
                                                     <field name="sample_amount_tested"/>
                                                     <field name="coverage_percentage" readonly="1"/>
-                                                    <field name="tolerable_error"/>
                                                 </group>
                                             </group>
                                             <div class="alert alert-success mt-4">
