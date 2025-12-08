@@ -579,14 +579,12 @@
                                             <group>
                                                 <group string="🎯 Risk Levels">
                                                     <field name="risk_rating" widget="radio" options="{'horizontal': true}"/>
-                                                    <field name="inherent_risk"/>
-                                                    <field name="control_risk"/>
-                                                    <field name="detection_risk"/>
+                                                    <field name="significant_risk" widget="boolean_button" options="{'terminology': 'significant'}"/>
                                                 </group>
                                                 <group string="📋 Assessment">
-                                                    <field name="risk_strength"/>
-                                                    <field name="significant_risk" widget="boolean_button" options="{'terminology': 'significant'}"/>
                                                     <field name="relying_on_controls" widget="boolean_button" options="{'terminology': 'relying'}"/>
+                                                    <field name="control_design_effective"/>
+                                                    <field name="control_operating_effective"/>
                                                 </group>
                                             </group>
                                             <group string="🎯 Multiple Assertions">
