@@ -1149,10 +1149,10 @@ class AuditExecutionMaster(models.Model):
     testing_completion = fields.Float(string='Testing Completion %', compute='_compute_testing_completion')
     selected_head_ids = fields.Many2many('account.account', string='Selected Accounting Heads', domain=[('deprecated', '=', False)])
     head_execution_ids = fields.One2many('audit.head.execution', 'master_id', string='Head-wise Executions')
-    total_heads_count = fields.Integer(string='Total Heads', compute='_compute_summary_metrics')
-    completed_heads_count = fields.Integer(string='Completed Heads', compute='_compute_summary_metrics')
-    high_risk_heads_count = fields.Integer(string='High Risk Heads', compute='_compute_summary_metrics')
-    significant_risks_count = fields.Integer(string='Significant Risks', compute='_compute_summary_metrics')
+    total_heads_count = fields.Integer(string='Total Heads', compute='_compute_summary_metrics', store=True)
+    completed_heads_count = fields.Integer(string='Completed Heads', compute='_compute_summary_metrics', store=True)
+    high_risk_heads_count = fields.Integer(string='High Risk Heads', compute='_compute_summary_metrics', store=True)
+    significant_risks_count = fields.Integer(string='Significant Risks', compute='_compute_summary_metrics', store=True)
 
     @api.depends('date_start')
     def _compute_fiscal_year(self):
