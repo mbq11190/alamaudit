@@ -525,6 +525,363 @@
                                 <button name="action_complete_head" type="object" string="✅ Complete" class="btn-sm btn-outline-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
                             </tree>
                         </field>
+                                <sheet>
+                                    <div class="oe_title">
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                        <div class="row mt-2">
+                                            <div class="col-12">
+                                                <div class="alert alert-info">
+                                                    <div class="row text-center">
+                                                        <div class="col-md-3">
+                                                            <strong>Progress:</strong>
+                                                            <field name="progress" widget="progressbar" options="{'edit': False}" class="mt-1"/>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <strong>Risk Coverage:</strong>
+                                                            <field name="risk_coverage" widget="progressbar" options="{'edit': False}" class="mt-1"/>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <strong>Testing:</strong>
+                                                            <field name="testing_completion" widget="progressbar" options="{'edit': False}" class="mt-1"/>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <strong>Coverage:</strong>
+                                                            <field name="coverage_percentage" widget="progressbar" options="{'edit': False}" class="mt-1"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <notebook>
+                                        <page string="📊 Lead Schedule &amp; Financials">
+                                            <group>
+                                                <group string="💰 Financial Information">
+                                                    <field name="current_year_amount"/>
+                                                    <field name="previous_year_amount"/>
+                                                    <field name="variance_amount" readonly="1"/>
+                                                    <field name="variance_percentage" readonly="1"/>
+                                                </group>
+                                                <group string="📈 Progress &amp; Status">
+                                                    <field name="state" widget="radio" options="{'horizontal': true}"/>
+                                                    <field name="progress" widget="progressbar" options="{'edit': False}"/>
+                                                    <field name="nature" widget="badge" 
+                                                           options="{'classes': {'revenue': 'success', 'expense': 'danger', 'asset': 'primary', 'liability': 'warning', 'equity': 'info'}}"/>
+                                                </group>
+                                            </group>
+                                        </page>
+
+                                        <page string="⚠️ Risk Assessment">
+                                            <group>
+                                                <group string="🎯 Risk Levels">
+                                                    <field name="risk_rating" widget="radio" options="{'horizontal': true}"/>
+                                                    <field name="significant_risk" widget="boolean_button" options="{'terminology': 'significant'}"/>
+                                                </group>
+                                                <group string="📋 Assessment">
+                                                    <field name="relying_on_controls" widget="boolean_button" options="{'terminology': 'relying'}"/>
+                                                    <field name="control_design_effective"/>
+                                                    <field name="control_operating_effective"/>
+                                                </group>
+                                            </group>
+                                            <group string="🎯 Multiple Assertions">
+                                                <field name="assertion_ids" widget="many2many_tags" 
+                                                       options="{'color_field': 'color', 'no_create': true, 'no_create_edit': true}"
+                                                       placeholder="Select multiple assertions..." 
+                                                       class="col-12"/>
+                                            </group>
+                                            <group string="📝 Risk Description">
+                                                <field name="risk_description" nolabel="1" placeholder="Describe the specific risks associated with this account..."/>
+                                            </group>
+                                        </page>
+
+                                        <page string="📈 Population &amp; Sampling">
+                                            <group>
+                                                <group string="🎲 Sampling Details">
+                                                    <field name="population_size"/>
+                                                    <field name="sample_size"/>
+                                                    <field name="sampling_method"/>
+                                                </group>
+                                                <group string="💰 Amount Details">
+                                                    <field name="population_amount"/>
+                                                    <field name="sample_amount_tested"/>
+                                                    <field name="coverage_percentage" readonly="1"/>
+                                                </group>
+                                            </group>
+                                            <div class="alert alert-success mt-4">
+                                                <h5 class="alert-heading">📊 Sampling Summary</h5>
+                                                <div class="row text-center mt-3">
+                                                    <div class="col-md-4">
+                                                        <h4 class="text-primary">
+                                                            <field name="population_amount" readonly="1" nolabel="1"/>
+                                                        </h4>
+                                                        <strong>Total Population Amount</strong>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="text-success">
+                                                            <field name="sample_amount_tested" readonly="1" nolabel="1"/>
+                                                        </h4>
+                                                        <strong>Sample Amount Tested</strong>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="text-warning">
+                                                            <field name="coverage_percentage" readonly="1" nolabel="1"/>%
+                                                        </h4>
+                                                        <strong>Coverage Percentage</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </page>
+
+                                        <page string="📋 Audit Procedures">
+                                            <div class="alert alert-info">
+                                                <i class="fa fa-info-circle me-2"></i>
+                                                <strong>Procedure Selection:</strong> Select audit procedures from the dropdown list. Multiple procedures can be added.
+                                            </div>
+                                            <field name="procedure_ids" nolabel="1">
+                                                <tree decoration-success="is_completed==True" decoration-muted="is_completed==False" editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="procedure_template_id" widget="many2one" options="{'no_create': true, 'no_create_edit': true}"/>
+                                                    <field name="procedure_type" widget="badge" 
+                                                           options="{'classes': {'risk_assessment': 'warning', 'test_of_controls': 'info', 'substantive': 'primary', 'analytical': 'success'}}"/>
+                                                    <field name="risk_level" widget="badge" 
+                                                           options="{'classes': {'low': 'success', 'medium': 'warning', 'high': 'danger'}}"/>
+                                                    <field name="is_completed" widget="boolean_toggle"/>
+                                                    <field name="performed_by"/>
+                                                    <field name="performed_date"/>
+                                                    <field name="result" widget="badge" 
+                                                           options="{'classes': {'satisfactory': 'success', 'unsatisfactory': 'danger', 'not_applicable': 'secondary'}}"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <div class="oe_title">
+                                                            <h2>
+                                                                <field name="procedure_template_id" widget="many2one" options="{'no_create': true, 'no_create_edit': true}" placeholder="Select Procedure..." class="col-8"/>
+                                                            </h2>
+                                                        </div>
+                                                        <group>
+                                                            <group string="📝 Procedure Details">
+                                                                <field name="procedure_name" readonly="1"/>
+                                                                <field name="procedure_type" readonly="1"/>
+                                                                <field name="risk_level"/>
+                                                            </group>
+                                                            <group string="🔄 Execution Details">
+                                                                <field name="is_completed" widget="boolean_button"/>
+                                                                <field name="performed_by"/>
+                                                                <field name="performed_date"/>
+                                                                <field name="result"/>
+                                                            </group>
+                                                        </group>
+                                                        <field name="procedure_description" nolabel="1" readonly="1"/>
+                                                        <field name="findings" nolabel="1" placeholder="Enter findings and observations..."/>
+                                                        <field name="notes" nolabel="1"/>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </page>
+
+                                        <page string="🔍 Test of Details">
+                                            <field name="test_of_details_ids" nolabel="1">
+                                                <tree editable="bottom">
+                                                    <field name="test_result" column_invisible="1"/>
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="test_objective"/>
+                                                    <field name="assertion_tested" widget="badge"/>
+                                                    <field name="population_size"/>
+                                                    <field name="sample_size"/>
+                                                    <field name="population_amount"/>
+                                                    <field name="sample_amount"/>
+                                                    <field name="coverage_percentage" widget="progressbar" options="{'edit': False}"/>
+                                                    <field name="exceptions_found"/>
+                                                    <field name="test_result" widget="badge" decoration-success="test_result=='satisfactory'" decoration-danger="test_result=='unsatisfactory'"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group>
+                                                                <field name="test_objective"/>
+                                                                <field name="assertion_tested"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="sampling_method"/>
+                                                            </group>
+                                                        </group>
+                                                        <group>
+                                                            <group string="Sampling">
+                                                                <field name="population_size"/>
+                                                                <field name="sample_size"/>
+                                                            </group>
+                                                            <group string="Amounts">
+                                                                <field name="population_amount"/>
+                                                                <field name="sample_amount"/>
+                                                                <field name="coverage_percentage" widget="progressbar" options="{'edit': False}"/>
+                                                            </group>
+                                                        </group>
+                                                        <group>
+                                                            <group string="Results">
+                                                                <field name="exceptions_found"/>
+                                                                <field name="test_result"/>
+                                                            </group>
+                                                            <group string="Conclusion">
+                                                                <field name="conclusion" nolabel="1"/>
+                                                            </group>
+                                                        </group>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                            <div class="alert alert-success mt-3" role="alert">
+                                                <h4 class="alert-heading">Testing Summary</h4>
+                                                <div class="row text-center mt-2">
+                                                    <div class="col-md-4">
+                                                        <strong>Total Population Amount</strong>
+                                                        <div class="h4 text-primary">
+                                                            <field name="population_amount" readonly="1"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <strong>Tested Amount</strong>
+                                                        <div class="h4 text-success">
+                                                            <field name="sample_amount" readonly="1"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <strong>Tested Percentage</strong>
+                                                        <div class="h4 text-warning">
+                                                            <field name="coverage_percentage" widget="percentpie" readonly="1"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </page>
+
+                                        <page string="🛡️ Test of Controls">
+                                            <div class="alert alert-warning" attrs="{'invisible': [('relying_on_controls', '=', true)]}">
+                                                <i class="fa fa-exclamation-triangle me-2"></i>
+                                                <strong>Note:</strong> Test of Controls is only applicable when relying on entity controls.
+                                            </div>
+                                            <field name="test_of_controls_ids" nolabel="1">
+                                                <tree decoration-success="control_effectiveness=='effective'" decoration-warning="control_effectiveness=='partially_effective'" decoration-danger="control_effectiveness=='ineffective'" editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="control_objective"/>
+                                                    <field name="control_activity" nolabel="1"/>
+                                                    <field name="frequency" widget="badge" 
+                                                           options="{'classes': {'daily': 'info', 'weekly': 'primary', 'monthly': 'warning', 'quarterly': 'success', 'annually': 'secondary'}}"/>
+                                                    <field name="sample_size"/>
+                                                    <field name="deviations"/>
+                                                    <field name="control_effectiveness" widget="badge" 
+                                                           options="{'classes': {'effective': 'success', 'partially_effective': 'warning', 'ineffective': 'danger'}}"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group string="🎯 Control Information">
+                                                                <field name="control_objective"/>
+                                                                <field name="control_activity" nolabel="1"/>
+                                                                <field name="control_owner"/>
+                                                                <field name="frequency"/>
+                                                            </group>
+                                                            <group string="📊 Testing Details">
+                                                                <field name="sample_size"/>
+                                                                <field name="sample_method"/>
+                                                                <field name="exceptions_found"/>
+                                                                <field name="deviation_rate" widget="progressbar" options="{'edit': false}"/>
+                                                            </group>
+                                                        </group>
+                                                        <group string="✅ Results">
+                                                            <field name="control_effective" widget="boolean_button"/>
+                                                            <field name="control_effectiveness"/>
+                                                        </group>
+                                                        <field name="notes" nolabel="1"/>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </page>
+
+                                        <page string="📊 Analytical Procedures">
+                                            <field name="analytical_ids" nolabel="1">
+                                                <tree decoration-success="expectation_met==True" decoration-warning="investigation_required==True" decoration-danger="unusual_fluctuation==True" editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="procedure_description"/>
+                                                    <field name="procedure_type" widget="badge" 
+                                                           options="{'classes': {'ratio': 'primary', 'trend': 'success', 'comparison': 'warning', 'reasonableness': 'info'}}"/>
+                                                    <field name="current_year_amount"/>
+                                                    <field name="previous_year_amount"/>
+                                                    <field name="variance_percentage" widget="percentpie"/>
+                                                    <field name="expectation_met" widget="boolean_button"/>
+                                                    <field name="investigation_required" widget="boolean_button"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group>
+                                                                <field name="procedure_description"/>
+                                                                <field name="procedure_type"/>
+                                                            </group>
+                                                            <group string="💰 Financial Data">
+                                                                <field name="current_year_amount"/>
+                                                                <field name="previous_year_amount"/>
+                                                                <field name="budget_amount"/>
+                                                                <field name="industry_average"/>
+                                                            </group>
+                                                        </group>
+                                                        <group string="📈 Variance Analysis">
+                                                            <group>
+                                                                <field name="variance_cy_py" readonly="1" string="Variance CY vs PY"/>
+                                                                <field name="variance_cy_budget" readonly="1" string="Variance CY vs Budget"/>
+                                                                <field name="variance_percentage" readonly="1" string="Variance %"/>
+                                                            </group>
+                                                        </group>
+                                                        <group string="✅ Results">
+                                                            <field name="expectation_met" widget="boolean_button"/>
+                                                            <field name="unusual_fluctuation" widget="boolean_button"/>
+                                                            <field name="investigation_required" widget="boolean_button"/>
+                                                        </group>
+                                                        <group string="Analysis &amp; Follow-up">
+                                                            <field name="analysis_notes" nolabel="1"/>
+                                                            <field name="follow_up_actions" nolabel="1"/>
+                                                        </group>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </page>
+
+                                        <page string="📎 Evidence Collection">
+                                            <field name="evidence_ids" nolabel="1">
+                                                <tree decoration-success="reliability=='high'" decoration-warning="reliability=='medium'" decoration-danger="reliability=='low'" editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="evidence_type"/>
+                                                    <field name="description"/>
+                                                    <field name="reliability" widget="badge" 
+                                                           options="{'classes': {'high': 'success', 'medium': 'warning', 'low': 'danger'}}"/>
+                                                    <field name="collected_by"/>
+                                                    <field name="collection_date"/>
+                                                    <field name="attachment_id" filename="name" string="Attachment"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group>
+                                                                <field name="evidence_type"/>
+                                                                <field name="reliability"/>
+                                                                <field name="collected_by"/>
+                                                                <field name="collection_date"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="attachment_id" filename="name"/>
+                                                            </group>
+                                                        </group>
+                                                        <field name="description"/>
+                                                        <field name="evidence_notes"/>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                                </sheet>
+                            </form>
+                        </field>
                     </group>
                 </sheet>
                 
