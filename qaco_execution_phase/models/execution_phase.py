@@ -1144,9 +1144,9 @@ class AuditExecutionMaster(models.Model):
         ('under_review', '👀 Under Review'),
         ('completed', '✅ Completed')
     ], string='Status', default='draft', tracking=True)
-    overall_progress = fields.Float(string='Overall Progress', compute='_compute_overall_progress')
-    risk_coverage = fields.Float(string='Risk Coverage %', compute='_compute_risk_coverage')
-    testing_completion = fields.Float(string='Testing Completion %', compute='_compute_testing_completion')
+    overall_progress = fields.Float(string='Overall Progress', compute='_compute_overall_progress', store=True)
+    risk_coverage = fields.Float(string='Risk Coverage %', compute='_compute_risk_coverage', store=True)
+    testing_completion = fields.Float(string='Testing Completion %', compute='_compute_testing_completion', store=True)
     selected_head_ids = fields.Many2many('account.account', string='Selected Accounting Heads', domain=[('deprecated', '=', False)])
     head_execution_ids = fields.One2many('audit.head.execution', 'master_id', string='Head-wise Executions')
     total_heads_count = fields.Integer(string='Total Heads', compute='_compute_summary_metrics', store=True)
