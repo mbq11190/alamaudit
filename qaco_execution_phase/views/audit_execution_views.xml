@@ -685,7 +685,8 @@
 
                                         <page string="🔍 Test of Details">
                                             <field name="test_of_details_ids" nolabel="1">
-                                                <tree decoration-success="test_result=='satisfactory'" decoration-danger="test_result=='unsatisfactory'" editable="bottom">
+                                                <tree editable="bottom">
+                                                    <field name="test_result" column_invisible="1"/>
                                                     <field name="sequence" widget="handle"/>
                                                     <field name="test_objective"/>
                                                     <field name="assertion_tested" widget="badge"/>
@@ -695,7 +696,7 @@
                                                     <field name="sample_amount"/>
                                                     <field name="coverage_percentage" widget="progressbar" options="{'edit': False}"/>
                                                     <field name="exceptions_found"/>
-                                                    <field name="test_result" widget="badge" options="{'classes': {'satisfactory': 'success', 'unsatisfactory': 'danger'}}"/>
+                                                    <field name="test_result" widget="badge" decoration-success="test_result=='satisfactory'" decoration-danger="test_result=='unsatisfactory'"/>
                                                 </tree>
                                                 <form>
                                                     <sheet>
