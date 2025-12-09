@@ -423,7 +423,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm_planning" type="object" string="🎯 Confirm Planning" class="btn-primary" states="draft" attrs="{'invisible': [('selected_head_ids', '=', [])]}"/>
+                    <button name="action_confirm_planning" type="object" string="🎯 Confirm Planning" class="btn-primary" invisible="state != 'draft' or not selected_head_ids"/>
                     <button name="action_start_execution" type="object" string="🚀 Start Execution" class="btn-warning" states="planning"/>
                     <button name="action_send_review" type="object" string="📋 Send for Review" class="btn-info" states="in_progress"/>
                     <button name="action_complete" type="object" string="✅ Complete Audit" class="btn-success" states="under_review"/>
@@ -438,7 +438,7 @@
                         </h1>
                         <div class="row mt-2">
                             <div class="col-12">
-                                <div class="alert" attrs="{'class': 'alert-success' if state == 'completed' else 'alert-info' if state == 'under_review' else 'alert-warning' if state == 'in_progress' else 'alert-primary' if state == 'planning' else 'alert-secondary'}">
+                                <div class="alert alert-info">
                                     <div class="row text-center">
                                         <div class="col-md-2">
                                             <strong>📊 Overall Progress:</strong>
@@ -490,7 +490,7 @@
                         </group>
                     </group>
 
-                    <group string="📊 Accounting Heads Selection" attrs="{'invisible': [('state', '!=', 'draft')]}">
+                    <group string="📊 Accounting Heads Selection" invisible="state != 'draft'">
                         <div class="alert alert-info">
                             <i class="fa fa-info-circle me-2"></i>
                             <strong>Instructions:</strong> Select all accounting heads you want to include in this audit execution. You can select multiple heads.
@@ -501,8 +501,8 @@
                                class="col-12"/>
                     </group>
 
-                    <group string="🎯 Head-wise Execution Dashboard" attrs="{'invisible': [('state', '=', 'draft')]}">
-                        <div class="alert alert-success" attrs="{'invisible': [('state', '!=', 'completed')]}">
+                    <group string="🎯 Head-wise Execution Dashboard" invisible="state == 'draft'">
+                        <div class="alert alert-success" invisible="state != 'completed'">
                             <i class="fa fa-check-circle me-2"></i>
                             <strong>Audit Completed:</strong> All selected accounting heads have been processed and reviewed.
                         </div>
@@ -521,8 +521,8 @@
                                 <field name="testing_completion" widget="progressbar" options="{'edit': False}"/>
                                 <field name="state" widget="badge" 
                                        options="{'classes': {'draft': 'secondary', 'in_progress': 'warning', 'completed': 'success'}}"/>
-                                <button name="action_start_head" type="object" string="🚀 Start" class="btn-sm btn-outline-warning" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                                <button name="action_complete_head" type="object" string="✅ Complete" class="btn-sm btn-outline-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                                <button name="action_start_head" type="object" string="🚀 Start" class="btn-sm btn-outline-warning" invisible="state != 'draft'"/>
+                                <button name="action_complete_head" type="object" string="✅ Complete" class="btn-sm btn-outline-success" invisible="state != 'in_progress'"/>
                             </tree>
                         </field>
                     </group>
