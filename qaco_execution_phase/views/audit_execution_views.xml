@@ -424,10 +424,10 @@
             <form>
                 <header>
                     <button name="action_confirm_planning" type="object" string="🎯 Confirm Planning" class="btn-primary" invisible="state != 'draft' or not selected_head_ids"/>
-                    <button name="action_start_execution" type="object" string="🚀 Start Execution" class="btn-warning" states="planning"/>
-                    <button name="action_send_review" type="object" string="📋 Send for Review" class="btn-info" states="in_progress"/>
-                    <button name="action_complete" type="object" string="✅ Complete Audit" class="btn-success" states="under_review"/>
-                    <button name="action_reset_draft" type="object" string="🔄 Reset to Draft" class="btn-secondary" states="planning,in_progress,under_review"/>
+                    <button name="action_start_execution" type="object" string="🚀 Start Execution" class="btn-warning" invisible="state != 'planning'"/>
+                    <button name="action_send_review" type="object" string="📋 Send for Review" class="btn-info" invisible="state != 'in_progress'"/>
+                    <button name="action_complete" type="object" string="✅ Complete Audit" class="btn-success" invisible="state != 'under_review'"/>
+                    <button name="action_reset_draft" type="object" string="🔄 Reset to Draft" class="btn-secondary" invisible="state not in ['planning', 'in_progress', 'under_review']"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,planning,in_progress,under_review,completed" clickable="1"/>
                 </header>
                 
