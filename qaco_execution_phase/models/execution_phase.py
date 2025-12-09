@@ -977,7 +977,9 @@ class AuditProcedure(models.Model):
 class TestOfDetails(models.Model):
     _name = 'test.of.details'
     _description = 'Test of Details'
+    _order = 'sequence'
 
+    sequence = fields.Integer(string='Sequence', default=10)
     head_details_id = fields.Many2one('execution.head.details', string='Head Details', ondelete='cascade')
     head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     test_objective = fields.Char(string='Test Objective', required=True)
