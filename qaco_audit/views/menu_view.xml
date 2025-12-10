@@ -25,7 +25,6 @@
 <!--     menu categories -->
 
     <menuitem name="Audit" id="qaco_audit.menu_1" parent="qaco_audit.menu_root" sequence="1" action="qaco_audit.action_window"/>
-    <menuitem name="Audit Main" id="qaco_audit.menu_qaco_audit_main" parent="qaco_audit.menu_root" sequence="2"/>
     <menuitem name="Configurations" id="qaco_audit.menu_2" parent="qaco_audit.menu_root" groups="qaco_audit.group_audit_administrator" sequence="5"/>
 
     <!-- Configuration submenus -->
