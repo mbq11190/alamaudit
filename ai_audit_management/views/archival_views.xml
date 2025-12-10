@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_archival_tree" model="ir.ui.view">
+        <field name="name">audit.archival.tree</field>
+        <field name="model">audit.archival</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="file_index"/>
+                <field name="archival_date"/>
+                <field name="locked_status" widget="boolean_toggle"/>
+                <field name="qc_reviewer"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_archival_form" model="ir.ui.view">
+        <field name="name">audit.archival.form</field>
+        <field name="model">audit.archival</field>
+        <field name="arch" type="xml">
+            <form string="Audit Archival">
+                <header>
+                    <button name="action_lock" string="Lock" type="object" class="btn-danger" attrs="{'invisible': [('locked_status', '=', True)]}"/>
+                    <field name="locked_status" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="file_index"/>
+                            <field name="archival_date"/>
+                            <field name="retention_period"/>
+                        </group>
+                        <group>
+                            <field name="qc_reviewer"/>
+                            <field name="qc_comments" nolabel="1"/>
+                            <field name="assigned_user_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <field name="document_ids" widget="many2many_binary"/>
+                </sheet>
+                <chatter></chatter>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_archival" model="ir.actions.act_window">
+        <field name="name">Archival</field>
+        <field name="res_model">audit.archival</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

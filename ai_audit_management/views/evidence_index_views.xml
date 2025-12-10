@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_evidence_index_tree" model="ir.ui.view">
+        <field name="name">audit.evidence.index.tree</field>
+        <field name="model">audit.evidence.index</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="final_report_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_evidence_index_form" model="ir.ui.view">
+        <field name="name">audit.evidence.index.form</field>
+        <field name="model">audit.evidence.index</field>
+        <field name="arch" type="xml">
+            <form string="Evidence Index">
+                <header>
+                    <button name="action_generate_index" string="Generate Index" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="final_report_id"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="ai_summary" nolabel="1"/>
+                    </group>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="source_document"/>
+                            <field name="assertion_addressed"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <chatter></chatter>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_evidence_index" model="ir.actions.act_window">
+        <field name="name">Evidence Index</field>
+        <field name="res_model">audit.evidence.index</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

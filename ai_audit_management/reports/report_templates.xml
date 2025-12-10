@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_engagement_letter_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Engagement Letter</h2>
+                        <p>Date: <span t-esc="doc.start_date"/></p>
+                        <p>Client: <span t-esc="doc.client_id.name or doc.name"/></p>
+                        <p>Scope:</p>
+                        <div t-out="doc.letter_body or doc.scope_of_audit"/>
+                        <p>Laws Applicable: <span t-esc="doc.laws_applicable"/></p>
+                        <p>Fee Quotation: <span t-esc="doc.fee"/></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_management_rep_letter_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Management Representation Letter</h2>
+                        <p>Subject: ISA 580 confirmation</p>
+                        <p>Going Concern Summary:</p>
+                        <p t-esc="doc.going_concern_assessment"/>
+                        <p>Subsequent Events Review:</p>
+                        <p t-esc="doc.subsequent_events_review"/>
+                        <p>Partner Notes:</p>
+                        <p t-esc="doc.partner_review_notes"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_tcw_report_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Audit Findings Report to TCWG</h2>
+                        <p>Final Analytics:</p>
+                        <p t-esc="doc.final_analytics"/>
+                        <p>Misstatement Attachments Count: <span t-esc="doc.misstatement_summary_file and len(doc.misstatement_summary_file) or 0"/></p>
+                        <div t-if="doc.tcwg_report_html" t-out="doc.tcwg_report_html"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_audit_final_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Independent Auditor's Report</h2>
+                        <p>Client: <span t-esc="doc.client_id.name or doc.name"/></p>
+                        <p>Opinion Type: <span t-esc="doc.report_type"/></p>
+                        <div t-out="doc.opinion_text"/>
+                        <h3>Key Audit Matters</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Matter</th>
+                                    <th>Description</th>
+                                    <th>Response</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.key_audit_matter_ids" t-as="kam">
+                                    <td t-esc="kam.name"/>
+                                    <td t-esc="kam.description"/>
+                                    <td t-esc="kam.response"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>ISA Quality Notes:</p>
+                        <p t-esc="doc.isa_quality_notes"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

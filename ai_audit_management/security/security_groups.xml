@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_ai_audit" model="ir.module.category">
+            <field name="name">AI Audit Suite</field>
+        </record>
+
+        <record id="group_ai_audit_associate" model="res.groups">
+            <field name="name">Audit Associate</field>
+            <field name="category_id" ref="ai_audit_management.module_category_ai_audit"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_ai_audit_senior" model="res.groups">
+            <field name="name">Audit Senior</field>
+            <field name="category_id" ref="ai_audit_management.module_category_ai_audit"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('ai_audit_management.group_ai_audit_associate'))]"/>
+        </record>
+
+        <record id="group_ai_audit_manager" model="res.groups">
+            <field name="name">Audit Manager</field>
+            <field name="category_id" ref="ai_audit_management.module_category_ai_audit"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('ai_audit_management.group_ai_audit_senior'))]"/>
+        </record>
+
+        <record id="group_ai_audit_partner" model="res.groups">
+            <field name="name">Audit Partner</field>
+            <field name="category_id" ref="ai_audit_management.module_category_ai_audit"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('ai_audit_management.group_ai_audit_manager'))]"/>
+        </record>
+
+        <record id="group_ai_qc_reviewer" model="res.groups">
+            <field name="name">QC Reviewer</field>
+            <field name="category_id" ref="ai_audit_management.module_category_ai_audit"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('ai_audit_management.group_ai_audit_partner'))]"/>
+        </record>
+    </data>
+</odoo>

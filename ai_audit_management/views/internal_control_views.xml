@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_internal_control_tree" model="ir.ui.view">
+        <field name="name">audit.internal.control.tree</field>
+        <field name="model">audit.internal.control</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="cycle"/>
+                <field name="control_design_assessment"/>
+                <field name="implementation_status"/>
+                <field name="deficiency_classification"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_internal_control_form" model="ir.ui.view">
+        <field name="name">audit.internal.control.form</field>
+        <field name="model">audit.internal.control</field>
+        <field name="arch" type="xml">
+            <form string="Internal Control Evaluation">
+                <header>
+                    <button name="ai_evaluate_internal_control_design" string="AI Evaluate" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="cycle"/>
+                            <field name="assigned_user_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="control_design_assessment"/>
+                            <field name="implementation_status"/>
+                            <field name="deficiency_classification"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Narratives">
+                            <field name="narratives" nolabel="1"/>
+                        </page>
+                        <page string="Walkthrough">
+                            <field name="walkthrough_notes" nolabel="1"/>
+                        </page>
+                        <page string="Test of Controls">
+                            <field name="test_of_controls_results" nolabel="1"/>
+                        </page>
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter></chatter>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_internal_control" model="ir.actions.act_window">
+        <field name="name">Internal Controls</field>
+        <field name="res_model">audit.internal.control</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

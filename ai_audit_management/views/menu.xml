@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ai_audit_root" name="AI Audit" sequence="10" groups="base.group_user"/>
+
+    <menuitem id="menu_ai_pre_engagement" name="Pre-Engagement" parent="menu_ai_audit_root" sequence="10"/>
+    <menuitem id="menu_ai_planning" name="Planning" parent="menu_ai_audit_root" sequence="20"/>
+    <menuitem id="menu_ai_execution" name="Execution" parent="menu_ai_audit_root" sequence="30"/>
+    <menuitem id="menu_ai_completion" name="Completion" parent="menu_ai_audit_root" sequence="40"/>
+    <menuitem id="menu_ai_reporting" name="Reporting" parent="menu_ai_audit_root" sequence="50"/>
+    <menuitem id="menu_ai_archival" name="Archival" parent="menu_ai_audit_root" sequence="60"/>
+    <menuitem id="menu_ai_dashboard" name="Dashboard" parent="menu_ai_audit_root" sequence="15" action="ai_audit_management.action_audit_dashboard" groups="ai_audit_management.group_ai_audit_manager,ai_audit_management.group_ai_audit_partner"/>
+    <menuitem id="menu_ai_config" name="Configuration" parent="menu_ai_audit_root" groups="ai_audit_management.group_ai_audit_partner" sequence="90"/>
+
+    <menuitem id="menu_ai_client_acceptance" name="Client Acceptance" parent="menu_ai_pre_engagement" action="ai_audit_management.action_client_acceptance"/>
+    <menuitem id="menu_ai_engagement_letters" name="Engagement Letters" parent="menu_ai_pre_engagement" action="ai_audit_management.action_engagement_letters"/>
+
+    <menuitem id="menu_ai_audit_plan" name="Audit Plans" parent="menu_ai_planning" action="ai_audit_management.action_audit_plan"/>
+    <menuitem id="menu_ai_internal_control" name="Internal Controls" parent="menu_ai_planning" action="ai_audit_management.action_internal_control"/>
+
+    <menuitem id="menu_ai_substantive_tests" name="Substantive Procedures" parent="menu_ai_execution" action="ai_audit_management.action_substantive_tests"/>
+    <menuitem id="menu_ai_ocr" name="OCR Documents" parent="menu_ai_execution" action="ai_audit_management.action_audit_ocr"/>
+
+    <menuitem id="menu_ai_completion_review" name="Completion & Review" parent="menu_ai_completion" action="ai_audit_management.action_completion_review"/>
+
+    <menuitem id="menu_ai_final_reports" name="Final Reports" parent="menu_ai_reporting" action="ai_audit_management.action_final_reports"/>
+    <menuitem id="menu_ai_evidence_index" name="Evidence Index" parent="menu_ai_reporting" action="ai_audit_management.action_evidence_index" groups="ai_audit_management.group_ai_audit_manager,ai_audit_management.group_ai_audit_partner"/>
+
+    <menuitem id="menu_ai_archival_records" name="Archival" parent="menu_ai_archival" action="ai_audit_management.action_archival" groups="ai_audit_management.group_ai_audit_partner,ai_audit_management.group_ai_qc_reviewer"/>
+
+    <menuitem id="menu_ai_settings" name="AI Settings" parent="menu_ai_config" action="ai_audit_management.action_ai_settings"/>
+</odoo>

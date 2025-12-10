@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AI Audit Management – Overview</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; line-height: 1.4; color: #1e1e1e; }
+    h1, h2, h3 { color: #0f4c81; margin-bottom: 8px; }
+    ul { margin-top: 4px; }
+    code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
+    .tag { display: inline-block; padding: 2px 6px; margin-right: 6px; background: #eef3fb; border-radius: 4px; font-size: 12px; }
+    .section { margin-bottom: 22px; }
+  </style>
+</head>
+<body>
+  <h1>AI Audit Management (Odoo 17)</h1>
+  <p>ISA/Pakistan-aligned audit suite with OpenAI automations (default model: GPT-5.1-Codex-Max Preview).</p>
+
+  <div class="section">
+    <h2>Module Scope</h2>
+    <div class="tag">Client Acceptance</div>
+    <div class="tag">Engagement Letters</div>
+    <div class="tag">Planning & Risks</div>
+    <div class="tag">Internal Control</div>
+    <div class="tag">Substantive Tests</div>
+    <div class="tag">Completion</div>
+    <div class="tag">Final Reports</div>
+    <div class="tag">Archival</div>
+    <div class="tag">Dashboard</div>
+    <div class="tag">OCR (placeholder)</div>
+    <div class="tag">Chatbot</div>
+    <div class="tag">Evidence Index</div>
+  </div>
+
+  <div class="section">
+    <h2>Key Models</h2>
+    <ul>
+      <li><code>audit.client.acceptance</code> – risk scoring, AI background summary, auto engagement letter creation.</li>
+      <li><code>audit.engagement.letter</code> – ISA 210 letter drafting, AI text + QWeb PDF.</li>
+      <li><code>audit.plan</code> – materiality, risks, AI plan/risks from attachments.</li>
+      <li><code>audit.internal.control</code> – control design/implementation, AI evaluation.</li>
+      <li><code>audit.substantive.test</code> – assertions, templates, AI design/review/flags.</li>
+      <li><code>audit.completion.review</code> – subsequent events, going concern, AI TCWG/rep letter.</li>
+      <li><code>audit.final.report</code> – opinions, AI KAMs, quality check, QWeb PDF.</li>
+      <li><code>audit.archival</code> – retention + auto-lock cron after 60 days.</li>
+      <li><code>audit.dashboard.metrics</code> – KPIs with AI insights refresh.</li>
+      <li><code>audit.ocr.document</code> – OCR/vision placeholder with AI summary/sampling.</li>
+      <li><code>audit.evidence.index</code> – builds evidence index + AI summary.</li>
+      <li><code>audit.ai.settings</code> – OpenAI key/config; default GPT-5.1-Codex-Max.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Menus</h2>
+    <ul>
+      <li>Audit ▸ Dashboard (Manager/Partner)</li>
+      <li>Pre-Engagement ▸ Client Acceptance, Engagement Letters</li>
+      <li>Planning ▸ Audit Plans, Internal Controls</li>
+      <li>Execution ▸ Substantive Procedures, OCR Documents</li>
+      <li>Completion ▸ Completion & Review</li>
+      <li>Reporting ▸ Final Reports, Evidence Index (Manager/Partner)</li>
+      <li>Archival ▸ Archival (Partner/QC)</li>
+      <li>Configuration ▸ AI Settings (Partner)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Security</h2>
+    <p>Groups: Associate, Senior, Manager, Partner, QC Reviewer. Record rules restrict access via assignment or group where applicable. OCR to Senior+, Dashboard/Evidence Index to Manager/Partner.</p>
+  </div>
+
+  <div class="section">
+    <h2>AI Hooks</h2>
+    <ul>
+      <li>Background risk, engagement letter drafting, materiality, audit plan JSON, control eval, substantive design/review/flags.</li>
+      <li>Completion AI (rep letter, TCWG), final opinion/KAMs, ISA quality check.</li>
+      <li>Dashboard AI insights, OCR AI summary/sampling, Evidence Index AI summary.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Reports</h2>
+    <ul>
+      <li>Engagement Letter</li>
+      <li>Management Representation Letter</li>
+      <li>TCWG Findings Report</li>
+      <li>Final Audit Opinion with KAM table</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Cron</h2>
+    <ul>
+      <li>Archive auto-lock weekly: locks files older than 60 days (unlocked only).</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Setup</h2>
+    <ol>
+      <li>Install dependency: <code>pip install openai</code>.</li>
+      <li>Add module to <code>addons_path</code>; update apps list.</li>
+      <li>Install/upgrade: <code>odoo-bin -u ai_audit_management -d &lt;db&gt;</code> (enable demo to load sample data).</li>
+      <li>Configure OpenAI key: Audit ▸ Configuration ▸ AI Settings.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Smoke Tests</h2>
+    <ul>
+      <li>Acceptance: AI Risk Summary → Approve → Engagement letter created.</li>
+      <li>Engagement: AI Draft → Print PDF.</li>
+      <li>Planning: AI Materiality/Plan/Risks from attachments; submit/approve.</li>
+      <li>Controls/Substantive: AI evaluate/design/review; attach evidence.</li>
+      <li>Completion: AI rep letter, AI TCWG; render reports.</li>
+      <li>Final report: AI opinion/KAM → Print PDF.</li>
+      <li>Archival: lock guard; cron auto-lock.</li>
+      <li>Dashboard: AI Refresh; OCR: Run OCR (placeholder); Evidence Index: attach → Generate.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Notes</h2>
+    <ul>
+      <li>OCR uses a placeholder; wire Tesseract/OpenAI Vision for real extraction.</li>
+      <li>Chatbot JS is a scaffold; extend with OWL UI as needed.</li>
+      <li>Add TransactionCase tests for AI guards and archival locking for CI robustness.</li>
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo partner -->
+        <record id="demo_audit_partner" model="res.partner">
+            <field name="name">Demo Manufacturing Ltd</field>
+            <field name="email">finance@demo-mfg.com</field>
+            <field name="phone">+92 300 0000000</field>
+        </record>
+
+        <!-- Demo employees -->
+        <record id="demo_employee_manager" model="hr.employee">
+            <field name="name">Ayesha Khan</field>
+            <field name="work_email">ayesha.khan@demo-mfg.com</field>
+        </record>
+        <record id="demo_employee_senior" model="hr.employee">
+            <field name="name">Bilal Hussain</field>
+            <field name="work_email">bilal.hussain@demo-mfg.com</field>
+        </record>
+
+        <!-- Client acceptance -->
+        <record id="demo_client_acceptance" model="audit.client.acceptance">
+            <field name="client_name">Demo Manufacturing Ltd</field>
+            <field name="client_id" ref="demo_audit_partner"/>
+            <field name="client_type">company</field>
+            <field name="background_check_notes">Existing audit client, expanding into exports.</field>
+            <field name="integrity_score">78</field>
+            <field name="risk_level">medium</field>
+            <field name="acceptance_status">approved</field>
+        </record>
+
+        <!-- Engagement letter -->
+        <record id="demo_engagement_letter" model="audit.engagement.letter">
+            <field name="client_acceptance_id" ref="demo_client_acceptance"/>
+            <field name="client_id" ref="demo_audit_partner"/>
+            <field name="scope_of_audit">Statutory audit for FY 2025 under ISA as adopted in Pakistan.</field>
+            <field name="laws_applicable">isa</field>
+            <field name="fee">1500000</field>
+            <field name="start_date">2025-07-01</field>
+            <field name="end_date">2026-06-30</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <!-- Audit plan -->
+        <record id="demo_audit_plan" model="audit.plan">
+            <field name="name">FY25 Audit Plan</field>
+            <field name="client_id" ref="demo_audit_partner"/>
+            <field name="financial_year">FY2025</field>
+            <field name="overall_materiality">1200000</field>
+            <field name="performance_materiality">900000</field>
+            <field name="entity_understanding">Manufacturing entity with export sales, moderate FX exposure.</field>
+            <field name="risk_assessment_summary">Inventory valuation and revenue cut-off flagged as significant risks.</field>
+            <field name="approval_state">submitted</field>
+            <field name="team_assignments" eval="[(4, ref('demo_employee_manager')), (4, ref('demo_employee_senior'))]"/>
+        </record>
+
+        <!-- Internal control review -->
+        <record id="demo_internal_control" model="audit.internal.control">
+            <field name="name">Revenue Cycle Controls</field>
+            <field name="cycle">revenue</field>
+            <field name="narratives">Sales orders approved by credit control; invoices batch-posted.</field>
+            <field name="control_design_assessment">adequate</field>
+            <field name="implementation_status">implemented</field>
+            <field name="deficiency_classification">none</field>
+        </record>
+
+        <!-- Substantive test -->
+        <record id="demo_substantive_test" model="audit.substantive.test">
+            <field name="name">Revenue Cut-off Testing</field>
+            <field name="account_head">revenue</field>
+            <field name="procedure_template">custom</field>
+            <field name="assertion">cutoff</field>
+            <field name="test_description">Sample dispatches pre/post year-end and agree to invoices and GRNs.</field>
+            <field name="sampling_method">Monetary unit sampling</field>
+            <field name="conclusion_status">draft</field>
+        </record>
+
+        <!-- Completion review -->
+        <record id="demo_completion_review" model="audit.completion.review">
+            <field name="name">FY25 Completion</field>
+            <field name="subsequent_events_review">No adjusting events noted up to report date.</field>
+            <field name="going_concern_assessment">Positive cashflows; banking facilities renewed.</field>
+            <field name="final_analytics">Gross margin stable at 24% vs prior 23.5%.</field>
+            <field name="partner_review_notes">Proceed to finalize with unmodified opinion.</field>
+        </record>
+
+        <!-- Final report -->
+        <record id="demo_final_report" model="audit.final.report">
+            <field name="name">FY25 Audit Report</field>
+            <field name="client_id" ref="demo_audit_partner"/>
+            <field name="report_type">unmodified</field>
+            <field name="opinion_text">Financial statements present fairly in all material respects.</field>
+        </record>
+
+        <!-- Archival record -->
+        <record id="demo_archival" model="audit.archival">
+            <field name="file_index">FY25-DEMOMFG</field>
+            <field name="archival_date">2026-09-15</field>
+            <field name="retention_period">365</field>
+            <field name="locked_status">False</field>
+        </record>
+    </data>
+</odoo>

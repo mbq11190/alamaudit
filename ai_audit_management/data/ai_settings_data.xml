@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="ai_audit_default_settings" model="audit.ai.settings">
+            <field name="name">Default AI Settings</field>
+            <field name="active">True</field>
+            <field name="model_version">gpt-5.1-codex-max-preview</field>
+            <field name="temperature">0.2</field>
+        </record>
+    </data>
+</odoo>

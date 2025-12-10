@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_audit_dashboard_tree" model="ir.ui.view">
+        <field name="name">audit.dashboard.metrics.tree</field>
+        <field name="model">audit.dashboard.metrics</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="high_risk_clients"/>
+                <field name="materiality_benchmark"/>
+                <field name="control_deficiency_heat"/>
+                <field name="substantive_exceptions"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_audit_dashboard_form" model="ir.ui.view">
+        <field name="name">audit.dashboard.metrics.form</field>
+        <field name="model">audit.dashboard.metrics</field>
+        <field name="arch" type="xml">
+            <form string="Audit Dashboard">
+                <header>
+                    <button name="update_from_ai" string="AI Refresh" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <group>
+                            <field name="high_risk_clients"/>
+                            <field name="materiality_benchmark"/>
+                        </group>
+                        <group>
+                            <field name="control_deficiency_heat"/>
+                            <field name="substantive_exceptions"/>
+                        </group>
+                        <group>
+                            <field name="risk_distribution" widget="json"/>
+                            <field name="progress_timeline" widget="json"/>
+                        </group>
+                        <field name="ai_insights" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_audit_dashboard" model="ir.actions.act_window">
+        <field name="name">Audit Dashboard</field>
+        <field name="res_model">audit.dashboard.metrics</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

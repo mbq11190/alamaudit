@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_engagement_letter" model="ir.actions.report">
+        <field name="name">Engagement Letter A2</field>
+        <field name="model">audit.engagement.letter</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ai_audit_management.report_engagement_letter_document</field>
+        <field name="print_report_name">(object.client_id.name or object.name)</field>
+    </record>
+
+    <record id="report_management_rep_letter" model="ir.actions.report">
+        <field name="name">Management Representation Letter</field>
+        <field name="model">audit.completion.review</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ai_audit_management.report_management_rep_letter_document</field>
+        <field name="print_report_name">('Mgmt Rep Letter - %s' % (object.name or 'letter'))</field>
+    </record>
+
+    <record id="report_tcw_report" model="ir.actions.report">
+        <field name="name">Audit Findings to TCWG</field>
+        <field name="model">audit.completion.review</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ai_audit_management.report_tcw_report_document</field>
+        <field name="print_report_name">('TCWG Report - %s' % (object.name or 'report'))</field>
+    </record>
+
+    <record id="report_audit_final" model="ir.actions.report">
+        <field name="name">Audit Opinion (Pakistan)</field>
+        <field name="model">audit.final.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ai_audit_management.report_audit_final_document</field>
+        <field name="print_report_name">('Audit Opinion - %s' % (object.client_id.name or object.name))</field>
+    </record>
+</odoo>

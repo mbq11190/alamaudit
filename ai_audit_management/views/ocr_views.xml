@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_audit_ocr_tree" model="ir.ui.view">
+        <field name="name">audit.ocr.document.tree</field>
+        <field name="model">audit.ocr.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="document_type"/>
+                <field name="attachment_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_audit_ocr_form" model="ir.ui.view">
+        <field name="name">audit.ocr.document.form</field>
+        <field name="model">audit.ocr.document</field>
+        <field name="arch" type="xml">
+            <form string="OCR Document">
+                <header>
+                    <button name="action_run_ocr" string="Run OCR" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="document_type"/>
+                        <field name="attachment_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Extracted Text">
+                            <field name="extracted_text" nolabel="1"/>
+                        </page>
+                        <page string="AI Summary">
+                            <field name="ai_summary" nolabel="1"/>
+                        </page>
+                        <page string="Sampling Suggestion">
+                            <field name="ai_sampling_suggestion" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter></chatter>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_audit_ocr" model="ir.actions.act_window">
+        <field name="name">OCR Documents</field>
+        <field name="res_model">audit.ocr.document</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_client_acceptance_tree" model="ir.ui.view">
+        <field name="name">audit.client.acceptance.tree</field>
+        <field name="model">audit.client.acceptance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="client_name"/>
+                <field name="client_type"/>
+                <field name="integrity_score"/>
+                <field name="risk_level"/>
+                <field name="acceptance_status" widget="statusbar"/>
+                <field name="approval_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_client_acceptance_form" model="ir.ui.view">
+        <field name="name">audit.client.acceptance.form</field>
+        <field name="model">audit.client.acceptance</field>
+        <field name="arch" type="xml">
+            <form string="Client Acceptance" create="true" edit="true">
+                <header>
+                    <button name="action_submit" string="Submit" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_approve" string="Approve" type="object" states="pending_review" class="btn-success"/>
+                    <button name="action_reject" string="Reject" type="object" states="pending_review" class="btn-danger"/>
+                    <button name="action_ai_background_analysis" string="AI Risk Summary" type="object" class="btn-secondary"/>
+                    <field name="acceptance_status" widget="statusbar" statusbar_visible="draft,pending_review,approved,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="client_id"/>
+                            <field name="client_name"/>
+                            <field name="client_type"/>
+                            <field name="integrity_score"/>
+                            <field name="risk_level"/>
+                            <field name="approval_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="assigned_user_ids" widget="many2many_tags"/>
+                            <field name="generated_letter_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Background">
+                            <field name="background_check_notes" nolabel="1" placeholder="Document integrity and independence considerations."/>
+                        </page>
+                        <page string="Prior Auditor">
+                            <field name="prior_auditor_details" nolabel="1"/>
+                        </page>
+                        <page string="AI Summary">
+                            <field name="ai_background_summary" nolabel="1" widget="html"/>
+                        </page>
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter></chatter>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_client_acceptance_kanban" model="ir.ui.view">
+        <field name="name">audit.client.acceptance.kanban</field>
+        <field name="model">audit.client.acceptance</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" default_group_by="acceptance_status" create="false">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_content">
+                            <strong t-esc="record.client_name.value"/>
+                            <div class="text-muted" t-esc="record.client_type.value"/>
+                            <div>
+                                <span>Risk:</span>
+                                <span class="badge" t-att-class="'badge-' + record.risk_level.raw_value">
+                                    <t t-esc="record.risk_level.value"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_client_acceptance" model="ir.actions.act_window">
+        <field name="name">Client Acceptance</field>
+        <field name="res_model">audit.client.acceptance</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Prepare ISA-compliant acceptance files with automated OpenAI risk scoring.
+            </p>
+        </field>
+    </record>
+</odoo>
