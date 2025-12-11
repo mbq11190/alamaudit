@@ -24,6 +24,6 @@
     </record>
 
     <menuitem id="menu_qaco_finalisation_phase" name="Finalisation Phases"
-              parent="qaco_audit.menu_qaco_audit_main"
-              action="action_qaco_finalisation_phase" sequence="40"/>
+              parent="qaco_audit.menu_1"
+              action="action_qaco_finalisation_phase" sequence="30"/>
 </odoo>

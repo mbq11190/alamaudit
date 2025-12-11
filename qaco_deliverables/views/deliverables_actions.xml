@@ -24,6 +24,6 @@
     </record>
 
     <menuitem id="menu_qaco_deliverables" name="Deliverables"
-              parent="qaco_audit.menu_qaco_audit_main"
+              parent="qaco_audit.menu_1"
               action="action_qaco_deliverables" sequence="50"/>
 </odoo>

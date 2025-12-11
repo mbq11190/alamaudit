@@ -461,5 +461,5 @@
         </field>
     </record>
 
-    <menuitem id="menu_simple_execution_phase" name="Audit Execution" parent="qaco_audit.menu_qaco_audit_main" action="action_simple_execution_phase" sequence="30"/>
+    <menuitem id="menu_simple_execution_phase" name="Audit Execution" parent="qaco_audit.menu_1" action="action_simple_execution_phase" sequence="30"/>
 </odoo>

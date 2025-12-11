@@ -396,7 +396,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_audit_execution" name="Audit Execution Dashboard" parent="qaco_audit.menu_qaco_audit_main" action="action_audit_execution" sequence="25"/>
+    <menuitem id="menu_audit_execution" name="Audit Execution Dashboard" parent="qaco_audit.menu_1" action="action_audit_execution" sequence="25"/>
 
     <record id="view_audit_execution_master_tree" model="ir.ui.view">
         <field name="name">audit.execution.master.tree</field>
@@ -584,6 +584,6 @@
     </record>
 
     <menuitem id="menu_audit_execution_master" name="🎯 Audit Execution Dashboard" 
-              parent="qaco_audit.menu_qaco_audit_main" 
+              parent="qaco_audit.menu_1" 
               action="action_audit_execution_master" sequence="10"/>
 </odoo>

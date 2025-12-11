@@ -27,6 +27,6 @@
     </record>
 
     <menuitem id="menu_qaco_planning_phase" name="Planning Phases"
-              parent="qaco_audit.menu_qaco_audit_main"
+              parent="qaco_audit.menu_1"
               action="action_qaco_planning_phase" sequence="20"/>
 </odoo>
