@@ -25,6 +25,7 @@
     "assets": {
         "web.assets_backend": [
             "audit_planning/static/src/js/planning_dashboard.js",
+            "audit_planning/static/src/js/button_box_limit_patch.js",
             "audit_planning/static/src/css/planning_dashboard.css",
             "audit_planning/static/src/xml/planning_dashboard.xml",
         ],
