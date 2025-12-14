@@ -24,6 +24,7 @@
                             </div>
                             <div class="o_kanban_primary_right text-end">
                                 <div class="o_progressbar">Overall: <field name="overall_progress" widget="progressbar"/> | Checklist: <field name="checklist_completion" widget="progressbar"/></div>
+                                <div class="text-muted mt-1">Agreed: <field name="amount_agreed"/> | Start: <field name="tentative_start_date"/> | End: <field name="tentative_end_date"/></div>
                             </div>
                         </div>
                     </t>

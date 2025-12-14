@@ -18,6 +18,34 @@ class AuditPlanning(models.Model):
         tracking=True,
         domain=[("is_company", "=", True)],
     )
+    ntn = fields.Char(string="NTN")
+    strn = fields.Char(string="STRN")
+    company_nature = fields.Selection(
+        [
+            ("manufacturing", "Manufacturing"),
+            ("services", "Services"),
+            ("trading", "Trading"),
+            ("financial", "Financial Services"),
+            ("public", "Public Sector"),
+            ("nonprofit", "Not-for-Profit"),
+        ],
+        string="Company Nature",
+    )
+    focal_person = fields.Char(string="Focal Person")
+    focal_phone = fields.Char(string="Focal Phone")
+    focal_email = fields.Char(string="Focal Email")
+    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company, required=True)
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        default=lambda self: self.env.company.currency_id,
+        required=True,
+    )
+    amount_agreed = fields.Monetary(string="Amount Agreed", currency_field="currency_id")
+    tentative_start_date = fields.Date(string="Tentative Start Date")
+    tentative_end_date = fields.Date(string="Tentative End Date")
+    udin = fields.Char(string="UDIN")
+    udin_generated_on = fields.Date(string="UDIN Generated On", readonly=True)
     audit_type = fields.Selection(
         [
             ("statutory", "Statutory"),
@@ -255,6 +283,13 @@ class AuditPlanning(models.Model):
             rec.state = "approved"
             rec.message_post(body=_("Partner approved and locked."))
 
+    def action_mark_udin_generated(self):
+        for rec in self:
+            if not rec.udin:
+                raise ValidationError(_("Set UDIN before marking generated."))
+            rec.udin_generated_on = fields.Date.context_today(rec)
+            rec.message_post(body=_("UDIN generated on %s") % rec.udin_generated_on)
+
     def write(self, vals):
         if any(rec.state == "approved" for rec in self):
             disallowed = set(vals.keys()) - {"message_follower_ids", "activity_ids"}
@@ -267,6 +302,11 @@ class AuditPlanning(models.Model):
         record = super().create(vals)
         record._populate_default_checklist()
         return record
+
+    @api.onchange("udin")
+    def _onchange_udin(self):
+        if self.udin and not self.udin_generated_on:
+            self.udin_generated_on = fields.Date.context_today(self)
 
     def _populate_default_checklist(self):
         template_items = self.env["audit.planning.checklist"].search_read(
