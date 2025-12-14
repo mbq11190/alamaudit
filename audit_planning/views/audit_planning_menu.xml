@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_audit_planning_root" name="Audit Planning" parent="base.menu_custom" sequence="30" groups="audit_planning.group_audit_staff,audit_planning.group_audit_manager,audit_planning.group_audit_partner"/>
+    <menuitem id="menu_audit_planning" name="Planning" parent="menu_audit_planning_root" action="action_audit_planning" sequence="10"/>
+</odoo>

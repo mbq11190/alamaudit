@@ -20,7 +20,10 @@
     <!-- Top menu item -->
 
     <menuitem name="Audit Work" id="qaco_audit.menu_root" web_icon="qaco_audit,static/description/icon.png"
-              groups="qaco_audit.group_audit_trainee,qaco_audit.group_audit_supervisor,qaco_audit.group_audit_manager,qaco_audit.group_audit_hr_manager,qaco_audit.group_audit_partner,qaco_audit.group_audit_administrator"/>
+          groups="qaco_audit.group_audit_trainee,qaco_audit.group_audit_supervisor,qaco_audit.group_audit_manager,qaco_audit.group_audit_hr_manager,qaco_audit.group_audit_partner,qaco_audit.group_audit_administrator"/>
+
+    <!-- Compatibility alias: keep legacy xmlid used by other modules as parent target (hidden from UI) -->
+    <menuitem name="Audit" id="qaco_audit.menu_qaco_audit_main" parent="qaco_audit.menu_root" sequence="0" groups="base.group_no_one"/>
 
 <!--     menu categories -->
 

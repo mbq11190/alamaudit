@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_audit_planning_form" model="ir.ui.view">
+        <field name="name">audit.planning.form</field>
+        <field name="model">audit.planning</field>
+        <field name="arch" type="xml">
+            <form string="Audit Planning" create="1" edit="1">
+                <header>
+                    <button name="action_submit_review" type="object" string="Submit for Review" states="draft" class="btn-primary"/>
+                    <button name="action_manager_sign" type="object" string="Manager Sign" states="in_review" class="btn-success"/>
+                    <button name="action_partner_sign" type="object" string="Partner Approve" states="in_review" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_review,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_checklist" class="oe_stat_button" icon="fa-check-square">
+                            <field name="checklist_count" string="Checklist" widget="statinfo"/>
+                        </button>
+                        <button type="object" name="action_view_attachments" class="oe_stat_button" icon="fa-paperclip">
+                            <field name="attachment_count" string="Attachments" widget="statinfo"/>
+                        </button>
+                    </div>
+
+                    <separator string="Planning Dashboard"/>
+                    <group>
+                        <field name="overall_progress" widget="planning_dashboard" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Engagement Details">
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="client_id"/>
+                                    <field name="audit_type"/>
+                                    <field name="previous_auditor"/>
+                                    <field name="audit_tenure_years"/>
+                                </group>
+                                <group>
+                                    <field name="audit_period_from"/>
+                                    <field name="audit_period_to"/>
+                                    <field name="financial_year_end"/>
+                                    <field name="manager_id"/>
+                                    <field name="partner_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Entity & Environment (ISA 315)">
+                            <field name="entity_understanding" nolabel="1" placeholder="Document understanding of entity and environment."/>
+                        </page>
+                        <page string="Analytics (ISA 520)">
+                            <field name="analytics_notes" nolabel="1" placeholder="Preliminary analytical procedures."/>
+                        </page>
+                        <page string="Materiality (ISA 320)">
+                            <field name="materiality_notes" nolabel="1" placeholder="Planning and performance materiality."/>
+                        </page>
+                        <page string="Controls (ISA 315)">
+                            <field name="controls_notes" nolabel="1" placeholder="Design and implementation of controls."/>
+                        </page>
+                        <page string="Risk & Fraud (ISA 315/330/240)">
+                            <field name="risk_strategy_notes" nolabel="1" placeholder="Risk response strategy."/>
+                            <field name="fraud_risk_notes" nolabel="1" placeholder="Fraud risk assessment."/>
+                        </page>
+                        <page string="Attachments & Checklists">
+                            <group string="Attachments">
+                                <field name="organogram_attachment_ids" widget="many2many_binary"/>
+                                <field name="engagement_letter_attachment_ids" widget="many2many_binary"/>
+                                <field name="board_minutes_attachment_ids" widget="many2many_binary"/>
+                                <field name="process_flow_attachment_ids" widget="many2many_binary"/>
+                                <field name="related_party_attachment_ids" widget="many2many_binary"/>
+                                <field name="materiality_worksheet_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Checklist">
+                                <field name="checklist_ids" context="{'default_planning_id': active_id}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

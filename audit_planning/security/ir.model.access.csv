@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_audit_planning_staff,audit.planning staff,model_audit_planning,audit_planning.group_audit_staff,1,1,1,0
+access_audit_planning_manager,audit.planning manager,model_audit_planning,audit_planning.group_audit_manager,1,1,1,1
+access_audit_planning_partner,audit.planning partner,model_audit_planning,audit_planning.group_audit_partner,1,1,0,0
+access_audit_planning_checklist_staff,audit.planning.checklist staff,model_audit_planning_checklist,audit_planning.group_audit_staff,1,1,1,0
+access_audit_planning_checklist_manager,audit.planning.checklist manager,model_audit_planning_checklist,audit_planning.group_audit_manager,1,1,1,1
+access_audit_planning_checklist_partner,audit.planning.checklist partner,model_audit_planning_checklist,audit_planning.group_audit_partner,1,1,0,0
