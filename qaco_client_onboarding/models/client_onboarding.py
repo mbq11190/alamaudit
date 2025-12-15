@@ -375,7 +375,9 @@ class ClientOnboarding(models.Model):
                 audit = self.env['qaco.audit'].browse(vals['audit_id'])
             partner = audit.client_id if audit else None
 
-            vals.setdefault('entity_type', 'other')
+            vals.setdefault('entity_type', 'pic')
+            if vals.get('entity_type') == 'other':
+                vals.setdefault('other_entity_description', _('Pending classification'))
             vals.setdefault('legal_name', partner.name if partner else _('Pending Legal Name'))
             vals.setdefault('principal_business_address', partner.contact_address or _('Pending Address'))
             vals.setdefault('business_registration_number', vals.get('business_registration_number') or _('TBD'))
