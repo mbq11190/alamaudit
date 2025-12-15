@@ -8,7 +8,6 @@
                 <field name="name"/>
                 <field name="client_id"/>
                 <field name="overall_status"/>
-                <field name="progress_percentage"/>
             </tree>
         </field>
     </record>
@@ -20,7 +19,6 @@
             <form string="Client Onboarding">
                 <header>
                     <field name="overall_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                    <field name="progress_percentage" widget="progressbar" options="{'format':'percent'}" readonly="1"/>
                     <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" class="btn-primary"/>
                     <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn-secondary"/>
                 </header>
