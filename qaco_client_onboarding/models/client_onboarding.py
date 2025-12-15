@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from .audit_compliance import ONBOARDING_AREAS
 import re
 
 ENTITY_SELECTION = [
@@ -126,6 +127,8 @@ class ClientOnboarding(models.Model):
     audit_standard_overview = fields.Html(string='Selected Standards Overview', compute='_compute_audit_standard_overview', sanitize=False)
     regulator_checklist_line_ids = fields.One2many('audit.onboarding.checklist', 'onboarding_id', string='Regulator Onboarding Checklist')
     high_risk_onboarding = fields.Boolean(string='High-Risk Onboarding', compute='_compute_high_risk', store=True)
+    regulator_checklist_completion = fields.Float(string='Mandatory Checklist Completion %', compute='_compute_regulator_checklist_summary', store=True)
+    regulator_checklist_overview = fields.Html(string='Checklist Summary', compute='_compute_regulator_checklist_summary', sanitize=False)
 
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
@@ -312,6 +315,40 @@ class ClientOnboarding(models.Model):
                 or record.management_integrity_rating == 'low'
                 or record.fee_dependency_flag
             )
+
+    @api.depends('regulator_checklist_line_ids.completed', 'regulator_checklist_line_ids.mandatory', 'regulator_checklist_line_ids.standard_ids')
+    def _compute_regulator_checklist_summary(self):
+        for record in self:
+            lines = record.regulator_checklist_line_ids
+            mandatory = lines.filtered('mandatory')
+            completed_mandatory = mandatory.filtered('completed')
+            total_mandatory = len(mandatory)
+            percent = 0.0
+            if total_mandatory:
+                percent = round(len(completed_mandatory) / total_mandatory * 100.0, 2)
+            record.regulator_checklist_completion = percent
+
+            summary_html = []
+            for area_key, area_label in ONBOARDING_AREAS:
+                area_lines = lines.filtered(lambda l: l.onboarding_area == area_key and l.mandatory)
+                if not area_lines:
+                    continue
+                area_completed = area_lines.filtered('completed')
+                codes = set()
+                for l in area_lines:
+                    codes.update(l.standard_ids.mapped('code'))
+                codes_text = ', '.join(sorted(codes)) if codes else _('No standards linked')
+                summary_html.append(
+                    _('<p><strong>%s</strong>: %s/%s mandatory completed | Standards: %s</p>') % (
+                        area_label,
+                        len(area_completed),
+                        len(area_lines),
+                        codes_text,
+                    )
+                )
+            if not summary_html:
+                summary_html = [_('<p>No checklist summary available.</p>')]
+            record.regulator_checklist_overview = ''.join(summary_html)
 
     @api.depends('legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator')
     def _compute_section_status(self):
