@@ -198,7 +198,7 @@ class ClientOnboarding(models.Model):
     managing_partner_signature = fields.Binary(string='Managing Partner Signature')
 
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
-    checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Smart Checklist')
+    checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Engagement Partner Decision')
     audit_trail_ids = fields.One2many('qaco.onboarding.audit.trail', 'onboarding_id', string='Audit Trail', readonly=True)
 
     @api.depends('client_id')
@@ -525,7 +525,7 @@ class OnboardingDocument(models.Model):
 
 class OnboardingChecklistTemplate(models.Model):
     _name = 'qaco.onboarding.checklist.template'
-    _description = 'Smart Checklist Template'
+    _description = 'Engagement Partner Decision Template'
 
     question = fields.Char(string='Checklist Question', required=True)
     category = fields.Char(string='Checklist Category')

@@ -134,7 +134,7 @@
                                     <field name="management_followup_note" widget="html"/>
                                 </group>
                             </group>
-                            <group string="Smart Checklist">
+                            <group string="Engagement Partner Decision">
                                 <field name="checklist_misstatement_evaluated" widget="boolean_toggle"/>
                                 <field name="checklist_cumulative_below_materiality" widget="boolean_toggle"/>
                                 <field name="checklist_qualitative_considered" widget="boolean_toggle"/>
@@ -232,7 +232,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Smart Checklist">
+                            <group string="Engagement Partner Decision">
                                 <field name="checklist_gc_assessment_challenged" widget="boolean_toggle"/>
                                 <field name="checklist_gc_future_info_considered" widget="boolean_toggle"/>
                                 <field name="checklist_gc_basis_appropriate" widget="boolean_toggle"/>
@@ -263,7 +263,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Smart Checklist">
+                            <group string="Engagement Partner Decision">
                                 <field name="checklist_related_complete" widget="boolean_toggle"/>
                                 <field name="checklist_related_authorised" widget="boolean_toggle"/>
                                 <field name="checklist_related_disclosures_ok" widget="boolean_toggle"/>
@@ -276,7 +276,7 @@
                                 <field name="representation_letter_template" widget="html" readonly="1"/>
                                 <field name="representation_letter_signed_on"/>
                             </group>
-                            <group string="Smart Checklist">
+                            <group string="Engagement Partner Decision">
                                 <field name="checklist_rep_obtained" widget="boolean_toggle"/>
                                 <field name="checklist_rep_content_complete" widget="boolean_toggle"/>
                                 <field name="checklist_rep_date_valid" widget="boolean_toggle"/>
@@ -304,7 +304,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Smart Checklist">
+                            <group string="Engagement Partner Decision">
                                 <field name="checklist_analytics_corrob" widget="boolean_toggle"/>
                                 <field name="checklist_variances_resolved" widget="boolean_toggle"/>
                                 <field name="checklist_fs_compliant" widget="boolean_toggle"/>
