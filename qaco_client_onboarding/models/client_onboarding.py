@@ -359,11 +359,31 @@ class ClientOnboarding(models.Model):
 
     @api.model
     def create(self, vals):
+        vals = self._with_minimum_defaults(vals)
         onboarding = super().create(vals)
         onboarding._populate_checklist_from_templates()
         onboarding._populate_preconditions()
         onboarding._log_action('Created onboarding record')
         return onboarding
+
+    def _with_minimum_defaults(self, vals):
+        """Ensure required gateway fields are populated when launched from audit smart button."""
+        # Only apply when creating a single record via dict input.
+        if isinstance(vals, dict):
+            audit = None
+            if vals.get('audit_id'):
+                audit = self.env['qaco.audit'].browse(vals['audit_id'])
+            partner = audit.client_id if audit else None
+
+            vals.setdefault('entity_type', 'other')
+            vals.setdefault('legal_name', partner.name if partner else _('Pending Legal Name'))
+            vals.setdefault('principal_business_address', partner.contact_address or _('Pending Address'))
+            vals.setdefault('business_registration_number', vals.get('business_registration_number') or _('TBD'))
+            vals.setdefault('primary_regulator', 'secp')
+            vals.setdefault('financial_framework', 'ifrs')
+            vals.setdefault('management_integrity_rating', 'medium')
+            vals.setdefault('management_integrity_comment', vals.get('management_integrity_comment') or _('Pending assessment'))
+        return vals
 
     def write(self, vals):
         res = super().write(vals)
