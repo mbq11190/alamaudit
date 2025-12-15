@@ -199,7 +199,7 @@
                                                         <span class="fa fa-exclamation-triangle"/>
                                                         <span>Independence declarations pending. Confirm all engagement team declarations.</span>
                                                     </div>
-                                                    <div class="o_onboarding_banner o_onboarding_banner-warning" attrs="{'invisible': ['&','&','&', ('pcl_document','!=',False), ('pcl_no_outstanding_fees','=',True), ('pcl_no_disputes','=',True), ('pcl_no_ethics_issues','=',True)]}">
+                                                    <div class="o_onboarding_banner o_onboarding_banner-warning" attrs="{'invisible': ['&amp;','&amp;','&amp;', ('pcl_document','!=',False), ('pcl_no_outstanding_fees','=',True), ('pcl_no_disputes','=',True), ('pcl_no_ethics_issues','=',True)]}">
                                                         <span class="fa fa-envelope-open"/>
                                                         <span>Predecessor auditor confirmation pending. Upload PCL and confirm fee/dispute/ethics responses.</span>
                                                     </div>
