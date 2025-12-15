@@ -84,6 +84,13 @@ CHECKLIST_ANSWER_SELECTION = [
     ('na', 'Not Applicable'),
 ]
 
+ONBOARDING_STATUS = [
+    ('draft', 'Draft'),
+    ('under_review', 'Under Review'),
+    ('partner_approved', 'Partner Approved'),
+    ('locked', 'Locked'),
+]
+
 
 class ClientOnboarding(models.Model):
     _name = 'qaco.client.onboarding'
@@ -98,6 +105,7 @@ class ClientOnboarding(models.Model):
     entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', required=True, tracking=True)
     other_entity_description = fields.Char(string='Specify Other Entity Type')
     entity_type_guidance = fields.Char(string='Entity Gateway Guidance', default='Select the entity classification that dictates mandatory thresholds, regulatory obligations, and risk profiles.')
+    state = fields.Selection(ONBOARDING_STATUS, string='Approval Status', default='draft', tracking=True)
     overall_status = fields.Selection(SECTION_STATUS, string='Onboarding Status', compute='_compute_overall_status', store=True, tracking=True, default='red')
     progress_percentage = fields.Float(string='Completion Progress', compute='_compute_progress', store=True)
     section1_status = fields.Selection(SECTION_STATUS, string='Section 1 Status', compute='_compute_section_status', store=True)
@@ -114,6 +122,10 @@ class ClientOnboarding(models.Model):
     aml_risk_label = fields.Char(string='AML Risk Label', compute='_compute_selection_labels')
     overall_status_label = fields.Char(string='Overall Status Label', compute='_compute_selection_labels')
     engagement_decision_label = fields.Char(string='Engagement Decision Label', compute='_compute_selection_labels')
+    audit_standard_ids = fields.Many2many('audit.standard.library', string='Auditing Standards & References', tracking=True)
+    audit_standard_overview = fields.Html(string='Selected Standards Overview', compute='_compute_audit_standard_overview', sanitize=False)
+    regulator_checklist_line_ids = fields.One2many('audit.onboarding.checklist', 'onboarding_id', string='Regulator Onboarding Checklist')
+    high_risk_onboarding = fields.Boolean(string='High-Risk Onboarding', compute='_compute_high_risk', store=True)
 
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
@@ -275,6 +287,32 @@ class ClientOnboarding(models.Model):
             record.overall_status_label = dict(SECTION_STATUS).get(record.overall_status, '')
             record.engagement_decision_label = dict(ENGAGEMENT_DECISION_SELECTION).get(record.engagement_decision, '')
 
+    @api.depends('audit_standard_ids')
+    def _compute_audit_standard_overview(self):
+        for record in self:
+            if not record.audit_standard_ids:
+                record.audit_standard_overview = _('<p>No standards selected.</p>')
+                continue
+            lines = []
+            for standard in record.audit_standard_ids:
+                regulator_label = dict(standard._fields['regulator_reference'].selection).get(standard.regulator_reference, '')
+                parts = [f"<strong>{standard.code}</strong> – {standard.title}"]
+                if regulator_label:
+                    parts.append(f"({regulator_label})")
+                applicability = standard.applicability or ''
+                lines.append(f"<p>{' '.join(parts)}<br/>{applicability}</p>")
+            record.audit_standard_overview = ''.join(lines)
+
+    @api.depends('aml_risk_rating', 'eqcr_required', 'management_integrity_rating', 'fee_dependency_flag')
+    def _compute_high_risk(self):
+        for record in self:
+            record.high_risk_onboarding = bool(
+                record.aml_risk_rating == 'high'
+                or record.eqcr_required
+                or record.management_integrity_rating == 'low'
+                or record.fee_dependency_flag
+            )
+
     @api.depends('legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator')
     def _compute_section_status(self):
         for record in self:
@@ -363,6 +401,7 @@ class ClientOnboarding(models.Model):
         onboarding = super().create(vals)
         onboarding._populate_checklist_from_templates()
         onboarding._populate_preconditions()
+        onboarding._populate_regulator_checklist()
         onboarding._log_action('Created onboarding record')
         return onboarding
 
@@ -416,6 +455,24 @@ class ClientOnboarding(models.Model):
                     'description': template.description,
                 })
 
+    def _populate_regulator_checklist(self):
+        template_obj = self.env['audit.onboarding.checklist.template']
+        for record in self:
+            if record.regulator_checklist_line_ids:
+                continue
+            templates = template_obj.search([])
+            for template in templates:
+                self.env['audit.onboarding.checklist'].create({
+                    'onboarding_id': record.id,
+                    'template_id': template.id,
+                    'name': template.name,
+                    'onboarding_area': template.onboarding_area,
+                    'standard_ids': [(6, 0, template.standard_ids.ids)],
+                    'mandatory': template.mandatory,
+                    'sequence': template.sequence,
+                    'notes': template.guidance,
+                })
+
     def _log_action(self, action, notes=None):
         trail = self.env['qaco.onboarding.audit.trail']
         for record in self:
@@ -425,6 +482,36 @@ class ClientOnboarding(models.Model):
                 'notes': notes or '',
             })
 
+    def _validate_mandatory_checklist_completion(self):
+        for record in self:
+            if not record.regulator_checklist_line_ids:
+                record._populate_regulator_checklist()
+            if not record.regulator_checklist_line_ids:
+                raise ValidationError(_('Mandatory onboarding checklist items are missing for this record. Please reload or contact an administrator.'))
+            pending = record.regulator_checklist_line_ids.filtered(lambda line: line.mandatory and not line.completed)
+            if pending:
+                pending_names = ', '.join(pending.mapped('name'))
+                raise ValidationError(_(
+                    'All mandatory onboarding checklist items must be completed before final authorization. Pending: %s'
+                ) % pending_names)
+
+    def action_submit_review(self):
+        for record in self:
+            if record.state != 'draft':
+                continue
+            record.write({'state': 'under_review'})
+            record._log_action('Submitted for review')
+
+    def action_partner_approve(self):
+        for record in self:
+            if record.state != 'under_review':
+                raise ValidationError(_('Submit the onboarding for review before partner approval.'))
+            record._validate_mandatory_checklist_completion()
+            if record.high_risk_onboarding and not record.engagement_partner_id:
+                raise ValidationError(_('High-risk onboardings require an Engagement Partner before approval.'))
+            record.write({'state': 'partner_approved'})
+            record._log_action('Partner approved onboarding', notes=_('High risk: %s') % ('Yes' if record.high_risk_onboarding else 'No'))
+
     def action_generate_acceptance_report(self):
         report = self.env.ref('qaco_client_onboarding.report_client_onboarding_pdf', raise_if_not_found=False)
         if report:
@@ -433,13 +520,15 @@ class ClientOnboarding(models.Model):
 
     def action_lock_onboarding(self):
         for record in self:
+            record._validate_mandatory_checklist_completion()
             if record.overall_status != 'green':
                 raise ValidationError(_('Finalize all sections before locking the onboarding.'))
-        for record in self:
-            self.env['qaco.onboarding.audit.trail'].create({
-                'onboarding_id': record.id,
-                'action': 'Locked onboarding for final approval',
-            })
+            if record.state != 'partner_approved':
+                raise ValidationError(_('Partner approval is required before locking the onboarding.'))
+            if record.high_risk_onboarding and record.state != 'partner_approved':
+                raise ValidationError(_('High-risk onboarding must be partner approved before locking.'))
+            record.write({'state': 'locked'})
+            record._log_action('Locked onboarding for final authorization')
 
 
 class OnboardingBranchLocation(models.Model):

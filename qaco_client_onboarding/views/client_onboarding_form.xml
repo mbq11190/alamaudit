@@ -18,9 +18,12 @@
         <field name="arch" type="xml">
             <form string="Client Onboarding">
                 <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,under_review,partner_approved,locked" statusbar_colors="{'draft':'secondary','under_review':'warning','partner_approved':'success','locked':'primary'}"/>
                     <field name="overall_status" widget="statusbar" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
                     <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" class="btn-primary"/>
-                    <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn-secondary"/>
+                    <button name="action_submit_review" type="object" string="Submit for Review" class="btn-secondary" attrs="{'invisible':[('state','!=','draft')]}"/>
+                    <button name="action_partner_approve" type="object" string="Partner Approve" class="btn-secondary" attrs="{'invisible':[('state','!=','under_review')]}"/>
+                    <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn-secondary" attrs="{'invisible':[('state','!=','partner_approved')]}"/>
                 </header>
                 <sheet>
                     <group>
@@ -205,6 +208,131 @@
                                 <field name="managing_partner_id" invisible="not managing_partner_escalation"/>
                                 <field name="managing_partner_signature" invisible="not managing_partner_escalation" widget="binary"/>
                             </group>
+                        </page>
+                        <page string="Auditing Standards &amp; Compliance" name="auditing_standards">
+                            <group>
+                                <field name="audit_standard_ids" widget="many2many_tags" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}"/>
+                                <field name="audit_standard_overview" widget="html" readonly="1"/>
+                            </group>
+                            <notebook>
+                                <page string="Legal Identity">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','legal_identity')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Regulatory &amp; Compliance">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','regulatory_compliance')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Ownership &amp; Governance">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','ownership_governance')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Pre-Acceptance Risk">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','pre_acceptance_risk')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Independence &amp; Ethics">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','independence_ethics')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Predecessor Auditor">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','predecessor_auditor')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Engagement Terms">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','engagement_terms')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Partner Authorization">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','partner_authorization')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Audit Trail">
+                                    <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','audit_trail')]" attrs="{'readonly':[('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                        <tree editable="bottom">
+                                            <field name="name" readonly="1"/>
+                                            <field name="mandatory" readonly="1"/>
+                                            <field name="completed"/>
+                                            <field name="completed_by" readonly="1"/>
+                                            <field name="completed_on" readonly="1"/>
+                                            <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
                         </page>
                         <page string="Document Vault" name="documents">
                             <field name="document_ids">

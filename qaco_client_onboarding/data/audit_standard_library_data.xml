@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="audit_standard_isa200" model="audit.standard.library">
+        <field name="code">ISA 200</field>
+        <field name="title">Overall Objectives of the Independent Auditor</field>
+        <field name="applicability">Sets the overall objectives of the auditor and explains the nature and scope of an audit.</field>
+        <field name="category">acceptance</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa210" model="audit.standard.library">
+        <field name="code">ISA 210</field>
+        <field name="title">Agreeing the Terms of Audit Engagements</field>
+        <field name="applicability">Requires suitable preconditions and a signed engagement letter before commencing the audit.</field>
+        <field name="category">acceptance</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa220" model="audit.standard.library">
+        <field name="code">ISA 220 (Revised)</field>
+        <field name="title">Quality Management for an Audit of Financial Statements</field>
+        <field name="applicability">Sets engagement-level quality management responsibilities for the engagement partner.</field>
+        <field name="category">acceptance</field>
+        <field name="regulator_reference">aob</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isqm1" model="audit.standard.library">
+        <field name="code">ISQM-1</field>
+        <field name="title">Firm-Level Quality Management</field>
+        <field name="applicability">Requires system of quality management, acceptance/continuance processes, and governance over resources.</field>
+        <field name="category">ethics</field>
+        <field name="regulator_reference">aob</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa240" model="audit.standard.library">
+        <field name="code">ISA 240</field>
+        <field name="title">Auditor’s Responsibilities Relating to Fraud</field>
+        <field name="applicability">Mandates fraud risk assessment, responses, and documentation of management integrity considerations.</field>
+        <field name="category">fraud</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa250" model="audit.standard.library">
+        <field name="code">ISA 250</field>
+        <field name="title">Consideration of Laws and Regulations</field>
+        <field name="applicability">Requires identification of relevant regulators, compliance monitoring, and reporting of non-compliance.</field>
+        <field name="category">legal</field>
+        <field name="regulator_reference">secp</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa300" model="audit.standard.library">
+        <field name="code">ISA 300</field>
+        <field name="title">Planning an Audit</field>
+        <field name="applicability">Covers audit strategy, plan, and directing resources including acceptance handoffs.</field>
+        <field name="category">planning</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa315" model="audit.standard.library">
+        <field name="code">ISA 315 (Revised)</field>
+        <field name="title">Identifying and Assessing Risks of Material Misstatement</field>
+        <field name="applicability">Requires understanding of the entity, controls, and risk assessment including related parties.</field>
+        <field name="category">planning</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa550" model="audit.standard.library">
+        <field name="code">ISA 550</field>
+        <field name="title">Related Parties</field>
+        <field name="applicability">Mandates procedures to identify related parties, relationships, and unusual transactions.</field>
+        <field name="category">legal</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_isa230" model="audit.standard.library">
+        <field name="code">ISA 230</field>
+        <field name="title">Audit Documentation</field>
+        <field name="applicability">Requires timely, sufficient audit documentation to support conclusions and engagement quality reviews.</field>
+        <field name="category">documentation</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+    <record id="audit_standard_iesba" model="audit.standard.library">
+        <field name="code">IESBA Code (ICAP)</field>
+        <field name="title">Code of Ethics for Professional Accountants</field>
+        <field name="applicability">Independence, conflict-of-interest safeguards, and partner rotation per ICAP adoption.</field>
+        <field name="category">ethics</field>
+        <field name="regulator_reference">icap</field>
+        <field name="mandatory">True</field>
+    </record>
+</odoo>

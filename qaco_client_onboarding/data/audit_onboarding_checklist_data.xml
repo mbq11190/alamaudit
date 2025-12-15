@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="audit_onboarding_checklist_legal_identity" model="audit.onboarding.checklist.template">
+        <field name="name">Verify incorporation, registration, NTN</field>
+        <field name="onboarding_area">legal_identity</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">10</field>
+        <field name="guidance">Confirm incorporation certificate, registration numbers, and NTN match regulator records.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa210'), ref('audit_standard_isa250')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_regulatory" model="audit.onboarding.checklist.template">
+        <field name="name">Identify applicable regulators</field>
+        <field name="onboarding_area">regulatory_compliance</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">20</field>
+        <field name="guidance">Capture SECP, SBP, FBR and sectoral regulators with evidence of compliance status.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa250')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_governance" model="audit.onboarding.checklist.template">
+        <field name="name">Group structure &amp; related parties</field>
+        <field name="onboarding_area">ownership_governance</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">30</field>
+        <field name="guidance">Obtain ownership structure, related parties, and governance framework for risk assessment.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa315'), ref('audit_standard_isa550')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_preaccept" model="audit.onboarding.checklist.template">
+        <field name="name">Integrity &amp; risk assessment</field>
+        <field name="onboarding_area">pre_acceptance_risk</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">40</field>
+        <field name="guidance">Document management integrity, fraud considerations, and risk mitigation plans.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa315'), ref('audit_standard_isa240')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_independence" model="audit.onboarding.checklist.template">
+        <field name="name">Independence &amp; COI confirmations</field>
+        <field name="onboarding_area">independence_ethics</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">50</field>
+        <field name="guidance">Ensure independence declarations, conflict-of-interest checks, and safeguards are completed.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_iesba'), ref('audit_standard_isa220')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_predecessor" model="audit.onboarding.checklist.template">
+        <field name="name">Predecessor communication &amp; reasons for change</field>
+        <field name="onboarding_area">predecessor_auditor</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">60</field>
+        <field name="guidance">Document communications with predecessor auditor and reasons for change.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa210')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_engagement_terms" model="audit.onboarding.checklist.template">
+        <field name="name">Signed engagement letter</field>
+        <field name="onboarding_area">engagement_terms</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">70</field>
+        <field name="guidance">Obtain signed engagement letter with scope, responsibilities, and reporting framework.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa210')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_partner_auth" model="audit.onboarding.checklist.template">
+        <field name="name">Engagement Partner approval</field>
+        <field name="onboarding_area">partner_authorization</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">80</field>
+        <field name="guidance">Capture partner sign-off, especially for high-risk engagements per ISQM-1/ISA 220.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa220'), ref('audit_standard_isqm1')])]"></field>
+    </record>
+    <record id="audit_onboarding_checklist_audit_trail" model="audit.onboarding.checklist.template">
+        <field name="name">Complete documentation (onboarding file)</field>
+        <field name="onboarding_area">audit_trail</field>
+        <field name="mandatory">True</field>
+        <field name="sequence">90</field>
+        <field name="guidance">Ensure all onboarding evidence, approvals, and notes are archived for ICAP/AOB inspection.</field>
+        <field name="standard_ids" eval="[(6, 0, [ref('audit_standard_isa230')])]"></field>
+    </record>
+</odoo>
