@@ -134,50 +134,6 @@ $audit-bg: #f7f8fa;
     font-weight: 600;
   }
 
-  .o_onboarding_phase_nav {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 10px;
-    padding: 0 16px 16px;
-  }
-
-  .o_phase_chip {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 10px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 10px 12px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-
-    .o_phase_label {
-      font-weight: 700;
-      color: $audit-indigo;
-      min-width: 40px;
-    }
-
-    .o_phase_title {
-      color: $audit-charcoal;
-      font-weight: 600;
-    }
-
-    .o_phase_status {
-      justify-self: end;
-      padding: 2px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      text-transform: capitalize;
-      background: #f1f5f9;
-      color: $audit-slate;
-
-      &[data-value="green"], &[data-value="success"] { background: #ecfdf3; color: $audit-green; }
-      &[data-value="amber"], &[data-value="warning"] { background: #fffbeb; color: $audit-amber; }
-      &[data-value="red"], &[data-value="danger"] { background: #fef2f2; color: #b91c1c; }
-    }
-  }
-
   .o_onboarding_tabs .nav.nav-tabs {
     border-bottom: none;
     padding: 0 16px;

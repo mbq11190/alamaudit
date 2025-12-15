@@ -49,44 +49,6 @@
                         </div>
                     </div>
 
-                    <div class="o_onboarding_phase_nav">
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.1</div>
-                            <div class="o_phase_title">Legal Identity</div>
-                            <field name="section1_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.2</div>
-                            <div class="o_phase_title">Regulatory &amp; Compliance</div>
-                            <field name="section2_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.3</div>
-                            <div class="o_phase_title">Ownership &amp; Governance</div>
-                            <field name="section3_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.4</div>
-                            <div class="o_phase_title">Pre-Acceptance Risk</div>
-                            <field name="section4_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.5</div>
-                            <div class="o_phase_title">Independence &amp; Ethics</div>
-                            <field name="section5_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.6</div>
-                            <div class="o_phase_title">Predecessor Auditor</div>
-                            <field name="section6_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                        <div class="o_phase_chip">
-                            <div class="o_phase_label">1.7</div>
-                            <div class="o_phase_title">Final Authorization</div>
-                            <field name="section7_status" nolabel="1" readonly="1" class="o_phase_status"/>
-                        </div>
-                    </div>
-
                     <notebook class="o_onboarding_tabs">
                         <page string="1.1 Legal Identity" name="section_1">
                             <div class="o_onboarding_card">
