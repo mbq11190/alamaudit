@@ -74,6 +74,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','legal_identity') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -103,6 +104,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','regulatory_compliance') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -146,6 +148,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','ownership_governance') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -176,6 +179,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','pre_acceptance_risk') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -223,6 +227,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','independence_ethics') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -248,6 +253,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','predecessor_auditor') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -285,6 +291,7 @@
                             <group string="Standards &amp; Checklist">
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','engagement_terms') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -296,6 +303,7 @@
                                 </field>
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','partner_authorization') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>
@@ -307,6 +315,7 @@
                                 </field>
                                 <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','audit_trail') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                     <tree editable="bottom">
+                                        <field name="code" readonly="1"/>
                                         <field name="name" readonly="1"/>
                                         <field name="mandatory" readonly="1"/>
                                         <field name="completed"/>

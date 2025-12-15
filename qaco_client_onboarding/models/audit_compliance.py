@@ -55,6 +55,7 @@ class AuditOnboardingChecklistTemplate(models.Model):
     _description = 'Regulator Onboarding Checklist Template'
     _order = 'sequence, id'
 
+    code = fields.Char(string='Code', help='Structured reference such as 1.1.1 or 1.2.1.')
     name = fields.Char(string='Checklist Requirement', required=True)
     onboarding_area = fields.Selection(ONBOARDING_AREAS, string='Onboarding Area', required=True)
     standard_ids = fields.Many2many('audit.standard.library', string='Standards')
@@ -68,6 +69,7 @@ class AuditOnboardingChecklist(models.Model):
     _description = 'Regulator Onboarding Checklist'
     _order = 'sequence, id'
 
+    code = fields.Char(string='Code', help='Structured reference such as 1.1.1 or 1.2.1.')
     onboarding_id = fields.Many2one('qaco.client.onboarding', string='Onboarding', required=True, ondelete='cascade')
     template_id = fields.Many2one('audit.onboarding.checklist.template', string='Template Reference', ondelete='set null')
     name = fields.Char(string='Checklist Requirement', required=True)

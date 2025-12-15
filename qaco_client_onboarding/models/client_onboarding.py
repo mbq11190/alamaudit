@@ -13,7 +13,7 @@ ENTITY_SELECTION = [
     ('section_42', 'Section 42 Company'),
     ('npo', 'Not-for-Profit Organization (NPO)'),
     ('sole', 'Sole Proprietorship'),
-    ('partnership', 'Partnership'),
+    ('partnership',,  'Partnership'),
     ('other', 'Other (Specify)'),
 ]
 
@@ -502,6 +502,7 @@ class ClientOnboarding(models.Model):
                 self.env['audit.onboarding.checklist'].create({
                     'onboarding_id': record.id,
                     'template_id': template.id,
+                    'code': template.code,
                     'name': template.name,
                     'onboarding_area': template.onboarding_area,
                     'standard_ids': [(6, 0, template.standard_ids.ids)],
