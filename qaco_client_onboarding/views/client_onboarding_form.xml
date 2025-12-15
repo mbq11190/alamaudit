@@ -31,33 +31,6 @@
                 </header>
 
                 <sheet class="o_onboarding_sheet">
-                    <div class="o_onboarding_hero">
-                        <div class="o_onboarding_hero_left">
-                            <div class="o_onboarding_hero_title">
-                                <span class="o_onboarding_label">Audit Work</span>
-                                <field name="name" readonly="1" class="o_onboarding_value"/>
-                            </div>
-                            <div class="o_onboarding_hero_subtitle">
-                                <span class="fa fa-briefcase"/>
-                                <field name="audit_id" readonly="1" nolabel="1" class="o_onboarding_value"/>
-                            </div>
-                            <div class="o_onboarding_hero_subtitle">
-                                <span class="fa fa-user-circle"/>
-                                <field name="client_id" readonly="1" nolabel="1" class="o_onboarding_value"/>
-                            </div>
-                        </div>
-                        <div class="o_onboarding_hero_right">
-                            <span class="o_onboarding_badge o_onboarding_badge-primary">
-                                <span class="fa fa-flag"/>
-                                <field name="state" readonly="1" nolabel="1" class="o_onboarding_badge_value"/>
-                            </span>
-                            <span class="o_onboarding_badge o_onboarding_badge-health">
-                                <span class="fa fa-shield-check"/>
-                                <field name="overall_status" readonly="1" nolabel="1" class="o_onboarding_badge_value"/>
-                            </span>
-                        </div>
-                    </div>
-
                     <div class="o_onboarding_meta">
                         <div class="o_onboarding_progress_card">
                             <div class="o_onboarding_progress_title">Mandatory Checklist Completion</div>
