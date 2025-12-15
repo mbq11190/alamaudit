@@ -28,7 +28,7 @@
                 <sheet>
                     <!-- Header identifiers removed from visible layout -->
                     <notebook>
-                        <page string="Section 1: Legal Identity" name="section_1">
+                        <page string="1.1 Legal Identity" name="section_1">
                             <group>
                                 <field name="entity_type" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
                                 <field name="other_entity_description" modifiers="{'invisible':[('entity_type','!=','other')]}"/>
@@ -85,7 +85,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 2: Regulatory &amp; Compliance" name="section_2">
+                        <page string="1.2 Regulatory &amp; Compliance" name="section_2">
                             <group>
                                 <field name="financial_framework" help="Choose the accounting framework that governs audit procedures."/>
                                 <field name="financial_framework_other" modifiers="{'invisible':[('financial_framework','!=','other_framework')]}"/>
@@ -114,7 +114,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 3: Ownership &amp; Governance" name="section_3">
+                        <page string="1.3 Ownership &amp; Governance" name="section_3">
                             <group>
                                 <field name="shareholder_ids">
                                     <tree editable="bottom">
@@ -157,7 +157,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 4: Pre-Acceptance Risk" name="section_4">
+                        <page string="1.4 Pre-Acceptance Risk" name="section_4">
                             <group>
                                 <field name="management_integrity_rating" widget="radio"/>
                                 <field name="management_integrity_comment" placeholder="Explain the rating referencing reputation, background and documentation."/>
@@ -187,7 +187,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 5: Independence &amp; Ethics" name="section_5">
+                        <page string="1.5 Independence &amp; Ethics" name="section_5">
                             <group>
                                 <field name="independence_threat_ids">
                                     <tree editable="bottom">
@@ -234,7 +234,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 6: Predecessor Auditor" name="section_6">
+                        <page string="1.6 Predecessor Auditor" name="section_6">
                             <group>
                                 <field name="predecessor_auditor_name"/>
                                 <field name="predecessor_contact"/>
@@ -259,7 +259,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Section 7: Final Authorization" name="section_7">
+                        <page string="1.7 Final Authorization" name="section_7">
                             <group>
                                 <field name="precondition_line_ids">
                                     <tree editable="bottom">
@@ -324,7 +324,7 @@
                                 <field name="regulator_checklist_overview" widget="html" readonly="1"/>
                             </group>
                         </page>
-                        <page string="Document Vault" name="documents">
+                        <page string="1.8 Document Vault" name="documents">
                             <field name="document_ids">
                                 <tree editable="bottom">
                                     <field name="name"/>
@@ -334,7 +334,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Engagement Partner Decision" name="checklists">
+                        <page string="1.9 Engagement Partner Decision" name="checklists">
                             <field name="checklist_line_ids">
                                 <tree editable="bottom">
                                     <field name="question" readonly="1"/>
@@ -344,7 +344,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Audit Trail" name="audit_trail">
+                        <page string="1.10 Audit Trail" name="audit_trail">
                             <field name="audit_trail_ids">
                                 <tree>
                                     <field name="create_date"/>
