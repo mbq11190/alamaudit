@@ -26,12 +26,7 @@
                     <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn-secondary" modifiers="{'invisible': [('state','!=','partner_approved')]}"/>
                 </header>
                 <sheet>
-                    <!-- Header identifiers are kept on the record but hidden from the form for a cleaner UI -->
-                    <group modifiers="{'invisible': True}">
-                        <field name="name" readonly="1"/>
-                        <field name="audit_id" readonly="1"/>
-                        <field name="client_id" readonly="1"/>
-                    </group>
+                    <!-- Header identifiers removed from visible layout -->
                     <notebook>
                         <page string="Section 1: Legal Identity" name="section_1">
                             <group>
