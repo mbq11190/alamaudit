@@ -2,7 +2,11 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from .audit_compliance import ONBOARDING_AREAS
+
+try:
+    from odoo.addons.qaco_client_onboarding.models.audit_compliance import ONBOARDING_AREAS  # type: ignore
+except ImportError:  # pragma: no cover - fallback for static analysis or path issues
+    from .audit_compliance import ONBOARDING_AREAS  # type: ignore
 import re
 
 ENTITY_SELECTION = [
@@ -13,7 +17,7 @@ ENTITY_SELECTION = [
     ('section_42', 'Section 42 Company'),
     ('npo', 'Not-for-Profit Organization (NPO)'),
     ('sole', 'Sole Proprietorship'),
-    ('partnership',,  'Partnership'),
+    ('partnership', 'Partnership'),
     ('other', 'Other (Specify)'),
 ]
 
@@ -455,7 +459,7 @@ class ClientOnboarding(models.Model):
             if vals.get('entity_type') == 'other':
                 vals.setdefault('other_entity_description', _('Pending classification'))
             vals.setdefault('legal_name', partner.name if partner else _('Pending Legal Name'))
-            vals.setdefault('principal_business_address', partner.contact_address or _('Pending Address'))
+            vals.setdefault('principal_business_address', (partner.contact_address if partner else None) or _('Pending Address'))
             vals.setdefault('business_registration_number', vals.get('business_registration_number') or _('TBD'))
             vals.setdefault('primary_regulator', 'secp')
             vals.setdefault('financial_framework', 'ifrs')
@@ -465,41 +469,52 @@ class ClientOnboarding(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        self._log_action('Updated onboarding', notes=', '.join(vals.keys()))
+        changed_fields = ', '.join(map(str, vals.keys())) if vals else ''
+        self._log_action('Updated onboarding', notes=changed_fields)
         return res
 
     def _populate_checklist_from_templates(self):
         template_obj = self.env['qaco.onboarding.checklist.template']
+        templates = template_obj.search([])
+        if not templates:
+            return
         for record in self:
-            templates = template_obj.search([])
-            for template in templates:
-                self.env['qaco.onboarding.checklist.line'].create({
+            self.env['qaco.onboarding.checklist.line'].create([
+                {
                     'onboarding_id': record.id,
                     'template_id': template.id,
                     'question': template.question,
                     'category': template.category,
                     'critical': template.critical,
-                })
+                }
+                for template in templates
+            ])
 
     def _populate_preconditions(self):
         template_obj = self.env['qaco.onboarding.precondition.template']
+        templates = template_obj.search([])
+        if not templates:
+            return
         for record in self:
-            templates = template_obj.search([])
-            for template in templates:
-                self.env['qaco.onboarding.precondition.line'].create({
+            self.env['qaco.onboarding.precondition.line'].create([
+                {
                     'onboarding_id': record.id,
                     'template_id': template.id,
                     'description': template.description,
-                })
+                }
+                for template in templates
+            ])
 
     def _populate_regulator_checklist(self):
         template_obj = self.env['audit.onboarding.checklist.template']
+        templates = template_obj.search([])
+        if not templates:
+            return
         for record in self:
             if record.regulator_checklist_line_ids:
                 continue
-            templates = template_obj.search([])
-            for template in templates:
-                self.env['audit.onboarding.checklist'].create({
+            self.env['audit.onboarding.checklist'].create([
+                {
                     'onboarding_id': record.id,
                     'template_id': template.id,
                     'code': template.code,
@@ -509,7 +524,9 @@ class ClientOnboarding(models.Model):
                     'mandatory': template.mandatory,
                     'sequence': template.sequence,
                     'notes': template.guidance,
-                })
+                }
+                for template in templates
+            ])
 
     def _log_action(self, action, notes=None):
         trail = self.env['qaco.onboarding.audit.trail']
