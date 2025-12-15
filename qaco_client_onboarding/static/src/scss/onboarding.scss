@@ -88,6 +88,79 @@ $audit-bg: #f7f8fa;
     padding: 16px;
   }
 
+  .o_onboarding_hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px 6px;
+    background: #fff;
+    border-radius: 12px;
+    margin: 12px 16px 4px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    .o_onboarding_hero_left {
+      display: grid;
+      gap: 6px;
+    }
+
+    .o_onboarding_hero_title {
+      display: grid;
+      gap: 4px;
+      .o_onboarding_label {
+        font-weight: 700;
+        color: $audit-slate;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .o_onboarding_value {
+        font-size: 20px;
+        font-weight: 800;
+        color: $audit-charcoal;
+      }
+    }
+
+    .o_onboarding_hero_subtitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: $audit-slate;
+      font-weight: 600;
+      .o_onboarding_value { font-weight: 700; color: $audit-charcoal; }
+    }
+
+    .o_onboarding_hero_right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .o_onboarding_badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: #eef2ff;
+      color: $audit-indigo;
+
+      &.o_onboarding_badge-primary {
+        background: linear-gradient(90deg, $audit-indigo, $audit-purple);
+        color: #fff;
+      }
+
+      &.o_onboarding_badge-health {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        color: $audit-slate;
+      }
+    }
+  }
+
   .o_onboarding_progress_card {
     background: #ffffff;
     border: 1px solid #e5e7eb;
