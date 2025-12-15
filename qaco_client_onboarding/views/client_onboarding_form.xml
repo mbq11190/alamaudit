@@ -173,70 +173,497 @@
                                 <field name="eqcr_required" readonly="1" invisible="1"/>
                             </group>
                             <group>
-                                <field name="business_risk_profile"/>
-                                <field name="risk_mitigation_plan" required="eqcr_required"/>
-                            </group>
-                            <group string="Standards &amp; Checklist">
-                                <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','pre_acceptance_risk') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
-                                    <tree editable="bottom">
-                                        <field name="code" readonly="1"/>
-                                        <field name="name" readonly="1"/>
-                                        <field name="mandatory" readonly="1"/>
-                                        <field name="completed"/>
-                                        <field name="completed_by" readonly="1"/>
-                                        <field name="completed_on" readonly="1"/>
-                                        <field name="standard_ids" widget="many2many_tags" readonly="1"/>
-                                        <field name="notes"/>
-                                    </tree>
+                                <field name="arch" type="xml">
+                                    <form string="Client Onboarding" class="o_onboarding_form">
+                                        <header class="o_onboarding_command_bar">
+                                            <div class="o_onboarding_actions">
+                                                <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" class="btn btn-primary o_onboarding_btn o_onboarding_btn-primary"/>
+                                                <button name="action_submit_review" type="object" string="Submit for Review" class="btn btn-warning o_onboarding_btn o_onboarding_btn-outline" modifiers="{'invisible': [('state','!=','draft')]}" confirm="Submit for review? This notifies the engagement reviewer."/>
+                                                <button name="action_partner_approve" type="object" string="Partner Approve" class="btn btn-success o_onboarding_btn o_onboarding_btn-outline" modifiers="{'invisible': [('state','!=','under_review')]}" confirm="Confirm partner approval? This locks further edits except final sign-off."/>
+                                                <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn btn-outline-danger o_onboarding_btn" modifiers="{'invisible': [('state','!=','partner_approved')]}" confirm="Lock onboarding for issuance? Ensure all mandatory items and signatures are complete."/>
+                                            </div>
+                                            <div class="o_onboarding_status_area">
+                                                <field name="state" widget="statusbar" class="o_onboarding_stepper" statusbar_visible="draft,under_review,partner_approved,locked" statusbar_colors="{'draft':'secondary','under_review':'warning','partner_approved':'primary','locked':'success'}"/>
+                                                <field name="overall_status" widget="statusbar" class="o_onboarding_health" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
+                                            </div>
+                                        </header>
+                                        <sheet class="o_onboarding_sheet">
+                                            <div class="o_onboarding_meta">
+                                                <div class="o_onboarding_progress_card">
+                                                    <div class="o_onboarding_progress_title">Mandatory Checklist Completion</div>
+                                                    <field name="regulator_checklist_completion" widget="progressbar" readonly="1" options="{'max_value': 100}"/>
+                                                    <field name="regulator_checklist_overview" widget="html" readonly="1" class="o_onboarding_overview"/>
+                                                </div>
+                                                <div class="o_onboarding_alerts">
+                                                    <div class="o_onboarding_banner o_onboarding_banner-warning" attrs="{'invisible': [('independence_declaration_ids','!=',False)]}">
+                                                        <span class="fa fa-exclamation-triangle"/>
+                                                        <span>Independence declarations pending. Confirm all engagement team declarations.</span>
+                                                    </div>
+                                                    <div class="o_onboarding_banner o_onboarding_banner-warning" attrs="{'invisible': ['&','&','&', ('pcl_document','!=',False), ('pcl_no_outstanding_fees','=',True), ('pcl_no_disputes','=',True), ('pcl_no_ethics_issues','=',True)]}">
+                                                        <span class="fa fa-envelope-open"/>
+                                                        <span>Predecessor auditor confirmation pending. Upload PCL and confirm fee/dispute/ethics responses.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="o_onboarding_phase_nav">
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.1</div>
+                                                    <div class="o_phase_title">Legal Identity</div>
+                                                    <field name="section1_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.2</div>
+                                                    <div class="o_phase_title">Regulatory &amp; Compliance</div>
+                                                    <field name="section2_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.3</div>
+                                                    <div class="o_phase_title">Ownership &amp; Governance</div>
+                                                    <field name="section3_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.4</div>
+                                                    <div class="o_phase_title">Pre-Acceptance Risk</div>
+                                                    <field name="section4_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.5</div>
+                                                    <div class="o_phase_title">Independence &amp; Ethics</div>
+                                                    <field name="section5_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.6</div>
+                                                    <div class="o_phase_title">Predecessor Auditor</div>
+                                                    <field name="section6_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                                <div class="o_phase_chip">
+                                                    <div class="o_phase_label">1.7</div>
+                                                    <div class="o_phase_title">Final Authorization</div>
+                                                    <field name="section7_status" nolabel="1" readonly="1" class="o_phase_status"/>
+                                                </div>
+                                            </div>
+
+                                            <notebook class="o_onboarding_tabs">
+                                                <page string="1.1 Legal Identity" name="section_1">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.1</span>
+                                                            <span class="o_onboarding_card_title">Legal Identity</span>
+                                                            <span class="o_onboarding_card_ref">ISA 210 / ISQM-1</span>
+                                                        </div>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="entity_type" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
+                                                            <field name="other_entity_description" modifiers="{'invisible':[('entity_type','!=','other')]}"/>
+                                                            <field name="legal_name" help="The name exactly as on the Certificate of Incorporation or registration document."/>
+                                                            <field name="trading_name" help="Enter the trading name if it differs from the legal name."/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="principal_business_address" help="Enter the registered office as stated in legal filings."/>
+                                                            <field name="primary_regulator" help="Select the principal regulator overseeing this entity."/>
+                                                            <field name="regulator_other" modifiers="{'invisible':[('primary_regulator','!=','other')]}"/>
+                                                            <field name="industry_id" help="Select the primary industry; it auto-populates the risk profile."/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="ntn" help="NTN must follow the NNNNNNN-N format for validation."/>
+                                                            <field name="strn" help="Provide the Sales Tax Registration Number if applicable."/>
+                                                            <field name="business_registration_number" help="Enter the number assigned by SECP or relevant authority."/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="org_chart_attachment" filename="org_chart_name" widget="binary" help="Upload latest organizational chart or group structure."/>
+                                                            <field name="org_chart_name" readonly="1"/>
+                                                        </group>
+                                                        <group string="Branch &amp; Office Locations" class="o_onboarding_grid">
+                                                            <field name="branch_location_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="name"/>
+                                                                    <field name="address"/>
+                                                                    <field name="country_id"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group string="Ultimate Beneficial Owners" class="o_onboarding_grid">
+                                                            <field name="ubo_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="name"/>
+                                                                    <field name="cnic_passport"/>
+                                                                    <field name="nationality"/>
+                                                                    <field name="ownership_percent"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','legal_identity') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.2 Regulatory &amp; Compliance" name="section_2">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.2</span>
+                                                            <span class="o_onboarding_card_title">Regulatory &amp; Compliance</span>
+                                                            <span class="o_onboarding_card_ref">ISA 250</span>
+                                                        </div>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="financial_framework" help="Choose the accounting framework that governs audit procedures."/>
+                                                            <field name="financial_framework_other" modifiers="{'invisible':[('financial_framework','!=','other_framework')]}"/>
+                                                            <field name="annual_return_last_filed"/>
+                                                            <field name="annual_return_overdue"/>
+                                                            <field name="fbr_compliance_rating"/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="tax_assessment_history" help="Summarize tax assessments, litigations or disputes."/>
+                                                            <field name="regulatory_inspection_notes" help="Detail any inspections by SECP, SBP, FBR or other regulators."/>
+                                                            <field name="regulatory_inspection_attachment" filename="Regulatory Inspection Report" widget="binary" help="Attach inspection or notice documents."/>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','regulatory_compliance') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.3 Ownership &amp; Governance" name="section_3">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.3</span>
+                                                            <span class="o_onboarding_card_title">Ownership &amp; Governance</span>
+                                                            <span class="o_onboarding_card_ref">ISA 220</span>
+                                                        </div>
+                                                        <group string="Shareholding" class="o_onboarding_grid">
+                                                            <field name="shareholder_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="name"/>
+                                                                    <field name="share_class"/>
+                                                                    <field name="percentage"/>
+                                                                    <field name="voting_rights"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group string="Board &amp; Key Personnel" class="o_onboarding_grid">
+                                                            <field name="board_member_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="name"/>
+                                                                    <field name="cnic"/>
+                                                                    <field name="din"/>
+                                                                    <field name="role"/>
+                                                                    <field name="is_pep"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="fit_proper_confirmed"/>
+                                                            <field name="fit_proper_document" widget="binary"/>
+                                                            <field name="enhanced_due_diligence_required" readonly="1"/>
+                                                            <field name="enhanced_due_diligence_details" invisible="not enhanced_due_diligence_required"/>
+                                                            <field name="enhanced_due_diligence_attachment" invisible="not enhanced_due_diligence_required" widget="binary"/>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','ownership_governance') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.4 Pre-Acceptance Risk" name="section_4">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.4</span>
+                                                            <span class="o_onboarding_card_title">Pre-Acceptance Risk</span>
+                                                            <span class="o_onboarding_card_ref">ISA 315 / ISA 300</span>
+                                                        </div>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="management_integrity_rating" widget="radio"/>
+                                                            <field name="management_integrity_comment" placeholder="Explain the rating referencing reputation, background and documentation."/>
+                                                            <field name="litigation_history"/>
+                                                            <field name="fraud_history"/>
+                                                            <field name="fraud_explanation" invisible="fraud_history == 'no'"/>
+                                                            <field name="aml_risk_rating" readonly="1"/>
+                                                            <field name="eqcr_required" readonly="1" invisible="1"/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="business_risk_profile"/>
+                                                            <field name="risk_mitigation_plan" required="eqcr_required"/>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','pre_acceptance_risk') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.5 Independence &amp; Ethics" name="section_5">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.5</span>
+                                                            <span class="o_onboarding_card_title">Independence &amp; Ethics</span>
+                                                            <span class="o_onboarding_card_ref">IESBA Code</span>
+                                                        </div>
+                                                        <group string="Threat Assessment" class="o_onboarding_grid">
+                                                            <field name="independence_threat_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="threat_type"/>
+                                                                    <field name="answer"/>
+                                                                    <field name="details"/>
+                                                                    <field name="safeguards"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="non_audit_services_confirmed"/>
+                                                            <field name="non_audit_services_attachment" widget="binary"/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="currency_id" readonly="1"/>
+                                                            <field name="proposed_audit_fee"/>
+                                                            <field name="total_fee_income"/>
+                                                            <field name="fee_dependency_percent" readonly="1" help="Calculated as proposed audit fee divided by total firm income."/>
+                                                            <field name="fee_dependency_flag" readonly="1"/>
+                                                        </group>
+                                                        <group string="Team Declarations" class="o_onboarding_grid">
+                                                            <field name="independence_declaration_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="user_id"/>
+                                                                    <field name="state"/>
+                                                                    <field name="confirmation_date"/>
+                                                                    <field name="reminder_sent"/>
+                                                                </tree>
+                                                            </field>
+                                                            <field name="independence_status_feedback" readonly="1"/>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','independence_ethics') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.6 Predecessor Auditor" name="section_6">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.6</span>
+                                                            <span class="o_onboarding_card_title">Predecessor Auditor</span>
+                                                            <span class="o_onboarding_card_ref">ISA 210 / ISA 220</span>
+                                                        </div>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="predecessor_auditor_name"/>
+                                                            <field name="predecessor_contact"/>
+                                                            <field name="pcl_requested"/>
+                                                            <field name="pcl_received"/>
+                                                            <field name="pcl_document" filename="pcl_document_name" widget="binary"/>
+                                                            <field name="pcl_no_outstanding_fees"/>
+                                                            <field name="pcl_no_disputes"/>
+                                                            <field name="pcl_no_ethics_issues"/>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','predecessor_auditor') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.7 Final Authorization" name="section_7">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.7</span>
+                                                            <span class="o_onboarding_card_title">Final Authorization</span>
+                                                            <span class="o_onboarding_card_ref">ISA 210 / ISA 230</span>
+                                                        </div>
+                                                        <group string="ISA 210 Preconditions" class="o_onboarding_grid">
+                                                            <field name="precondition_line_ids">
+                                                                <tree editable="bottom">
+                                                                    <field name="description" readonly="1"/>
+                                                                    <field name="confirmed"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="engagement_summary" readonly="1"/>
+                                                            <field name="engagement_decision"/>
+                                                            <field name="engagement_justification"/>
+                                                        </group>
+                                                        <group class="o_onboarding_grid">
+                                                            <field name="engagement_partner_id"/>
+                                                            <field name="engagement_partner_signature" widget="binary"/>
+                                                            <field name="eqcr_partner_id" invisible="not eqcr_required"/>
+                                                            <field name="eqcr_partner_signature" invisible="not eqcr_required" widget="binary"/>
+                                                            <field name="managing_partner_escalation" readonly="1" invisible="1"/>
+                                                            <field name="managing_partner_id" invisible="not managing_partner_escalation"/>
+                                                            <field name="managing_partner_signature" invisible="not managing_partner_escalation" widget="binary"/>
+                                                        </group>
+                                                        <group string="Standards &amp; Checklist" class="o_onboarding_grid">
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','engagement_terms') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','partner_authorization') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                            <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','audit_trail') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
+                                                                <tree editable="bottom" class="o_onboarding_checklist">
+                                                                    <field name="code" readonly="1"/>
+                                                                    <field name="name" readonly="1"/>
+                                                                    <field name="mandatory" readonly="1"/>
+                                                                    <field name="completed"/>
+                                                                    <field name="completed_by" readonly="1"/>
+                                                                    <field name="completed_on" readonly="1"/>
+                                                                    <field name="standard_ids" widget="many2many_tags" readonly="1"/>
+                                                                    <field name="notes"/>
+                                                                </tree>
+                                                            </field>
+                                                        </group>
+                                                        <group string="Compliance Summary" class="o_onboarding_grid">
+                                                            <field name="audit_standard_ids" widget="many2many_tags" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}"/>
+                                                            <field name="audit_standard_overview" widget="html" readonly="1"/>
+                                                            <field name="regulator_checklist_completion" readonly="1" widget="progressbar" options="{'max_value': 100}"/>
+                                                            <field name="regulator_checklist_overview" widget="html" readonly="1"/>
+                                                        </group>
+                                                    </div>
+                                                </page>
+                                                <page string="1.8 Document Vault" name="documents">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.8</span>
+                                                            <span class="o_onboarding_card_title">Document Vault</span>
+                                                            <span class="o_onboarding_card_ref">ISA 230</span>
+                                                        </div>
+                                                        <field name="document_ids" mode="kanban,tree" class="o_onboarding_file_cards">
+                                                            <kanban class="o_onboarding_kanban" create="true" edit="true">
+                                                                <templates>
+                                                                    <t t-name="kanban-box">
+                                                                        <div class="o_kanban_record o_onboarding_file_card">
+                                                                            <div class="o_onboarding_file_header">
+                                                                                <span class="o_onboarding_file_icon fa fa-file-text-o"/>
+                                                                                <strong><field name="name"/></strong>
+                                                                            </div>
+                                                                            <div class="o_onboarding_file_meta"><field name="doc_type"/></div>
+                                                                            <div class="o_onboarding_file_meta"><field name="state"/></div>
+                                                                            <div class="o_onboarding_file_meta"><field name="file_name"/></div>
+                                                                        </div>
+                                                                    </t>
+                                                                </templates>
+                                                            </kanban>
+                                                            <tree editable="bottom">
+                                                                <field name="name"/>
+                                                                <field name="doc_type"/>
+                                                                <field name="state"/>
+                                                                <field name="file_name"/>
+                                                            </tree>
+                                                        </field>
+                                                    </div>
+                                                </page>
+                                                <page string="1.9 Engagement Partner Decision" name="checklists">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.9</span>
+                                                            <span class="o_onboarding_card_title">Engagement Partner Decision</span>
+                                                            <span class="o_onboarding_card_ref">ISA 220</span>
+                                                        </div>
+                                                        <field name="checklist_line_ids">
+                                                            <tree editable="bottom" class="o_onboarding_checklist">
+                                                                <field name="question" readonly="1"/>
+                                                                <field name="answer"/>
+                                                                <field name="remarks"/>
+                                                                <field name="critical" readonly="1"/>
+                                                            </tree>
+                                                        </field>
+                                                    </div>
+                                                </page>
+                                                <page string="1.10 Audit Trail" name="audit_trail">
+                                                    <div class="o_onboarding_card">
+                                                        <div class="o_onboarding_card_header">
+                                                            <span class="o_onboarding_card_number">1.10</span>
+                                                            <span class="o_onboarding_card_title">Audit Trail</span>
+                                                            <span class="o_onboarding_card_ref">ISQM-1</span>
+                                                        </div>
+                                                        <field name="audit_trail_ids">
+                                                            <tree>
+                                                                <field name="create_date"/>
+                                                                <field name="user_id"/>
+                                                                <field name="action"/>
+                                                                <field name="notes"/>
+                                                            </tree>
+                                                        </field>
+                                                    </div>
+                                                </page>
+                                            </notebook>
+                                        </sheet>
+                                    </form>
                                 </field>
-                            </group>
-                        </page>
-                        <page string="1.5 Independence &amp; Ethics" name="section_5">
-                            <group>
-                                <field name="independence_threat_ids">
-                                    <tree editable="bottom">
-                                        <field name="threat_type"/>
-                                        <field name="answer"/>
-                                        <field name="details"/>
-                                        <field name="safeguards"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group>
-                                <field name="non_audit_services_confirmed"/>
-                                <field name="non_audit_services_attachment" widget="binary"/>
-                            </group>
-                            <group>
-                                <field name="currency_id" readonly="1"/> 
-                                <field name="proposed_audit_fee"/>
-                                <field name="total_fee_income"/>
-                                <field name="fee_dependency_percent" readonly="1" help="Calculated as proposed audit fee divided by total firm income."/>
-                                <field name="fee_dependency_flag" readonly="1"/>
-                            </group>
-                            <group>
-                                <field name="independence_declaration_ids">
-                                    <tree editable="bottom">
-                                        <field name="user_id"/>
-                                        <field name="state"/>
-                                        <field name="confirmation_date"/>
-                                        <field name="reminder_sent"/>
-                                    </tree>
-                                </field>
-                                <field name="independence_status_feedback" readonly="1"/>
-                            </group>
-                            <group string="Standards &amp; Checklist">
-                                <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','independence_ethics') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
-                                    <tree editable="bottom">
-                                        <field name="code" readonly="1"/>
-                                        <field name="name" readonly="1"/>
-                                        <field name="mandatory" readonly="1"/>
-                                        <field name="completed"/>
-                                        <field name="completed_by" readonly="1"/>
-                                        <field name="completed_on" readonly="1"/>
-                                        <field name="standard_ids" widget="many2many_tags" readonly="1"/>
-                                        <field name="notes"/>
-                                    </tree>
-                                </field>
+                            </record>
                             </group>
                         </page>
                         <page string="1.6 Predecessor Auditor" name="section_6">
