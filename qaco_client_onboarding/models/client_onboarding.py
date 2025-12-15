@@ -123,7 +123,7 @@ class ClientOnboarding(models.Model):
     ntn = fields.Char(string='NTN', help='Enter in format 1234567-1')
     strn = fields.Char(string='STRN', help='State the Sales Tax Registration Number if applicable')
     business_registration_number = fields.Char(string='Business Registration Number', required=True)
-    industry_id = fields.Many2one('qaco.onboarding.industry', string='Industry / Sector', required=True)
+    industry_id = fields.Many2one('qaco.onboarding.industry', string='Industry / Sector')
     primary_regulator = fields.Selection(PRIMARY_REGULATOR_SELECTION, string='Primary Regulator', required=True)
     regulator_other = fields.Char(string='Other Regulator Details')
     org_chart_attachment = fields.Binary(string='Group Structure / Org Chart')
