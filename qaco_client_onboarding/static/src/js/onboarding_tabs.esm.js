@@ -10,7 +10,7 @@ const superSetup = FormRenderer.prototype.setup;
 function isDebugAssets() {
     try {
         return /(^|[?&])debug=assets([&#]|$)/.test(window.location.search || "");
-    } catch {
+    } catch (e) {
         return false;
     }
 }
