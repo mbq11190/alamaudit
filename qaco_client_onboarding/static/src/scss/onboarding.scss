@@ -112,10 +112,6 @@ $audit-green-dark: darken($audit-green, 8%);
       }
     }
 
-    .o_onboarding_overview {
-      margin-top: 8px;
-      color: $audit-slate;
-    }
   }
 
   .o_onboarding_alerts {
@@ -135,6 +131,7 @@ $audit-green-dark: darken($audit-green, 8%);
     font-weight: 600;
   }
 
+<<<<<<< HEAD
   .o_onboarding_tabs .nav.nav-tabs {
     border-bottom: none;
     padding: 0 16px;
@@ -204,6 +201,8 @@ $audit-green-dark: darken($audit-green, 8%);
     }
   }
 
+=======
+>>>>>>> parent of 937559a (Revert "12")
   .o_onboarding_card {
     margin: 12px 16px 20px;
     padding: 0;
