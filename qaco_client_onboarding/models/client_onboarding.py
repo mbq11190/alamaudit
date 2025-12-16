@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 try:
     from odoo.addons.qaco_client_onboarding.models.audit_compliance import ONBOARDING_AREAS  # type: ignore
@@ -107,7 +107,7 @@ class ClientOnboarding(models.Model):
     client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=True)
 
     # Section 0: Gateway fields
-    entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', required=True, tracking=True)
+    entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', tracking=True)
     other_entity_description = fields.Char(string='Specify Other Entity Type')
     entity_type_guidance = fields.Char(string='Entity Gateway Guidance', default='Select the entity classification that dictates mandatory thresholds, regulatory obligations, and risk profiles.')
     state = fields.Selection(ONBOARDING_STATUS, string='Approval Status', default='draft', tracking=True)
@@ -120,6 +120,9 @@ class ClientOnboarding(models.Model):
     section5_status = fields.Selection(SECTION_STATUS, string='Section 5 Status', compute='_compute_section_status', store=True)
     section6_status = fields.Selection(SECTION_STATUS, string='Section 6 Status', compute='_compute_section_status', store=True)
     section7_status = fields.Selection(SECTION_STATUS, string='Section 7 Status', compute='_compute_section_status', store=True)
+    section8_status = fields.Selection(SECTION_STATUS, string='Section 8 Status', compute='_compute_section_status', store=True)
+    section9_status = fields.Selection(SECTION_STATUS, string='Section 9 Status', compute='_compute_section_status', store=True)
+    section10_status = fields.Selection(SECTION_STATUS, string='Section 10 Status', compute='_compute_section_status', store=True)
     entity_type_label = fields.Char(string='Entity Type Label', compute='_compute_selection_labels')
     primary_regulator_label = fields.Char(string='Primary Regulator Label', compute='_compute_selection_labels')
     financial_framework_label = fields.Char(string='Financial Framework Label', compute='_compute_selection_labels')
@@ -135,22 +138,22 @@ class ClientOnboarding(models.Model):
     regulator_checklist_overview = fields.Html(string='Checklist Summary', compute='_compute_regulator_checklist_summary', sanitize=False)
 
     # Section 1: Legal Identity
-    legal_name = fields.Char(string='Legal Name', required=True)
+    legal_name = fields.Char(string='Legal Name')
     trading_name = fields.Char(string='Trading Name')
-    principal_business_address = fields.Char(string='Principal Business Address', required=True)
+    principal_business_address = fields.Char(string='Principal Business Address')
     branch_location_ids = fields.One2many('qaco.onboarding.branch.location', 'onboarding_id', string='Branch and Office Locations')
     ntn = fields.Char(string='NTN', help='Enter in format 1234567-1')
     strn = fields.Char(string='STRN', help='State the Sales Tax Registration Number if applicable')
-    business_registration_number = fields.Char(string='Business Registration Number', required=True)
+    business_registration_number = fields.Char(string='Business Registration Number')
     industry_id = fields.Many2one('qaco.onboarding.industry', string='Industry / Sector')
-    primary_regulator = fields.Selection(PRIMARY_REGULATOR_SELECTION, string='Primary Regulator', required=True)
+    primary_regulator = fields.Selection(PRIMARY_REGULATOR_SELECTION, string='Primary Regulator')
     regulator_other = fields.Char(string='Other Regulator Details')
     org_chart_attachment = fields.Binary(string='Group Structure / Org Chart')
     org_chart_name = fields.Char(string='Org Chart File Name')
     ubo_ids = fields.One2many('qaco.onboarding.ubo', 'onboarding_id', string='Ultimate Beneficial Owners')
 
     # Section 2: Compliance History
-    financial_framework = fields.Selection(FINANCIAL_FRAMEWORK_SELECTION, string='Applicable Framework', required=True)
+    financial_framework = fields.Selection(FINANCIAL_FRAMEWORK_SELECTION, string='Applicable Framework')
     financial_framework_other = fields.Char(string='Other Framework Details')
     annual_return_last_filed = fields.Date(string='Annual Return Last Filed')
     annual_return_overdue = fields.Boolean(string='Return Overdue', default=False)
@@ -170,10 +173,10 @@ class ClientOnboarding(models.Model):
     enhanced_due_diligence_attachment = fields.Binary(string='Enhanced Due Diligence Documentation')
 
     # Section 4: Pre-Acceptance Risk
-    management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating', required=True)
-    management_integrity_comment = fields.Text(string='Management Integrity Justification', required=True)
+    management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating')
+    management_integrity_comment = fields.Text(string='Management Integrity Justification')
     litigation_history = fields.Text(string='Litigation History')
-    fraud_history = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='History of Fraud or Penalties', required=True, default='no')
+    fraud_history = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='History of Fraud or Penalties', default='no')
     fraud_explanation = fields.Text(string='Fraud or Penalty Details')
     aml_risk_rating = fields.Selection(AML_RATING, string='AML/CTF Risk Rating', compute='_compute_aml_risk_rating', store=True)
     business_risk_profile = fields.Text(string='Business Risk Profile')
@@ -354,16 +357,87 @@ class ClientOnboarding(models.Model):
                 summary_html = [_('<p>No checklist summary available.</p>')]
             record.regulator_checklist_overview = ''.join(summary_html)
 
-    @api.depends('legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator')
+    @api.depends(
+        'entity_type',
+        'legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator',
+        'financial_framework',
+        'shareholder_ids', 'board_member_ids',
+        'management_integrity_rating', 'management_integrity_comment', 'aml_risk_rating',
+        'independence_threat_ids', 'independence_declaration_ids',
+        'pcl_document', 'pcl_no_outstanding_fees', 'pcl_no_disputes', 'pcl_no_ethics_issues',
+        'engagement_decision', 'engagement_partner_signature',
+        'document_ids',
+        'checklist_line_ids.answer', 'checklist_line_ids.critical',
+    )
     def _compute_section_status(self):
         for record in self:
-            record.section1_status = 'green' if all([record.legal_name, record.principal_business_address, record.business_registration_number, record.industry_id, record.primary_regulator]) else 'red'
+            record.section1_status = 'green' if all([
+                record.entity_type,
+                record.legal_name,
+                record.principal_business_address,
+                record.business_registration_number,
+                record.industry_id,
+                record.primary_regulator,
+            ]) else 'red'
             record.section2_status = 'green' if record.financial_framework else 'red'
             record.section3_status = 'green' if record.shareholder_ids and record.board_member_ids else 'red'
-            record.section4_status = 'green' if record.management_integrity_rating and record.aml_risk_rating in ['low', 'medium'] else ('amber' if record.management_integrity_rating else 'red')
+            record.section4_status = 'green' if (
+                record.management_integrity_rating
+                and record.management_integrity_comment
+                and record.aml_risk_rating in ['low', 'medium']
+            ) else ('amber' if record.management_integrity_rating else 'red')
             record.section5_status = 'green' if record.independence_threat_ids and record.independence_declaration_ids else 'red'
             record.section6_status = 'green' if record.pcl_document and record.pcl_no_outstanding_fees and record.pcl_no_disputes and record.pcl_no_ethics_issues else 'red'
             record.section7_status = 'green' if record.engagement_decision == 'accept' and record.engagement_partner_signature else 'red'
+
+            # Sections 8-10: no mandatory fields enforced for navigation; mark as complete by default.
+            record.section8_status = 'green'
+            record.section9_status = 'green'
+            record.section10_status = 'green'
+
+    def _get_onboarding_section_status(self, section_number: int) -> str:
+        field_name = f'section{section_number}_status'
+        if field_name not in self._fields:
+            return 'red'
+        return getattr(self, field_name) or 'red'
+
+    def _validate_onboarding_section(self, section_number: int):
+        self.ensure_one()
+        if section_number in (8, 9, 10):
+            return
+        status = self._get_onboarding_section_status(section_number)
+        if status != 'green':
+            raise UserError(
+                _('Please complete all required fields in section %s before continuing.')
+                % f'1.{section_number}'
+            )
+
+    def _action_reopen_onboarding(self, target_section: int):
+        self.ensure_one()
+        ctx = dict(self.env.context)
+        ctx['onboarding_active_section'] = target_section
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Client Onboarding'),
+            'res_model': self._name,
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+            'context': ctx,
+        }
+
+    def action_onboarding_back(self):
+        self.ensure_one()
+        current = int(self.env.context.get('onboarding_current_section') or 1)
+        target = max(1, current - 1)
+        return self._action_reopen_onboarding(target)
+
+    def action_onboarding_save_next(self):
+        self.ensure_one()
+        current = int(self.env.context.get('onboarding_current_section') or 1)
+        self._validate_onboarding_section(current)
+        target = min(10, current + 1)
+        return self._action_reopen_onboarding(target)
 
     def _compute_pep_flag(self):
         for record in self:

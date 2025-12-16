@@ -111,6 +111,11 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 1}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 1}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -147,6 +152,11 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 2}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 2}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -199,6 +209,11 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 3}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 3}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -236,6 +251,11 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 4}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 4}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -292,6 +312,11 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 5}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 5}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -326,6 +351,11 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 6}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 6}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -402,6 +432,11 @@
                                     <field name="regulator_checklist_completion" readonly="1" widget="progressbar" options="{'max_value': 100}"/>
                                     <field name="regulator_checklist_overview" widget="html" readonly="1"/>
                                 </group>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 7}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 7}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -435,6 +470,11 @@
                                         <field name="file_name"/>
                                     </tree>
                                 </field>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 8}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 8}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -453,6 +493,11 @@
                                         <field name="critical" readonly="1"/>
                                     </tree>
                                 </field>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 9}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 9}"/>
+                                </div>
                             </div>
                         </page>
 
@@ -471,6 +516,11 @@
                                         <field name="notes"/>
                                     </tree>
                                 </field>
+
+                                <div class="o_onboarding_nav">
+                                    <button type="object" name="action_onboarding_back" string="Back" class="btn btn-secondary o_onboarding_nav_back" context="{'onboarding_current_section': 10}"/>
+                                    <button type="object" name="action_onboarding_save_next" string="Save &amp; Next" class="btn btn-primary o_onboarding_nav_next" context="{'onboarding_current_section': 10}"/>
+                                </div>
                             </div>
                         </page>
                     </notebook>

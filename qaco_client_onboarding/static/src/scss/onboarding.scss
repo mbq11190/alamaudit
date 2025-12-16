@@ -7,6 +7,7 @@ $audit-green: #15803d;
 $audit-blue: #2563eb;
 $audit-grey: #94a3b8;
 $audit-bg: #f7f8fa;
+$audit-green-dark: darken($audit-green, 8%);
 
 .o_onboarding_form {
   background: $audit-bg;
@@ -137,21 +138,69 @@ $audit-bg: #f7f8fa;
   .o_onboarding_tabs .nav.nav-tabs {
     border-bottom: none;
     padding: 0 16px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 
     .nav-link {
-      border: 1px solid transparent;
-      margin-right: 6px;
+      border: 1px solid #e5e7eb;
+      margin-right: 8px;
       border-radius: 999px;
-      color: $audit-charcoal;
-      font-weight: 600;
-      background: #eef2ff;
+      color: $audit-slate;
+      font-weight: 700;
+      background: #f1f5f9;
+      white-space: nowrap;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+
+      &:hover {
+        background: $audit-green-dark;
+        border-color: $audit-green-dark;
+        color: #fff;
+      }
 
       &.active {
-        background: linear-gradient(90deg, $audit-indigo, $audit-purple);
+        background: $audit-green-dark;
+        border-color: $audit-green-dark;
         color: #fff;
-        border-color: transparent;
-        box-shadow: 0 4px 12px rgba(47, 43, 74, 0.2);
+        box-shadow: 0 4px 12px rgba(21, 128, 61, 0.18);
       }
+
+      &.o_onboarding_tab--complete {
+        background: $audit-green;
+        border-color: $audit-green;
+        color: #fff;
+
+        &:hover {
+          background: $audit-green-dark;
+          border-color: $audit-green-dark;
+        }
+      }
+
+      &.o_onboarding_tab--inprogress {
+        background: #fff7ed;
+        border-color: #fed7aa;
+        color: #9a3412;
+      }
+
+      &.o_onboarding_tab--locked {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .o_onboarding_nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-top: 1px solid #f1f5f9;
+    background: #ffffff;
+
+    .btn {
+      min-width: 120px;
+      font-weight: 700;
+      border-radius: 8px;
+      text-transform: none;
     }
   }
 
