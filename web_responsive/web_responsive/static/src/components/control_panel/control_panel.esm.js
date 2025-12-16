@@ -39,7 +39,7 @@ export function minMaxCollector(delay = 100) {
     };
 }
 
-export const unpatchControlPanel = patch(ControlPanel.prototype, {
+export const unpatchControlPanel = patch(ControlPanel.prototype, "web_responsive.control_panel_sticky", {
     scrollValueCollector: undefined,
     /** @type {Number}*/
     scrollHeaderGap: undefined,

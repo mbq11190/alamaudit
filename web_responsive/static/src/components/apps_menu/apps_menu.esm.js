@@ -17,7 +17,7 @@ import {useHotkey} from "@web/core/hotkeys/hotkey_hook";
 import {browser} from "@web/core/browser/browser";
 
 // Patch WebClient to show AppsMenu instead of default app
-patch(WebClient.prototype, {
+patch(WebClient.prototype, "web_responsive.apps_menu", {
     setup() {
         super.setup();
         useBus(this.env.bus, "APPS_MENU:STATE_CHANGED", ({detail: state}) => {

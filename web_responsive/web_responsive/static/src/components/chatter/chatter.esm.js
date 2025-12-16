@@ -8,7 +8,7 @@ import {Chatter} from "@mail/core/web/chatter";
 import {patch} from "@web/core/utils/patch";
 import {useEffect} from "@odoo/owl";
 
-patch(Chatter.prototype, {
+patch(Chatter.prototype, "web_responsive.chatter_scroll_to_attachments", {
     setup() {
         super.setup();
         useEffect(this._resetScrollToAttachmentsEffect.bind(this), () => [

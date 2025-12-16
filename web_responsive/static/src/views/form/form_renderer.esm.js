@@ -5,7 +5,7 @@
 import {patch} from "@web/core/utils/patch";
 import {FormRenderer} from "@web/views/form/form_renderer";
 
-export const unpatchDisableFilePreview = patch(FormRenderer.prototype, {
+export const unpatchDisableFilePreview = patch(FormRenderer.prototype, "web_responsive.disable_file_preview", {
     /** @returns {Boolean}*/
     hasFileViewer() {
         return false;

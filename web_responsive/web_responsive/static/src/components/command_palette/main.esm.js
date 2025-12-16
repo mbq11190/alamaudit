@@ -5,7 +5,7 @@ import {useService} from "@web/core/utils/hooks";
 import {CommandPalette} from "@web/core/commands/command_palette";
 import {patch} from "@web/core/utils/patch";
 
-export const unpatchCommandPalette = patch(CommandPalette.prototype, {
+export const unpatchCommandPalette = patch(CommandPalette.prototype, "web_responsive.command_palette", {
     setup() {
         super.setup();
         this.ui = useState(useService("ui"));

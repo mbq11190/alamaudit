@@ -41,7 +41,7 @@ export function useFileViewerContainerSize(ref) {
  * Patch attachment viewer to add min/max buttons capability
  * @property {Function} resizeUpdateActualFormChatterWidth
  */
-patch(FileViewer.prototype, {
+patch(FileViewer.prototype, "web_responsive.file_viewer", {
     setup() {
         super.setup();
         this.root = useRef("root");
