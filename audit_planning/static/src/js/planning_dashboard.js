@@ -57,7 +57,7 @@ class PlanningDashboard extends Component {
 
 PlanningDashboard.template = "audit_planning.PlanningDashboard";
 
-registry.category("fields" ).add("planning_dashboard", {
+registry.category("fields").add("planning_dashboard", {
     component: PlanningDashboard,
 });
 
