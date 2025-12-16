@@ -111,6 +111,10 @@ $audit-bg: #f7f8fa;
       }
     }
 
+    .o_onboarding_overview {
+      margin-top: 8px;
+      color: $audit-slate;
+    }
   }
 
   .o_onboarding_alerts {
@@ -128,6 +132,27 @@ $audit-bg: #f7f8fa;
     background: #fff7ed;
     color: #92400e;
     font-weight: 600;
+  }
+
+  .o_onboarding_tabs .nav.nav-tabs {
+    border-bottom: none;
+    padding: 0 16px;
+
+    .nav-link {
+      border: 1px solid transparent;
+      margin-right: 6px;
+      border-radius: 999px;
+      color: $audit-charcoal;
+      font-weight: 600;
+      background: #eef2ff;
+
+      &.active {
+        background: linear-gradient(90deg, $audit-indigo, $audit-purple);
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(47, 43, 74, 0.2);
+      }
+    }
   }
 
   .o_onboarding_card {
