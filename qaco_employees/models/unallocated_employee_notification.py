@@ -13,22 +13,29 @@ class UnallocatedEmployeeNotification(models.Model):
         today = datetime.today().date()
         excluded_departments = ["Administration", "Partners", "Bahria Office"]
 
-        # Get the UNALLOCATED and LEAVE client records
-        unallocated_client = self.env['res.partner'].search([('name', '=', 'UNALLOCATED')], limit=1)
-        leave_client = self.env['res.partner'].search([('name', '=', 'LEAVE')], limit=1)
+        # Fetch target clients in one query
+        clients = self.env['res.partner'].search([('name', 'in', ['UNALLOCATED', 'LEAVE'])])
+        client_map = {c.name: c for c in clients}
+        unallocated_client = client_map.get('UNALLOCATED')
+        leave_client = client_map.get('LEAVE')
 
-        # Find unallocated employees (no deputation or explicitly UNALLOCATED)
-        unallocated_employees = self.env['hr.employee'].search([
+        # Find employees with no deputation or mapped to UNALLOCATED/LEAVE
+        target_client_ids = [c.id for c in clients]
+        employee_domain = [
+            ('department_id.name', 'not in', excluded_departments),
             '|',
-            ('latest_deputation_client_id', '=', unallocated_client.id),
             ('latest_deputation_client_id', '=', False),
-            ('department_id.name', 'not in', excluded_departments)
-        ])
+            ('latest_deputation_client_id', 'in', target_client_ids or [0]),
+        ]
+        employees = self.env['hr.employee'].search(employee_domain)
 
-        # Find employees assigned to "LEAVE"
-        employees_on_leave = self.env['hr.employee'].search([
-            ('latest_deputation_client_id', '=', leave_client.id)
-        ]) if leave_client else []
+        unallocated_employees = []
+        employees_on_leave = []
+        for emp in employees:
+            if leave_client and emp.latest_deputation_client_id.id == leave_client.id:
+                employees_on_leave.append(emp)
+            else:
+                unallocated_employees.append(emp)
 
         if not unallocated_employees and not employees_on_leave:
             return  # Exit if no relevant employees found
@@ -62,6 +69,9 @@ class UnallocatedEmployeeNotification(models.Model):
             recipients = self.env['unallocated.employee.recipient'].sudo().search([])
             recipient_emails = [r.employee_id.work_email for r in recipients if r.employee_id.work_email]
             email_to = ",".join(recipient_emails)
+
+        if not email_to:
+            return True
 
         # **CC will only be included if `include_cc=True`**
         email_cc = ",".join(manager_emails) if include_cc else ""
