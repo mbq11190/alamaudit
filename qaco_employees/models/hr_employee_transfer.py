@@ -41,12 +41,53 @@ class HrEmployeeTransfer(models.Model):
 
     restricted_clients = ['LEAVE', 'UNALLOCATED', 'BAKERTILLY-RDF', 'BAKERTILLY-STATELIFE']
 
-    def _get_unallocated_client(self):
-        """Return the UNALLOCATED client partner record, or an empty recordset.
+    def _get_or_create_unallocated_client(self):
+        """Return the UNALLOCATED client (res.partner), creating it if missing.
 
-        For cron/server actions, callers should not raise on missing configuration.
+        Why: cron/server actions must be background-safe and must not raise blocking
+        UserError because missing master data would cause repeated cron failures.
+
+        Multi-company: prefer a shared record (`company_id` is False). If your
+        deployment uses company-specific client records, we also accept a match
+        for any company in the current environment.
         """
-        return self.env['res.partner'].sudo().search([('name', '=', 'UNALLOCATED')], limit=1)
+        Partner = self.env["res.partner"].sudo().with_context(active_test=False)
+        companies = self.env.companies
+
+        domain = [
+            ("name", "=", "UNALLOCATED"),
+            "|",
+            ("company_id", "=", False),
+            ("company_id", "in", companies.ids),
+        ]
+
+        client = Partner.search(domain, limit=1)
+        if client:
+            return client
+
+        # Create a shared UNALLOCATED client. Idempotency is best-effort because
+        # res.partner has no unique constraint on name; we mitigate race by
+        # re-searching if creation fails.
+        vals = {
+            "name": "UNALLOCATED",
+            "is_company": True,
+            "company_type": "company",
+            "active": True,
+            "company_id": False,
+        }
+
+        try:
+            client = Partner.create(vals)
+            _logger.info(
+                "[qaco_employees] Auto-created missing UNALLOCATED client (res.partner id=%s)",
+                client.id,
+            )
+            return client
+        except Exception:
+            _logger.exception(
+                "[qaco_employees] Failed creating UNALLOCATED client; will retry lookup"
+            )
+            return Partner.search(domain, limit=1)
 
     @api.constrains('transfer_date_from', 'transfer_date_to')
     def _check_transfer_date_gap(self):
@@ -75,9 +116,12 @@ class HrEmployeeTransfer(models.Model):
             if not record.employee_id:
                 raise UserError("No employee selected.")
 
-            unallocated_client = self.env['res.partner'].search([('name', '=', 'UNALLOCATED')], limit=1)
+            # Keep behavior consistent with cron: auto-create if missing.
+            unallocated_client = record._get_or_create_unallocated_client()
             if not unallocated_client:
-                raise UserError("Unallocated client not found. Please create 'UNALLOCATED' in Clients.")
+                raise UserError(
+                    "Unable to create/find 'UNALLOCATED' in Clients. Please contact your administrator."
+                )
 
             # ✅ Update employee's latest deputation client and change state to "Returned"
             record.employee_id.write({
@@ -93,10 +137,11 @@ class HrEmployeeTransfer(models.Model):
     def auto_set_unallocated(self):
         """Automatically mark expired latest transfers as 'Returned' and notify managers."""
         today = fields.Date.today()
-        unallocated_client = self._get_unallocated_client()
+        # Cron-safe: never raise UserError in background jobs.
+        unallocated_client = self._get_or_create_unallocated_client()
         if not unallocated_client:
             _logger.warning(
-                "[qaco_employees] Skipping auto unallocation: missing client 'UNALLOCATED' in Clients (res.partner)."
+                "[qaco_employees] Auto unallocation skipped: could not find/create 'UNALLOCATED' client."
             )
             return
 
@@ -142,10 +187,11 @@ class HrEmployeeTransfer(models.Model):
     def send_expiry_email_to_manager(self):
         """Sends email to each manager listing employees whose latest deputation expired and are currently unallocated and active."""
         today = fields.Date.today()
-        unallocated_client = self._get_unallocated_client()
+        # Cron-safe: never raise UserError in background jobs.
+        unallocated_client = self._get_or_create_unallocated_client()
         if not unallocated_client:
             _logger.warning(
-                "[qaco_employees] Skipping expiry email: missing client 'UNALLOCATED' in Clients (res.partner)."
+                "[qaco_employees] Expiry email skipped: could not find/create 'UNALLOCATED' client."
             )
             return
 
