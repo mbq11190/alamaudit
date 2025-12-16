@@ -41,6 +41,55 @@ class HrEmployeeTransfer(models.Model):
 
     restricted_clients = ['LEAVE', 'UNALLOCATED', 'BAKERTILLY-RDF', 'BAKERTILLY-STATELIFE']
 
+    def _latest_transfer_per_employee(self, domain, *, employee_ids=None):
+        """Return latest `hr.employee.transfer` per employee for the given domain.
+
+        Performance: uses `read_group` to compute max `transfer_date_to` per employee,
+        then a targeted `search` to fetch only those rows (instead of scanning all transfers).
+
+        :param domain: base domain applied to hr.employee.transfer
+        :param employee_ids: optional iterable of employee ids to restrict
+        """
+        Transfer = self.env["hr.employee.transfer"]
+
+        final_domain = list(domain)
+        if employee_ids:
+            final_domain.append(("employee_id", "in", list(employee_ids)))
+
+        groups = Transfer.read_group(
+            final_domain,
+            ["transfer_date_to:max"],
+            ["employee_id"],
+            lazy=False,
+        )
+        employee_max_date = {
+            g["employee_id"][0]: g.get("transfer_date_to_max")
+            for g in groups
+            if g.get("employee_id")
+        }
+        if not employee_max_date:
+            return Transfer.browse()
+
+        max_dates = list({d for d in employee_max_date.values() if d})
+        candidates = Transfer.search(
+            [
+                ("employee_id", "in", list(employee_max_date.keys())),
+                ("transfer_date_to", "in", max_dates),
+            ]
+            + final_domain,
+            order="transfer_date_to desc, id desc",
+        )
+
+        # Pick exactly one transfer per employee.
+        latest_map = {}
+        for transfer in candidates:
+            emp_id = transfer.employee_id.id
+            if emp_id in latest_map:
+                continue
+            if transfer.transfer_date_to == employee_max_date.get(emp_id):
+                latest_map[emp_id] = transfer
+        return Transfer.browse([t.id for t in latest_map.values()])
+
     def _get_or_create_unallocated_client(self):
         """Return the UNALLOCATED client (res.partner), creating it if missing.
 
@@ -145,41 +194,64 @@ class HrEmployeeTransfer(models.Model):
             )
             return
 
-        # ✅ Get the latest transfer for each employee
-        all_transfers = self.env['hr.employee.transfer'].search([
-            ('state', 'in', ['approved', 'returned'])
-        ], order='transfer_date_to desc')
+        # Performance: only fetch the latest transfer per employee where expiry applies.
+        latest_transfers = self._latest_transfer_per_employee(
+            [
+                ("state", "in", ["approved", "returned"]),
+                ("transfer_date_to", "<", today),
+            ]
+        )
+        if not latest_transfers:
+            return
 
-        latest_transfer_map = {}
-        for transfer in all_transfers:
-            emp_id = transfer.employee_id.id
-            if emp_id not in latest_transfer_map:
-                latest_transfer_map[emp_id] = transfer
+        employees_to_mark = self.env["hr.employee"]
+        transfers_to_return = self.env["hr.employee.transfer"]
+        client_names_for_geofence = set()
+        transfer_to_employee = {}
 
-        # ✅ Process only if latest transfer is expired
-        transfers_to_unallocate = []
-        for transfer in latest_transfer_map.values():
-            if transfer.transfer_date_to < today:
-                transfers_to_unallocate.append(transfer)
-
-        for transfer in transfers_to_unallocate:
+        for transfer in latest_transfers:
             employee = transfer.employee_id
-
+            transfer_to_employee[transfer.id] = employee
             if employee.latest_deputation_client_id.id != unallocated_client.id:
-                employee.write({
-                    'latest_deputation_client_id': unallocated_client.id,
-                    'was_unallocated': True
-                })
+                employees_to_mark |= employee
+            if transfer.state != "returned":
+                transfers_to_return |= transfer
+            if transfer.to_client_id and transfer.to_client_id.name:
+                client_names_for_geofence.add(transfer.to_client_id.name)
 
-            if transfer.state != 'returned':
-                transfer.write({'state': 'returned'})
+        if employees_to_mark:
+            employees_to_mark.write(
+                {
+                    "latest_deputation_client_id": unallocated_client.id,
+                    "was_unallocated": True,
+                }
+            )
 
-            # ✅ Remove employee from previous client's geofence (if exists)
-            from_client = transfer.to_client_id
-            if from_client:
-                geofence = self.env['hr.attendance.geofence'].search([('name', '=', from_client.name)], limit=1)
-                if geofence:
-                    geofence.write({'employee_ids': [(3, employee.id)]})
+        if transfers_to_return:
+            transfers_to_return.write({"state": "returned"})
+
+        # Batch geofence cleanup by client name.
+        if client_names_for_geofence:
+            geofences = self.env["hr.attendance.geofence"].sudo().search(
+                [("name", "in", list(client_names_for_geofence))]
+            )
+            geofence_by_name = {g.name: g for g in geofences}
+            removals = {}
+            for transfer in latest_transfers:
+                client_name = transfer.to_client_id.name if transfer.to_client_id else None
+                if not client_name:
+                    continue
+                geofence = geofence_by_name.get(client_name)
+                if not geofence:
+                    continue
+                employee = transfer_to_employee.get(transfer.id)
+                if employee:
+                    removals.setdefault(geofence.id, set()).add(employee.id)
+
+            for geofence_id, employee_ids in removals.items():
+                self.env["hr.attendance.geofence"].browse(geofence_id).write(
+                    {"employee_ids": [(3, emp_id) for emp_id in employee_ids]}
+                )
 
         # ✅ Now notify managers
         self.send_expiry_email_to_manager()
@@ -195,26 +267,19 @@ class HrEmployeeTransfer(models.Model):
             )
             return
 
-        # ✅ Get all expired + returned transfers with active employees
-        returned_transfers = self.env['hr.employee.transfer'].search([
-            ('state', '=', 'returned'),
-            ('transfer_date_to', '<', today),
-            ('employee_id.active', '=', True)  # ✅ Only include active employees
-        ])
+        # Performance: fetch latest returned transfer per active employee.
+        latest_transfers = self._latest_transfer_per_employee(
+            [
+                ("state", "=", "returned"),
+                ("transfer_date_to", "<", today),
+                ("employee_id.active", "=", True),
+            ]
+        )
 
-        # ✅ Pick only the latest one per employee
-        latest_transfer_map = {}
-        for transfer in returned_transfers:
-            emp_id = transfer.employee_id.id
-            if emp_id not in latest_transfer_map or transfer.transfer_date_to > latest_transfer_map[
-                emp_id].transfer_date_to:
-                latest_transfer_map[emp_id] = transfer
-
-        # ✅ Filter: only if employee is still unallocated
-        unallocated_transfers = [
-            t for t in latest_transfer_map.values()
-            if t.employee_id.latest_deputation_client_id.id == unallocated_client.id
-        ]
+        # Only include employees still unallocated.
+        unallocated_transfers = latest_transfers.filtered(
+            lambda t: t.employee_id.latest_deputation_client_id.id == unallocated_client.id
+        )
 
         if not unallocated_transfers:
             return  # ✅ Nothing to email
@@ -258,6 +323,7 @@ class HrEmployeeTransfer(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """Assign correct 'From Client' when creating a new transfer."""
+        unallocated_client = None
         for vals in vals_list:
             if vals.get('sequence', '/') == '/':
                 vals['sequence'] = self.env['ir.sequence'].next_by_code('transfer.sequence') or '/'
@@ -267,7 +333,8 @@ class HrEmployeeTransfer(models.Model):
 
                 if employee.was_unallocated:
                     # ✅ If employee was previously unallocated, set "UNALLOCATED"
-                    unallocated_client = self.env['res.partner'].search([('name', '=', 'UNALLOCATED')], limit=1)
+                    if unallocated_client is None:
+                        unallocated_client = self._get_or_create_unallocated_client()
                     if unallocated_client:
                         vals['from_client_id'] = unallocated_client.id
                 else:
