@@ -1,0 +1,11 @@
+{
+  "name": "web-ui-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "live-server src --port=3000",
+    "build": "echo \"add your build command\""
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
