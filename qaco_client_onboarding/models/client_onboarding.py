@@ -335,59 +335,6 @@ class ClientOnboarding(models.Model):
     @api.depends('regulator_checklist_line_ids.completed', 'regulator_checklist_line_ids.mandatory')
     def _compute_regulator_checklist_completion(self):
         for record in self:
-<<<<<<< HEAD
-            lines = record.regulator_checklist_line_ids
-            total_mandatory = 0
-            completed_mandatory = 0
-
-            area_stats = {
-                key: {
-                    'label': label,
-                    'total': 0,
-                    'completed': 0,
-                    'codes': set(),
-                }
-                for key, label in ONBOARDING_AREAS
-            }
-
-            for line in lines:
-                if not line.mandatory:
-                    continue
-
-                total_mandatory += 1
-                if line.completed:
-                    completed_mandatory += 1
-
-                stats = area_stats.get(line.onboarding_area)
-                if not stats:
-                    continue
-
-                stats['total'] += 1
-                if line.completed:
-                    stats['completed'] += 1
-
-                for standard in line.standard_ids:
-                    if standard.code:
-                        stats['codes'].add(standard.code)
-
-            record.regulator_checklist_completion = round((completed_mandatory / total_mandatory) * 100.0, 2) if total_mandatory else 0.0
-
-            summary_html = []
-            for area_key, area_label in ONBOARDING_AREAS:
-                stats = area_stats.get(area_key)
-                if not stats or not stats['total']:
-                    continue
-
-                codes_text = ', '.join(sorted(stats['codes'])) if stats['codes'] else _('No standards linked')
-                summary_html.append(
-                    _('<p><strong>%s</strong>: %s/%s mandatory completed | Standards: %s</p>') % (
-                        area_label,
-                        stats['completed'],
-                        stats['total'],
-                        codes_text,
-                    )
-                )
-=======
             mandatory = [line for line in record.regulator_checklist_line_ids if line.mandatory]
             total_mandatory = len(mandatory)
             if not total_mandatory:
@@ -428,9 +375,6 @@ class ClientOnboarding(models.Model):
                         codes_text,
                     )
                 )
-
-            record.regulator_checklist_overview = ''.join(summary_html) if summary_html else _('<p>No checklist summary available.</p>')
->>>>>>> parent of 937559a (Revert "12")
 
             record.regulator_checklist_overview = ''.join(summary_html) if summary_html else _('<p>No checklist summary available.</p>')
 
