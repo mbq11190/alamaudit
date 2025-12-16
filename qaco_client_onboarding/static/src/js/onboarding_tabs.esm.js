@@ -23,10 +23,24 @@ function statusToClass(status) {
     return "";
 }
 
+function getCachedSectionIndex(linkEl) {
+    const cached = linkEl && linkEl.dataset && linkEl.dataset.qacoSectionIndex;
+    if (cached) {
+        const n = parseInt(cached, 10);
+        return Number.isFinite(n) ? n : null;
+    }
+    const idx = parseSectionIndexFromLabel(linkEl && linkEl.textContent);
+    if (idx && linkEl && linkEl.dataset) {
+        linkEl.dataset.qacoSectionIndex = String(idx);
+    }
+    return idx;
+}
+
 patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
     setup() {
         superSetup.call(this);
         this.notification = useService("notification");
+        this.__qacoActivatedSection = null;
         onMounted(() => {
             this._qacoWireOnboardingTabGuards();
             this._qacoApplyOnboardingTabStates();
@@ -72,7 +86,7 @@ patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
         const unlockedMax = this._qacoUnlockedMaxSection();
         const links = root.querySelectorAll(".nav.nav-tabs .nav-link");
         for (const link of links) {
-            const idx = parseSectionIndexFromLabel(link.textContent);
+            const idx = getCachedSectionIndex(link);
             if (!idx) continue;
 
             link.classList.remove(
@@ -100,14 +114,23 @@ patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
         const target = parseInt(ctx.onboarding_active_section, 10);
         if (!target || target < 1 || target > 10) return;
 
+        const active = root.querySelector(".nav.nav-tabs .nav-link.active");
+        const activeIdx = active ? getCachedSectionIndex(active) : null;
+        if (activeIdx === target) {
+            this.__qacoActivatedSection = target;
+            return;
+        }
+        if (this.__qacoActivatedSection === target) return;
+
         const links = root.querySelectorAll(".nav.nav-tabs .nav-link");
         for (const link of links) {
-            const idx = parseSectionIndexFromLabel(link.textContent);
+            const idx = getCachedSectionIndex(link);
             if (idx === target) {
                 // Avoid endless loops: only click if not already active.
                 if (!link.classList.contains("active")) {
                     link.click();
                 }
+                this.__qacoActivatedSection = target;
                 break;
             }
         }
@@ -126,7 +149,7 @@ patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
                 const link = target.closest(".nav.nav-tabs .nav-link");
                 if (!link) return;
 
-                const idx = parseSectionIndexFromLabel(link.textContent);
+                const idx = getCachedSectionIndex(link);
                 if (!idx) return;
 
                 const unlockedMax = this._qacoUnlockedMaxSection();

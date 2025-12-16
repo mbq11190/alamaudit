@@ -97,6 +97,15 @@ ONBOARDING_STATUS = [
 ]
 
 
+ENTITY_LABELS = dict(ENTITY_SELECTION)
+PRIMARY_REGULATOR_LABELS = dict(PRIMARY_REGULATOR_SELECTION)
+FINANCIAL_FRAMEWORK_LABELS = dict(FINANCIAL_FRAMEWORK_SELECTION)
+MANAGEMENT_INTEGRITY_LABELS = dict(MANAGEMENT_INTEGRITY_SELECTION)
+AML_RATING_LABELS = dict(AML_RATING)
+SECTION_STATUS_LABELS = dict(SECTION_STATUS)
+ENGAGEMENT_DECISION_LABELS = dict(ENGAGEMENT_DECISION_SELECTION)
+
+
 class ClientOnboarding(models.Model):
     _name = 'qaco.client.onboarding'
     _description = 'Client Onboarding'
@@ -289,13 +298,13 @@ class ClientOnboarding(models.Model):
     @api.depends('entity_type', 'primary_regulator', 'financial_framework', 'management_integrity_rating', 'aml_risk_rating', 'overall_status', 'engagement_decision')
     def _compute_selection_labels(self):
         for record in self:
-            record.entity_type_label = dict(ENTITY_SELECTION).get(record.entity_type, '')
-            record.primary_regulator_label = dict(PRIMARY_REGULATOR_SELECTION).get(record.primary_regulator, '')
-            record.financial_framework_label = dict(FINANCIAL_FRAMEWORK_SELECTION).get(record.financial_framework, '')
-            record.management_integrity_label = dict(MANAGEMENT_INTEGRITY_SELECTION).get(record.management_integrity_rating, '')
-            record.aml_risk_label = dict(AML_RATING).get(record.aml_risk_rating, '')
-            record.overall_status_label = dict(SECTION_STATUS).get(record.overall_status, '')
-            record.engagement_decision_label = dict(ENGAGEMENT_DECISION_SELECTION).get(record.engagement_decision, '')
+            record.entity_type_label = ENTITY_LABELS.get(record.entity_type, '')
+            record.primary_regulator_label = PRIMARY_REGULATOR_LABELS.get(record.primary_regulator, '')
+            record.financial_framework_label = FINANCIAL_FRAMEWORK_LABELS.get(record.financial_framework, '')
+            record.management_integrity_label = MANAGEMENT_INTEGRITY_LABELS.get(record.management_integrity_rating, '')
+            record.aml_risk_label = AML_RATING_LABELS.get(record.aml_risk_rating, '')
+            record.overall_status_label = SECTION_STATUS_LABELS.get(record.overall_status, '')
+            record.engagement_decision_label = ENGAGEMENT_DECISION_LABELS.get(record.engagement_decision, '')
 
     @api.depends('audit_standard_ids')
     def _compute_audit_standard_overview(self):
@@ -327,43 +336,66 @@ class ClientOnboarding(models.Model):
     def _compute_regulator_checklist_summary(self):
         for record in self:
             lines = record.regulator_checklist_line_ids
-            mandatory = lines.filtered('mandatory')
-            completed_mandatory = mandatory.filtered('completed')
-            total_mandatory = len(mandatory)
-            percent = 0.0
-            if total_mandatory:
-                percent = round(len(completed_mandatory) / total_mandatory * 100.0, 2)
-            record.regulator_checklist_completion = percent
+            total_mandatory = 0
+            completed_mandatory = 0
+
+            area_stats = {
+                key: {
+                    'label': label,
+                    'total': 0,
+                    'completed': 0,
+                    'codes': set(),
+                }
+                for key, label in ONBOARDING_AREAS
+            }
+
+            for line in lines:
+                if not line.mandatory:
+                    continue
+
+                total_mandatory += 1
+                if line.completed:
+                    completed_mandatory += 1
+
+                stats = area_stats.get(line.onboarding_area)
+                if not stats:
+                    continue
+
+                stats['total'] += 1
+                if line.completed:
+                    stats['completed'] += 1
+
+                for standard in line.standard_ids:
+                    if standard.code:
+                        stats['codes'].add(standard.code)
+
+            record.regulator_checklist_completion = round((completed_mandatory / total_mandatory) * 100.0, 2) if total_mandatory else 0.0
 
             summary_html = []
             for area_key, area_label in ONBOARDING_AREAS:
-                area_lines = lines.filtered(lambda l: l.onboarding_area == area_key and l.mandatory)
-                if not area_lines:
+                stats = area_stats.get(area_key)
+                if not stats or not stats['total']:
                     continue
-                area_completed = area_lines.filtered('completed')
-                codes = set()
-                for l in area_lines:
-                    codes.update(l.standard_ids.mapped('code'))
-                codes_text = ', '.join(sorted(codes)) if codes else _('No standards linked')
+
+                codes_text = ', '.join(sorted(stats['codes'])) if stats['codes'] else _('No standards linked')
                 summary_html.append(
                     _('<p><strong>%s</strong>: %s/%s mandatory completed | Standards: %s</p>') % (
                         area_label,
-                        len(area_completed),
-                        len(area_lines),
+                        stats['completed'],
+                        stats['total'],
                         codes_text,
                     )
                 )
-            if not summary_html:
-                summary_html = [_('<p>No checklist summary available.</p>')]
-            record.regulator_checklist_overview = ''.join(summary_html)
+
+            record.regulator_checklist_overview = ''.join(summary_html) if summary_html else _('<p>No checklist summary available.</p>')
 
     @api.depends(
         'entity_type',
         'legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator',
         'financial_framework',
-        'shareholder_ids', 'board_member_ids',
-        'management_integrity_rating', 'management_integrity_comment', 'aml_risk_rating',
-        'independence_threat_ids', 'independence_declaration_ids',
+        'shareholder_ids', 'board_member_ids', 'has_pep',
+        'management_integrity_rating', 'management_integrity_comment', 'aml_risk_rating', 'eqcr_required',
+        'independence_threat_ids', 'independence_declaration_ids', 'fee_dependency_flag',
         'pcl_document', 'pcl_no_outstanding_fees', 'pcl_no_disputes', 'pcl_no_ethics_issues',
         'engagement_decision', 'engagement_partner_signature',
         'document_ids',
@@ -380,13 +412,29 @@ class ClientOnboarding(models.Model):
                 record.primary_regulator,
             ]) else 'red'
             record.section2_status = 'green' if record.financial_framework else 'red'
-            record.section3_status = 'green' if record.shareholder_ids and record.board_member_ids else 'red'
-            record.section4_status = 'green' if (
+            if not (record.shareholder_ids and record.board_member_ids):
+                record.section3_status = 'red'
+            else:
+                record.section3_status = 'amber' if record.has_pep else 'green'
+
+            base_section4_green = bool(
                 record.management_integrity_rating
                 and record.management_integrity_comment
                 and record.aml_risk_rating in ['low', 'medium']
-            ) else ('amber' if record.management_integrity_rating else 'red')
-            record.section5_status = 'green' if record.independence_threat_ids and record.independence_declaration_ids else 'red'
+            )
+            if not record.management_integrity_rating:
+                record.section4_status = 'red'
+            elif base_section4_green and record.eqcr_required:
+                record.section4_status = 'amber'
+            elif base_section4_green:
+                record.section4_status = 'green'
+            else:
+                record.section4_status = 'amber'
+
+            if not (record.independence_threat_ids and record.independence_declaration_ids):
+                record.section5_status = 'red'
+            else:
+                record.section5_status = 'amber' if record.fee_dependency_flag else 'green'
             record.section6_status = 'green' if record.pcl_document and record.pcl_no_outstanding_fees and record.pcl_no_disputes and record.pcl_no_ethics_issues else 'red'
             record.section7_status = 'green' if record.engagement_decision == 'accept' and record.engagement_partner_signature else 'red'
 
@@ -439,13 +487,12 @@ class ClientOnboarding(models.Model):
         target = min(10, current + 1)
         return self._action_reopen_onboarding(target)
 
+    @api.depends('board_member_ids.is_pep')
     def _compute_pep_flag(self):
         for record in self:
-            has_pep = bool(record.board_member_ids.filtered('is_pep'))
+            has_pep = any(member.is_pep for member in record.board_member_ids)
             record.has_pep = has_pep
             record.enhanced_due_diligence_required = has_pep
-            if has_pep:
-                record.section3_status = 'amber'
 
     @api.depends('management_integrity_rating', 'aml_risk_rating')
     def _compute_eqcr_required(self):
@@ -454,8 +501,6 @@ class ClientOnboarding(models.Model):
             high_aml = record.aml_risk_rating == 'high'
             record.eqcr_required = low_integrity or high_aml
             record.managing_partner_escalation = record.eqcr_required
-            if record.eqcr_required:
-                record.section4_status = 'amber'
 
     @api.depends('industry_id.risk_category', 'primary_regulator', 'has_pep')
     def _compute_aml_risk_rating(self):
@@ -483,8 +528,6 @@ class ClientOnboarding(models.Model):
             else:
                 record.fee_dependency_percent = 0.0
             record.fee_dependency_flag = record.fee_dependency_percent > threshold
-            if record.fee_dependency_flag:
-                record.section5_status = 'amber'
 
     @api.depends('independence_declaration_ids.state')
     def _compute_independence_status(self):
@@ -492,13 +535,12 @@ class ClientOnboarding(models.Model):
             if not record.independence_declaration_ids:
                 record.independence_status_feedback = _('Awaiting declarations from the engagement team.')
                 continue
-            completed = record.independence_declaration_ids.filtered(lambda l: l.state == 'confirmed')
-            percent = 0
-            if record.independence_declaration_ids:
-                percent = len(completed) / len(record.independence_declaration_ids) * 100
+            total = len(record.independence_declaration_ids)
+            confirmed = sum(1 for line in record.independence_declaration_ids if line.state == 'confirmed')
+            percent = (confirmed / total) * 100 if total else 0
             record.independence_status_feedback = _('%d%% of team members completed declarations.') % percent
 
-    @api.depends('client_id', 'audit_id', 'risk_mitigation_plan', 'section4_status')
+    @api.depends('client_id', 'aml_risk_rating', 'eqcr_required', 'engagement_decision')
     def _compute_engagement_summary(self):
         for record in self:
             summary = [
