@@ -250,59 +250,60 @@ class LeaveSummary(models.Model):
         month_end = (month_start + relativedelta(months=1)) - timedelta(days=1)
 
         employees = self.env['hr.employee'].search([])
+        if not employees:
+            return
+
+        existing_records = self.env['leave.summary'].sudo().search([
+            ('employee_id', 'in', employees.ids),
+            ('is_monthly_summary', '=', True),
+            ('event_date', '>=', month_start),
+            ('event_date', '<=', month_end),
+        ])
+        employees_with_summary = set(existing_records.mapped('employee_id').ids)
+
+        holiday_dates = {
+            h.date for h in self.env['hr.public.holiday'].search([
+                ('date', '>=', month_start),
+                ('date', '<=', month_end),
+                ('state', '=', 'approved')
+            ])
+        }
+        workdays = set(
+            month_start + timedelta(days=i)
+            for i in range((month_end - month_start).days + 1)
+            if (month_start + timedelta(days=i)).weekday() < 5 and
+            (month_start + timedelta(days=i)) not in holiday_dates
+        )
+
+        attendance_by_emp = {}
+        attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', employees.ids),
+            ('check_in', '>=', month_start),
+            ('check_in', '<', month_end + timedelta(days=1))
+        ])
+        for att in attendances:
+            attendance_by_emp.setdefault(att.employee_id.id, set()).add(att.check_in.date())
+
+        leaves_by_emp = {}
+        approved_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', employees.ids),
+            ('state', '=', 'validate'),
+            ('request_date_from', '<=', month_end),
+            ('request_date_to', '>=', month_start)
+        ])
+        for leave in approved_leaves:
+            start = max(leave.request_date_from, month_start)
+            end = min(leave.request_date_to, month_end)
+            emp_leaves = leaves_by_emp.setdefault(leave.employee_id.id, set())
+            for i in range((end - start).days + 1):
+                emp_leaves.add(start + timedelta(days=i))
 
         for emp in employees:
-            # Check if summary for this employee/month already exists
-            existing = self.env['leave.summary'].sudo().search([
-                ('employee_id', '=', emp.id),
-                ('is_monthly_summary', '=', True),
-                ('event_date', '>=', month_start),
-                ('event_date', '<=', month_end),
-            ], limit=1)
-
-            if existing:
+            if emp.id in employees_with_summary:
                 continue
 
-            # Calculate workdays (Mon–Fri)
-            holiday_dates = {
-                h.date for h in self.env['hr.public.holiday'].search([
-                    ('date', '>=', month_start),
-                    ('date', '<=', month_end),
-                    ('state', '=', 'approved')
-                ])
-            }
-
-            workdays = set(
-                month_start + timedelta(days=i)
-                for i in range((month_end - month_start).days + 1)
-                if (month_start + timedelta(days=i)).weekday() < 5 and
-                (month_start + timedelta(days=i)) not in holiday_dates
-            )
-
-            # Attended days (inclusive of the last day)
-            attended_days = set(
-                att.check_in.date()
-                for att in self.env['hr.attendance'].search([
-                    ('employee_id', '=', emp.id),
-                    ('check_in', '>=', month_start),
-                    ('check_in', '<', month_end + timedelta(days=1))
-                ])
-            )
-
-            # Approved leave days
-            leave_days = set()
-            approved_leaves = self.env['hr.leave'].search([
-                ('employee_id', '=', emp.id),
-                ('state', '=', 'validate'),
-                ('request_date_from', '<=', month_end),
-                ('request_date_to', '>=', month_start)
-            ])
-            for leave in approved_leaves:
-                start = max(leave.request_date_from, month_start)
-                end = min(leave.request_date_to, month_end)
-                leave_days |= set(start + timedelta(days=i) for i in range((end - start).days + 1))
-
-            # Calculate absents
+            attended_days = attendance_by_emp.get(emp.id, set())
+            leave_days = leaves_by_emp.get(emp.id, set())
             absent_days = workdays - attended_days - leave_days
 
             if absent_days:

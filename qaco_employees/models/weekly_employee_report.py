@@ -1,6 +1,5 @@
 from odoo import models, fields, api
 from datetime import datetime, timedelta
-import pandas as pd
 import logging
 
 _logger = logging.getLogger(__name__)  # Logger for debugging
@@ -19,7 +18,13 @@ class WeeklyEmployeeReport(models.Model):
 
         # Load Employees & Transfers (Only transfers from the last week)
         employees = self.env["hr.employee"].search([])
-        transfers = self.env["hr.employee.transfer"].search([("transfer_date_to", ">=", start_date)])
+        if not employees:
+            return
+
+        transfers = self.env["hr.employee.transfer"].search([
+            ("employee_id", "in", employees.ids),
+            ("transfer_date_to", ">=", start_date),
+        ])
 
         # Special Clients (to be sorted separately)
         special_clients = ["UNALLOCATED", "LEAVE", "BAKERTILLY-STATELIFE", "BAKERTILLY-RDF"]
@@ -90,41 +95,23 @@ class WeeklyEmployeeReport(models.Model):
                 client_mapping[client]["Employees"], key=lambda x: x["department_priority"]
             )
 
-        # Convert to DataFrame
-        df = pd.DataFrame(client_mapping).T.reset_index()
-        df.rename(columns={"index": "Client Name"}, inplace=True)
-
-        # Ensure Employees column contains lists, not strings
-        df["Employees"] = df["Employees"].apply(lambda x: eval(x) if isinstance(x, str) else x)
-
-        # Extract sorted employee data correctly
-        df["Managers"] = df["Employees"].apply(lambda employees: [emp.get("manager", "N/A") for emp in employees])
-        df["Departments"] = df["Employees"].apply(
-            lambda employees: [emp.get("department", "Other") for emp in employees])
-        df["Experiences"] = df["Employees"].apply(lambda employees: [emp.get("experience", 0) for emp in employees])
-
-        # **Sort all clients (including special ones) by Staff Count and Department Priority**
-        df = df.sort_values(
-            by=["Client Sorting Priority", "No. Of Staff Deputed"],
-            ascending=[True, False]
+        sorted_clients = sorted(
+            client_mapping.items(),
+            key=lambda kv: (
+                kv[1]["Client Sorting Priority"],
+                -kv[1]["No. Of Staff Deputed"],
+                kv[0] or "",
+            ),
         )
 
-        # Drop unnecessary sorting columns
-        df.drop(columns=["Client Sorting Priority"], inplace=True)
-
-        # Generate HTML Table
-        table_html = self._generate_html_table(df)
+        table_html = self._generate_html_table(sorted_clients)
 
         # Send Email with HTML Table
         self.send_email(table_html)
 
-    def _generate_html_table(self, df):
-        """Converts DataFrame to a Beautiful HTML Table for Email with Serial Numbers and alternating row colors per client"""
-        df.reset_index(drop=True, inplace=True)
-        df.insert(0, "S.No", df.index + 1)
-
-        # **Employee Numbering Continuous**
-        employee_counter = 1  # Continuous numbering across all rows
+    def _generate_html_table(self, sorted_clients):
+        """Render HTML with continuous numbering and per-client shading."""
+        employee_counter = 1
 
         html = """
         <html>
@@ -157,41 +144,43 @@ class WeeklyEmployeeReport(models.Model):
         """
 
         # Populate table rows with alternate row shading per client
-        current_client = None
         row_color = "#f9f9f9"
+        serial = 1
+        for client_name, data in sorted_clients:
+            employees = data.get("Employees", [])
+            if not employees:
+                continue
 
-        for _, row in df.iterrows():
-            employee_count = len(row["Employees"])
+            employee_count = len(employees)
+            row_color = "#e6f2ff" if row_color == "#f9f9f9" else "#f9f9f9"
 
-            for i in range(employee_count):
-                numbered_employee_name = f"{employee_counter}. {row['Employees'][i]['name']}"
-                employee_counter += 1  # Keep numbering continuous
+            for i, employee in enumerate(employees):
+                numbered_employee_name = f"{employee_counter}. {employee['name']}"
+                employee_counter += 1
 
                 if i == 0:
-                    if current_client != row["Client Name"]:
-                        row_color = "#e6f2ff" if row_color == "#f9f9f9" else "#f9f9f9"
-                        current_client = row["Client Name"]
-
                     html += f"""
                     <tr style="background-color: {row_color};">
-                        <td rowspan="{employee_count}">{row["S.No"]}</td>
-                        <td rowspan="{employee_count}">{row["Client Name"]}</td>
-                        <td rowspan="{employee_count}">{row["No. Of Staff Deputed"]}</td>
+                        <td rowspan="{employee_count}">{serial}</td>
+                        <td rowspan="{employee_count}">{client_name}</td>
+                        <td rowspan="{employee_count}">{data['No. Of Staff Deputed']}</td>
                         <td>{numbered_employee_name}</td>
-                        <td>{row["Managers"][i]}</td>
-                        <td>{row["Departments"][i]}</td>
-                        <td>{row["Experiences"][i]}</td>
+                        <td>{employee.get('manager', 'N/A')}</td>
+                        <td>{employee.get('department', 'Other')}</td>
+                        <td>{employee.get('experience', 0)}</td>
                     </tr>
                     """
                 else:
                     html += f"""
                     <tr style="background-color: {row_color};">
                         <td>{numbered_employee_name}</td>
-                        <td>{row["Managers"][i]}</td>
-                        <td>{row["Departments"][i]}</td>
-                        <td>{row["Experiences"][i]}</td>
+                        <td>{employee.get('manager', 'N/A')}</td>
+                        <td>{employee.get('department', 'Other')}</td>
+                        <td>{employee.get('experience', 0)}</td>
                     </tr>
                     """
+
+            serial += 1
 
         html += "</table><p>Best Regards,<br><strong>Odoo System</strong></p></body></html>"
 
