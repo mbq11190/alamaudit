@@ -1,0 +1,301 @@
+/* Plain CSS version of onboarding.scss to avoid Sass compilation issues in some Odoo deployments. */
+
+.o_onboarding_form {
+  background: #f7f8fa;
+}
+
+.o_onboarding_form .o_onboarding_sheet {
+  background: #f7f8fa;
+}
+
+.o_onboarding_form .o_onboarding_command_bar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.o_onboarding_form .o_onboarding_command_bar .o_onboarding_actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.o_onboarding_form .o_onboarding_command_bar .o_onboarding_btn {
+  min-width: 44px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-transform: none;
+}
+
+.o_onboarding_form .o_onboarding_command_bar .o_onboarding_btn-primary {
+  background: linear-gradient(90deg, #2f2b4a, #4b3c78);
+  border-color: transparent;
+  color: #fff;
+}
+
+.o_onboarding_form .o_onboarding_command_bar .o_onboarding_btn-outline {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  color: #2c2f36;
+}
+
+.o_onboarding_form .o_onboarding_command_bar .btn-outline-danger {
+  border-width: 1px;
+}
+
+.o_onboarding_form .o_onboarding_command_bar .o_onboarding_status_area {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  min-width: 260px;
+}
+
+.o_onboarding_form .o_onboarding_stepper .o_statusbar_status {
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+}
+
+.o_onboarding_form .o_onboarding_health .o_statusbar_status {
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 600;
+  min-width: 130px;
+  text-align: center;
+}
+
+.o_onboarding_form .o_onboarding_meta {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.o_onboarding_form .o_onboarding_progress_card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.o_onboarding_form .o_onboarding_progress_card .o_onboarding_progress_title {
+  font-weight: 600;
+  color: #2c2f36;
+  margin-bottom: 8px;
+}
+
+.o_onboarding_form .o_onboarding_progress_card .o_progressbar {
+  height: 12px;
+  border-radius: 999px;
+  background: #edeff5;
+}
+
+.o_onboarding_form .o_onboarding_progress_card .o_progressbar .o_progressbar_fill {
+  background: linear-gradient(90deg, #2f2b4a, #2563eb);
+}
+
+.o_onboarding_form .o_onboarding_alerts {
+  display: grid;
+  gap: 8px;
+}
+
+.o_onboarding_form .o_onboarding_banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #fcd34d;
+  background: #fff7ed;
+  color: #92400e;
+  font-weight: 600;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs {
+  border-bottom: none;
+  padding: 0 16px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link {
+  border: 1px solid #e5e7eb;
+  margin-right: 8px;
+  border-radius: 999px;
+  color: #4b5563;
+  font-weight: 700;
+  background: #f1f5f9;
+  white-space: nowrap;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link:hover,
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link.active {
+  background: #0f6b34;
+  border-color: #0f6b34;
+  color: #fff;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link.active {
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.18);
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link.o_onboarding_tab--complete {
+  background: #15803d;
+  border-color: #15803d;
+  color: #fff;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link.o_onboarding_tab--complete:hover {
+  background: #0f6b34;
+  border-color: #0f6b34;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link.o_onboarding_tab--inprogress {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.o_onboarding_form .o_onboarding_tabs .nav.nav-tabs .nav-link.o_onboarding_tab--locked {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.o_onboarding_form .o_onboarding_nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 1px solid #f1f5f9;
+  background: #ffffff;
+}
+
+.o_onboarding_form .o_onboarding_nav .btn {
+  min-width: 120px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-transform: none;
+}
+
+.o_onboarding_form .o_onboarding_card {
+  margin: 12px 16px 20px;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_card_header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: linear-gradient(90deg, #f5f6fa, #eef2ff);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_card_number {
+  font-weight: 800;
+  color: #2f2b4a;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_card_title {
+  font-weight: 700;
+  color: #2c2f36;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_card_ref {
+  margin-left: auto;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_grid {
+  padding: 14px 16px;
+  border-top: 1px solid #f1f5f9;
+  column-gap: 18px;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_grid .o_field_widget input[readonly],
+.o_onboarding_form .o_onboarding_card .o_onboarding_grid .o_field_widget textarea[readonly],
+.o_onboarding_form .o_onboarding_card .o_onboarding_grid .o_field_widget.o_readonly_modifier {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+  color: #4b5563;
+}
+
+.o_onboarding_form .o_onboarding_card .o_onboarding_grid .o_input,
+.o_onboarding_form .o_onboarding_card .o_onboarding_grid .o_field_widget {
+  font-size: 14px;
+}
+
+.o_onboarding_form .o_onboarding_checklist tbody tr td {
+  vertical-align: middle;
+}
+
+.o_onboarding_form .o_onboarding_checklist tbody tr .o_field_many2manytags {
+  max-width: 240px;
+}
+
+.o_onboarding_form .o_onboarding_file_cards .o_onboarding_kanban {
+  padding: 10px;
+}
+
+.o_onboarding_form .o_onboarding_file_cards .o_onboarding_file_card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.o_onboarding_form .o_onboarding_file_cards .o_onboarding_file_header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: #2c2f36;
+  font-weight: 700;
+}
+
+.o_onboarding_form .o_onboarding_file_cards .o_onboarding_file_icon {
+  color: #2f2b4a;
+  font-size: 16px;
+}
+
+.o_onboarding_form .o_onboarding_file_cards .o_onboarding_file_meta {
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.o_onboarding_form .o_field_widget input[required],
+.o_onboarding_form .o_field_widget textarea[required],
+.o_onboarding_form .o_field_widget.o_required_modifier {
+  border-color: #ef4444;
+}
+
+@media (max-width: 992px) {
+  .o_onboarding_form .o_onboarding_meta {
+    grid-template-columns: 1fr;
+  }
+
+  .o_onboarding_form .o_onboarding_command_bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
