@@ -7,6 +7,21 @@ import { onMounted, onPatched } from "@odoo/owl";
 
 const superSetup = FormRenderer.prototype.setup;
 
+function isDebugAssets() {
+    try {
+        return /(^|[?&])debug=assets([&#]|$)/.test(window.location.search || "");
+    } catch {
+        return false;
+    }
+}
+
+function debugLog(...args) {
+    if (isDebugAssets()) {
+        // eslint-disable-next-line no-console
+        console.log(...args);
+    }
+}
+
 function parseSectionIndexFromLabel(label) {
     // Expects labels like "1.5 Independence & Ethics" or "1.10 Audit Trail"
     const match = String(label || "").trim().match(/^1\.(\d{1,2})\b/);
@@ -39,16 +54,29 @@ function getCachedSectionIndex(linkEl) {
 patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
     setup() {
         superSetup.call(this);
-        this.notification = useService("notification");
+        try {
+            this.notification = useService("notification");
+        } catch (e) {
+            this.notification = null;
+            debugLog("[qaco_client_onboarding] notification service unavailable", e);
+        }
         this.__qacoActivatedSection = null;
         onMounted(() => {
-            this._qacoWireOnboardingTabGuards();
-            this._qacoApplyOnboardingTabStates();
-            this._qacoActivateRequestedSection();
+            try {
+                this._qacoWireOnboardingTabGuards();
+                this._qacoApplyOnboardingTabStates();
+                this._qacoActivateRequestedSection();
+            } catch (e) {
+                debugLog("[qaco_client_onboarding] onboarding tab setup failed", e);
+            }
         });
         onPatched(() => {
-            this._qacoApplyOnboardingTabStates();
-            this._qacoActivateRequestedSection();
+            try {
+                this._qacoApplyOnboardingTabStates();
+                this._qacoActivateRequestedSection();
+            } catch (e) {
+                debugLog("[qaco_client_onboarding] onboarding tab update failed", e);
+            }
         });
     },
 
@@ -144,6 +172,7 @@ patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
         root.addEventListener(
             "click",
             (ev) => {
+                if (typeof HTMLElement === "undefined") return;
                 const target = ev.target;
                 if (!(target instanceof HTMLElement)) return;
                 const link = target.closest(".nav.nav-tabs .nav-link");
@@ -156,10 +185,14 @@ patch(FormRenderer.prototype, "qaco_client_onboarding.onboarding_tabs", {
                 if (idx > unlockedMax) {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    this.notification.add(
-                        "Complete the current section before moving ahead.",
-                        { type: "warning" }
-                    );
+                    if (this.notification && this.notification.add) {
+                        this.notification.add(
+                            "Complete the current section before moving ahead.",
+                            { type: "warning" }
+                        );
+                    } else {
+                        debugLog("[qaco_client_onboarding] blocked tab navigation", idx);
+                    }
                 }
             },
             true

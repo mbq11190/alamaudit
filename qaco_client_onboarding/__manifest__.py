@@ -18,6 +18,7 @@ Client onboarding phase with smart button access from audit.
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',
         'views/client_onboarding_form.xml',
+        'views/client_onboarding_menu.xml',
         'views/audit_smart_button.xml',
         'reports/client_onboarding_report.xml',
         'reports/client_onboarding_report_template.xml',
