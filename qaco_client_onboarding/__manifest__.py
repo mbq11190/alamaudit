@@ -26,6 +26,7 @@ Client onboarding phase with smart button access from audit.
     'assets': {
         'web.assets_backend': [
             'qaco_client_onboarding/static/src/css/onboarding.css',
+            'qaco_client_onboarding/static/src/js/onboarding_tabs.esm.js',
         ],
     },
     'installable': True,

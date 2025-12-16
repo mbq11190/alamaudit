@@ -399,15 +399,30 @@ class ExecutionRiskCoverage(models.Model):
     is_significant = fields.Boolean(string='Significant Risk')
     control_test_ids = fields.One2many('qaco.exec.control.test', 'risk_line_id', string='Control Tests')
     substantive_procedure_ids = fields.One2many('qaco.exec.substantive.procedure', 'risk_line_id', string='Substantive Procedures')
-    coverage_percent = fields.Float(string='Coverage %', compute='_compute_coverage', digits=(3, 2))
-    is_fully_addressed = fields.Boolean(string='Fully Addressed', compute='_compute_coverage', store=True)
+    coverage_percent = fields.Float(
+        string='Coverage %',
+        compute='_compute_coverage',
+        store=True,
+        compute_sudo=True,
+        digits=(3, 2),
+    )
+    is_fully_addressed = fields.Boolean(
+        string='Fully Addressed',
+        compute='_compute_coverage',
+        store=True,
+        compute_sudo=True,
+    )
 
+    @api.depends('control_test_ids.test_status', 'substantive_procedure_ids.status')
     def _compute_coverage(self):
         for record in self:
-            has_control = bool(record.control_test_ids.filtered(lambda t: t.test_status == 'green'))
-            has_substantive = bool(record.substantive_procedure_ids.filtered(lambda s: s.status == 'green'))
-            tests = record.control_test_ids | record.substantive_procedure_ids
-            record.coverage_percent = min(len(tests) * 50.0, 100.0) if tests else 0.0
+            control_tests = record.control_test_ids
+            substantive_tests = record.substantive_procedure_ids
+            has_control = any(t.test_status == 'green' for t in control_tests)
+            has_substantive = any(s.status == 'green' for s in substantive_tests)
+
+            total_tests = len(control_tests) + len(substantive_tests)
+            record.coverage_percent = min(total_tests * 50.0, 100.0) if total_tests else 0.0
             record.is_fully_addressed = bool(has_control and has_substantive)
 
 
