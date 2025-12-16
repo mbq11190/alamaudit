@@ -1,6 +1,11 @@
+import logging
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from dateutil.relativedelta import relativedelta
+
+
+_logger = logging.getLogger(__name__)
 
 
 class HrEmployeeTransfer(models.Model):
@@ -35,6 +40,13 @@ class HrEmployeeTransfer(models.Model):
     )
 
     restricted_clients = ['LEAVE', 'UNALLOCATED', 'BAKERTILLY-RDF', 'BAKERTILLY-STATELIFE']
+
+    def _get_unallocated_client(self):
+        """Return the UNALLOCATED client partner record, or an empty recordset.
+
+        For cron/server actions, callers should not raise on missing configuration.
+        """
+        return self.env['res.partner'].sudo().search([('name', '=', 'UNALLOCATED')], limit=1)
 
     @api.constrains('transfer_date_from', 'transfer_date_to')
     def _check_transfer_date_gap(self):
@@ -81,10 +93,12 @@ class HrEmployeeTransfer(models.Model):
     def auto_set_unallocated(self):
         """Automatically mark expired latest transfers as 'Returned' and notify managers."""
         today = fields.Date.today()
-        unallocated_client = self.env['res.partner'].search([('name', '=', 'UNALLOCATED')], limit=1)
-
+        unallocated_client = self._get_unallocated_client()
         if not unallocated_client:
-            raise UserError("Unallocated client not found. Please create 'UNALLOCATED' in Clients.")
+            _logger.warning(
+                "[qaco_employees] Skipping auto unallocation: missing client 'UNALLOCATED' in Clients (res.partner)."
+            )
+            return
 
         # ✅ Get the latest transfer for each employee
         all_transfers = self.env['hr.employee.transfer'].search([
@@ -128,10 +142,12 @@ class HrEmployeeTransfer(models.Model):
     def send_expiry_email_to_manager(self):
         """Sends email to each manager listing employees whose latest deputation expired and are currently unallocated and active."""
         today = fields.Date.today()
-        unallocated_client = self.env['res.partner'].search([('name', '=', 'UNALLOCATED')], limit=1)
-
+        unallocated_client = self._get_unallocated_client()
         if not unallocated_client:
-            raise UserError("Unallocated client not found. Please create 'UNALLOCATED' in Clients.")
+            _logger.warning(
+                "[qaco_employees] Skipping expiry email: missing client 'UNALLOCATED' in Clients (res.partner)."
+            )
+            return
 
         # ✅ Get all expired + returned transfers with active employees
         returned_transfers = self.env['hr.employee.transfer'].search([
