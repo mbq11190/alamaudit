@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="city_lahore" model="qaco.onboarding.city">
+        <field name="name">Lahore</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_punjab"/>
+    </record>
+    <record id="city_islamabad" model="qaco.onboarding.city">
+        <field name="name">Islamabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_ict"/>
+    </record>
+    <record id="city_karachi" model="qaco.onboarding.city">
+        <field name="name">Karachi</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_sindh"/>
+    </record>
+    <record id="city_peshawar" model="qaco.onboarding.city">
+        <field name="name">Peshawar</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_kpk"/>
+    </record>
+    <record id="city_quetta" model="qaco.onboarding.city">
+        <field name="name">Quetta</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_balochistan"/>
+    </record>
+    <record id="city_muzaffarabad" model="qaco.onboarding.city">
+        <field name="name">Muzaffarabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_ajk"/>
+    </record>
+    <record id="city_gilgit" model="qaco.onboarding.city">
+        <field name="name">Gilgit</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_gb"/>
+    </record>
+</odoo>

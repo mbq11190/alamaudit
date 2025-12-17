@@ -102,10 +102,10 @@
                                 <group string="Branch &amp; Office Locations" class="o_onboarding_grid">
                                     <field name="branch_location_ids">
                                         <tree editable="bottom">
-                                            <field name="address"/>
+                                            <field name="city_id"/>
                                             <field name="province_id" domain="[('country_id','=',country_id)]" options="{'no_create': True}"/>
-                                            <field name="city"/>
                                             <field name="country_id" options="{'no_create': True}"/>
+                                            <field name="address"/>
                                         </tree>
                                     </field>
                                 </group>

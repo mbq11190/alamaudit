@@ -24,7 +24,16 @@
                 <t t-if="doc.branch_location_ids">
                     <ul>
                         <t t-foreach="doc.branch_location_ids" t-as="branch">
-                            <li><t t-esc="branch.name"/> – <t t-esc="branch.address"/> (<t t-esc="branch.country_id.name or '—'"/>)</li>
+                            <li>
+                                <t t-esc="branch.city_id.name or '—'"/>
+                                <t t-if="branch.province_id">
+                                    , <t t-esc="branch.province_id.name"/>
+                                </t>
+                                <t t-if="branch.country_id">
+                                    &#160;(<t t-esc="branch.country_id.name"/>)
+                                </t>
+                                &#160;– <t t-esc="branch.address or '—'"/>
+                            </li>
                         </t>
                     </ul>
                 </t>
