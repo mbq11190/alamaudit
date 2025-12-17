@@ -19,6 +19,40 @@
             <form string="Client Onboarding" class="o_onboarding_form">
                 <sheet class="o_onboarding_sheet">
                     <notebook class="o_onboarding_tabs">
+                        <page name="section_10" string="1.0&#10;Templates &amp; Docs" class="o_onboarding_tab_page">
+                            <div id="section-1-0" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">1.0</span>
+                                    <span class="o_onboarding_card_title">Templates &amp; Docs</span>
+                                    <span class="o_onboarding_card_ref">Standard Professional Templates</span>
+                                </div>
+                                <div class="o_template_repository">
+                                    <p class="text-muted mb-3">
+                                        Download standard professional templates or attach them directly to this onboarding record.
+                                    </p>
+                                    
+                                    <!-- Template Categories with Documents -->
+                                    <div class="o_template_categories">
+                                        <field name="attached_template_ids" widget="one2many" mode="tree">
+                                            <tree string="Attached Templates" editable="bottom" create="1" delete="1">
+                                                <field name="template_id" options="{'no_create': True}"/>
+                                                <field name="attached_filename" readonly="1"/>
+                                                <field name="attached_file" filename="attached_filename" widget="binary"/>
+                                                <field name="notes"/>
+                                                <field name="attached_by" readonly="1"/>
+                                                <field name="attached_date" readonly="1"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+
+                                    <separator string="Available Templates Library"/>
+                                    <p class="text-muted small">
+                                        To attach a template: Click "Add a line" above, select a template, and it will be automatically populated. 
+                                        To download templates directly, use the Template Library menu.
+                                    </p>
+                                </div>
+                            </div>
+                        </page>
                         <page name="section_11" string="1.1&#10;Legal Identity" class="o_onboarding_tab_page">
                             <div id="section-1-1" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
