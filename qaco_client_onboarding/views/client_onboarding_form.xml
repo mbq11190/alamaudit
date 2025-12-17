@@ -17,19 +17,6 @@
         <field name="model">qaco.client.onboarding</field>
         <field name="arch" type="xml">
             <form string="Client Onboarding" class="o_onboarding_form">
-                <header class="o_onboarding_command_bar">
-                    <div class="o_onboarding_actions">
-                        <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" class="btn btn-primary o_onboarding_btn o_onboarding_btn-primary"/>
-                        <button name="action_submit_review" type="object" string="Submit for Review" class="btn btn-warning o_onboarding_btn o_onboarding_btn-outline" modifiers="{'invisible': [('state','!=','draft')]}" confirm="Submit for review? This notifies the engagement reviewer."/>
-                        <button name="action_partner_approve" type="object" string="Partner Approve" class="btn btn-success o_onboarding_btn o_onboarding_btn-outline" modifiers="{'invisible': [('state','!=','under_review')]}" confirm="Confirm partner approval? This locks further edits except final sign-off."/>
-                        <button name="action_lock_onboarding" type="object" string="Lock Onboarding" class="btn btn-outline-danger o_onboarding_btn" modifiers="{'invisible': [('state','!=','partner_approved')]}" confirm="Lock onboarding for issuance? Ensure all mandatory items and signatures are complete."/>
-                    </div>
-                    <div class="o_onboarding_status_area">
-                        <field name="state" widget="statusbar" class="o_onboarding_stepper" statusbar_visible="draft,under_review,partner_approved,locked" statusbar_colors="{'draft':'secondary','under_review':'warning','partner_approved':'primary','locked':'success'}"/>
-                        <field name="overall_status" widget="statusbar" class="o_onboarding_health" statusbar_visible="red,amber,green" statusbar_colors="{'red':'danger','amber':'warning','green':'success'}" readonly="1"/>
-                    </div>
-                </header>
-
                 <sheet class="o_onboarding_sheet">
                     <notebook class="o_onboarding_tabs">
                         <page name="section_11" string="1.1&#10;Legal Identity" class="o_onboarding_tab_page">
