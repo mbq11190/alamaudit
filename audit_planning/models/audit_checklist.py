@@ -3,14 +3,14 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class AuditPlanningChecklist(models.Model):
-    _name = "audit.planning.checklist"
-    _description = "Audit Planning Checklist"
-    _order = "planning_id, id"
+class AuditEngagementChecklist(models.Model):
+    _name = "audit.engagement.checklist"
+    _description = "Audit Engagement Checklist"
+    _order = "engagement_id, id"
 
-    planning_id = fields.Many2one(
-        "audit.planning",
-        string="Planning",
+    engagement_id = fields.Many2one(
+        "audit.engagement",
+        string="Engagement",
         required=False,
         ondelete="cascade",
         index=True,
@@ -24,13 +24,13 @@ class AuditPlanningChecklist(models.Model):
     @api.onchange("completed")
     def _onchange_completed(self):
         # Keep chatter consistent when checklist items change.
-        if self.planning_id and self._origin:
-            self.planning_id.message_post(
+        if self.engagement_id and self._origin:
+            self.engagement_id.message_post(
                 body=f"Checklist item '{self.name}' marked {'completed' if self.completed else 'incomplete'}."
             )
 
-    @api.constrains("planning_id", "is_template")
+    @api.constrains("engagement_id", "is_template")
     def _check_planning_required(self):
         for rec in self:
-            if not rec.is_template and not rec.planning_id:
-                raise ValidationError("Planning checklist rows must belong to a plan unless marked as template.")
+            if not rec.is_template and not rec.engagement_id:
+                raise ValidationError("Checklist rows must belong to an engagement unless marked as template.")

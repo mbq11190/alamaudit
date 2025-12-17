@@ -111,10 +111,6 @@ $audit-bg: #f7f8fa;
       }
     }
 
-    .o_onboarding_overview {
-      margin-top: 8px;
-      color: $audit-slate;
-    }
   }
 
   .o_onboarding_alerts {
@@ -132,71 +128,6 @@ $audit-bg: #f7f8fa;
     background: #fff7ed;
     color: #92400e;
     font-weight: 600;
-  }
-
-  .o_onboarding_phase_nav {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 10px;
-    padding: 0 16px 16px;
-  }
-
-  .o_phase_chip {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 10px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 10px 12px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-
-    .o_phase_label {
-      font-weight: 700;
-      color: $audit-indigo;
-      min-width: 40px;
-    }
-
-    .o_phase_title {
-      color: $audit-charcoal;
-      font-weight: 600;
-    }
-
-    .o_phase_status {
-      justify-self: end;
-      padding: 2px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      text-transform: capitalize;
-      background: #f1f5f9;
-      color: $audit-slate;
-
-      &[data-value="green"], &[data-value="success"] { background: #ecfdf3; color: $audit-green; }
-      &[data-value="amber"], &[data-value="warning"] { background: #fffbeb; color: $audit-amber; }
-      &[data-value="red"], &[data-value="danger"] { background: #fef2f2; color: #b91c1c; }
-    }
-  }
-
-  .o_onboarding_tabs .nav.nav-tabs {
-    border-bottom: none;
-    padding: 0 16px;
-
-    .nav-link {
-      border: 1px solid transparent;
-      margin-right: 6px;
-      border-radius: 999px;
-      color: $audit-charcoal;
-      font-weight: 600;
-      background: #eef2ff;
-
-      &.active {
-        background: linear-gradient(90deg, $audit-indigo, $audit-purple);
-        color: #fff;
-        border-color: transparent;
-        box-shadow: 0 4px 12px rgba(47, 43, 74, 0.2);
-      }
-    }
   }
 
   .o_onboarding_card {
@@ -258,6 +189,71 @@ $audit-bg: #f7f8fa;
     .o_field_many2manytags { max-width: 240px; }
   }
 
+  .o_onboarding_tabs {
+    margin: 0 16px 24px;
+    background: transparent;
+
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      border-bottom: none;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(47, 43, 74, 0.08);
+    }
+
+    .nav-item {
+      margin: 0;
+    }
+
+    .nav-link {
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      text-align: left;
+      color: $audit-slate;
+      background: #f9fafb;
+      min-height: 64px;
+      white-space: pre-line;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+      &::first-line {
+        font-size: 18px;
+        color: $audit-indigo;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+      }
+
+      &.active, &.active:hover {
+        background: linear-gradient(120deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.12));
+        color: $audit-charcoal;
+        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.2);
+      }
+    }
+
+    .tab-content {
+      margin-top: 18px;
+      border: none;
+      background: transparent;
+    }
+
+    .tab-pane {
+      padding: 0;
+      background: transparent;
+    }
+  }
+
   .o_onboarding_file_cards {
     .o_onboarding_kanban {
       padding: 10px;
@@ -306,5 +302,9 @@ $audit-bg: #f7f8fa;
   .o_onboarding_form .o_onboarding_command_bar {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .o_onboarding_form .o_onboarding_tabs .nav-tabs {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
   }
 }

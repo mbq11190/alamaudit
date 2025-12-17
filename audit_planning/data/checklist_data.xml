@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="checklist_entity_understanding" model="audit.planning.checklist">
+        <record id="checklist_entity_understanding" model="audit.engagement.checklist">
             <field name="name">Understand entity and environment</field>
             <field name="isa_reference">ISA 315</field>
             <field name="is_mandatory">True</field>
             <field name="is_template">True</field>
         </record>
-        <record id="checklist_analytics" model="audit.planning.checklist">
+        <record id="checklist_analytics" model="audit.engagement.checklist">
             <field name="name">Perform preliminary analytical procedures</field>
             <field name="isa_reference">ISA 520</field>
             <field name="is_mandatory">True</field>
             <field name="is_template">True</field>
         </record>
-        <record id="checklist_materiality" model="audit.planning.checklist">
+        <record id="checklist_materiality" model="audit.engagement.checklist">
             <field name="name">Set planning materiality and performance materiality</field>
             <field name="isa_reference">ISA 320</field>
             <field name="is_mandatory">True</field>
             <field name="is_template">True</field>
         </record>
-        <record id="checklist_controls" model="audit.planning.checklist">
+        <record id="checklist_controls" model="audit.engagement.checklist">
             <field name="name">Assess design and implementation of controls</field>
             <field name="isa_reference">ISA 315</field>
             <field name="is_mandatory">True</field>
             <field name="is_template">True</field>
         </record>
-        <record id="checklist_risks" model="audit.planning.checklist">
+        <record id="checklist_risks" model="audit.engagement.checklist">
             <field name="name">Identify and assess risks of material misstatement</field>
             <field name="isa_reference">ISA 315/330</field>
             <field name="is_mandatory">True</field>
             <field name="is_template">True</field>
         </record>
-        <record id="checklist_fraud" model="audit.planning.checklist">
+        <record id="checklist_fraud" model="audit.engagement.checklist">
             <field name="name">Fraud risk discussions and inquiries</field>
             <field name="isa_reference">ISA 240</field>
             <field name="is_mandatory">True</field>
             <field name="is_template">True</field>
         </record>
-        <record id="checklist_related_parties" model="audit.planning.checklist">
+        <record id="checklist_related_parties" model="audit.engagement.checklist">
             <field name="name">Understand related party transactions</field>
             <field name="isa_reference">ISA 550</field>
             <field name="is_mandatory">True</field>
