@@ -58,7 +58,7 @@
                                 </div>
                                 <group class="o_onboarding_grid">
                                     <field name="entity_type" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
-                                    <field name="other_entity_description" modifiers="{'invisible':[('entity_type','!=','other')]}"/>
+                                    <field name="other_entity_description" string="Other: specify" attrs="{'invisible': [('entity_type', '!=', 'other')]}" placeholder="Describe the entity type if not listed above"/>
                                     <field name="legal_name" help="The name exactly as on the Certificate of Incorporation or registration document."/>
                                     <field name="trading_name" help="Enter the trading name if it differs from the legal name."/>
                                 </group>
