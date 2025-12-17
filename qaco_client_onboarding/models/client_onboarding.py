@@ -604,7 +604,14 @@ class OnboardingUBO(models.Model):
     name = fields.Char(string='UBO Name', required=True)
     cnic_passport = fields.Char(string='CNIC / Passport Number', required=True)
     nationality = fields.Char(string='Nationality')
+    country_id = fields.Many2one('res.country', string='Country')
     ownership_percent = fields.Float(string='Ownership %', digits=(5, 2))
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        for record in self:
+            if record.country_id:
+                record.nationality = record.country_id.name
 
 
 class OnboardingShareholder(models.Model):

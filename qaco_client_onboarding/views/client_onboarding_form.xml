@@ -130,6 +130,7 @@
                                         <tree editable="bottom">
                                             <field name="name"/>
                                             <field name="cnic_passport"/>
+                                            <field name="country_id"/>
                                             <field name="nationality"/>
                                             <field name="ownership_percent"/>
                                         </tree>
