@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_audit_planning_tree" model="ir.ui.view">
-        <field name="name">audit.planning.tree</field>
-        <field name="model">audit.planning</field>
+        <field name="name">audit.engagement.tree</field>
+        <field name="model">audit.engagement</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="audit_id"/>
                 <field name="client_id"/>
                 <field name="audit_type"/>
                 <field name="audit_period_from"/>
@@ -22,7 +23,7 @@
 
     <record id="action_audit_planning" model="ir.actions.act_window">
         <field name="name">Audit Planning</field>
-        <field name="res_model">audit.planning</field>
+        <field name="res_model">audit.engagement</field>
         <field name="view_mode">tree,form,kanban</field>
         <field name="view_id" ref="view_audit_planning_tree"/>
     </record>

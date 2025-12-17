@@ -33,7 +33,7 @@ class PlanningDashboard extends Component {
             "overall_progress",
         ];
         const [vals] = await this.rpc("/web/dataset/call_kw", {
-            model: "audit.planning",
+            model: "audit.engagement",
             method: "read",
             args: [[resId], fields],
             kwargs: {},

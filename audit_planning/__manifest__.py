@@ -12,6 +12,9 @@
         "mail",
         "web",
         "documents",
+        "qaco_audit",
+        "qaco_planning_phase",
+        "qaco_client_onboarding",
     ],
     "data": [
         "security/security.xml",

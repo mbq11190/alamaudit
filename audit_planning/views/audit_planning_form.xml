@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_audit_planning_form" model="ir.ui.view">
-        <field name="name">audit.planning.form</field>
-        <field name="model">audit.planning</field>
+        <field name="name">audit.engagement.form</field>
+        <field name="model">audit.engagement</field>
         <field name="arch" type="xml">
             <form string="Audit Planning" create="1" edit="1">
                 <header>
-                    <button name="action_submit_review" type="object" string="Submit for Review" states="draft" class="btn-primary"/>
-                    <button name="action_manager_sign" type="object" string="Manager Sign" states="in_review" class="btn-success"/>
-                    <button name="action_partner_sign" type="object" string="Partner Approve" states="in_review" class="btn-primary"/>
+                    <button name="action_submit_review" type="object" string="Mark Staff Prepared" states="draft" class="btn-primary"/>
+                    <button name="action_manager_sign" type="object" string="Manager Sign" states="staff_prepared" class="btn-success"/>
+                    <button name="action_partner_sign" type="object" string="Partner Approve" states="manager_review" class="btn-primary"/>
                     <button name="action_mark_udin_generated" type="object" string="Mark UDIN Generated" class="btn-secondary" attrs="{'invisible': [('udin','=',False)]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,in_review,approved"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,staff_prepared,manager_review,partner_approved"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -32,7 +32,8 @@
                             <group>
                                 <group>
                                     <field name="name"/>
-                                    <field name="client_id"/>
+                                    <field name="audit_id"/>
+                                    <field name="client_id" readonly="1"/>
                                     <field name="company_nature"/>
                                     <field name="audit_type"/>
                                     <field name="previous_auditor"/>
@@ -73,7 +74,7 @@
                                 <field name="materiality_worksheet_attachment_ids" widget="many2many_binary"/>
                             </group>
                             <group string="Checklist">
-                                <field name="checklist_ids" context="{'default_planning_id': active_id}"/>
+                                <field name="checklist_ids" context="{'default_engagement_id': active_id}"/>
                             </group>
                         </page>
                         <page string="Commercials & Timeline">
