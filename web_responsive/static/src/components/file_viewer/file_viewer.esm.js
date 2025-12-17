@@ -37,7 +37,7 @@ export function useFileViewerContainerSize(ref) {
     });
 }
 
-export const unpatchFileViewer = patch(FileViewer.prototype, "web_responsive.file_viewer", {
+export const unpatchFileViewer = patch(FileViewer.prototype, {
     setup() {
         super.setup();
         this.root = useRef("root");
