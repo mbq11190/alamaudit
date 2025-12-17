@@ -13,10 +13,8 @@ Client onboarding phase with smart button access from audit.
     'website': 'https://www.qaco.com',
     'depends': ['qaco_audit'],
     'data': [
-        'data/ir_model_onboarding_city.xml',
         'security/ir.model.access.csv',
         'data/pakistan_location_data.xml',
-        'data/onboarding_city_data.xml',
         'data/audit_standard_library_data.xml',
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',
