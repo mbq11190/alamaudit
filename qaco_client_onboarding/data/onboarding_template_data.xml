@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Template Categories -->
+        <record id="template_category_client_onboarding" model="qaco.onboarding.template.category">
+            <field name="name">A. Client Onboarding &amp; Administration</field>
+            <field name="code">client_onboarding</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="template_category_professional_clearance" model="qaco.onboarding.template.category">
+            <field name="name">B. Professional Clearance &amp; Communication</field>
+            <field name="code">professional_clearance</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="template_category_audit_assurance" model="qaco.onboarding.template.category">
+            <field name="name">C. Audit &amp; Assurance Engagement</field>
+            <field name="code">audit_assurance</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="template_category_tax_engagements" model="qaco.onboarding.template.category">
+            <field name="name">D. Tax Engagements</field>
+            <field name="code">tax_engagements</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="template_category_other_letters" model="qaco.onboarding.template.category">
+            <field name="name">E. Other Standard Letters &amp; Confirmations</field>
+            <field name="code">other_letters</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- A. Client Onboarding & Administration Templates -->
+        <record id="template_client_onboarding_checklist" model="qaco.onboarding.template.document">
+            <field name="name">Client Onboarding Checklist</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">10</field>
+            <field name="description">Standard checklist for new client onboarding procedures.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_new_client_acceptance" model="qaco.onboarding.template.document">
+            <field name="name">New Client Acceptance Form</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">20</field>
+            <field name="description">Form for documenting new client acceptance decisions.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_engagement_setup_sheet" model="qaco.onboarding.template.document">
+            <field name="name">Client Engagement Setup Sheet</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">30</field>
+            <field name="description">Engagement setup and administrative details sheet.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <!-- B. Professional Clearance & Communication Templates -->
+        <record id="template_link_letter" model="qaco.onboarding.template.document">
+            <field name="name">Link Letter (Request for Professional Clearance)</field>
+            <field name="category_id" ref="template_category_professional_clearance"/>
+            <field name="sequence">10</field>
+            <field name="description">Letter to request professional clearance from predecessor auditor.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_professional_clearance_response" model="qaco.onboarding.template.document">
+            <field name="name">Response to Professional Clearance Request</field>
+            <field name="category_id" ref="template_category_professional_clearance"/>
+            <field name="sequence">20</field>
+            <field name="description">Standard response template for professional clearance requests received.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <!-- C. Audit & Assurance Engagement Templates -->
+        <record id="template_audit_engagement_letter" model="qaco.onboarding.template.document">
+            <field name="name">Audit Engagement Letter</field>
+            <field name="category_id" ref="template_category_audit_assurance"/>
+            <field name="sequence">10</field>
+            <field name="description">Standard audit engagement letter per ISA 210.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_review_engagement_letter" model="qaco.onboarding.template.document">
+            <field name="name">Review Engagement Letter</field>
+            <field name="category_id" ref="template_category_audit_assurance"/>
+            <field name="sequence">20</field>
+            <field name="description">Engagement letter for review engagements per ISRE 2400.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_compilation_engagement_letter" model="qaco.onboarding.template.document">
+            <field name="name">Compilation Engagement Letter</field>
+            <field name="category_id" ref="template_category_audit_assurance"/>
+            <field name="sequence">30</field>
+            <field name="description">Engagement letter for compilation engagements per ISRS 4410.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_opening_balance_verification" model="qaco.onboarding.template.document">
+            <field name="name">Letter for Verification of Opening Balances</field>
+            <field name="category_id" ref="template_category_audit_assurance"/>
+            <field name="sequence">40</field>
+            <field name="description">Request letter for opening balance verification from predecessor.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_management_representation_letter" model="qaco.onboarding.template.document">
+            <field name="name">Management Representation Letter (Draft)</field>
+            <field name="category_id" ref="template_category_audit_assurance"/>
+            <field name="sequence">50</field>
+            <field name="description">Draft management representation letter per ISA 580.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_audit_committee_communication" model="qaco.onboarding.template.document">
+            <field name="name">Audit Committee Communication Letter</field>
+            <field name="category_id" ref="template_category_audit_assurance"/>
+            <field name="sequence">60</field>
+            <field name="description">Communication letter to those charged with governance per ISA 260.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <!-- D. Tax Engagements Templates -->
+        <record id="template_tax_compliance_engagement" model="qaco.onboarding.template.document">
+            <field name="name">Tax Compliance Engagement Letter</field>
+            <field name="category_id" ref="template_category_tax_engagements"/>
+            <field name="sequence">10</field>
+            <field name="description">Engagement letter for tax compliance services.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_tax_advisory_engagement" model="qaco.onboarding.template.document">
+            <field name="name">Tax Advisory Engagement Letter</field>
+            <field name="category_id" ref="template_category_tax_engagements"/>
+            <field name="sequence">20</field>
+            <field name="description">Engagement letter for tax advisory services.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <!-- E. Other Standard Letters & Confirmations Templates -->
+        <record id="template_independence_confirmation" model="qaco.onboarding.template.document">
+            <field name="name">Independence Confirmation Letter</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">10</field>
+            <field name="description">Independence confirmation declaration for engagement team.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_terms_of_business" model="qaco.onboarding.template.document">
+            <field name="name">Client Terms of Business</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">20</field>
+            <field name="description">Standard terms of business agreement with clients.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_non_engagement_letter" model="qaco.onboarding.template.document">
+            <field name="name">Letter of Non-Engagement</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">30</field>
+            <field name="description">Letter to communicate decision not to accept engagement.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_pbc_list" model="qaco.onboarding.template.document">
+            <field name="name">Document Request List (PBC List)</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">40</field>
+            <field name="description">Prepared By Client (PBC) document request checklist.</field>
+            <field name="file_type">docx</field>
+        </record>
+    </data>
+</odoo>
