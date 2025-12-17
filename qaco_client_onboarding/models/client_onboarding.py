@@ -605,7 +605,63 @@ class OnboardingBranchLocation(models.Model):
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
     name = fields.Char(string='Location', required=True)
     address = fields.Char(string='Address', required=True)
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one(
+        'res.country',
+        string='Country',
+        default=lambda self: self.env.ref('base.pk', raise_if_not_found=False),
+    )
+    province_id = fields.Many2one(
+        'res.country.state',
+        string='Province / Territory',
+        help='Select the province to align with Pakistan jurisdictional mapping.',
+    )
+    city_id = fields.Many2one(
+        'res.city',
+        string='City',
+        help='Pick a Pakistan city; options are filtered by province.',
+    )
+
+    @api.onchange('province_id')
+    def _onchange_province(self):
+        for record in self:
+            if record.province_id:
+                record.country_id = record.province_id.country_id
+            if record.city_id and record.city_id.state_id != record.province_id:
+                record.city_id = False
+
+    @api.onchange('city_id')
+    def _onchange_city(self):
+        for record in self:
+            if record.city_id:
+                record.province_id = record.city_id.state_id
+                if record.city_id.country_id:
+                    record.country_id = record.city_id.country_id
+
+    @api.onchange('country_id')
+    def _onchange_country(self):
+        pk_country = self.env.ref('base.pk', raise_if_not_found=False)
+        for record in self:
+            if pk_country and record.country_id and record.country_id != pk_country:
+                record.country_id = pk_country
+            if not record.country_id and pk_country:
+                record.country_id = pk_country
+            if record.province_id and record.province_id.country_id != record.country_id:
+                record.province_id = False
+            if record.city_id and record.city_id.country_id != record.country_id:
+                record.city_id = False
+
+    @api.constrains('country_id', 'province_id', 'city_id')
+    def _check_location_hierarchy(self):
+        pk_country = self.env.ref('base.pk', raise_if_not_found=False)
+        for record in self:
+            if pk_country and record.country_id and record.country_id != pk_country:
+                raise ValidationError(_('Branch locations must be within Pakistan.'))
+            if record.province_id and record.country_id and record.province_id.country_id != record.country_id:
+                raise ValidationError(_('Selected province must belong to the chosen country.'))
+            if record.city_id and record.province_id and record.city_id.state_id != record.province_id:
+                raise ValidationError(_('Selected city must belong to the chosen province.'))
+            if record.city_id and record.country_id and record.city_id.country_id != record.country_id:
+                raise ValidationError(_('Selected city must belong to the chosen country.'))
 
 
 class OnboardingUBO(models.Model):

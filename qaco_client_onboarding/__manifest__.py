@@ -14,6 +14,7 @@ Client onboarding phase with smart button access from audit.
     'depends': ['qaco_audit'],
     'data': [
         'security/ir.model.access.csv',
+        'data/pakistan_location_data.xml',
         'data/audit_standard_library_data.xml',
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',

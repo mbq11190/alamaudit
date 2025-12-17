@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Pakistan Provinces / Territories -->
+    <record id="state_pk_punjab" model="res.country.state">
+        <field name="name">Punjab</field>
+        <field name="code">PK-PB</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="state_pk_sindh" model="res.country.state">
+        <field name="name">Sindh</field>
+        <field name="code">PK-SD</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="state_pk_kpk" model="res.country.state">
+        <field name="name">Khyber Pakhtunkhwa</field>
+        <field name="code">PK-KP</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="state_pk_balochistan" model="res.country.state">
+        <field name="name">Balochistan</field>
+        <field name="code">PK-BA</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="state_pk_ict" model="res.country.state">
+        <field name="name">Islamabad Capital Territory</field>
+        <field name="code">PK-IS</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="state_pk_gb" model="res.country.state">
+        <field name="name">Gilgit-Baltistan</field>
+        <field name="code">PK-GB</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="state_pk_ajk" model="res.country.state">
+        <field name="name">Azad Jammu &amp; Kashmir</field>
+        <field name="code">PK-AK</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Punjab Cities -->
+    <record id="city_pk_lahore" model="res.city">
+        <field name="name">Lahore</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_punjab"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_faisalabad" model="res.city">
+        <field name="name">Faisalabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_punjab"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_rawalpindi" model="res.city">
+        <field name="name">Rawalpindi</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_punjab"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_multan" model="res.city">
+        <field name="name">Multan</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_punjab"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_gujranwala" model="res.city">
+        <field name="name">Gujranwala</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_punjab"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Sindh Cities -->
+    <record id="city_pk_karachi" model="res.city">
+        <field name="name">Karachi</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_sindh"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_hyderabad" model="res.city">
+        <field name="name">Hyderabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_sindh"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_sukkur" model="res.city">
+        <field name="name">Sukkur</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_sindh"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Khyber Pakhtunkhwa Cities -->
+    <record id="city_pk_peshawar" model="res.city">
+        <field name="name">Peshawar</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_kpk"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_abbottabad" model="res.city">
+        <field name="name">Abbottabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_kpk"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_mingora" model="res.city">
+        <field name="name">Mingora (Swat)</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_kpk"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Balochistan Cities -->
+    <record id="city_pk_quetta" model="res.city">
+        <field name="name">Quetta</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_balochistan"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_gwadar" model="res.city">
+        <field name="name">Gwadar</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_balochistan"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Islamabad Cities -->
+    <record id="city_pk_islamabad" model="res.city">
+        <field name="name">Islamabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_ict"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Gilgit-Baltistan Cities -->
+    <record id="city_pk_gilgit" model="res.city">
+        <field name="name">Gilgit</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_gb"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_skardu" model="res.city">
+        <field name="name">Skardu</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_gb"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+
+    <!-- Azad Jammu &amp; Kashmir Cities -->
+    <record id="city_pk_muzaffarabad" model="res.city">
+        <field name="name">Muzaffarabad</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_ajk"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="city_pk_mirpur" model="res.city">
+        <field name="name">Mirpur</field>
+        <field name="state_id" ref="qaco_client_onboarding.state_pk_ajk"/>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+</odoo>

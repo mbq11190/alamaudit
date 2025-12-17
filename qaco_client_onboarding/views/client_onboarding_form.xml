@@ -100,11 +100,13 @@
                                     <field name="org_chart_name" readonly="1"/>
                                 </group>
                                 <group string="Branch &amp; Office Locations" class="o_onboarding_grid">
-                                    <field name="branch_location_ids">
+                                    <field name="branch_location_ids" context="{'default_country_id': ref('base.pk')}">
                                         <tree editable="bottom">
                                             <field name="name"/>
                                             <field name="address"/>
-                                            <field name="country_id"/>
+                                            <field name="province_id" domain="[('country_id','=',country_id)]" options="{'no_create': True}"/>
+                                            <field name="city_id" domain="[('state_id','=',province_id)]" options="{'no_create': True}"/>
+                                            <field name="country_id" domain="[('id','=',ref('base.pk'))]" options="{'no_create': True}"/>
                                         </tree>
                                     </field>
                                 </group>
