@@ -4,6 +4,10 @@
         <field name="name">Manufacturing (Textile)</field>
         <field name="risk_category">medium</field>
     </record>
+    <record id="industry_manufacturing_general" model="qaco.onboarding.industry">
+        <field name="name">Manufacturing (General)</field>
+        <field name="risk_category">medium</field>
+    </record>
     <record id="industry_financial" model="qaco.onboarding.industry">
         <field name="name">Financial Services (Banking)</field>
         <field name="risk_category">high</field>
