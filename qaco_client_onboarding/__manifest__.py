@@ -18,15 +18,13 @@ Client onboarding phase with smart button access from audit.
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',
         'views/client_onboarding_form.xml',
-        'views/client_onboarding_menu.xml',
         'views/audit_smart_button.xml',
         'reports/client_onboarding_report.xml',
         'reports/client_onboarding_report_template.xml',
     ],
     'assets': {
         'web.assets_backend': [
-            'qaco_client_onboarding/static/src/css/onboarding.css',
-            'qaco_client_onboarding/static/src/js/onboarding_tabs.esm.js',
+            'qaco_client_onboarding/static/src/scss/onboarding.scss',
         ],
     },
     'installable': True,

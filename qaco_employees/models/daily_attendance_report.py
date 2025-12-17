@@ -22,51 +22,19 @@ class DailyAttendanceReport(models.Model):
             return
 
         employees = self.env['hr.employee'].search([])
-        if not employees:
-            return
-
-        attendance = self.env['hr.attendance'].search([
-            ('employee_id', 'in', employees.ids),
-            ('check_in', '>=', start_date),
-        ])
+        attendance = self.env['hr.attendance'].search([('check_in', '>=', start_date)])
         leaves = self.env['hr.leave'].search([
-            ('employee_id', 'in', employees.ids),
             ('request_date_from', '<=', today),
             ('request_date_to', '>=', today),
             ('state', '=', 'validate')
         ])
-
-        attendance_by_emp = {}
-        for att in attendance:
-            attendance_by_emp.setdefault(att.employee_id.id, []).append(att)
-
-        leave_emp_ids = set(leaves.mapped('employee_id').ids)
-
-        summary_group = self.env['leave.summary'].read_group(
-            [
-                ('employee_id', 'in', employees.ids),
-                ('event_date', '<=', today),
-            ],
-            ['employee_id', 'event_date:max'],
-            ['employee_id']
-        )
-        latest_summary_by_emp = {}
-        for group in summary_group:
-            emp_id = group['employee_id'][0]
-            event_date = group['event_date_max']
-            if emp_id and event_date:
-                summary = self.env['leave.summary'].search([
-                    ('employee_id', '=', emp_id),
-                    ('event_date', '=', event_date),
-                ], limit=1)
-                if summary:
-                    latest_summary_by_emp[emp_id] = summary
+        leave_summary_model = self.env['leave.summary']
 
         grouped_by_manager = defaultdict(list)
         manager_summary = defaultdict(lambda: {'late': 0, 'approved': 0, 'unauthorized': 0})
 
         for emp in employees:
-            emp_attendance = attendance_by_emp.get(emp.id, [])
+            emp_attendance = attendance.filtered(lambda a: a.employee_id.id == emp.id)
             checkins = []
             today_checkin = None
 
@@ -87,7 +55,7 @@ class DailyAttendanceReport(models.Model):
                 avg_time = None
 
             if not today_checkin:
-                if emp.id in leave_emp_ids:
+                if leaves.filtered(lambda leave: leave.employee_id.id == emp.id):
                     today_status = "Approved Leave"
                     manager_summary[emp.parent_id.name if emp.parent_id else "N/A"]['approved'] += 1
                 else:
@@ -100,7 +68,7 @@ class DailyAttendanceReport(models.Model):
                 if checkin_raw > time(10, 0):
                     manager_summary[emp.parent_id.name if emp.parent_id else "N/A"]['late'] += 1
 
-            summary = latest_summary_by_emp.get(emp.id)
+            summary = leave_summary_model.search([('employee_id', '=', emp.id)], order="event_date desc", limit=1)
 
             record = {
                 'name': emp.name,

@@ -7,28 +7,5 @@
         "test*.py"
     ],
     "python.testing.pytestEnabled": false,
-    "python.testing.unittestEnabled": true,
-
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 1000,
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": false,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.minimap.enabled": true,
-    "editor.wordWrap": "on",
-    "editor.smoothScrolling": true,
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact",
-        "vue-html": "html"
-    },
-    "emmet.triggerExpansionOnTab": true,
-    "terminal.integrated.fontSize": 14,
-    "terminal.integrated.defaultProfile.windows": "Git Bash",
-    "browser-preview.startUrl": "http://localhost:3000",
-    "css.validate": false,
-    "scss.validate": false,
-    "less.validate": false,
-    "editor.quickSuggestions": {
-        "strings": true
-    }
+    "python.testing.unittestEnabled": true
 }

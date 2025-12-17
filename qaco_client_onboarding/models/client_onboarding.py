@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 
 try:
     from odoo.addons.qaco_client_onboarding.models.audit_compliance import ONBOARDING_AREAS  # type: ignore
@@ -97,15 +97,6 @@ ONBOARDING_STATUS = [
 ]
 
 
-ENTITY_LABELS = dict(ENTITY_SELECTION)
-PRIMARY_REGULATOR_LABELS = dict(PRIMARY_REGULATOR_SELECTION)
-FINANCIAL_FRAMEWORK_LABELS = dict(FINANCIAL_FRAMEWORK_SELECTION)
-MANAGEMENT_INTEGRITY_LABELS = dict(MANAGEMENT_INTEGRITY_SELECTION)
-AML_RATING_LABELS = dict(AML_RATING)
-SECTION_STATUS_LABELS = dict(SECTION_STATUS)
-ENGAGEMENT_DECISION_LABELS = dict(ENGAGEMENT_DECISION_SELECTION)
-
-
 class ClientOnboarding(models.Model):
     _name = 'qaco.client.onboarding'
     _description = 'Client Onboarding'
@@ -116,7 +107,7 @@ class ClientOnboarding(models.Model):
     client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=True)
 
     # Section 0: Gateway fields
-    entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', tracking=True)
+    entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', required=True, tracking=True)
     other_entity_description = fields.Char(string='Specify Other Entity Type')
     entity_type_guidance = fields.Char(string='Entity Gateway Guidance', default='Select the entity classification that dictates mandatory thresholds, regulatory obligations, and risk profiles.')
     state = fields.Selection(ONBOARDING_STATUS, string='Approval Status', default='draft', tracking=True)
@@ -129,9 +120,6 @@ class ClientOnboarding(models.Model):
     section5_status = fields.Selection(SECTION_STATUS, string='Section 5 Status', compute='_compute_section_status', store=True)
     section6_status = fields.Selection(SECTION_STATUS, string='Section 6 Status', compute='_compute_section_status', store=True)
     section7_status = fields.Selection(SECTION_STATUS, string='Section 7 Status', compute='_compute_section_status', store=True)
-    section8_status = fields.Selection(SECTION_STATUS, string='Section 8 Status', compute='_compute_section_status', store=True)
-    section9_status = fields.Selection(SECTION_STATUS, string='Section 9 Status', compute='_compute_section_status', store=True)
-    section10_status = fields.Selection(SECTION_STATUS, string='Section 10 Status', compute='_compute_section_status', store=True)
     entity_type_label = fields.Char(string='Entity Type Label', compute='_compute_selection_labels')
     primary_regulator_label = fields.Char(string='Primary Regulator Label', compute='_compute_selection_labels')
     financial_framework_label = fields.Char(string='Financial Framework Label', compute='_compute_selection_labels')
@@ -143,26 +131,26 @@ class ClientOnboarding(models.Model):
     audit_standard_overview = fields.Html(string='Selected Standards Overview', compute='_compute_audit_standard_overview', sanitize=False)
     regulator_checklist_line_ids = fields.One2many('audit.onboarding.checklist', 'onboarding_id', string='Regulator Onboarding Checklist')
     high_risk_onboarding = fields.Boolean(string='High-Risk Onboarding', compute='_compute_high_risk', store=True)
-    regulator_checklist_completion = fields.Float(string='Mandatory Checklist Completion %', compute='_compute_regulator_checklist_summary', store=True)
-    regulator_checklist_overview = fields.Html(string='Checklist Summary', compute='_compute_regulator_checklist_summary', sanitize=False)
+    regulator_checklist_completion = fields.Float(string='Mandatory Checklist Completion %', compute='_compute_regulator_checklist_completion', store=True)
+    regulator_checklist_overview = fields.Html(string='Checklist Summary', compute='_compute_regulator_checklist_overview', sanitize=False)
 
     # Section 1: Legal Identity
-    legal_name = fields.Char(string='Legal Name')
+    legal_name = fields.Char(string='Legal Name', required=True)
     trading_name = fields.Char(string='Trading Name')
-    principal_business_address = fields.Char(string='Principal Business Address')
+    principal_business_address = fields.Char(string='Principal Business Address', required=True)
     branch_location_ids = fields.One2many('qaco.onboarding.branch.location', 'onboarding_id', string='Branch and Office Locations')
     ntn = fields.Char(string='NTN', help='Enter in format 1234567-1')
     strn = fields.Char(string='STRN', help='State the Sales Tax Registration Number if applicable')
-    business_registration_number = fields.Char(string='Business Registration Number')
+    business_registration_number = fields.Char(string='Business Registration Number', required=True)
     industry_id = fields.Many2one('qaco.onboarding.industry', string='Industry / Sector')
-    primary_regulator = fields.Selection(PRIMARY_REGULATOR_SELECTION, string='Primary Regulator')
+    primary_regulator = fields.Selection(PRIMARY_REGULATOR_SELECTION, string='Primary Regulator', required=True)
     regulator_other = fields.Char(string='Other Regulator Details')
     org_chart_attachment = fields.Binary(string='Group Structure / Org Chart')
     org_chart_name = fields.Char(string='Org Chart File Name')
     ubo_ids = fields.One2many('qaco.onboarding.ubo', 'onboarding_id', string='Ultimate Beneficial Owners')
 
     # Section 2: Compliance History
-    financial_framework = fields.Selection(FINANCIAL_FRAMEWORK_SELECTION, string='Applicable Framework')
+    financial_framework = fields.Selection(FINANCIAL_FRAMEWORK_SELECTION, string='Applicable Framework', required=True)
     financial_framework_other = fields.Char(string='Other Framework Details')
     annual_return_last_filed = fields.Date(string='Annual Return Last Filed')
     annual_return_overdue = fields.Boolean(string='Return Overdue', default=False)
@@ -182,10 +170,10 @@ class ClientOnboarding(models.Model):
     enhanced_due_diligence_attachment = fields.Binary(string='Enhanced Due Diligence Documentation')
 
     # Section 4: Pre-Acceptance Risk
-    management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating')
-    management_integrity_comment = fields.Text(string='Management Integrity Justification')
+    management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating', required=True)
+    management_integrity_comment = fields.Text(string='Management Integrity Justification', required=True)
     litigation_history = fields.Text(string='Litigation History')
-    fraud_history = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='History of Fraud or Penalties', default='no')
+    fraud_history = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='History of Fraud or Penalties', required=True, default='no')
     fraud_explanation = fields.Text(string='Fraud or Penalty Details')
     aml_risk_rating = fields.Selection(AML_RATING, string='AML/CTF Risk Rating', compute='_compute_aml_risk_rating', store=True)
     business_risk_profile = fields.Text(string='Business Risk Profile')
@@ -298,13 +286,13 @@ class ClientOnboarding(models.Model):
     @api.depends('entity_type', 'primary_regulator', 'financial_framework', 'management_integrity_rating', 'aml_risk_rating', 'overall_status', 'engagement_decision')
     def _compute_selection_labels(self):
         for record in self:
-            record.entity_type_label = ENTITY_LABELS.get(record.entity_type, '')
-            record.primary_regulator_label = PRIMARY_REGULATOR_LABELS.get(record.primary_regulator, '')
-            record.financial_framework_label = FINANCIAL_FRAMEWORK_LABELS.get(record.financial_framework, '')
-            record.management_integrity_label = MANAGEMENT_INTEGRITY_LABELS.get(record.management_integrity_rating, '')
-            record.aml_risk_label = AML_RATING_LABELS.get(record.aml_risk_rating, '')
-            record.overall_status_label = SECTION_STATUS_LABELS.get(record.overall_status, '')
-            record.engagement_decision_label = ENGAGEMENT_DECISION_LABELS.get(record.engagement_decision, '')
+            record.entity_type_label = dict(ENTITY_SELECTION).get(record.entity_type, '')
+            record.primary_regulator_label = dict(PRIMARY_REGULATOR_SELECTION).get(record.primary_regulator, '')
+            record.financial_framework_label = dict(FINANCIAL_FRAMEWORK_SELECTION).get(record.financial_framework, '')
+            record.management_integrity_label = dict(MANAGEMENT_INTEGRITY_SELECTION).get(record.management_integrity_rating, '')
+            record.aml_risk_label = dict(AML_RATING).get(record.aml_risk_rating, '')
+            record.overall_status_label = dict(SECTION_STATUS).get(record.overall_status, '')
+            record.engagement_decision_label = dict(ENGAGEMENT_DECISION_SELECTION).get(record.engagement_decision, '')
 
     @api.depends('audit_standard_ids')
     def _compute_audit_standard_overview(self):
@@ -332,144 +320,70 @@ class ClientOnboarding(models.Model):
                 or record.fee_dependency_flag
             )
 
-    @api.depends('regulator_checklist_line_ids.completed', 'regulator_checklist_line_ids.mandatory', 'regulator_checklist_line_ids.standard_ids')
-    def _compute_regulator_checklist_summary(self):
+    @api.depends('regulator_checklist_line_ids.completed', 'regulator_checklist_line_ids.mandatory')
+    def _compute_regulator_checklist_completion(self):
         for record in self:
-            lines = record.regulator_checklist_line_ids
-            mandatory = lines.filtered('mandatory')
-            completed_mandatory = mandatory.filtered('completed')
+            mandatory = [line for line in record.regulator_checklist_line_ids if line.mandatory]
             total_mandatory = len(mandatory)
-            percent = 0.0
-            if total_mandatory:
-                percent = round(len(completed_mandatory) / total_mandatory * 100.0, 2)
-            record.regulator_checklist_completion = percent
+            if not total_mandatory:
+                record.regulator_checklist_completion = 0.0
+                continue
+            completed_mandatory = sum(1 for line in mandatory if line.completed)
+            record.regulator_checklist_completion = round(completed_mandatory / total_mandatory * 100.0, 2)
+
+    @api.depends('regulator_checklist_line_ids.completed', 'regulator_checklist_line_ids.mandatory', 'regulator_checklist_line_ids.standard_ids')
+    def _compute_regulator_checklist_overview(self):
+        for record in self:
+            mandatory_lines = [line for line in record.regulator_checklist_line_ids if line.mandatory]
+            if not mandatory_lines:
+                record.regulator_checklist_overview = _('<p>No checklist summary available.</p>')
+                continue
+
+            lines_by_area = {}
+            for line in mandatory_lines:
+                lines_by_area.setdefault(line.onboarding_area, []).append(line)
 
             summary_html = []
             for area_key, area_label in ONBOARDING_AREAS:
-                area_lines = lines.filtered(lambda l: l.onboarding_area == area_key and l.mandatory)
+                area_lines = lines_by_area.get(area_key)
                 if not area_lines:
                     continue
-                area_completed = area_lines.filtered('completed')
-                codes = set()
-                for l in area_lines:
-                    codes.update(l.standard_ids.mapped('code'))
-                codes_text = ', '.join(sorted(codes)) if codes else _('No standards linked')
+                completed_count = sum(1 for line in area_lines if line.completed)
+                standards = set()
+                for line in area_lines:
+                    for standard in line.standard_ids:
+                        if standard.code:
+                            standards.add(standard.code)
+                codes_text = ', '.join(sorted(standards)) if standards else _('No standards linked')
                 summary_html.append(
                     _('<p><strong>%s</strong>: %s/%s mandatory completed | Standards: %s</p>') % (
                         area_label,
-                        len(area_completed),
+                        completed_count,
                         len(area_lines),
                         codes_text,
                     )
                 )
-            if not summary_html:
-                summary_html = [_('<p>No checklist summary available.</p>')]
-            record.regulator_checklist_overview = ''.join(summary_html)
 
-    @api.depends(
-        'entity_type',
-        'legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator',
-        'financial_framework',
-        'shareholder_ids', 'board_member_ids', 'has_pep',
-        'management_integrity_rating', 'management_integrity_comment', 'aml_risk_rating', 'eqcr_required',
-        'independence_threat_ids', 'independence_declaration_ids', 'fee_dependency_flag',
-        'pcl_document', 'pcl_no_outstanding_fees', 'pcl_no_disputes', 'pcl_no_ethics_issues',
-        'engagement_decision', 'engagement_partner_signature',
-        'document_ids',
-        'checklist_line_ids.answer', 'checklist_line_ids.critical',
-    )
+            record.regulator_checklist_overview = ''.join(summary_html) if summary_html else _('<p>No checklist summary available.</p>')
+
+    @api.depends('legal_name', 'principal_business_address', 'business_registration_number', 'industry_id', 'primary_regulator')
     def _compute_section_status(self):
         for record in self:
-            record.section1_status = 'green' if all([
-                record.entity_type,
-                record.legal_name,
-                record.principal_business_address,
-                record.business_registration_number,
-                record.industry_id,
-                record.primary_regulator,
-            ]) else 'red'
+            record.section1_status = 'green' if all([record.legal_name, record.principal_business_address, record.business_registration_number, record.industry_id, record.primary_regulator]) else 'red'
             record.section2_status = 'green' if record.financial_framework else 'red'
-            if not (record.shareholder_ids and record.board_member_ids):
-                record.section3_status = 'red'
-            else:
-                record.section3_status = 'amber' if record.has_pep else 'green'
-
-            base_section4_green = bool(
-                record.management_integrity_rating
-                and record.management_integrity_comment
-                and record.aml_risk_rating in ['low', 'medium']
-            )
-            if not record.management_integrity_rating:
-                record.section4_status = 'red'
-            elif base_section4_green and record.eqcr_required:
-                record.section4_status = 'amber'
-            elif base_section4_green:
-                record.section4_status = 'green'
-            else:
-                record.section4_status = 'amber'
-
-            if not (record.independence_threat_ids and record.independence_declaration_ids):
-                record.section5_status = 'red'
-            else:
-                record.section5_status = 'amber' if record.fee_dependency_flag else 'green'
+            record.section3_status = 'green' if record.shareholder_ids and record.board_member_ids else 'red'
+            record.section4_status = 'green' if record.management_integrity_rating and record.aml_risk_rating in ['low', 'medium'] else ('amber' if record.management_integrity_rating else 'red')
+            record.section5_status = 'green' if record.independence_threat_ids and record.independence_declaration_ids else 'red'
             record.section6_status = 'green' if record.pcl_document and record.pcl_no_outstanding_fees and record.pcl_no_disputes and record.pcl_no_ethics_issues else 'red'
             record.section7_status = 'green' if record.engagement_decision == 'accept' and record.engagement_partner_signature else 'red'
 
-            # Sections 8-10: no mandatory fields enforced for navigation; mark as complete by default.
-            record.section8_status = 'green'
-            record.section9_status = 'green'
-            record.section10_status = 'green'
-
-    def _get_onboarding_section_status(self, section_number: int) -> str:
-        field_name = f'section{section_number}_status'
-        if field_name not in self._fields:
-            return 'red'
-        return getattr(self, field_name) or 'red'
-
-    def _validate_onboarding_section(self, section_number: int):
-        self.ensure_one()
-        if section_number in (8, 9, 10):
-            return
-        status = self._get_onboarding_section_status(section_number)
-        if status != 'green':
-            raise UserError(
-                _('Please complete all required fields in section %s before continuing.')
-                % f'1.{section_number}'
-            )
-
-    def _action_reopen_onboarding(self, target_section: int):
-        self.ensure_one()
-        ctx = dict(self.env.context)
-        ctx['onboarding_active_section'] = target_section
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Client Onboarding'),
-            'res_model': self._name,
-            'view_mode': 'form',
-            'res_id': self.id,
-            'target': 'current',
-            'context': ctx,
-        }
-
-    def action_onboarding_back(self):
-        self.ensure_one()
-        current = int(self.env.context.get('onboarding_current_section') or 1)
-        target = max(1, current - 1)
-        return self._action_reopen_onboarding(target)
-
-    def action_onboarding_save_next(self):
-        self.ensure_one()
-        current = int(self.env.context.get('onboarding_current_section') or 1)
-        self._validate_onboarding_section(current)
-        target = min(10, current + 1)
-        return self._action_reopen_onboarding(target)
-
-    @api.depends('board_member_ids.is_pep')
     def _compute_pep_flag(self):
         for record in self:
-            has_pep = any(member.is_pep for member in record.board_member_ids)
+            has_pep = bool(record.board_member_ids.filtered('is_pep'))
             record.has_pep = has_pep
             record.enhanced_due_diligence_required = has_pep
+            if has_pep:
+                record.section3_status = 'amber'
 
     @api.depends('management_integrity_rating', 'aml_risk_rating')
     def _compute_eqcr_required(self):
@@ -478,6 +392,8 @@ class ClientOnboarding(models.Model):
             high_aml = record.aml_risk_rating == 'high'
             record.eqcr_required = low_integrity or high_aml
             record.managing_partner_escalation = record.eqcr_required
+            if record.eqcr_required:
+                record.section4_status = 'amber'
 
     @api.depends('industry_id.risk_category', 'primary_regulator', 'has_pep')
     def _compute_aml_risk_rating(self):
@@ -505,6 +421,8 @@ class ClientOnboarding(models.Model):
             else:
                 record.fee_dependency_percent = 0.0
             record.fee_dependency_flag = record.fee_dependency_percent > threshold
+            if record.fee_dependency_flag:
+                record.section5_status = 'amber'
 
     @api.depends('independence_declaration_ids.state')
     def _compute_independence_status(self):
@@ -512,12 +430,13 @@ class ClientOnboarding(models.Model):
             if not record.independence_declaration_ids:
                 record.independence_status_feedback = _('Awaiting declarations from the engagement team.')
                 continue
-            total = len(record.independence_declaration_ids)
-            confirmed = sum(1 for line in record.independence_declaration_ids if line.state == 'confirmed')
-            percent = (confirmed / total) * 100 if total else 0
+            completed = record.independence_declaration_ids.filtered(lambda l: l.state == 'confirmed')
+            percent = 0
+            if record.independence_declaration_ids:
+                percent = len(completed) / len(record.independence_declaration_ids) * 100
             record.independence_status_feedback = _('%d%% of team members completed declarations.') % percent
 
-    @api.depends('client_id', 'aml_risk_rating', 'eqcr_required', 'engagement_decision')
+    @api.depends('client_id', 'audit_id', 'risk_mitigation_plan', 'section4_status')
     def _compute_engagement_summary(self):
         for record in self:
             summary = [
