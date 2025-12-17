@@ -60,7 +60,7 @@
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
                                             <field name="entity_type" class="w-100" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
-                                            <field name="other_entity_description" class="w-100" string="Other: specify" attrs="{'invisible': [('entity_type', '!=', 'other')]}" placeholder="Describe the entity type if not listed above"/>
+                                            <field name="other_entity_description" class="w-100" string="Other: specify" modifiers="{'invisible': [('entity_type', '!=', 'other')]}" placeholder="Describe the entity type if not listed above"/>
                                         </group>
                                     </div>
                                     <div class="col-md-6">
