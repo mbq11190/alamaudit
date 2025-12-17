@@ -48,7 +48,9 @@
                         </div>
                     </div>
 
-                    <div class="o_onboarding_card">
+                    <notebook class="o_onboarding_tabs">
+                        <page name="section_11" string="1.1&#10;Legal Identity" class="o_onboarding_tab_page">
+                            <div id="section-1-1" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.1</span>
                                     <span class="o_onboarding_card_title">Legal Identity</span>
@@ -109,8 +111,10 @@
                                     </field>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_12" string="1.2&#10;Regulatory &amp; Compliance" class="o_onboarding_tab_page">
+                            <div id="section-1-2" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.2</span>
                                     <span class="o_onboarding_card_title">Regulatory &amp; Compliance</span>
@@ -143,8 +147,10 @@
                                     </field>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_13" string="1.3&#10;Ownership &amp; Governance" class="o_onboarding_tab_page">
+                            <div id="section-1-3" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.3</span>
                                     <span class="o_onboarding_card_title">Ownership &amp; Governance</span>
@@ -193,8 +199,10 @@
                                     </field>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_14" string="1.4&#10;Pre-Acceptance Risk" class="o_onboarding_tab_page">
+                            <div id="section-1-4" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.4</span>
                                     <span class="o_onboarding_card_title">Pre-Acceptance Risk</span>
@@ -228,8 +236,10 @@
                                     </field>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_15" string="1.5&#10;Independence &amp; Ethics" class="o_onboarding_tab_page">
+                            <div id="section-1-5" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.5</span>
                                     <span class="o_onboarding_card_title">Independence &amp; Ethics</span>
@@ -282,8 +292,10 @@
                                     </field>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_16" string="1.6&#10;Predecessor Auditor" class="o_onboarding_tab_page">
+                            <div id="section-1-6" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.6</span>
                                     <span class="o_onboarding_card_title">Predecessor Auditor</span>
@@ -314,8 +326,10 @@
                                     </field>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_17" string="1.7&#10;Final Authorization" class="o_onboarding_tab_page">
+                            <div id="section-1-7" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.7</span>
                                     <span class="o_onboarding_card_title">Final Authorization</span>
@@ -387,8 +401,10 @@
                                     <field name="regulator_checklist_completion" readonly="1" widget="progressbar" options="{'max_value': 100}"/>
                                 </group>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_18" string="1.8&#10;Document Vault" class="o_onboarding_tab_page">
+                            <div id="section-1-8" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.8</span>
                                     <span class="o_onboarding_card_title">Document Vault</span>
@@ -418,8 +434,10 @@
                                     </tree>
                                 </field>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_19" string="1.9&#10;Engagement Decision" class="o_onboarding_tab_page">
+                            <div id="section-1-9" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.9</span>
                                     <span class="o_onboarding_card_title">Engagement Partner Decision</span>
@@ -434,8 +452,10 @@
                                     </tree>
                                 </field>
                             </div>
+                        </page>
 
-                    <div class="o_onboarding_card">
+                        <page name="section_110" string="1.10&#10;Audit Trail" class="o_onboarding_tab_page">
+                            <div id="section-1-10" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.10</span>
                                     <span class="o_onboarding_card_title">Audit Trail</span>
@@ -450,6 +470,8 @@
                                     </tree>
                                 </field>
                             </div>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

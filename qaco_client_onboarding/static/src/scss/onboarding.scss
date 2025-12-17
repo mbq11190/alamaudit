@@ -189,6 +189,71 @@ $audit-bg: #f7f8fa;
     .o_field_many2manytags { max-width: 240px; }
   }
 
+  .o_onboarding_tabs {
+    margin: 0 16px 24px;
+    background: transparent;
+
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      border-bottom: none;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(47, 43, 74, 0.08);
+    }
+
+    .nav-item {
+      margin: 0;
+    }
+
+    .nav-link {
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      text-align: left;
+      color: $audit-slate;
+      background: #f9fafb;
+      min-height: 64px;
+      white-space: pre-line;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+      &::first-line {
+        font-size: 18px;
+        color: $audit-indigo;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+      }
+
+      &.active, &.active:hover {
+        background: linear-gradient(120deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.12));
+        color: $audit-charcoal;
+        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.2);
+      }
+    }
+
+    .tab-content {
+      margin-top: 18px;
+      border: none;
+      background: transparent;
+    }
+
+    .tab-pane {
+      padding: 0;
+      background: transparent;
+    }
+  }
+
   .o_onboarding_file_cards {
     .o_onboarding_kanban {
       padding: 10px;
@@ -237,5 +302,9 @@ $audit-bg: #f7f8fa;
   .o_onboarding_form .o_onboarding_command_bar {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .o_onboarding_form .o_onboarding_tabs .nav-tabs {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
   }
 }
