@@ -56,23 +56,45 @@
                                     <span class="o_onboarding_card_title">Legal Identity</span>
                                     <span class="o_onboarding_card_ref">ISA 210 / ISQM-1</span>
                                 </div>
-                                <group class="o_onboarding_grid">
-                                    <field name="entity_type" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
-                                    <field name="other_entity_description" string="Other: specify" attrs="{'invisible': [('entity_type', '!=', 'other')]}" placeholder="Describe the entity type if not listed above"/>
-                                    <field name="legal_name" help="The name exactly as on the Certificate of Incorporation or registration document."/>
-                                    <field name="trading_name" help="Enter the trading name if it differs from the legal name."/>
-                                </group>
-                                <group class="o_onboarding_grid">
-                                    <field name="principal_business_address" help="Enter the registered office as stated in legal filings."/>
-                                    <field name="primary_regulator" help="Select the principal regulator overseeing this entity."/>
-                                    <field name="regulator_other" modifiers="{'invisible':[('primary_regulator','!=','other')]}"/>
-                                    <field name="industry_id" help="Select the primary industry; it auto-populates the risk profile."/>
-                                </group>
-                                <group class="o_onboarding_grid">
-                                    <field name="ntn" help="NTN must follow the NNNNNNN-N format for validation."/>
-                                    <field name="strn" help="Provide the Sales Tax Registration Number if applicable."/>
-                                    <field name="business_registration_number" help="Enter the number assigned by SECP or relevant authority."/>
-                                </group>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <group class="o_onboarding_grid">
+                                            <field name="entity_type" class="w-100" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
+                                            <field name="other_entity_description" class="w-100" string="Other: specify" attrs="{'invisible': [('entity_type', '!=', 'other')]}" placeholder="Describe the entity type if not listed above"/>
+                                        </group>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <group class="o_onboarding_grid">
+                                            <field name="legal_name" class="w-100" help="The name exactly as on the Certificate of Incorporation or registration document."/>
+                                            <field name="trading_name" class="w-100" help="Enter the trading name if it differs from the legal name."/>
+                                        </group>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <group class="o_onboarding_grid">
+                                            <field name="principal_business_address" class="w-100" help="Enter the registered office as stated in legal filings."/>
+                                            <field name="industry_id" class="w-100" help="Select the primary industry; it auto-populates the risk profile."/>
+                                        </group>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <group class="o_onboarding_grid">
+                                            <field name="primary_regulator" class="w-100" help="Select the principal regulator overseeing this entity."/>
+                                            <field name="regulator_other" class="w-100" modifiers="{'invisible':[('primary_regulator','!=','other')]}"/>
+                                        </group>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <field name="ntn" class="w-100" help="NTN must follow the NNNNNNN-N format for validation."/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="strn" class="w-100" help="Provide the Sales Tax Registration Number if applicable."/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="business_registration_number" class="w-100" help="Enter the number assigned by SECP or relevant authority."/>
+                                    </div>
+                                </div>
                                 <group class="o_onboarding_grid">
                                     <field name="org_chart_attachment" filename="org_chart_name" widget="binary" help="Upload latest organizational chart or group structure."/>
                                     <field name="org_chart_name" readonly="1"/>
