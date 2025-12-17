@@ -2,7 +2,6 @@
     <record id="model_qaco_onboarding_city" model="ir.model">
         <field name="name">x_qaco_onboarding_city</field>
         <field name="model">qaco.onboarding.city</field>
-        <field name="module">qaco_client_onboarding</field>
         <field name="state">manual</field>
     </record>
 </odoo>
