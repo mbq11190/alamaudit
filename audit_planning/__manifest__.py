@@ -19,6 +19,8 @@
     "data": [
         "security/security.xml",
         "security/ir.model.access.csv",
+        "data/assertion_tags.xml",
+        "data/materiality_defaults.xml",
         "data/checklist_data.xml",
         "views/audit_planning_menu.xml",
         "views/audit_planning_tree.xml",

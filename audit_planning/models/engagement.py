@@ -159,6 +159,15 @@ class AuditEngagement(models.Model):
         help="Benchmarks and performance materiality computations.",
     )
 
+    # Linked planning artifacts
+    fs_risk_ids = fields.One2many("audit.risk.fs", "engagement_id", string="FS-Level Risks")
+    assertion_risk_ids = fields.One2many("audit.risk.assertion", "engagement_id", string="Assertion Risks")
+    fraud_risk_ids = fields.One2many("audit.fraud.risk", "engagement_id", string="Fraud Risks")
+    law_compliance_ids = fields.One2many("audit.law.compliance", "engagement_id", string="Laws & Regulations")
+    control_assessment_ids = fields.One2many("audit.internal.control", "engagement_id", string="Control Evaluations")
+    materiality_ids = fields.One2many("audit.materiality", "engagement_id", string="Materiality Workpapers")
+    sampling_ids = fields.One2many("audit.sampling", "engagement_id", string="Sampling Plans")
+
     # Checklist scaffolding
     checklist_ids = fields.One2many(
         "audit.engagement.checklist",
@@ -175,6 +184,16 @@ class AuditEngagement(models.Model):
     controls_progress = fields.Float(string="Controls Progress", compute="_compute_progress", store=True)
     risk_progress = fields.Float(string="Risk Progress", compute="_compute_progress", store=True)
     overall_progress = fields.Float(string="Overall Progress", compute="_compute_progress", store=True)
+    romm_level = fields.Selection(
+        [
+            ("low", "Low"),
+            ("moderate", "Moderate"),
+            ("high", "High"),
+        ],
+        string="Aggregated RoMM",
+        compute="_compute_romm_level",
+        help="Summarized risk of material misstatement derived from FS and assertion matrices.",
+    )
 
     # Convenience counters
     attachment_count = fields.Integer(string="Attachment Count", compute="_compute_attachment_count")
@@ -237,6 +256,11 @@ class AuditEngagement(models.Model):
     def _compute_checklist_count(self):
         for record in self:
             record.checklist_count = len(record.checklist_ids)
+
+    @api.depends("fs_risk_ids.risk_level", "assertion_risk_ids.risk_level")
+    def _compute_romm_level(self):
+        for record in self:
+            record.romm_level = record._derive_romm_level()
 
     def action_view_checklist(self):
         self.ensure_one()
@@ -343,3 +367,13 @@ class AuditEngagement(models.Model):
         ]
         if checklist_vals:
             self.env["audit.engagement.checklist"].create(checklist_vals)
+
+    def _derive_romm_level(self):
+        self.ensure_one()
+        risk_levels = list(filter(None, self.fs_risk_ids.mapped("risk_level")))
+        risk_levels += list(filter(None, self.assertion_risk_ids.mapped("risk_level")))
+        if "high" in risk_levels:
+            return "high"
+        if "moderate" in risk_levels:
+            return "moderate"
+        return "low"
