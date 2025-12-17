@@ -638,7 +638,6 @@ class OnboardingBranchLocation(models.Model):
     ]
 
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
-    name = fields.Char(string='Location', required=True)
     address = fields.Char(string='Address', required=True)
     country_id = fields.Many2one(
         'res.country',
