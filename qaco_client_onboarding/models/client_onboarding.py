@@ -602,6 +602,41 @@ class OnboardingBranchLocation(models.Model):
     _name = 'qaco.onboarding.branch.location'
     _description = 'Onboarding Branch / Office Location'
 
+    CITY_SELECTION = [
+        # Punjab
+        ('lahore', 'Lahore'),
+        ('faisalabad', 'Faisalabad'),
+        ('rawalpindi', 'Rawalpindi'),
+        ('multan', 'Multan'),
+        ('gujranwala', 'Gujranwala'),
+        ('sialkot', 'Sialkot'),
+        ('bahawalpur', 'Bahawalpur'),
+        ('sargodha', 'Sargodha'),
+        # Sindh
+        ('karachi', 'Karachi'),
+        ('hyderabad', 'Hyderabad'),
+        ('sukkur', 'Sukkur'),
+        ('larkana', 'Larkana'),
+        # KPK
+        ('peshawar', 'Peshawar'),
+        ('abbottabad', 'Abbottabad'),
+        ('mingora', 'Mingora (Swat)'),
+        ('mardan', 'Mardan'),
+        # Balochistan
+        ('quetta', 'Quetta'),
+        ('gwadar', 'Gwadar'),
+        # ICT
+        ('islamabad', 'Islamabad'),
+        # GB
+        ('gilgit', 'Gilgit'),
+        ('skardu', 'Skardu'),
+        # AJK
+        ('muzaffarabad', 'Muzaffarabad'),
+        ('mirpur', 'Mirpur'),
+        # Other
+        ('other', 'Other'),
+    ]
+
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
     name = fields.Char(string='Location', required=True)
     address = fields.Char(string='Address', required=True)
@@ -613,12 +648,13 @@ class OnboardingBranchLocation(models.Model):
     province_id = fields.Many2one(
         'res.country.state',
         string='Province / Territory',
+        domain="[('country_id', '=', country_id)]",
         help='Select the province to align with Pakistan jurisdictional mapping.',
     )
-    city_id = fields.Many2one(
-        'res.city',
+    city = fields.Selection(
+        selection=CITY_SELECTION,
         string='City',
-        help='Pick a Pakistan city; options are filtered by province.',
+        help='Select a Pakistan city from the list.',
     )
 
     @api.onchange('province_id')
@@ -626,16 +662,6 @@ class OnboardingBranchLocation(models.Model):
         for record in self:
             if record.province_id:
                 record.country_id = record.province_id.country_id
-            if record.city_id and record.city_id.state_id != record.province_id:
-                record.city_id = False
-
-    @api.onchange('city_id')
-    def _onchange_city(self):
-        for record in self:
-            if record.city_id:
-                record.province_id = record.city_id.state_id
-                if record.city_id.country_id:
-                    record.country_id = record.city_id.country_id
 
     @api.onchange('country_id')
     def _onchange_country(self):
@@ -647,10 +673,8 @@ class OnboardingBranchLocation(models.Model):
                 record.country_id = pk_country
             if record.province_id and record.province_id.country_id != record.country_id:
                 record.province_id = False
-            if record.city_id and record.city_id.country_id != record.country_id:
-                record.city_id = False
 
-    @api.constrains('country_id', 'province_id', 'city_id')
+    @api.constrains('country_id', 'province_id')
     def _check_location_hierarchy(self):
         pk_country = self.env.ref('base.pk', raise_if_not_found=False)
         for record in self:
@@ -658,10 +682,6 @@ class OnboardingBranchLocation(models.Model):
                 raise ValidationError(_('Branch locations must be within Pakistan.'))
             if record.province_id and record.country_id and record.province_id.country_id != record.country_id:
                 raise ValidationError(_('Selected province must belong to the chosen country.'))
-            if record.city_id and record.province_id and record.city_id.state_id != record.province_id:
-                raise ValidationError(_('Selected city must belong to the chosen province.'))
-            if record.city_id and record.country_id and record.city_id.country_id != record.country_id:
-                raise ValidationError(_('Selected city must belong to the chosen country.'))
 
 
 class OnboardingUBO(models.Model):

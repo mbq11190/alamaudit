@@ -105,8 +105,8 @@
                                             <field name="name"/>
                                             <field name="address"/>
                                             <field name="province_id" domain="[('country_id','=',country_id)]" options="{'no_create': True}"/>
-                                            <field name="city_id" domain="[('state_id','=',province_id)]" options="{'no_create': True}"/>
-                                            <field name="country_id" domain="[('id','=',ref('base.pk'))]" options="{'no_create': True}"/>
+                                            <field name="city"/>
+                                            <field name="country_id" options="{'no_create': True}"/>
                                         </tree>
                                     </field>
                                 </group>
