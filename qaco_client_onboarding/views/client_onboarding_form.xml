@@ -100,7 +100,7 @@
                                     <field name="org_chart_name" readonly="1"/>
                                 </group>
                                 <group string="Branch &amp; Office Locations" class="o_onboarding_grid">
-                                    <field name="branch_location_ids" context="{'default_country_id': ref('base.pk')}">
+                                    <field name="branch_location_ids">
                                         <tree editable="bottom">
                                             <field name="name"/>
                                             <field name="address"/>
