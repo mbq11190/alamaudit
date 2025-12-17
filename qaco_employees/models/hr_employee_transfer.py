@@ -1,6 +1,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from dateutil.relativedelta import relativedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class HrEmployeeTransfer(models.Model):
@@ -84,7 +87,12 @@ class HrEmployeeTransfer(models.Model):
         unallocated_client = self.env['res.partner'].search([('name', '=', 'UNALLOCATED')], limit=1)
 
         if not unallocated_client:
-            raise UserError("Unallocated client not found. Please create 'UNALLOCATED' in Clients.")
+            # Try to get from XML ID if seeded
+            unallocated_client = self.env.ref('qaco_employees.partner_unallocated', raise_if_not_found=False)
+
+        if not unallocated_client:
+            _logger.warning("Unallocated client not found. Skipping auto_set_unallocated cron. Please create 'UNALLOCATED' in Clients or upgrade qaco_employees module.")
+            return
 
         # ✅ Get the latest transfer for each employee
         all_transfers = self.env['hr.employee.transfer'].search([

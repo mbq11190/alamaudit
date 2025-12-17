@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Seed UNALLOCATED client for deputation expiry handling -->
+    <record id="partner_unallocated" model="res.partner">
+        <field name="name">UNALLOCATED</field>
+        <field name="company_type">company</field>
+        <field name="active">True</field>
+        <field name="comment">System placeholder for employees without active deputation assignments.</field>
+    </record>
+</odoo>

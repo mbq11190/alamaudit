@@ -54,6 +54,7 @@ QACO Employees Database Management System
         'views/unallocated_employee_recipient_views.xml',
         'data/designation_data.xml',
         'data/region_data.xml',
+        'data/unallocated_client_data.xml',
         'data/sequence.xml',
         'data/cron_weekly_employee_report.xml',
         'data/leave_condonation_sequence.xml',
