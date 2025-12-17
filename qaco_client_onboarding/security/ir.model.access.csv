@@ -5,9 +5,9 @@ access_qaco_client_onboarding_manager,qaco.client.onboarding.manager,model_qaco_
 access_qaco_branch_location_user,qaco.onboarding.branch.location,model_qaco_onboarding_branch_location,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_branch_location_partner,qaco.onboarding.branch.location,model_qaco_onboarding_branch_location,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_branch_location_manager,qaco.onboarding.branch.location,model_qaco_onboarding_branch_location,qaco_audit.group_audit_manager,1,1,1,1
-access_qaco_onboarding_city_user,qaco.onboarding.city,model_qaco_onboarding_city,qaco_audit.group_audit_trainee,1,1,1,1
-access_qaco_onboarding_city_partner,qaco.onboarding.city,model_qaco_onboarding_city,qaco_audit.group_audit_partner,1,1,1,1
-access_qaco_onboarding_city_manager,qaco.onboarding.city,model_qaco_onboarding_city,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_onboarding_city_user,qaco.onboarding.city,qaco_client_onboarding.model_qaco_onboarding_city,qaco_audit.group_audit_trainee,1,1,1,1
+access_qaco_onboarding_city_partner,qaco.onboarding.city,qaco_client_onboarding.model_qaco_onboarding_city,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_onboarding_city_manager,qaco.onboarding.city,qaco_client_onboarding.model_qaco_onboarding_city,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_ubo_user,qaco.onboarding.ubo,model_qaco_onboarding_ubo,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_ubo_partner,qaco.onboarding.ubo,model_qaco_onboarding_ubo,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_ubo_manager,qaco.onboarding.ubo,model_qaco_onboarding_ubo,qaco_audit.group_audit_manager,1,1,1,1
