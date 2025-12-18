@@ -5,6 +5,8 @@
 		<field name="model">qaco.planning.phase</field>
 		<field name="arch" type="xml">
 			<form string="Planning Phase - Statutory Audit Pakistan" class="o_planning_form">
+				<!-- Hidden fields for modifiers -->
+				<field name="can_finalize_planning" invisible="1"/>
 				<header>
 					<button name="action_manager_sign" type="object" string="Manager Sign-off"
 							class="btn-primary oe_highlight"
