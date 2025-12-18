@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- ═══════════════════════════════════════════════════════════════════════════════════
+         📄 AUTO-GENERATED REPORTS - ISA-Referenced, ICAP QCR Ready
+         ═══════════════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Original Client Acceptance Report (General) -->
     <report
         id="report_client_onboarding_pdf"
         model="qaco.client.onboarding"
@@ -8,5 +13,53 @@
         name="qaco_client_onboarding.report_client_onboarding_template"
         file="qaco_client_onboarding.report_client_onboarding_template"
         attachment_use="True"
+    />
+
+    <!-- 1. Client Acceptance & Continuance Report (ISA 220, ISQM-1) -->
+    <report
+        id="report_acceptance_continuance_pdf"
+        model="qaco.client.onboarding"
+        string="Client Acceptance &amp; Continuance Report"
+        report_type="qweb-pdf"
+        name="qaco_client_onboarding.report_acceptance_continuance_template"
+        file="qaco_client_onboarding.report_acceptance_continuance_template"
+        attachment_use="True"
+        print_report_name="'Acceptance_Continuance_%s_%s' % (object.client_id.name or 'Client', object.reports_generated_date.strftime('%Y%m%d') if object.reports_generated_date else '')"
+    />
+
+    <!-- 2. Ethics & Independence Compliance Report (IESBA Code, ISA 220) -->
+    <report
+        id="report_ethics_independence_pdf"
+        model="qaco.client.onboarding"
+        string="Ethics &amp; Independence Compliance Report"
+        report_type="qweb-pdf"
+        name="qaco_client_onboarding.report_ethics_independence_template"
+        file="qaco_client_onboarding.report_ethics_independence_template"
+        attachment_use="True"
+        print_report_name="'Ethics_Independence_%s_%s' % (object.client_id.name or 'Client', object.reports_generated_date.strftime('%Y%m%d') if object.reports_generated_date else '')"
+    />
+
+    <!-- 3. Fraud & Business Risk Summary (ISA 240, ISA 315) -->
+    <report
+        id="report_fraud_business_risk_pdf"
+        model="qaco.client.onboarding"
+        string="Fraud &amp; Business Risk Summary"
+        report_type="qweb-pdf"
+        name="qaco_client_onboarding.report_fraud_business_risk_template"
+        file="qaco_client_onboarding.report_fraud_business_risk_template"
+        attachment_use="True"
+        print_report_name="'Fraud_Risk_%s_%s' % (object.client_id.name or 'Client', object.reports_generated_date.strftime('%Y%m%d') if object.reports_generated_date else '')"
+    />
+
+    <!-- 4. Engagement Authorization Memorandum (ISA 210, ISQM-1) -->
+    <report
+        id="report_engagement_authorization_pdf"
+        model="qaco.client.onboarding"
+        string="Engagement Authorization Memorandum"
+        report_type="qweb-pdf"
+        name="qaco_client_onboarding.report_engagement_authorization_template"
+        file="qaco_client_onboarding.report_engagement_authorization_template"
+        attachment_use="True"
+        print_report_name="'Authorization_Memo_%s_%s' % (object.client_id.name or 'Client', object.reports_generated_date.strftime('%Y%m%d') if object.reports_generated_date else '')"
     />
 </odoo>

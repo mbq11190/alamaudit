@@ -200,6 +200,24 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <!-- Mandatory Narratives -->
+                                <separator string="Mandatory Risk Narratives"/>
+                                <group class="o_onboarding_grid">
+                                    <field name="legal_existence_verification" placeholder="Describe how legal existence was verified..." required="1"/>
+                                    <field name="group_structure_risk" placeholder="Assess risks from group/holding/subsidiary structure..." required="1"/>
+                                    <field name="foreign_ownership_exposure" placeholder="Document foreign ownership and cross-border implications..." required="1"/>
+                                    <field name="ubo_risk_summary" placeholder="Summarize UBO identification, PEP exposure, sanctions screening..." required="1"/>
+                                </group>
+
+                                <!-- Mandatory Attachments -->
+                                <separator string="Mandatory Attachments"/>
+                                <group class="o_onboarding_grid">
+                                    <field name="incorporation_evidence" filename="incorporation_evidence_name" widget="binary" required="1"/>
+                                    <field name="incorporation_evidence_name" readonly="1" invisible="1"/>
+                                    <field name="group_structure_chart" filename="group_structure_chart_name" widget="binary" required="1"/>
+                                    <field name="group_structure_chart_name" readonly="1" invisible="1"/>
+                                </group>
                                 </div>
                         </page>
 
@@ -221,6 +239,23 @@
                                     <field name="tax_assessment_history" help="Summarize tax assessments, litigations or disputes."/>
                                     <field name="regulatory_inspection_notes" help="Detail any inspections by SECP, SBP, FBR or other regulators."/>
                                     <field name="regulatory_inspection_attachment" filename="Regulatory Inspection Report" widget="binary" help="Attach inspection or notice documents."/>
+                                </group>
+
+                                <!-- Mandatory Compliance Assessment Notes -->
+                                <separator string="Mandatory Compliance Assessment"/>
+                                <group class="o_onboarding_grid">
+                                    <field name="applicable_laws_regulators" placeholder="List all applicable laws, regulations, and regulatory bodies..." required="1"/>
+                                    <field name="filing_history_gaps" placeholder="Document filing history, gaps, late filings, non-compliance..." required="1"/>
+                                    <field name="inspection_enforcement_exposure" placeholder="Summarize regulatory inspections, enforcement actions, investigations..." required="1"/>
+                                    <field name="litigation_penalties_note" placeholder="Document litigation, fines, penalties, adverse findings..." required="1"/>
+                                </group>
+
+                                <!-- Mandatory Conclusion -->
+                                <separator string="Mandatory Conclusion"/>
+                                <group class="o_onboarding_grid">
+                                    <label for="regulatory_framework_acceptable" string="Regulatory framework applicable to the client is acceptable for engagement."/>
+                                    <field name="regulatory_framework_acceptable" widget="radio" options="{'horizontal': true}" required="1" nolabel="1"/>
+                                    <field name="regulatory_framework_conclusion" placeholder="Provide justification for the conclusion..." required="1"/>
                                 </group>
                                 </div>
                         </page>
@@ -260,6 +295,26 @@
                                     <field name="enhanced_due_diligence_details" invisible="not enhanced_due_diligence_required"/>
                                     <field name="enhanced_due_diligence_attachment" invisible="not enhanced_due_diligence_required" widget="binary"/>
                                 </group>
+
+                                <!-- Mandatory Governance Risk Notes -->
+                                <separator string="Mandatory Governance Risk Assessment"/>
+                                <group class="o_onboarding_grid">
+                                    <field name="board_independence_assessment" placeholder="Assess board composition, independent directors, conflicts of interest..." required="1"/>
+                                    <field name="audit_committee_competence" placeholder="Document audit committee existence, member qualifications, effectiveness..." required="1"/>
+                                    <field name="political_exposure_note" placeholder="Assess political connections, PEP involvement, government contracts..." required="1"/>
+                                    <field name="dominant_shareholder_risk" placeholder="Evaluate concentrated ownership risks, related party influence..." required="1"/>
+                                </group>
+
+                                <!-- Mandatory Evidence Attachments -->
+                                <separator string="Mandatory Evidence"/>
+                                <group class="o_onboarding_grid">
+                                    <field name="board_list_attachment" filename="board_list_attachment_name" widget="binary" required="1"/>
+                                    <field name="board_list_attachment_name" readonly="1" invisible="1"/>
+                                    <field name="audit_committee_details_attachment" filename="audit_committee_details_attachment_name" widget="binary" required="1"/>
+                                    <field name="audit_committee_details_attachment_name" readonly="1" invisible="1"/>
+                                    <field name="fit_proper_confirmation_attachment" filename="fit_proper_confirmation_attachment_name" widget="binary" required="1"/>
+                                    <field name="fit_proper_confirmation_attachment_name" readonly="1" invisible="1"/>
+                                </group>
                                 </div>
                         </page>
 
@@ -283,6 +338,38 @@
                                     <field name="business_risk_profile"/>
                                     <field name="risk_mitigation_plan" required="eqcr_required"/>
                                 </group>
+
+                                <!-- Mandatory Risk Summaries -->
+                                <separator string="Mandatory Risk Summaries"/>
+                                <div class="alert alert-info mb-3">
+                                    <i class="fa fa-info-circle me-2"/>
+                                    Each risk must conclude with <strong>Low / Moderate / High</strong> rating and detailed justification. Yes/No only answers are not acceptable.
+                                </div>
+
+                                <group string="a) Integrity Risk" class="o_onboarding_grid">
+                                    <field name="integrity_risk_level" widget="radio" options="{'horizontal': true}" required="1"/>
+                                    <field name="integrity_risk_summary" placeholder="Summarize management integrity concerns, background checks, reputation issues. Justify the risk level selected..." required="1"/>
+                                </group>
+
+                                <group string="b) Business Risk" class="o_onboarding_grid">
+                                    <field name="business_risk_level" widget="radio" options="{'horizontal': true}" required="1"/>
+                                    <field name="business_risk_summary" placeholder="Summarize industry risks, competitive pressures, financial stability. Justify the risk level selected..." required="1"/>
+                                </group>
+
+                                <group string="c) Fraud Risk" class="o_onboarding_grid">
+                                    <field name="fraud_risk_level" widget="radio" options="{'horizontal': true}" required="1"/>
+                                    <field name="fraud_risk_summary" placeholder="Summarize fraud indicators, control environment, management override risks. Justify the risk level selected..." required="1"/>
+                                </group>
+
+                                <group string="d) Going Concern" class="o_onboarding_grid">
+                                    <field name="going_concern_level" widget="radio" options="{'horizontal': true}" required="1"/>
+                                    <field name="going_concern_indicators" placeholder="Document going concern indicators, liquidity, debt covenants, losses. Justify the risk level selected..." required="1"/>
+                                </group>
+
+                                <group string="e) Reputation Risk to Firm" class="o_onboarding_grid">
+                                    <field name="reputation_risk_level" widget="radio" options="{'horizontal': true}" required="1"/>
+                                    <field name="reputation_risk_to_firm" placeholder="Assess reputational risk to firm, media exposure, controversial activities. Justify the risk level selected..." required="1"/>
+                                </group>
                                 </div>
                         </page>
 
@@ -293,29 +380,50 @@
                                     <span class="o_onboarding_card_title">Independence &amp; Ethics</span>
                                     <span class="o_onboarding_card_ref">IESBA Code</span>
                                 </div>
-                                <group string="Threat Assessment" class="o_onboarding_grid">
-                                    <field name="independence_threat_ids">
+
+                                <!-- Acceptance Blocking Alert -->
+                                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('independence_residual_risk_acceptable', '=', True)]}">
+                                    <strong>⚠ ACCEPTANCE BLOCKED:</strong> One or more residual risks are NOT Low. Apply additional safeguards or decline the engagement.
+                                </div>
+
+                                <separator string="Mandatory Threat-by-Threat Documentation"/>
+                                <p class="text-muted"><em>
+                                    All FIVE threat types must be documented. For each threat: describe the threat, document safeguards applied, and assess residual risk.
+                                    <strong>If residual risk is NOT Low for ANY threat, acceptance is BLOCKED.</strong>
+                                </em></p>
+                                <group class="o_onboarding_grid">
+                                    <field name="independence_threat_ids" nolabel="1" colspan="2">
                                         <tree editable="bottom">
-                                            <field name="threat_type"/>
-                                            <field name="answer"/>
-                                            <field name="details"/>
-                                            <field name="safeguards"/>
+                                            <field name="threat_type" required="1"/>
+                                            <field name="answer" required="1"/>
+                                            <field name="threat_description" required="1"/>
+                                            <field name="safeguards_applied" required="1"/>
+                                            <field name="residual_risk" required="1" decoration-danger="residual_risk in ('moderate', 'high')" decoration-success="residual_risk == 'low'"/>
                                         </tree>
                                     </field>
                                 </group>
                                 <group class="o_onboarding_grid">
+                                    <field name="independence_residual_risk_acceptable" readonly="1" widget="boolean_toggle"/>
+                                </group>
+
+                                <separator string="Fee Dependency Assessment"/>
+                                <group class="o_onboarding_grid">
+                                    <field name="currency_id" readonly="1"/>
+                                    <field name="proposed_audit_fee" required="1"/>
+                                    <field name="total_fee_income" required="1"/>
+                                    <field name="fee_dependency_percent" readonly="1" help="Calculated as proposed audit fee divided by total firm income. Above 15% triggers review."/>
+                                    <field name="fee_dependency_flag" readonly="1"/>
+                                </group>
+
+                                <separator string="Non-Audit Services"/>
+                                <group class="o_onboarding_grid">
                                     <field name="non_audit_services_confirmed"/>
                                     <field name="non_audit_services_attachment" widget="binary"/>
                                 </group>
+
+                                <separator string="Team Independence Declarations"/>
                                 <group class="o_onboarding_grid">
-                                    <field name="currency_id" readonly="1"/>
-                                    <field name="proposed_audit_fee"/>
-                                    <field name="total_fee_income"/>
-                                    <field name="fee_dependency_percent" readonly="1" help="Calculated as proposed audit fee divided by total firm income."/>
-                                    <field name="fee_dependency_flag" readonly="1"/>
-                                </group>
-                                <group string="Team Declarations" class="o_onboarding_grid">
-                                    <field name="independence_declaration_ids">
+                                    <field name="independence_declaration_ids" nolabel="1" colspan="2">
                                         <tree editable="bottom">
                                             <field name="user_id"/>
                                             <field name="state"/>
@@ -325,7 +433,31 @@
                                     </field>
                                     <field name="independence_status_feedback" readonly="1"/>
                                 </group>
-                                </div>
+
+                                <separator string="Mandatory Attachments"/>
+                                <p class="text-muted"><em>
+                                    (a) Independence Declaration – must be signed BEFORE engagement acceptance.
+                                    (b) Fee Dependency Calculation – workpaper demonstrating compliance with 15% threshold.
+                                    (c) Audit Committee Approval – required if significant independence matters exist.
+                                </em></p>
+                                <group class="o_onboarding_grid">
+                                    <group>
+                                        <field name="independence_declaration_attachment" filename="independence_declaration_attachment_name" widget="binary" required="1"/>
+                                        <field name="independence_declaration_attachment_name" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="fee_dependency_calculation_attachment" filename="fee_dependency_calculation_attachment_name" widget="binary" required="1"/>
+                                        <field name="fee_dependency_calculation_attachment_name" invisible="1"/>
+                                    </group>
+                                </group>
+                                <group class="o_onboarding_grid">
+                                    <group>
+                                        <field name="audit_committee_approval_attachment" filename="audit_committee_approval_attachment_name" widget="binary"/>
+                                        <field name="audit_committee_approval_attachment_name" invisible="1"/>
+                                    </group>
+                                </group>
+
+                            </div>
                         </page>
 
                         <page name="section_16" string="1.6 - Predecessor Auditor" class="o_onboarding_tab_page">
@@ -335,6 +467,8 @@
                                     <span class="o_onboarding_card_title">Predecessor Auditor</span>
                                     <span class="o_onboarding_card_ref">ISA 210 / ISA 220</span>
                                 </div>
+
+                                <separator string="Predecessor Auditor Details"/>
                                 <group class="o_onboarding_grid">
                                     <field name="predecessor_auditor_name"/>
                                     <field name="predecessor_contact"/>
@@ -345,7 +479,28 @@
                                     <field name="pcl_no_disputes"/>
                                     <field name="pcl_no_ethics_issues"/>
                                 </group>
+
+                                <separator string="Mandatory Professional Clearance Note"/>
+                                <p class="text-muted"><em>
+                                    Document the following mandatory items based on professional clearance communication with predecessor auditor.
+                                </em></p>
+                                <group class="o_onboarding_grid">
+                                    <field name="pcl_reason_for_change" required="1" placeholder="Document the stated reason for change of auditors..."/>
+                                    <field name="pcl_disputes_unpaid_fees" required="1" placeholder="Document any disputes or unpaid fees, or state 'None identified'..."/>
+                                    <field name="pcl_access_to_working_papers" required="1" placeholder="Document status of access to predecessor working papers..."/>
+                                    <field name="pcl_ethical_concerns_raised" required="1" placeholder="Document any ethical concerns raised, or state 'None raised'..."/>
+                                </group>
+
+                                <separator string="Mandatory Conclusion"/>
+                                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('pcl_no_barrier_conclusion', '=', True)]}">
+                                    <strong>⚠ CONFIRMATION REQUIRED:</strong> You must confirm that no professional or ethical barrier exists before proceeding.
                                 </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="pcl_no_barrier_conclusion" required="1" widget="boolean_toggle"/>
+                                    <label for="pcl_no_barrier_conclusion" string="&quot;No professional or ethical barrier exists to accepting this engagement.&quot;"/>
+                                </group>
+
+                            </div>
                         </page>
 
                         <page name="section_17" string="1.7 - Final Authorization" class="o_onboarding_tab_page">
@@ -363,14 +518,45 @@
                                         </tree>
                                     </field>
                                 </group>
+
+                                <separator string="Mandatory Management Acknowledgement Checklist"/>
+                                <p class="text-muted"><em>
+                                    All management acknowledgements must be confirmed before final authorization (ISA 210 requirements).
+                                </em></p>
+                                <group class="o_onboarding_grid">
+                                    <group>
+                                        <field name="mgmt_ack_responsibility_fs" required="1" widget="boolean_toggle"/>
+                                        <field name="mgmt_ack_responsibility_ic" required="1" widget="boolean_toggle"/>
+                                    </group>
+                                    <group>
+                                        <field name="mgmt_ack_access_to_records" required="1" widget="boolean_toggle"/>
+                                        <field name="mgmt_ack_going_concern" required="1" widget="boolean_toggle"/>
+                                    </group>
+                                </group>
+
+                                <separator string="Mandatory Partner Judgment Note"/>
+                                <p class="text-muted"><em>
+                                    Document the Engagement Partner's professional judgment supporting acceptance of this engagement.
+                                </em></p>
+                                <group class="o_onboarding_grid">
+                                    <field name="partner_judgment_acceptable" required="1" placeholder="Document why this engagement is acceptable..."/>
+                                    <field name="partner_judgment_safeguards" required="1" placeholder="Document safeguards imposed, or state 'No additional safeguards required'..."/>
+                                    <field name="partner_judgment_conditions" required="1" placeholder="Document conditions, or state 'No conditions'..."/>
+                                </group>
+
+                                <separator string="Engagement Decision &amp; Sign-off"/>
+                                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('partner_signoff_complete', '=', True)]}">
+                                    <strong>❌ CANNOT PROCEED:</strong> Engagement Partner digital sign-off is required before final authorization.
+                                </div>
                                 <group class="o_onboarding_grid">
                                     <field name="engagement_summary" readonly="1"/>
                                     <field name="engagement_decision"/>
                                     <field name="engagement_justification"/>
                                 </group>
                                 <group class="o_onboarding_grid">
-                                    <field name="engagement_partner_id"/>
-                                    <field name="engagement_partner_signature" widget="binary"/>
+                                    <field name="engagement_partner_id" required="1"/>
+                                    <field name="engagement_partner_signature" widget="binary" required="1"/>
+                                    <field name="partner_signoff_complete" readonly="1" widget="boolean_toggle"/>
                                     <field name="eqcr_partner_id" invisible="not eqcr_required"/>
                                     <field name="eqcr_partner_signature" invisible="not eqcr_required" widget="binary"/>
                                     <field name="managing_partner_escalation" readonly="1" invisible="1"/>
@@ -392,6 +578,15 @@
                                     <span class="o_onboarding_card_title">Document Vault</span>
                                     <span class="o_onboarding_card_ref">ISA 230</span>
                                 </div>
+
+                                <separator string="Mandatory Document Classification"/>
+                                <p class="text-muted"><em>
+                                    Each document must be tagged with a mandatory classification:
+                                    <strong>Legal</strong>, <strong>Regulatory</strong>, <strong>Ethics</strong>, <strong>KYC/AML</strong>,
+                                    <strong>Engagement</strong>, <strong>Governance</strong>, or <strong>Risk</strong>.
+                                    ❌ Upload without classification is NOT allowed.
+                                </em></p>
+
                                 <field name="document_ids" mode="kanban,tree" class="o_onboarding_file_cards">
                                     <kanban class="o_onboarding_kanban" create="true" edit="true">
                                         <templates>
@@ -401,7 +596,7 @@
                                                         <span class="o_onboarding_file_icon fa fa-file-text-o"/>
                                                         <strong><field name="name"/></strong>
                                                     </div>
-                                                    <div class="o_onboarding_file_meta"><field name="doc_type"/></div>
+                                                    <div class="o_onboarding_file_meta"><strong>Classification:</strong> <field name="doc_type"/></div>
                                                     <div class="o_onboarding_file_meta"><field name="state"/></div>
                                                     <div class="o_onboarding_file_meta"><field name="file_name"/></div>
                                                 </div>
@@ -409,10 +604,11 @@
                                         </templates>
                                     </kanban>
                                     <tree editable="bottom">
-                                        <field name="name"/>
-                                        <field name="doc_type"/>
-                                        <field name="state"/>
+                                        <field name="name" required="1"/>
+                                        <field name="doc_type" required="1" string="Classification"/>
+                                        <field name="file" widget="binary" required="1"/>
                                         <field name="file_name"/>
+                                        <field name="state"/>
                                     </tree>
                                 </field>
                             </div>
@@ -425,6 +621,8 @@
                                     <span class="o_onboarding_card_title">Engagement Partner Decision</span>
                                     <span class="o_onboarding_card_ref">ISA 220</span>
                                 </div>
+
+                                <separator string="Engagement Partner Checklist"/>
                                 <field name="checklist_line_ids">
                                     <tree editable="bottom" class="o_onboarding_checklist">
                                         <field name="question" readonly="1"/>
@@ -433,6 +631,44 @@
                                         <field name="critical" readonly="1"/>
                                     </tree>
                                 </field>
+
+                                <separator string="Mandatory Final Acceptance Memorandum"/>
+                                <p class="text-muted"><em>
+                                    Partner must explicitly document the following conclusions. <strong>No silent acceptance allowed.</strong>
+                                </em></p>
+
+                                <group class="o_onboarding_grid">
+                                    <group string="Risk Assessment">
+                                        <field name="fam_engagement_risk_level" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="fam_engagement_risk_justification" required="1" placeholder="Document basis for engagement risk level..."/>
+                                    </group>
+                                    <group string="Key Conclusions">
+                                        <field name="fam_independence_conclusion" required="1" placeholder="State independence conclusion for engagement team..."/>
+                                        <field name="fam_fraud_risk_conclusion" required="1" placeholder="State fraud risk conclusion and response strategy..."/>
+                                    </group>
+                                </group>
+
+                                <group class="o_onboarding_grid">
+                                    <group string="Resource &amp; Compliance">
+                                        <field name="fam_resource_sufficiency" required="1" placeholder="Confirm sufficiency of staff, time, and budget..."/>
+                                        <field name="fam_isqm1_compliance" required="1" widget="boolean_toggle"/>
+                                    </group>
+                                </group>
+
+                                <separator string="Final Acceptance Decision"/>
+                                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('fam_final_decision', '!=', False)]}">
+                                    <strong>❌ NO SILENT ACCEPTANCE:</strong> Partner must explicitly select Accept, Accept with Safeguards, or Reject.
+                                </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="fam_final_decision" required="1" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                                <group class="o_onboarding_grid" attrs="{'invisible': [('fam_final_decision', '!=', 'accept_safeguards')]}">
+                                    <field name="fam_safeguards_imposed" required="1" placeholder="Document specific safeguards imposed for acceptance..."/>
+                                </group>
+                                <group class="o_onboarding_grid" attrs="{'invisible': [('fam_final_decision', '!=', 'reject')]}">
+                                    <field name="fam_rejection_reason" required="1" placeholder="Document specific reasons for declining the engagement..."/>
+                                </group>
+
                             </div>
                         </page>
 
@@ -443,14 +679,122 @@
                                     <span class="o_onboarding_card_title">Audit Trail</span>
                                     <span class="o_onboarding_card_ref">ISQM-1</span>
                                 </div>
-                                <field name="audit_trail_ids">
-                                    <tree>
-                                        <field name="create_date"/>
-                                        <field name="user_id"/>
-                                        <field name="action"/>
-                                        <field name="notes"/>
+
+                                <separator string="Immutable Audit Log"/>
+                                <p class="text-muted"><em>
+                                    This audit trail is <strong>automatically recorded</strong> and <strong>immutable</strong> – no manual override allowed.
+                                    All field changes, approval actions, and system events are permanently logged.
+                                </em></p>
+
+                                <field name="audit_trail_ids" readonly="1">
+                                    <tree create="false" edit="false" delete="false" decoration-info="change_type == 'approval'" decoration-warning="change_type == 'field_change'">
+                                        <field name="create_date" string="Timestamp"/>
+                                        <field name="user_id" string="User"/>
+                                        <field name="change_type" string="Type"/>
+                                        <field name="action" string="Action"/>
+                                        <field name="field_name" string="Field"/>
+                                        <field name="old_value" string="Old Value"/>
+                                        <field name="new_value" string="New Value"/>
+                                        <field name="notes" string="Notes"/>
                                     </tree>
                                 </field>
+                            </div>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             📄 AUTO-GENERATED REPORTS (Section 1.11)
+                             ISA-Referenced | ICAP QCR Ready | Time-stamped | Partner-signed
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <page name="section_111" string="📄 1.11 - Generated Reports" class="o_onboarding_tab_page"
+                              invisible="state not in ['partner_approved', 'locked']">
+                            <div id="section-1-11" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+                                    <span class="o_onboarding_card_number" style="background: #27ae60;">1.11</span>
+                                    <span class="o_onboarding_card_title">Auto-Generated Reports</span>
+                                    <span class="o_onboarding_card_ref">ISA 210, 220, 240, 315 | ISQM-1 | IESBA Code</span>
+                                </div>
+
+                                <!-- Reports Status Summary -->
+                                <field name="generated_reports_summary" widget="html" readonly="1"/>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex gap-2 my-3" invisible="not reports_generated">
+                                    <button name="action_download_all_reports" type="object" 
+                                            string="📦 Download All Reports (ZIP)" class="btn btn-primary"
+                                            icon="fa-download"/>
+                                    <button name="action_regenerate_reports" type="object" 
+                                            string="🔄 Regenerate Reports" class="btn btn-warning"
+                                            icon="fa-refresh"
+                                            invisible="state != 'partner_approved'"
+                                            confirm="Regenerate all reports? This will replace existing reports with fresh copies."/>
+                                </div>
+
+                                <separator string="Individual Reports"/>
+
+                                <!-- Report Cards Grid -->
+                                <group col="2">
+                                    <!-- Report 1: Client Acceptance & Continuance -->
+                                    <group string="✅ Client Acceptance &amp; Continuance Report">
+                                        <div class="alert alert-info mb-2">
+                                            <small><strong>ISA 220, ISQM-1</strong> — Comprehensive acceptance documentation</small>
+                                        </div>
+                                        <field name="report_acceptance_continuance" filename="report_acceptance_continuance_name" 
+                                               widget="binary" readonly="1"/>
+                                        <field name="report_acceptance_continuance_name" invisible="1"/>
+                                    </group>
+
+                                    <!-- Report 2: Ethics & Independence -->
+                                    <group string="⚖️ Ethics &amp; Independence Compliance Report">
+                                        <div class="alert alert-success mb-2">
+                                            <small><strong>IESBA Code, ISA 220</strong> — Independence threat assessment</small>
+                                        </div>
+                                        <field name="report_ethics_independence" filename="report_ethics_independence_name" 
+                                               widget="binary" readonly="1"/>
+                                        <field name="report_ethics_independence_name" invisible="1"/>
+                                    </group>
+
+                                    <!-- Report 3: Fraud & Business Risk -->
+                                    <group string="⚠️ Fraud &amp; Business Risk Summary">
+                                        <div class="alert alert-danger mb-2">
+                                            <small><strong>ISA 240, ISA 315</strong> — Fraud and business risk analysis</small>
+                                        </div>
+                                        <field name="report_fraud_business_risk" filename="report_fraud_business_risk_name" 
+                                               widget="binary" readonly="1"/>
+                                        <field name="report_fraud_business_risk_name" invisible="1"/>
+                                    </group>
+
+                                    <!-- Report 4: Engagement Authorization -->
+                                    <group string="📝 Engagement Authorization Memorandum">
+                                        <div class="alert alert-primary mb-2">
+                                            <small><strong>ISA 210, ISQM-1</strong> — Final authorization document</small>
+                                        </div>
+                                        <field name="report_engagement_authorization" filename="report_engagement_authorization_name" 
+                                               widget="binary" readonly="1"/>
+                                        <field name="report_engagement_authorization_name" invisible="1"/>
+                                    </group>
+                                </group>
+
+                                <separator string="Generation Details"/>
+
+                                <group col="3">
+                                    <field name="reports_generated" widget="boolean_toggle" readonly="1"/>
+                                    <field name="reports_generated_date" readonly="1"/>
+                                    <field name="reports_generated_by" readonly="1"/>
+                                </group>
+
+                                <!-- QCR Compliance Note -->
+                                <div class="alert alert-secondary mt-3" invisible="not reports_generated">
+                                    <div class="d-flex align-items-center">
+                                        <span style="font-size: 24px; margin-right: 12px;">🏛️</span>
+                                        <div>
+                                            <strong>ICAP Quality Control Review (QCR) Ready</strong>
+                                            <p class="mb-0 small text-muted">
+                                                All reports are ISA-referenced, time-stamped, and partner-signed. 
+                                                These documents satisfy ICAP QCR documentation requirements for client acceptance.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </page>
                     </notebook>

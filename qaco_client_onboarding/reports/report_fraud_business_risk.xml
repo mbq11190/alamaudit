@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════════════════════════════
+         📄 FRAUD & BUSINESS RISK SUMMARY
+         ISA 240: The Auditor's Responsibilities Relating to Fraud
+         ISA 315: Identifying and Assessing Risks of Material Misstatement
+         ICAP QCR Ready | Time-stamped | Partner-signed
+         ═══════════════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="report_fraud_business_risk_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.5;">
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             HEADER SECTION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); 
+                             color: white; padding: 24px 32px; margin: -20px -20px 24px -20px; 
+                             border-radius: 0 0 16px 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h1 style="margin: 0; font-size: 22pt; font-weight: 600;">
+                                        ⚠️ Fraud &amp; Business Risk Summary
+                                    </h1>
+                                    <p style="margin: 8px 0 0 0; font-size: 10pt; opacity: 0.9;">
+                                        ISA 240 • ISA 315 • ICAP Quality Control Review Ready
+                                    </p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 9pt; opacity: 0.8;">Report Generated</div>
+                                    <div style="font-size: 12pt; font-weight: 600;">
+                                        <t t-esc="doc.reports_generated_date.strftime('%d %B %Y') if doc.reports_generated_date else 'Pending'"/>
+                                    </div>
+                                    <div style="font-size: 9pt; opacity: 0.8;">
+                                        <t t-esc="doc.reports_generated_date.strftime('%H:%M:%S') if doc.reports_generated_date else ''"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             CLIENT IDENTIFICATION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; 
+                               background: #f8f9fa; border-radius: 8px; overflow: hidden;">
+                            <tr style="background: #2c3e50; color: white;">
+                                <th colspan="4" style="padding: 12px 16px; text-align: left; font-size: 12pt;">
+                                    🏢 Client Identification
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 16px; width: 25%; font-weight: 600; border-bottom: 1px solid #dee2e6;">Client</td>
+                                <td style="padding: 10px 16px; width: 25%; border-bottom: 1px solid #dee2e6;"><t t-esc="doc.client_id.name or '—'"/></td>
+                                <td style="padding: 10px 16px; width: 25%; font-weight: 600; border-bottom: 1px solid #dee2e6;">Audit Reference</td>
+                                <td style="padding: 10px 16px; width: 25%; border-bottom: 1px solid #dee2e6;"><t t-esc="doc.audit_id.name or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 16px; font-weight: 600;">Industry</td>
+                                <td style="padding: 10px 16px;"><t t-esc="doc.industry_id.name or '—'"/></td>
+                                <td style="padding: 10px 16px; font-weight: 600;">Entity Type</td>
+                                <td style="padding: 10px 16px;"><t t-esc="doc.entity_type_label or doc.entity_type or '—'"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             RISK DASHBOARD
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 24px;">
+                            <h3 style="margin: 0 0 16px 0; padding: 10px 16px; background: #34495e; color: white; border-radius: 8px 8px 0 0;">
+                                📊 Risk Dashboard Summary
+                            </h3>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <!-- Management Integrity Risk -->
+                                <div style="flex: 1; min-width: 200px; padding: 16px; border-radius: 8px; text-align: center;
+                                     background: #{doc.management_integrity_rating == 'high' and 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)' or doc.management_integrity_rating == 'medium' and 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)' or 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)'};">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">👔</div>
+                                    <div style="font-weight: 600; font-size: 11pt;">Management Integrity</div>
+                                    <div style="font-size: 16pt; font-weight: 700; margin-top: 4px;">
+                                        <t t-esc="doc.management_integrity_label or doc.management_integrity_rating or '—'"/>
+                                    </div>
+                                </div>
+                                <!-- Fraud Risk -->
+                                <div style="flex: 1; min-width: 200px; padding: 16px; border-radius: 8px; text-align: center;
+                                     background: #{doc.fraud_risk_level == 'low' and 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)' or doc.fraud_risk_level == 'medium' and 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)' or 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)'};">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">🔍</div>
+                                    <div style="font-weight: 600; font-size: 11pt;">Fraud Risk</div>
+                                    <div style="font-size: 16pt; font-weight: 700; margin-top: 4px;">
+                                        <t t-esc="dict([('low', 'LOW'), ('medium', 'MEDIUM'), ('high', 'HIGH')]).get(doc.fraud_risk_level, 'Not Assessed')"/>
+                                    </div>
+                                </div>
+                                <!-- Business Risk -->
+                                <div style="flex: 1; min-width: 200px; padding: 16px; border-radius: 8px; text-align: center;
+                                     background: #{doc.business_risk_level == 'low' and 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)' or doc.business_risk_level == 'medium' and 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)' or 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)'};">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">📈</div>
+                                    <div style="font-weight: 600; font-size: 11pt;">Business Risk</div>
+                                    <div style="font-size: 16pt; font-weight: 700; margin-top: 4px;">
+                                        <t t-esc="dict([('low', 'LOW'), ('medium', 'MEDIUM'), ('high', 'HIGH')]).get(doc.business_risk_level, 'Not Assessed')"/>
+                                    </div>
+                                </div>
+                                <!-- Going Concern -->
+                                <div style="flex: 1; min-width: 200px; padding: 16px; border-radius: 8px; text-align: center;
+                                     background: #{doc.going_concern_level == 'low' and 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)' or doc.going_concern_level == 'medium' and 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)' or 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)'};">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">⚡</div>
+                                    <div style="font-weight: 600; font-size: 11pt;">Going Concern</div>
+                                    <div style="font-size: 16pt; font-weight: 700; margin-top: 4px;">
+                                        <t t-esc="dict([('low', 'LOW'), ('medium', 'MEDIUM'), ('high', 'HIGH')]).get(doc.going_concern_level, 'Not Assessed')"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             MANAGEMENT INTEGRITY ASSESSMENT (ISA 240.A25)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #9b59b6; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #9b59b6; color: white; padding: 10px 16px; font-weight: 600;">
+                                👔 Management Integrity Assessment (ISA 240.A25)
+                            </div>
+                            <div style="padding: 16px;">
+                                <p><strong>Integrity Risk Summary:</strong></p>
+                                <div style="background: #f5eef8; padding: 12px; border-radius: 6px; border-left: 4px solid #9b59b6; margin-bottom: 12px;">
+                                    <t t-esc="doc.integrity_risk_summary or 'Not documented'"/>
+                                </div>
+                                <p><strong>Management Integrity Justification:</strong></p>
+                                <div style="background: #f5eef8; padding: 12px; border-radius: 6px; border-left: 4px solid #9b59b6;">
+                                    <t t-esc="doc.management_integrity_comment or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             FRAUD RISK ASSESSMENT (ISA 240)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #e74c3c; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #e74c3c; color: white; padding: 10px 16px; font-weight: 600;">
+                                🔍 Fraud Risk Assessment (ISA 240)
+                            </div>
+                            <div style="padding: 16px;">
+                                <!-- Fraud History -->
+                                <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                                    <div style="flex: 1; padding: 12px; border-radius: 6px; 
+                                         background: #{doc.fraud_history == 'yes' and '#f8d7da' or '#d4edda'};">
+                                        <strong>Fraud / Penalty History:</strong>
+                                        <span style="float: right;">
+                                            <t t-if="doc.fraud_history == 'yes'">⚠️ YES</t>
+                                            <t t-else="">✓ NO</t>
+                                        </span>
+                                    </div>
+                                </div>
+                                <t t-if="doc.fraud_history == 'yes' and doc.fraud_explanation">
+                                    <p><strong>Fraud Explanation:</strong></p>
+                                    <div style="background: #fff3cd; padding: 12px; border-radius: 6px; border-left: 4px solid #f39c12; margin-bottom: 12px;">
+                                        <t t-esc="doc.fraud_explanation"/>
+                                    </div>
+                                </t>
+
+                                <p><strong>Fraud Risk Summary:</strong></p>
+                                <div style="background: #fdf2f2; padding: 12px; border-radius: 6px; border-left: 4px solid #e74c3c; margin-bottom: 12px;">
+                                    <t t-esc="doc.fraud_risk_summary or 'Not documented'"/>
+                                </div>
+
+                                <p><strong>Partner's Fraud Risk Conclusion (ISA 240.12):</strong></p>
+                                <div style="background: #fdf2f2; padding: 12px; border-radius: 6px; border-left: 4px solid #e74c3c;">
+                                    <t t-esc="doc.fam_fraud_risk_conclusion or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             BUSINESS RISK PROFILE (ISA 315)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #3498db; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #3498db; color: white; padding: 10px 16px; font-weight: 600;">
+                                📈 Business Risk Profile (ISA 315)
+                            </div>
+                            <div style="padding: 16px;">
+                                <p><strong>Business Risk Summary:</strong></p>
+                                <div style="background: #f1f8ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3498db; margin-bottom: 12px;">
+                                    <t t-esc="doc.business_risk_summary or 'Not documented'"/>
+                                </div>
+                                <p><strong>Business Risk Profile:</strong></p>
+                                <div style="background: #f1f8ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3498db;">
+                                    <t t-esc="doc.business_risk_profile or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             GOING CONCERN ASSESSMENT (ISA 570)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #f39c12; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #f39c12; color: white; padding: 10px 16px; font-weight: 600;">
+                                ⚡ Going Concern Assessment (ISA 570)
+                            </div>
+                            <div style="padding: 16px;">
+                                <p><strong>Going Concern Indicators:</strong></p>
+                                <div style="background: #fff8e1; padding: 12px; border-radius: 6px; border-left: 4px solid #f39c12;">
+                                    <t t-esc="doc.going_concern_indicators or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             REPUTATION RISK TO FIRM
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #34495e; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #34495e; color: white; padding: 10px 16px; font-weight: 600;">
+                                🏛️ Reputation Risk to Firm (ISQM-1.28)
+                            </div>
+                            <div style="padding: 16px;">
+                                <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+                                    <tr>
+                                        <td style="padding: 10px; width: 40%; font-weight: 600;">Reputation Risk Level:</td>
+                                        <td style="padding: 10px;">
+                                            <span t-attf-style="padding: 4px 12px; border-radius: 4px; font-weight: 600; background: #{doc.reputation_risk_level == 'low' and '#27ae60' or doc.reputation_risk_level == 'medium' and '#f39c12' or '#e74c3c'}; color: white;">
+                                                <t t-esc="dict([('low', 'LOW'), ('medium', 'MEDIUM'), ('high', 'HIGH')]).get(doc.reputation_risk_level, 'Not Assessed')"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><strong>Reputation Risk Assessment:</strong></p>
+                                <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid #34495e;">
+                                    <t t-esc="doc.reputation_risk_to_firm or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             OVERALL ENGAGEMENT RISK CONCLUSION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 2px solid #2c3e50; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #2c3e50; color: white; padding: 12px 16px; font-weight: 600; font-size: 12pt;">
+                                📋 Overall Engagement Risk Conclusion
+                            </div>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                                    <div style="text-align: center; padding: 16px 24px; border-radius: 8px; 
+                                         background: #{doc.fam_engagement_risk_level == 'low' and 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)' or doc.fam_engagement_risk_level == 'moderate' and 'linear-gradient(135deg, #f39c12 0%, #f1c40f 100%)' or 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)'}; color: white;">
+                                        <div style="font-size: 9pt; opacity: 0.9;">Engagement Risk Level</div>
+                                        <div style="font-size: 20pt; font-weight: 700;">
+                                            <t t-esc="dict([('low', 'LOW'), ('moderate', 'MODERATE'), ('high', 'HIGH')]).get(doc.fam_engagement_risk_level, '—')"/>
+                                        </div>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <strong>Risk Justification:</strong>
+                                        <p style="margin: 8px 0 0 0;"><t t-esc="doc.fam_engagement_risk_justification or '—'"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             PARTNER SIGN-OFF
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-top: 32px; padding: 20px; border: 2px dashed #e74c3c; border-radius: 8px; background: #fdf2f2;">
+                            <h3 style="margin: 0 0 16px 0; color: #2c3e50;">🖊️ Partner Certification</h3>
+                            <p style="margin: 0 0 16px 0; font-size: 10pt; color: #7f8c8d;">
+                                I hereby confirm that I have reviewed the fraud and business risk assessment above, 
+                                and I am satisfied that appropriate risk responses have been planned in accordance 
+                                with ISA 240 and ISA 315 requirements.
+                            </p>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 50%; padding: 12px; vertical-align: top;">
+                                        <div style="border-bottom: 2px solid #2c3e50; padding-bottom: 8px; margin-bottom: 4px;">
+                                            <t t-if="doc.engagement_partner_signature">
+                                                <img t-att-src="'data:image/png;base64,%s' % doc.engagement_partner_signature.decode('utf-8')" 
+                                                     style="max-height: 50px; max-width: 200px;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #95a5a6; font-style: italic;">[Signature on file]</span>
+                                            </t>
+                                        </div>
+                                        <strong>Engagement Partner:</strong><br/>
+                                        <t t-esc="doc.engagement_partner_id.name or '—'"/>
+                                    </td>
+                                    <td style="width: 50%; padding: 12px; vertical-align: top; text-align: right;">
+                                        <strong>Date:</strong><br/>
+                                        <t t-esc="doc.reports_generated_date.strftime('%d %B %Y') if doc.reports_generated_date else '—'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             FOOTER
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-top: 32px; padding-top: 16px; border-top: 2px solid #bdc3c7; text-align: center; font-size: 9pt; color: #7f8c8d;">
+                            <p style="margin: 0;">
+                                <strong>Confidential</strong> — This report is prepared in accordance with ISA 240 and ISA 315 requirements.
+                            </p>
+                            <p style="margin: 4px 0 0 0;">
+                                Prepared for ICAP Quality Control Review (QCR) compliance.
+                            </p>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

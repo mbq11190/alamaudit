@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════════════════════════════
+         📄 CLIENT ACCEPTANCE & CONTINUANCE REPORT
+         ISA 220: Quality Management for an Audit of Financial Statements
+         ISQM-1: Quality Management for Firms
+         ICAP QCR Ready | Time-stamped | Partner-signed
+         ═══════════════════════════════════════════════════════════════════════════════════ -->
+
+    <template id="report_acceptance_continuance_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.5;">
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             HEADER SECTION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%); 
+                             color: white; padding: 24px 32px; margin: -20px -20px 24px -20px; 
+                             border-radius: 0 0 16px 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h1 style="margin: 0; font-size: 22pt; font-weight: 600;">
+                                        📋 Client Acceptance &amp; Continuance Report
+                                    </h1>
+                                    <p style="margin: 8px 0 0 0; font-size: 10pt; opacity: 0.9;">
+                                        ISA 220 • ISQM-1 • ICAP Quality Control Review Ready
+                                    </p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 9pt; opacity: 0.8;">Report Generated</div>
+                                    <div style="font-size: 12pt; font-weight: 600;">
+                                        <t t-esc="doc.reports_generated_date.strftime('%d %B %Y') if doc.reports_generated_date else 'Pending'"/>
+                                    </div>
+                                    <div style="font-size: 9pt; opacity: 0.8;">
+                                        <t t-esc="doc.reports_generated_date.strftime('%H:%M:%S') if doc.reports_generated_date else ''"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             CLIENT & ENGAGEMENT IDENTIFICATION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; 
+                               background: #f8f9fa; border-radius: 8px; overflow: hidden;">
+                            <tr style="background: #2c3e50; color: white;">
+                                <th colspan="4" style="padding: 12px 16px; text-align: left; font-size: 12pt;">
+                                    🏢 Client &amp; Engagement Identification
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 16px; width: 25%; font-weight: 600; border-bottom: 1px solid #dee2e6;">
+                                    Client Name
+                                </td>
+                                <td style="padding: 10px 16px; width: 25%; border-bottom: 1px solid #dee2e6;">
+                                    <t t-esc="doc.client_id.name or '—'"/>
+                                </td>
+                                <td style="padding: 10px 16px; width: 25%; font-weight: 600; border-bottom: 1px solid #dee2e6;">
+                                    Audit Reference
+                                </td>
+                                <td style="padding: 10px 16px; width: 25%; border-bottom: 1px solid #dee2e6;">
+                                    <t t-esc="doc.audit_id.name or '—'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #dee2e6;">
+                                    Legal Name
+                                </td>
+                                <td style="padding: 10px 16px; border-bottom: 1px solid #dee2e6;">
+                                    <t t-esc="doc.legal_name or '—'"/>
+                                </td>
+                                <td style="padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #dee2e6;">
+                                    Entity Type
+                                </td>
+                                <td style="padding: 10px 16px; border-bottom: 1px solid #dee2e6;">
+                                    <t t-esc="doc.entity_type_label or doc.entity_type or '—'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #dee2e6;">
+                                    NTN
+                                </td>
+                                <td style="padding: 10px 16px; border-bottom: 1px solid #dee2e6;">
+                                    <t t-esc="doc.ntn or '—'"/>
+                                </td>
+                                <td style="padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #dee2e6;">
+                                    Primary Regulator
+                                </td>
+                                <td style="padding: 10px 16px; border-bottom: 1px solid #dee2e6;">
+                                    <t t-esc="doc.primary_regulator_label or doc.primary_regulator or '—'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 16px; font-weight: 600;">Industry</td>
+                                <td style="padding: 10px 16px;">
+                                    <t t-esc="doc.industry_id.name or '—'"/>
+                                </td>
+                                <td style="padding: 10px 16px; font-weight: 600;">Financial Framework</td>
+                                <td style="padding: 10px 16px;">
+                                    <t t-esc="doc.financial_framework_label or doc.financial_framework or '—'"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             SECTION 1: LEGAL EXISTENCE VERIFICATION (ISA 220.21)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #3498db; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #3498db; color: white; padding: 10px 16px; font-weight: 600;">
+                                📑 Section 1: Legal Existence Verification (ISA 220.21)
+                            </div>
+                            <div style="padding: 16px;">
+                                <p style="margin: 0 0 12px 0;">
+                                    <strong>Verification Summary:</strong>
+                                </p>
+                                <div style="background: #f1f8ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3498db;">
+                                    <t t-esc="doc.legal_existence_verification or 'Not documented'"/>
+                                </div>
+                                <p style="margin: 16px 0 12px 0;">
+                                    <strong>Group Structure &amp; Ownership Risk:</strong>
+                                </p>
+                                <div style="background: #f1f8ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3498db;">
+                                    <t t-esc="doc.group_structure_risk or 'Not documented'"/>
+                                </div>
+                                <p style="margin: 16px 0 12px 0;">
+                                    <strong>Foreign Ownership Exposure:</strong>
+                                </p>
+                                <div style="background: #f1f8ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3498db;">
+                                    <t t-esc="doc.foreign_ownership_exposure or 'Not documented'"/>
+                                </div>
+                                <p style="margin: 16px 0 12px 0;">
+                                    <strong>Ultimate Beneficial Owner (UBO) Risk Summary:</strong>
+                                </p>
+                                <div style="background: #f1f8ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3498db;">
+                                    <t t-esc="doc.ubo_risk_summary or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             SECTION 2: REGULATORY COMPLIANCE ASSESSMENT (ISQM-1.28)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #27ae60; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #27ae60; color: white; padding: 10px 16px; font-weight: 600;">
+                                ⚖️ Section 2: Regulatory Compliance Assessment (ISQM-1.28)
+                            </div>
+                            <div style="padding: 16px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; width: 40%; font-weight: 600;">Applicable Laws &amp; Regulators:</td>
+                                        <td style="padding: 8px 0;"><t t-esc="doc.applicable_laws_regulators or '—'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Filing History &amp; Gaps:</td>
+                                        <td style="padding: 8px 0;"><t t-esc="doc.filing_history_gaps or '—'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Inspection/Enforcement Exposure:</td>
+                                        <td style="padding: 8px 0;"><t t-esc="doc.inspection_enforcement_exposure or '—'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Litigation &amp; Penalties:</td>
+                                        <td style="padding: 8px 0;"><t t-esc="doc.litigation_penalties_note or '—'"/></td>
+                                    </tr>
+                                </table>
+                                <div style="margin-top: 12px; padding: 12px; background: #d4edda; border-radius: 6px; border-left: 4px solid #27ae60;">
+                                    <strong>Regulatory Framework Conclusion:</strong><br/>
+                                    <t t-esc="doc.regulatory_framework_conclusion or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             SECTION 3: GOVERNANCE & TCWG ASSESSMENT (ISA 260)
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #8e44ad; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #8e44ad; color: white; padding: 10px 16px; font-weight: 600;">
+                                👥 Section 3: Governance &amp; TCWG Assessment (ISA 260)
+                            </div>
+                            <div style="padding: 16px;">
+                                <p><strong>Board Independence Assessment:</strong></p>
+                                <div style="background: #f5eef8; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                                    <t t-esc="doc.board_independence_assessment or 'Not documented'"/>
+                                </div>
+                                <p><strong>Audit Committee Competence:</strong></p>
+                                <div style="background: #f5eef8; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                                    <t t-esc="doc.audit_committee_competence or 'Not documented'"/>
+                                </div>
+                                <p><strong>Political Exposure (PEP) Assessment:</strong></p>
+                                <div style="background: #f5eef8; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                                    <t t-esc="doc.political_exposure_note or 'Not documented'"/>
+                                </div>
+                                <p><strong>Dominant Shareholder Risk:</strong></p>
+                                <div style="background: #f5eef8; padding: 12px; border-radius: 6px;">
+                                    <t t-esc="doc.dominant_shareholder_risk or 'Not documented'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             RISK INDICATORS SUMMARY
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 1px solid #e74c3c; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #e74c3c; color: white; padding: 10px 16px; font-weight: 600;">
+                                ⚠️ Risk Indicators Summary
+                            </div>
+                            <div style="padding: 16px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 10px; width: 40%; font-weight: 600;">Management Integrity Rating:</td>
+                                        <td style="padding: 10px;">
+                                            <span t-attf-style="padding: 4px 12px; border-radius: 4px; background: #{doc.management_integrity_rating == 'high' and '#27ae60' or doc.management_integrity_rating == 'medium' and '#f39c12' or '#e74c3c'}; color: white;">
+                                                <t t-esc="doc.management_integrity_label or doc.management_integrity_rating or '—'"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 10px; font-weight: 600;">AML Risk Rating:</td>
+                                        <td style="padding: 10px;">
+                                            <span t-attf-style="padding: 4px 12px; border-radius: 4px; background: #{doc.aml_risk_rating == 'low' and '#27ae60' or doc.aml_risk_rating == 'medium' and '#f39c12' or '#e74c3c'}; color: white;">
+                                                <t t-esc="doc.aml_risk_label or doc.aml_risk_rating or '—'"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 10px; font-weight: 600;">High-Risk Onboarding:</td>
+                                        <td style="padding: 10px;">
+                                            <t t-if="doc.high_risk_onboarding">
+                                                <span style="padding: 4px 12px; border-radius: 4px; background: #e74c3c; color: white;">⚠️ YES - Enhanced Procedures Required</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="padding: 4px 12px; border-radius: 4px; background: #27ae60; color: white;">✓ Standard Risk</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; font-weight: 600;">EQCR Required:</td>
+                                        <td style="padding: 10px;">
+                                            <t t-if="doc.eqcr_required">
+                                                <span style="padding: 4px 12px; border-radius: 4px; background: #9b59b6; color: white;">✓ Required</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="padding: 4px 12px; border-radius: 4px; background: #95a5a6; color: white;">Not Required</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             ACCEPTANCE DECISION & AUTHORIZATION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-bottom: 20px; border: 2px solid #2c3e50; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #2c3e50; color: white; padding: 12px 16px; font-weight: 600; font-size: 12pt;">
+                                ✅ Acceptance Decision &amp; Authorization
+                            </div>
+                            <div style="padding: 20px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 12px; width: 30%; font-weight: 600; vertical-align: top;">Final Decision:</td>
+                                        <td style="padding: 12px;">
+                                            <span t-attf-style="padding: 6px 16px; border-radius: 6px; font-size: 11pt; font-weight: 600; background: #{doc.fam_final_decision == 'accept' and '#27ae60' or doc.fam_final_decision == 'accept_safeguards' and '#f39c12' or '#e74c3c'}; color: white;">
+                                                <t t-esc="doc.engagement_decision_label or dict([('accept', 'ACCEPT'), ('accept_safeguards', 'ACCEPT WITH SAFEGUARDS'), ('reject', 'REJECT')]).get(doc.fam_final_decision, '—')"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; font-weight: 600; vertical-align: top;">Engagement Risk Level:</td>
+                                        <td style="padding: 12px;">
+                                            <t t-esc="dict([('low', 'Low'), ('moderate', 'Moderate'), ('high', 'High')]).get(doc.fam_engagement_risk_level, '—')"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; font-weight: 600; vertical-align: top;">Risk Justification:</td>
+                                        <td style="padding: 12px;"><t t-esc="doc.fam_engagement_risk_justification or '—'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; font-weight: 600; vertical-align: top;">ISQM-1 Compliance:</td>
+                                        <td style="padding: 12px;">
+                                            <t t-if="doc.fam_isqm1_compliance">
+                                                <span style="color: #27ae60; font-weight: 600;">✓ Confirmed Compliant</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #e74c3c; font-weight: 600;">✗ Not Confirmed</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             PARTNER SIGN-OFF SECTION
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-top: 32px; padding: 20px; border: 2px dashed #34495e; border-radius: 8px; background: #fafafa;">
+                            <h3 style="margin: 0 0 16px 0; color: #2c3e50;">🖊️ Partner Authorization</h3>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 50%; padding: 12px; vertical-align: top;">
+                                        <div style="border-bottom: 2px solid #2c3e50; padding-bottom: 8px; margin-bottom: 4px;">
+                                            <t t-if="doc.engagement_partner_signature">
+                                                <img t-att-src="'data:image/png;base64,%s' % doc.engagement_partner_signature.decode('utf-8')" 
+                                                     style="max-height: 50px; max-width: 200px;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #95a5a6; font-style: italic;">[Signature on file]</span>
+                                            </t>
+                                        </div>
+                                        <strong>Engagement Partner:</strong><br/>
+                                        <t t-esc="doc.engagement_partner_id.name or '—'"/>
+                                    </td>
+                                    <td style="width: 50%; padding: 12px; vertical-align: top;">
+                                        <div style="border-bottom: 2px solid #2c3e50; padding-bottom: 8px; margin-bottom: 4px;">
+                                            <t t-if="doc.eqcr_partner_signature">
+                                                <img t-att-src="'data:image/png;base64,%s' % doc.eqcr_partner_signature.decode('utf-8')" 
+                                                     style="max-height: 50px; max-width: 200px;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #95a5a6; font-style: italic;">[Signature on file]</span>
+                                            </t>
+                                        </div>
+                                        <strong>EQCR Partner:</strong><br/>
+                                        <t t-esc="doc.eqcr_partner_id.name or 'N/A'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #dee2e6; text-align: center; font-size: 9pt; color: #7f8c8d;">
+                                <strong>Report Generated:</strong> 
+                                <t t-esc="doc.reports_generated_date.strftime('%d %B %Y at %H:%M:%S') if doc.reports_generated_date else 'Pending'"/>
+                                <t t-if="doc.reports_generated_by"> | <strong>By:</strong> <t t-esc="doc.reports_generated_by.name"/></t>
+                            </div>
+                        </div>
+
+                        <!-- ═══════════════════════════════════════════════════════════════════════
+                             FOOTER
+                             ═══════════════════════════════════════════════════════════════════════ -->
+                        <div style="margin-top: 32px; padding-top: 16px; border-top: 2px solid #bdc3c7; text-align: center; font-size: 9pt; color: #7f8c8d;">
+                            <p style="margin: 0;">
+                                <strong>Confidential</strong> — This report is prepared in accordance with ISA 220 and ISQM-1 requirements.
+                            </p>
+                            <p style="margin: 4px 0 0 0;">
+                                Prepared for ICAP Quality Control Review (QCR) compliance.
+                            </p>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
