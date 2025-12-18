@@ -228,6 +228,8 @@ class OnboardingNote(models.Model):
     has_draft_recovery = fields.Boolean(
         string='Has Draft to Recover',
         compute='_compute_has_draft_recovery',
+        store=True,
+        help='Indicates if there is a draft newer than the saved content.',
     )
 
     # ═══════════════════════════════════════════════════════════════════════════
