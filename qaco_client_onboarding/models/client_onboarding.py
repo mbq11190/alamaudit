@@ -221,6 +221,62 @@ class ClientOnboarding(models.Model):
     checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Engagement Partner Decision')
     audit_trail_ids = fields.One2many('qaco.onboarding.audit.trail', 'onboarding_id', string='Audit Trail', readonly=True)
 
+    # Section 1.0: Mandatory Template Checklist
+    tpl_engagement_letter = fields.Boolean(string='Engagement Letter template selected', default=False, tracking=True)
+    tpl_independence_declaration = fields.Boolean(string='Independence Declaration template', default=False, tracking=True)
+    tpl_acceptance_checklist = fields.Boolean(string='Acceptance checklist template', default=False, tracking=True)
+    tpl_fraud_risk_questionnaire = fields.Boolean(string='Fraud risk questionnaire', default=False, tracking=True)
+    tpl_business_risk_questionnaire = fields.Boolean(string='Business risk questionnaire', default=False, tracking=True)
+    tpl_governance_tcwg_checklist = fields.Boolean(string='Governance & TCWG checklist', default=False, tracking=True)
+    templates_locked = fields.Boolean(string='Templates Locked', default=False, tracking=True)
+    templates_complete = fields.Boolean(string='All Templates Complete', compute='_compute_templates_complete', store=True)
+
+    @api.depends('tpl_engagement_letter', 'tpl_independence_declaration', 'tpl_acceptance_checklist',
+                 'tpl_fraud_risk_questionnaire', 'tpl_business_risk_questionnaire', 'tpl_governance_tcwg_checklist',
+                 'templates_locked')
+    def _compute_templates_complete(self):
+        for record in self:
+            all_selected = all([
+                record.tpl_engagement_letter,
+                record.tpl_independence_declaration,
+                record.tpl_acceptance_checklist,
+                record.tpl_fraud_risk_questionnaire,
+                record.tpl_business_risk_questionnaire,
+                record.tpl_governance_tcwg_checklist,
+            ])
+            record.templates_complete = all_selected and record.templates_locked
+
+    def action_lock_templates(self):
+        """Lock templates after all mandatory items are selected."""
+        for record in self:
+            missing = []
+            if not record.tpl_engagement_letter:
+                missing.append('Engagement Letter template')
+            if not record.tpl_independence_declaration:
+                missing.append('Independence Declaration template')
+            if not record.tpl_acceptance_checklist:
+                missing.append('Acceptance checklist template')
+            if not record.tpl_fraud_risk_questionnaire:
+                missing.append('Fraud risk questionnaire')
+            if not record.tpl_business_risk_questionnaire:
+                missing.append('Business risk questionnaire')
+            if not record.tpl_governance_tcwg_checklist:
+                missing.append('Governance & TCWG checklist')
+            if missing:
+                raise ValidationError(
+                    _('Cannot lock templates. The following mandatory items are not selected:\n• %s') % '\n• '.join(missing)
+                )
+            record.templates_locked = True
+            record._log_action('Templates locked - all mandatory templates confirmed')
+
+    def action_unlock_templates(self):
+        """Unlock templates for editing (only in draft state)."""
+        for record in self:
+            if record.state != 'draft':
+                raise ValidationError(_('Templates can only be unlocked in Draft state.'))
+            record.templates_locked = False
+            record._log_action('Templates unlocked for editing')
+
     @api.depends('client_id')
     def _compute_name(self):
         for record in self:
@@ -567,6 +623,11 @@ class ClientOnboarding(models.Model):
         for record in self:
             if record.state != 'draft':
                 continue
+            # Block progression if templates not complete
+            if not record.templates_complete:
+                raise ValidationError(
+                    _('Cannot submit for review. All mandatory templates must be selected and locked in Section 1.0 Templates & Docs.')
+                )
             record.write({'state': 'under_review'})
             record._log_action('Submitted for review')
 

@@ -89,6 +89,44 @@
                                         To download templates directly, use the Template Library menu.
                                     </p>
                                 </div>
+
+                                <!-- Mandatory Template Checklist -->
+                                <div class="o_onboarding_mandatory_checklist mt-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-check-square-o me-2"/>Mandatory Template Checklist
+                                        </h4>
+                                        <div>
+                                            <button name="action_lock_templates" type="object" 
+                                                    string="🔒 Lock Templates" class="btn btn-success btn-sm"
+                                                    invisible="templates_locked"
+                                                    confirm="Lock all templates? This confirms all mandatory templates are selected."/>
+                                            <button name="action_unlock_templates" type="object" 
+                                                    string="🔓 Unlock Templates" class="btn btn-warning btn-sm"
+                                                    invisible="not templates_locked or state != 'draft'"/>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-warning" invisible="templates_complete">
+                                        <i class="fa fa-exclamation-triangle me-2"/>
+                                        <strong>Progression Blocked:</strong> All templates must be selected and locked before proceeding to other sections.
+                                    </div>
+                                    <div class="alert alert-success" invisible="not templates_complete">
+                                        <i class="fa fa-check-circle me-2"/>
+                                        <strong>Templates Complete:</strong> All mandatory templates have been confirmed and locked.
+                                    </div>
+                                    <group class="o_onboarding_grid">
+                                        <field name="tpl_engagement_letter" widget="boolean_toggle" readonly="templates_locked"/>
+                                        <field name="tpl_independence_declaration" widget="boolean_toggle" readonly="templates_locked"/>
+                                        <field name="tpl_acceptance_checklist" widget="boolean_toggle" readonly="templates_locked"/>
+                                        <field name="tpl_fraud_risk_questionnaire" widget="boolean_toggle" readonly="templates_locked"/>
+                                        <field name="tpl_business_risk_questionnaire" widget="boolean_toggle" readonly="templates_locked"/>
+                                        <field name="tpl_governance_tcwg_checklist" widget="boolean_toggle" readonly="templates_locked"/>
+                                    </group>
+                                    <group>
+                                        <field name="templates_locked" readonly="1" invisible="1"/>
+                                        <field name="templates_complete" readonly="1" invisible="1"/>
+                                    </group>
+                                </div>
                             </div>
                         </page>
                         <page name="section_11" string="1.1 - Legal Identity" class="o_onboarding_tab_page">
