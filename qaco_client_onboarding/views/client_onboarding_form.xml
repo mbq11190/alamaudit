@@ -382,7 +382,7 @@
                                 </div>
 
                                 <!-- Acceptance Blocking Alert -->
-                                <div class="alert alert-danger" role="alert" invisible="independence_residual_risk_acceptable">
+                                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('independence_residual_risk_acceptable', '=', True)]}">
                                     <strong>⚠ ACCEPTANCE BLOCKED:</strong> One or more residual risks are NOT Low. Apply additional safeguards or decline the engagement.
                                 </div>
 
@@ -492,7 +492,7 @@
                                 </group>
 
                                 <separator string="Mandatory Conclusion"/>
-                                <div class="alert alert-warning" role="alert" invisible="pcl_no_barrier_conclusion">
+                                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('pcl_no_barrier_conclusion', '=', True)]}">
                                     <strong>⚠ CONFIRMATION REQUIRED:</strong> You must confirm that no professional or ethical barrier exists before proceeding.
                                 </div>
                                 <group class="o_onboarding_grid">
@@ -545,7 +545,7 @@
                                 </group>
 
                                 <separator string="Engagement Decision &amp; Sign-off"/>
-                                <div class="alert alert-danger" role="alert" invisible="partner_signoff_complete">
+                                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('partner_signoff_complete', '=', True)]}">
                                     <strong>❌ CANNOT PROCEED:</strong> Engagement Partner digital sign-off is required before final authorization.
                                 </div>
                                 <group class="o_onboarding_grid">
@@ -656,16 +656,16 @@
                                 </group>
 
                                 <separator string="Final Acceptance Decision"/>
-                                <div class="alert alert-warning" role="alert" invisible="fam_final_decision">
+                                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('fam_final_decision', '!=', False)]}">
                                     <strong>❌ NO SILENT ACCEPTANCE:</strong> Partner must explicitly select Accept, Accept with Safeguards, or Reject.
                                 </div>
                                 <group class="o_onboarding_grid">
                                     <field name="fam_final_decision" required="1" widget="radio" options="{'horizontal': true}"/>
                                 </group>
-                                <group class="o_onboarding_grid" invisible="fam_final_decision != 'accept_safeguards'">
+                                <group class="o_onboarding_grid" attrs="{'invisible': [('fam_final_decision', '!=', 'accept_safeguards')]}">
                                     <field name="fam_safeguards_imposed" required="1" placeholder="Document specific safeguards imposed for acceptance..."/>
                                 </group>
-                                <group class="o_onboarding_grid" invisible="fam_final_decision != 'reject'">
+                                <group class="o_onboarding_grid" attrs="{'invisible': [('fam_final_decision', '!=', 'reject')]}">
                                     <field name="fam_rejection_reason" required="1" placeholder="Document specific reasons for declining the engagement..."/>
                                 </group>
 
