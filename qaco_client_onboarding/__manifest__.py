@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'QACO Client Onboarding',
-    'version': '17.0.1.1.0',
+    'version': '17.0.1.2.0',
     'category': 'Audit',
-    'summary': 'Client Onboarding Phase with Auto-Generated Reports',
+    'summary': 'Client Onboarding Phase with Auto-Generated Reports & Notebooks',
     'description': """
 Client Onboarding Module
 ========================
@@ -19,6 +19,10 @@ Features:
   • Engagement Authorization Memorandum (ISA 210, ISQM-1)
 - ICAP QCR Ready documentation
 - Time-stamped, Partner-signed reports
+- Notebooks with Save & Next functionality:
+  • Auto-save every 30 seconds
+  • Draft recovery and session persistence
+  • Sequential note navigation
     """,
     'author': 'QACO',
     'website': 'https://www.qaco.com',
@@ -32,6 +36,7 @@ Features:
         'data/onboarding_seed.xml',
         'views/client_onboarding_form.xml',
         'views/audit_smart_button.xml',
+        'views/notebook_views.xml',
         'reports/client_onboarding_report.xml',
         'reports/client_onboarding_report_template.xml',
         'reports/report_acceptance_continuance.xml',
@@ -42,6 +47,8 @@ Features:
     'assets': {
         'web.assets_backend': [
             'qaco_client_onboarding/static/src/scss/onboarding.scss',
+            'qaco_client_onboarding/static/src/js/save_next_widget.js',
+            'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
         ],
     },
     'installable': True,

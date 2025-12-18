@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Auto-Save Status Widget Template -->
+    <t t-name="qaco_client_onboarding.AutoSaveStatus">
+        <div class="o_auto_save_status d-flex align-items-center">
+            <span t-attf-class="badge {{statusClass}}">
+                <i t-if="state.isSaving" class="fa fa-spinner fa-spin me-1"/>
+                <i t-elif="state.hasDraft" class="fa fa-file-text-o me-1"/>
+                <i t-else="" class="fa fa-check-circle me-1"/>
+                <t t-esc="statusText"/>
+            </span>
+        </div>
+    </t>
+
+    <!-- Save & Next Button Widget Template -->
+    <t t-name="qaco_client_onboarding.SaveNextButton">
+        <button 
+            t-attf-class="btn btn-primary o_save_next_button {{state.isLoading ? 'disabled' : ''}}"
+            t-on-click="onSaveAndNext"
+            t-att-disabled="state.isLoading">
+            <t t-if="state.isLoading">
+                <i class="fa fa-spinner fa-spin me-1"/>
+                Saving...
+            </t>
+            <t t-else="">
+                <i class="fa fa-save me-1"/>
+                Save &amp; Next
+                <i class="fa fa-arrow-right ms-1"/>
+            </t>
+        </button>
+    </t>
+
+    <!-- Draft Alert Banner Template -->
+    <t t-name="qaco_client_onboarding.DraftAlert">
+        <div t-if="props.hasDraft" class="alert alert-info d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <i class="fa fa-info-circle me-2"/>
+                <strong>Draft Available:</strong> 
+                You have unsaved draft content from a previous session.
+            </div>
+            <button 
+                class="btn btn-sm btn-outline-info"
+                t-on-click="onRestoreDraft">
+                <i class="fa fa-undo me-1"/>
+                Restore Draft
+            </button>
+        </div>
+    </t>
+
+    <!-- Notebook Progress Bar Template -->
+    <t t-name="qaco_client_onboarding.NotebookProgress">
+        <div class="o_notebook_progress mb-3">
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">
+                    Progress: <t t-esc="props.completed"/> / <t t-esc="props.total"/> notes completed
+                </span>
+                <span class="text-muted">
+                    <t t-esc="props.percentage"/>%
+                </span>
+            </div>
+            <div class="progress" style="height: 8px;">
+                <div 
+                    class="progress-bar bg-success" 
+                    role="progressbar"
+                    t-attf-style="width: {{props.percentage}}%;"
+                    t-att-aria-valuenow="props.percentage"
+                    aria-valuemin="0" 
+                    aria-valuemax="100">
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Note Sequence Navigator Template -->
+    <t t-name="qaco_client_onboarding.NoteNavigator">
+        <div class="o_note_navigator d-flex align-items-center gap-2 p-2 border-bottom bg-light">
+            <button 
+                class="btn btn-sm btn-outline-secondary"
+                t-att-disabled="!props.hasPrevious"
+                t-on-click="onPrevious"
+                title="Previous Note">
+                <i class="fa fa-chevron-left"/>
+            </button>
+            
+            <span class="badge bg-secondary">
+                Note <t t-esc="props.currentIndex"/> of <t t-esc="props.totalNotes"/>
+            </span>
+            
+            <button 
+                class="btn btn-sm btn-outline-secondary"
+                t-att-disabled="!props.hasNext"
+                t-on-click="onNext"
+                title="Next Note">
+                <i class="fa fa-chevron-right"/>
+            </button>
+            
+            <div class="ms-auto">
+                <t t-slot="actions"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- Auto-Save Indicator (Floating) Template -->
+    <t t-name="qaco_client_onboarding.AutoSaveIndicator">
+        <div 
+            t-attf-class="o_auto_save_indicator position-fixed {{state.visible ? 'visible' : 'hidden'}}"
+            style="bottom: 20px; right: 20px; z-index: 1050;">
+            <div t-attf-class="toast {{state.type}}">
+                <div class="toast-body d-flex align-items-center">
+                    <i t-if="state.saving" class="fa fa-spinner fa-spin me-2"/>
+                    <i t-elif="state.type === 'success'" class="fa fa-check-circle text-success me-2"/>
+                    <i t-elif="state.type === 'error'" class="fa fa-exclamation-circle text-danger me-2"/>
+                    <span t-esc="state.message"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

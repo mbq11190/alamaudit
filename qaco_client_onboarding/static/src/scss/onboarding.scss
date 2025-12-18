@@ -294,6 +294,358 @@ $audit-bg: #f7f8fa;
   }
 }
 
+// =========================================================================
+// NOTEBOOK & NOTES - Save & Next Feature Styles
+// =========================================================================
+
+.o_notebook_form {
+  .o_notebook_header {
+    background: linear-gradient(135deg, $audit-indigo, $audit-purple);
+    color: #fff;
+    padding: 20px 24px;
+    border-radius: 8px 8px 0 0;
+
+    .o_notebook_title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .o_notebook_description {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+  }
+
+  .o_notebook_progress {
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+      background: #e5e7eb;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, $audit-green, #22c55e);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .o_progress_stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: $audit-slate;
+      margin-top: 8px;
+    }
+  }
+}
+
+.o_note_form {
+  .o_note_navigator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+
+    .o_note_sequence_badge {
+      background: $audit-indigo;
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .o_note_nav_buttons {
+      display: flex;
+      gap: 8px;
+
+      .btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .o_note_draft_alert {
+    margin: 16px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .o_draft_message {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #92400e;
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+
+    .btn-restore {
+      background: #f59e0b;
+      border-color: #f59e0b;
+      color: #fff;
+
+      &:hover {
+        background: #d97706;
+        border-color: #d97706;
+      }
+    }
+  }
+
+  .o_note_content_area {
+    padding: 20px 24px;
+    background: #fff;
+    min-height: 400px;
+
+    .o_note_title_field {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $audit-charcoal;
+      margin-bottom: 16px;
+      border-bottom: 2px solid $audit-indigo;
+      padding-bottom: 8px;
+    }
+
+    .o_note_editor {
+      min-height: 300px;
+
+      .note-editable {
+        min-height: 280px;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        
+        &:focus {
+          border-color: $audit-indigo;
+          box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+      }
+    }
+  }
+
+  .o_note_action_bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+
+    .o_action_group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .o_save_next_button {
+      background: linear-gradient(90deg, $audit-indigo, $audit-purple);
+      border: none;
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+
+    .o_draft_button {
+      background: #fff;
+      border: 1px solid $audit-slate;
+      color: $audit-slate;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: $audit-charcoal;
+      }
+    }
+  }
+}
+
+// Auto-save status indicator
+.o_auto_save_status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: $audit-grey;
+
+  .o_saving_indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: $audit-amber;
+
+    .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  .o_saved_indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: $audit-green;
+  }
+
+  .o_last_saved_time {
+    color: $audit-grey;
+    font-size: 0.8rem;
+  }
+}
+
+// Floating auto-save toast
+.o_auto_save_indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
+  transition: all 0.3s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+  }
+
+  .toast {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 12px 16px;
+    min-width: 200px;
+
+    &.success {
+      border-left: 4px solid $audit-green;
+    }
+
+    &.warning {
+      border-left: 4px solid $audit-amber;
+    }
+
+    &.error {
+      border-left: 4px solid #ef4444;
+    }
+  }
+}
+
+// Note list in notebook
+.o_notebook_notes_list {
+  .o_note_item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    .o_note_handle {
+      cursor: grab;
+      color: $audit-grey;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    .o_note_sequence {
+      background: $audit-indigo;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .o_note_info {
+      flex: 1;
+
+      .o_note_title {
+        font-weight: 600;
+        color: $audit-charcoal;
+      }
+
+      .o_note_meta {
+        font-size: 0.8rem;
+        color: $audit-grey;
+      }
+    }
+
+    .o_note_status {
+      .badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+
+      .badge-draft {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .badge-complete {
+        background: #dcfce7;
+        color: #166534;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 992px) {
   .o_onboarding_form .o_onboarding_meta {
     grid-template-columns: 1fr;
@@ -306,5 +658,20 @@ $audit-bg: #f7f8fa;
 
   .o_onboarding_form .o_onboarding_tabs .nav-tabs {
     grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .o_note_form .o_note_action_bar {
+    flex-direction: column;
+    gap: 12px;
+
+    .o_action_group {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .o_save_next_button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
