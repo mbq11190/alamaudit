@@ -335,6 +335,35 @@ class AuditPlanning(models.Model):
         return tab_record.is_complete
 
     # ─────────────────────────────────────────────────────────────────
+    # Actions - Smart Buttons
+    # ─────────────────────────────────────────────────────────────────
+    def action_view_engagement(self):
+        """Open the linked audit engagement."""
+        self.ensure_one()
+        if not self.engagement_id:
+            raise UserError(_("No engagement linked to this planning."))
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "audit.engagement",
+            "res_id": self.engagement_id.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_view_programs(self):
+        """Open auto-generated audit programs."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Audit Programs"),
+            "res_model": "audit.planning.program",
+            "view_mode": "tree,form",
+            "domain": [("planning_id", "=", self.id)],
+            "context": {"default_planning_id": self.id},
+            "target": "current",
+        }
+
+    # ─────────────────────────────────────────────────────────────────
     # Actions - Navigation
     # ─────────────────────────────────────────────────────────────────
     def action_save_and_next(self):

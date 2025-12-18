@@ -119,86 +119,106 @@
                     <div class="o_alert" modifiers="{'invisible': [('compliance_scan_log','=',False)]}">
                         <field name="compliance_scan_log" readonly="1" widget="html"/>
                     </div>
-                    <notebook>
-                        <page string="4.1 Misstatements (ISA 450)">
-                            <group>
+                    <notebook class="o_finalisation_tabs">
+                        <page name="section_41" string="4.1 - Misstatements" class="o_finalisation_tab_page">
+                            <div id="section-4-1" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.1</span>
+                                    <span class="o_onboarding_card_title">Misstatements</span>
+                                    <span class="o_onboarding_card_ref">ISA 450</span>
+                                </div>
                                 <group>
-                                    <field name="misstatement_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                                    <field name="misstatement_threshold_percent"/>
-                                    <field name="corrected_total" widget="monetary" readonly="1"/>
-                                    <field name="uncorrected_total" widget="monetary" readonly="1"/>
-                                </group>
-                                <group>
-                                    <field name="pervasiveness_memo" widget="html"/>
-                                    <field name="partner_override_note" widget="html"/>
-                                    <field name="management_followup_note" widget="html"/>
-                                </group>
-                            </group>
-                            <group string="Engagement Partner Decision">
-                                <field name="checklist_misstatement_evaluated" widget="boolean_toggle"/>
-                                <field name="checklist_cumulative_below_materiality" widget="boolean_toggle"/>
-                                <field name="checklist_qualitative_considered" widget="boolean_toggle"/>
-                                <field name="checklist_disclosures_reassessed" widget="boolean_toggle"/>
-                            </group>
-                            <field name="misstatement_line_ids" context="{'default_finalisation_phase_id': active_id}" colspan="4">
-                                <tree editable="bottom">
-                                    <field name="area"/>
-                                    <field name="assertion"/>
-                                    <field name="misstatement_type"/>
-                                    <field name="status"/>
-                                    <field name="amount"/>
-                                    <field name="is_significant"/>
-                                </tree>
-                                <form string="Misstatement">
                                     <group>
+                                        <field name="misstatement_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                        <field name="misstatement_threshold_percent"/>
+                                        <field name="corrected_total" widget="monetary" readonly="1"/>
+                                        <field name="uncorrected_total" widget="monetary" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="pervasiveness_memo" widget="html"/>
+                                        <field name="partner_override_note" widget="html"/>
+                                        <field name="management_followup_note" widget="html"/>
+                                    </group>
+                                </group>
+                                <group string="Engagement Partner Decision" class="o_onboarding_grid">
+                                    <field name="checklist_misstatement_evaluated" widget="boolean_toggle"/>
+                                    <field name="checklist_cumulative_below_materiality" widget="boolean_toggle"/>
+                                    <field name="checklist_qualitative_considered" widget="boolean_toggle"/>
+                                    <field name="checklist_disclosures_reassessed" widget="boolean_toggle"/>
+                                </group>
+                                <field name="misstatement_line_ids" context="{'default_finalisation_phase_id': active_id}" colspan="4">
+                                    <tree editable="bottom">
                                         <field name="area"/>
                                         <field name="assertion"/>
                                         <field name="misstatement_type"/>
                                         <field name="status"/>
                                         <field name="amount"/>
                                         <field name="is_significant"/>
-                                    </group>
-                                    <group>
-                                        <field name="rationale" widget="text"/>
-                                        <field name="impact_notes" widget="text"/>
-                                        <field name="management_response" widget="text"/>
-                                        <field name="attachments_ids" widget="many2many_binary" filename="datas"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </page>
-                        <page string="4.2 Subsequent Events (ISA 560)">
-                            <group>
-                                <field name="subsequent_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                                <field name="subsequent_minutes_attachment_ids" widget="many2many_binary" filename="datas"/>
-                                <field name="subsequent_legal_attachment_ids" widget="many2many_binary" filename="datas"/>
-                            </group>
-                            <group string="Procedure Checklist">
-                                <field name="checklist_sub_events_period_covered" widget="boolean_toggle"/>
-                                <field name="checklist_sub_events_adjusting" widget="boolean_toggle"/>
-                                <field name="checklist_sub_events_disclosure" widget="boolean_toggle"/>
-                            </group>
-                            <group>
-                                <field name="subsequent_procedure_ids" context="{'default_finalisation_phase_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="procedure_code"/>
-                                        <field name="performed_by"/>
-                                        <field name="performed_on"/>
-                                        <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                     </tree>
+                                    <form string="Misstatement">
+                                        <group>
+                                            <field name="area"/>
+                                            <field name="assertion"/>
+                                            <field name="misstatement_type"/>
+                                            <field name="status"/>
+                                            <field name="amount"/>
+                                            <field name="is_significant"/>
+                                        </group>
+                                        <group>
+                                            <field name="rationale" widget="text"/>
+                                            <field name="impact_notes" widget="text"/>
+                                            <field name="management_response" widget="text"/>
+                                            <field name="attachments_ids" widget="many2many_binary" filename="datas"/>
+                                        </group>
+                                    </form>
                                 </field>
-                                <field name="subsequent_event_ids" context="{'default_finalisation_phase_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="name"/>
-                                        <field name="event_date"/>
-                                        <field name="classification"/>
-                                        <field name="resolved"/>
-                                    </tree>
-                                </field>
-                            </group>
+                            </div>
                         </page>
-                        <page string="4.3 Going Concern (ISA 570)">
+                        <page name="section_42" string="4.2 - Subsequent Events" class="o_finalisation_tab_page">
+                            <div id="section-4-2" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.2</span>
+                                    <span class="o_onboarding_card_title">Subsequent Events</span>
+                                    <span class="o_onboarding_card_ref">ISA 560</span>
+                                </div>
+                                <group>
+                                    <field name="subsequent_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                    <field name="subsequent_minutes_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="subsequent_legal_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </group>
+                                <group string="Procedure Checklist" class="o_onboarding_grid">
+                                    <field name="checklist_sub_events_period_covered" widget="boolean_toggle"/>
+                                    <field name="checklist_sub_events_adjusting" widget="boolean_toggle"/>
+                                    <field name="checklist_sub_events_disclosure" widget="boolean_toggle"/>
+                                </group>
+                                <group>
+                                    <field name="subsequent_procedure_ids" context="{'default_finalisation_phase_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="procedure_code"/>
+                                            <field name="performed_by"/>
+                                            <field name="performed_on"/>
+                                            <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
+                                        </tree>
+                                    </field>
+                                    <field name="subsequent_event_ids" context="{'default_finalisation_phase_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="name"/>
+                                            <field name="event_date"/>
+                                            <field name="classification"/>
+                                            <field name="resolved"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </div>
+                        </page>
+                        <page name="section_43" string="4.3 - Going Concern" class="o_finalisation_tab_page">
+                            <div id="section-4-3" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.3</span>
+                                    <span class="o_onboarding_card_title">Going Concern</span>
+                                    <span class="o_onboarding_card_ref">ISA 570</span>
+                                </div>
                             <group>
                                 <group>
                                     <field name="going_concern_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
@@ -232,85 +252,113 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Engagement Partner Decision">
-                                <field name="checklist_gc_assessment_challenged" widget="boolean_toggle"/>
-                                <field name="checklist_gc_future_info_considered" widget="boolean_toggle"/>
-                                <field name="checklist_gc_basis_appropriate" widget="boolean_toggle"/>
-                                <field name="checklist_gc_reporting_impact" widget="boolean_toggle"/>
-                            </group>
+                                <group string="Engagement Partner Decision" class="o_onboarding_grid">
+                                    <field name="checklist_gc_assessment_challenged" widget="boolean_toggle"/>
+                                    <field name="checklist_gc_future_info_considered" widget="boolean_toggle"/>
+                                    <field name="checklist_gc_basis_appropriate" widget="boolean_toggle"/>
+                                    <field name="checklist_gc_reporting_impact" widget="boolean_toggle"/>
+                                </group>
+                            </div>
                         </page>
-                        <page string="4.4 Related Parties &amp; Laws">
-                            <group>
-                                <field name="related_party_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                            </group>
-                            <group>
-                                <field name="related_party_line_ids" context="{'default_finalisation_phase_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="party_name"/>
-                                        <field name="relationship"/>
-                                        <field name="transaction_nature"/>
-                                        <field name="balance_amount"/>
-                                        <field name="authorised"/>
-                                    </tree>
-                                </field>
-                                <field name="non_compliance_log_ids" context="{'default_finalisation_phase_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="description"/>
-                                        <field name="law_reference"/>
-                                        <field name="severity"/>
+                        <page name="section_44" string="4.4 - Related Parties" class="o_finalisation_tab_page">
+                            <div id="section-4-4" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.4</span>
+                                    <span class="o_onboarding_card_title">Related Parties &amp; Laws</span>
+                                    <span class="o_onboarding_card_ref">ISA 550 / ISA 250</span>
+                                </div>
+                                <group>
+                                    <field name="related_party_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                </group>
+                                <group>
+                                    <field name="related_party_line_ids" context="{'default_finalisation_phase_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="party_name"/>
+                                            <field name="relationship"/>
+                                            <field name="transaction_nature"/>
+                                            <field name="balance_amount"/>
+                                            <field name="authorised"/>
+                                        </tree>
+                                    </field>
+                                    <field name="non_compliance_log_ids" context="{'default_finalisation_phase_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="description"/>
+                                            <field name="law_reference"/>
+                                            <field name="severity"/>
                                         <field name="financial_impact"/>
                                         <field name="communicated_tcwg"/>
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Engagement Partner Decision">
+                            <group string="Engagement Partner Decision" class="o_onboarding_grid">
                                 <field name="checklist_related_complete" widget="boolean_toggle"/>
                                 <field name="checklist_related_authorised" widget="boolean_toggle"/>
                                 <field name="checklist_related_disclosures_ok" widget="boolean_toggle"/>
                                 <field name="checklist_noncompliance_communicated" widget="boolean_toggle"/>
                             </group>
+                            </div>
                         </page>
-                        <page string="4.5 Management Representations">
-                            <group>
-                                <field name="representation_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                                <field name="representation_letter_template" widget="html" readonly="1"/>
-                                <field name="representation_letter_signed_on"/>
-                            </group>
-                            <group string="Engagement Partner Decision">
-                                <field name="checklist_rep_obtained" widget="boolean_toggle"/>
-                                <field name="checklist_rep_content_complete" widget="boolean_toggle"/>
-                                <field name="checklist_rep_date_valid" widget="boolean_toggle"/>
-                            </group>
+                        <page name="section_45" string="4.5 - Representations" class="o_finalisation_tab_page">
+                            <div id="section-4-5" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.5</span>
+                                    <span class="o_onboarding_card_title">Management Representations</span>
+                                    <span class="o_onboarding_card_ref">ISA 580</span>
+                                </div>
+                                <group>
+                                    <field name="representation_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                    <field name="representation_letter_template" widget="html" readonly="1"/>
+                                    <field name="representation_letter_signed_on"/>
+                                </group>
+                                <group string="Engagement Partner Decision" class="o_onboarding_grid">
+                                    <field name="checklist_rep_obtained" widget="boolean_toggle"/>
+                                    <field name="checklist_rep_content_complete" widget="boolean_toggle"/>
+                                    <field name="checklist_rep_date_valid" widget="boolean_toggle"/>
+                                </group>
+                            </div>
                         </page>
-                        <page string="4.6 Final Analytics &amp; Conclusion">
-                            <group>
-                                <field name="analytics_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                            </group>
-                            <group>
-                                <field name="analytics_ratio_ids" context="{'default_finalisation_phase_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="metric"/>
-                                        <field name="current_value"/>
-                                        <field name="prior_value"/>
-                                        <field name="variance_percent"/>
-                                        <field name="resolved"/>
-                                    </tree>
-                                </field>
-                                <field name="analytics_variance_ids" context="{'default_finalisation_phase_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="description"/>
-                                        <field name="threshold_trigger"/>
-                                        <field name="resolved"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group string="Engagement Partner Decision">
-                                <field name="checklist_analytics_corrob" widget="boolean_toggle"/>
-                                <field name="checklist_variances_resolved" widget="boolean_toggle"/>
-                                <field name="checklist_fs_compliant" widget="boolean_toggle"/>
-                            </group>
+                        <page name="section_46" string="4.6 - Final Analytics" class="o_finalisation_tab_page">
+                            <div id="section-4-6" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.6</span>
+                                    <span class="o_onboarding_card_title">Final Analytics &amp; Conclusion</span>
+                                    <span class="o_onboarding_card_ref">ISA 520</span>
+                                </div>
+                                <group>
+                                    <field name="analytics_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                </group>
+                                <group>
+                                    <field name="analytics_ratio_ids" context="{'default_finalisation_phase_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="metric"/>
+                                            <field name="current_value"/>
+                                            <field name="prior_value"/>
+                                            <field name="variance_percent"/>
+                                            <field name="resolved"/>
+                                        </tree>
+                                    </field>
+                                    <field name="analytics_variance_ids" context="{'default_finalisation_phase_id': active_id}">
+                                        <tree editable="bottom">
+                                            <field name="description"/>
+                                            <field name="threshold_trigger"/>
+                                            <field name="resolved"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Engagement Partner Decision" class="o_onboarding_grid">
+                                    <field name="checklist_analytics_corrob" widget="boolean_toggle"/>
+                                    <field name="checklist_variances_resolved" widget="boolean_toggle"/>
+                                    <field name="checklist_fs_compliant" widget="boolean_toggle"/>
+                                </group>
+                            </div>
                         </page>
-                        <page string="4.7 Completion &amp; Sign-off" modifiers="{'invisible': [('signoff_unlocked','=',False)]}">
+                        <page name="section_47" string="4.7 - Sign-off" class="o_finalisation_tab_page" modifiers="{'invisible': [('signoff_unlocked','=',False)]}">
+                            <div id="section-4-7" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.7</span>
+                                    <span class="o_onboarding_card_title">Completion &amp; Sign-off</span>
+                                    <span class="o_onboarding_card_ref">ISA 220 / ISA 230</span>
+                                </div>
                             <group>
                                 <field name="completion_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                             </group>
@@ -333,7 +381,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Checklist">
+                            <group string="Checklist" class="o_onboarding_grid">
                                 <field name="checklist_review_notes_cleared" widget="boolean_toggle"/>
                                 <field name="checklist_compliance_scan" widget="boolean_toggle" readonly="1"/>
                                 <field name="checklist_partner_approval" widget="boolean_toggle" readonly="1"/>
@@ -348,9 +396,17 @@
                                 <field name="final_locked_on" readonly="1"/>
                                 <field name="archive_deadline_date" readonly="1"/>
                             </group>
+                            </div>
                         </page>
-                        <page string="Regulatory Updates">
-                            <field name="regulatory_news" widget="html" readonly="1"/>
+                        <page name="section_48" string="4.8 - Regulatory" class="o_finalisation_tab_page">
+                            <div id="section-4-8" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">4.8</span>
+                                    <span class="o_onboarding_card_title">Regulatory Updates</span>
+                                    <span class="o_onboarding_card_ref">ISA 250</span>
+                                </div>
+                                <field name="regulatory_news" widget="html" readonly="1"/>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>

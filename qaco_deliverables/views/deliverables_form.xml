@@ -75,8 +75,14 @@
                     <group string="Gateway Findings" modifiers="{'invisible': [('outstanding_items_log','=',False)]}">
                         <field name="outstanding_items_log" widget="html" readonly="1"/>
                     </group>
-                    <notebook>
-                        <page string="5.0 Central Dashboard &amp; Pre-Issuance">
+                    <notebook class="o_deliverables_tabs">
+                        <page name="section_50" string="5.0 - Dashboard" class="o_deliverables_tab_page">
+                            <div id="section-5-0" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">5.0</span>
+                                    <span class="o_onboarding_card_title">Central Dashboard &amp; Pre-Issuance</span>
+                                    <span class="o_onboarding_card_ref">ISQM-1 / ISA 220</span>
+                                </div>
                             <!-- Central dashboard with pre-issuance gateway steps -->
                             <group>
                                 <group>
@@ -97,31 +103,38 @@
                             <group string="Final FS">
                                 <field name="final_fs_attachment_ids" widget="many2many_binary" filename="datas" colspan="4"/>
                             </group>
+                            </div>
                         </page>
-                        <page string="5.1 Auditor's Report (ISA 700/701/705/706)">
-                            <group>
-                                <field name="audit_report_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                            </group>
-                            <field name="audit_report_ids" colspan="4" context="{'default_deliverables_id': active_id}">
-                                <tree editable="bottom">
-                                    <field name="framework"/>
-                                    <field name="entity_type"/>
-                                    <field name="opinion_type"/>
-                                    <field name="kam_required"/>
-                                    <field name="eom_required"/>
-                                    <field name="readiness_flag" widget="boolean_toggle"/>
-                                </tree>
-                                <form string="Auditor's Report">
-                                    <group>
+                        <page name="section_51" string="5.1 - Auditor's Report" class="o_deliverables_tab_page">
+                            <div id="section-5-1" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">5.1</span>
+                                    <span class="o_onboarding_card_title">Auditor's Report</span>
+                                    <span class="o_onboarding_card_ref">ISA 700 / 701 / 705 / 706</span>
+                                </div>
+                                <group>
+                                    <field name="audit_report_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                </group>
+                                <field name="audit_report_ids" colspan="4" context="{'default_deliverables_id': active_id}">
+                                    <tree editable="bottom">
                                         <field name="framework"/>
                                         <field name="entity_type"/>
                                         <field name="opinion_type"/>
-                                        <field name="period_end"/>
-                                    </group>
-                                    <group>
-                                        <field name="kam_required" widget="boolean_toggle"/>
-                                        <field name="kam_override_reason"/>
-                                        <field name="eom_required" widget="boolean_toggle"/>
+                                        <field name="kam_required"/>
+                                        <field name="eom_required"/>
+                                        <field name="readiness_flag" widget="boolean_toggle"/>
+                                    </tree>
+                                    <form string="Auditor's Report">
+                                        <group>
+                                            <field name="framework"/>
+                                            <field name="entity_type"/>
+                                            <field name="opinion_type"/>
+                                            <field name="period_end"/>
+                                        </group>
+                                        <group>
+                                            <field name="kam_required" widget="boolean_toggle"/>
+                                            <field name="kam_override_reason"/>
+                                            <field name="eom_required" widget="boolean_toggle"/>
                                         <field name="eom_reason"/>
                                         <field name="gc_uncertainty" widget="boolean_toggle"/>
                                     </group>
@@ -189,22 +202,29 @@
                                     </notebook>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="5.2 Management Letter (ISA 265)">
-                            <group>
-                                <field name="management_letter_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                                <field name="management_letter_attachment_ids" widget="many2many_binary" filename="datas"/>
-                                <field name="management_response_attachment_ids" widget="many2many_binary" filename="datas"/>
-                            </group>
-                            <field name="deficiency_ids" context="{'default_deliverables_id': active_id}" colspan="4">
-                                <tree editable="bottom">
-                                    <field name="classification"/>
-                                    <field name="severity"/>
-                                    <field name="action_owner"/>
-                                    <field name="target_date"/>
-                                </tree>
-                                <form string="Deficiency">
-                                    <group>
+                        <page name="section_52" string="5.2 - Management Letter" class="o_deliverables_tab_page">
+                            <div id="section-5-2" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">5.2</span>
+                                    <span class="o_onboarding_card_title">Management Letter</span>
+                                    <span class="o_onboarding_card_ref">ISA 265</span>
+                                </div>
+                                <group>
+                                    <field name="management_letter_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                    <field name="management_letter_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="management_response_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </group>
+                                <field name="deficiency_ids" context="{'default_deliverables_id': active_id}" colspan="4">
+                                    <tree editable="bottom">
+                                        <field name="classification"/>
+                                        <field name="severity"/>
+                                        <field name="action_owner"/>
+                                        <field name="target_date"/>
+                                    </tree>
+                                    <form string="Deficiency">
+                                        <group>
                                         <field name="reference" readonly="1"/>
                                         <field name="classification"/>
                                         <field name="severity"/>
@@ -237,37 +257,51 @@
                                     <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="5.3 Communication with TCWG (ISA 260)">
-                            <group>
-                                <field name="tcwg_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                            </group>
-                            <group>
+                        <page name="section_53" string="5.3 - TCWG Communication" class="o_deliverables_tab_page">
+                            <div id="section-5-3" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">5.3</span>
+                                    <span class="o_onboarding_card_title">Communication with TCWG</span>
+                                    <span class="o_onboarding_card_ref">ISA 260</span>
+                                </div>
                                 <group>
-                                    <field name="tcwg_meeting_date"/>
-                                    <field name="tcwg_attendees"/>
-                                    <field name="tcwg_auditor_attendees"/>
+                                    <field name="tcwg_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
                                 </group>
-                                <group string="Mandatory Topics">
-                                    <field name="tcwg_topic_responsibilities" widget="boolean_toggle"/>
-                                    <field name="tcwg_topic_significant_findings" widget="boolean_toggle"/>
-                                    <field name="tcwg_topic_uncorrected" widget="boolean_toggle"/>
-                                    <field name="tcwg_topic_scope" widget="boolean_toggle"/>
-                                    <field name="tcwg_topic_independence" widget="boolean_toggle"/>
-                                    <field name="tcwg_topic_qualitative" widget="boolean_toggle"/>
+                                <group>
+                                    <group>
+                                        <field name="tcwg_meeting_date"/>
+                                        <field name="tcwg_attendees"/>
+                                        <field name="tcwg_auditor_attendees"/>
+                                    </group>
+                                    <group string="Mandatory Topics" class="o_onboarding_grid">
+                                        <field name="tcwg_topic_responsibilities" widget="boolean_toggle"/>
+                                        <field name="tcwg_topic_significant_findings" widget="boolean_toggle"/>
+                                        <field name="tcwg_topic_uncorrected" widget="boolean_toggle"/>
+                                        <field name="tcwg_topic_scope" widget="boolean_toggle"/>
+                                        <field name="tcwg_topic_independence" widget="boolean_toggle"/>
+                                        <field name="tcwg_topic_qualitative" widget="boolean_toggle"/>
+                                    </group>
                                 </group>
-                            </group>
-                            <group string="Attachments">
-                                <field name="tcwg_attachment_ids" widget="many2many_binary" filename="datas"/>
-                                <field name="tcwg_ack_attachment_ids" widget="many2many_binary" filename="datas"/>
-                            </group>
+                                <group string="Attachments">
+                                    <field name="tcwg_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="tcwg_ack_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </group>
+                            </div>
                         </page>
-                        <page string="5.4 Other Information (ISA 720)">
-                            <group>
-                                <field name="other_info_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                                <field name="other_info_attachment_ids" widget="many2many_binary" filename="datas"/>
-                            </group>
-                            <field name="other_info_line_ids" context="{'default_deliverables_id': active_id}">
+                        <page name="section_54" string="5.4 - Other Information" class="o_deliverables_tab_page">
+                            <div id="section-5-4" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">5.4</span>
+                                    <span class="o_onboarding_card_title">Other Information</span>
+                                    <span class="o_onboarding_card_ref">ISA 720</span>
+                                </div>
+                                <group>
+                                    <field name="other_info_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                    <field name="other_info_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                </group>
+                                <field name="other_info_line_ids" context="{'default_deliverables_id': active_id}">
                                 <tree editable="bottom">
                                     <field name="document_name"/>
                                     <field name="doc_type"/>
@@ -299,46 +333,53 @@
                                     <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="5.5 Final Attachments, Archiving &amp; Dispatch">
-                            <!-- Final pack references and dispatch logs -->
-                            <group>
-                                <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                            </group>
-                            <group string="Final Pack">
-                                <field name="deliverable_pack_attachment_ids" widget="many2many_binary" filename="datas"/>
-                                <field name="archive_confirmed" widget="boolean_toggle"/>
-                            </group>
-                            <field name="dispatch_log_ids" context="{'default_deliverables_id': active_id}">
-                                <tree editable="bottom">
-                                    <field name="recipient_name"/>
-                                    <field name="method"/>
-                                    <field name="dispatch_date"/>
-                                    <field name="status"/>
-                                    <field name="acknowledged_date"/>
-                                </tree>
-                                <form string="Dispatch Log">
-                                    <group>
+                        <page name="section_55" string="5.5 - Archiving &amp; Dispatch" class="o_deliverables_tab_page">
+                            <div id="section-5-5" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">5.5</span>
+                                    <span class="o_onboarding_card_title">Archiving &amp; Dispatch</span>
+                                    <span class="o_onboarding_card_ref">ISA 230</span>
+                                </div>
+                                <group>
+                                    <field name="dispatch_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
+                                </group>
+                                <group string="Final Pack">
+                                    <field name="deliverable_pack_attachment_ids" widget="many2many_binary" filename="datas"/>
+                                    <field name="archive_confirmed" widget="boolean_toggle"/>
+                                </group>
+                                <field name="dispatch_log_ids" context="{'default_deliverables_id': active_id}">
+                                    <tree editable="bottom">
                                         <field name="recipient_name"/>
-                                        <field name="recipient_role"/>
                                         <field name="method"/>
                                         <field name="dispatch_date"/>
-                                    </group>
-                                    <group>
                                         <field name="status"/>
                                         <field name="acknowledged_date"/>
-                                        <field name="tracking_reference"/>
-                                    </group>
-                                    <group>
-                                        <field name="portal_submission_reference"/>
-                                        <field name="notes" widget="text"/>
-                                    </group>
-                                    <group string="Attachments">
+                                    </tree>
+                                    <form string="Dispatch Log">
+                                        <group>
+                                            <field name="recipient_name"/>
+                                            <field name="recipient_role"/>
+                                            <field name="method"/>
+                                            <field name="dispatch_date"/>
+                                        </group>
+                                        <group>
+                                            <field name="status"/>
+                                            <field name="acknowledged_date"/>
+                                            <field name="tracking_reference"/>
+                                        </group>
+                                        <group>
+                                            <field name="portal_submission_reference"/>
+                                            <field name="notes" widget="text"/>
+                                        </group>
+                                        <group string="Attachments">
                                         <field name="attachment_ids" widget="many2many_binary" filename="datas"/>
                                         <field name="acknowledgment_attachment_ids" widget="many2many_binary" filename="datas"/>
                                     </group>
                                 </form>
                             </field>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>

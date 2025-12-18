@@ -56,6 +56,7 @@ P-13: Planning Review & Approval (ISA 220, ISQM-1)
         "views/planning_main_views.xml",
         "views/planning_tabs_p1_p6_views.xml",
         "views/planning_tabs_p7_p13_views.xml",
+        "views/planning_program_views.xml",
         "views/audit_planning_menu.xml",
         "views/audit_planning_tree.xml",
         "views/audit_planning_form.xml",

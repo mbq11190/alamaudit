@@ -77,6 +77,15 @@ class AuditPlanningProgram(models.Model):
         ("finalized", "Finalized"),
     ], string="Status", default="draft")
 
+    def action_finalize(self):
+        """Finalize the audit program."""
+        self.ensure_one()
+        self.status = "finalized"
+        self.reviewed_by = self.env.user
+        self.reviewed_on = fields.Datetime.now()
+        self.message_post(body=_("Audit program finalized."))
+        return True
+
     @api.model
     def generate_for_planning(self, planning_id):
         """Generate all cycle programs for a planning record."""

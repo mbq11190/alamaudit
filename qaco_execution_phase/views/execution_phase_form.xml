@@ -101,26 +101,39 @@
                     <div class="o_execution_alert" modifiers="{'invisible': [('compliance_alert_message', '=', False)]}">
                         <field name="compliance_alert_message" readonly="1" widget="html"/>
                     </div>
-                    <notebook>
-                        <page string="Dashboard">
-                            <field name="execution_risk_line_ids" context="{'default_execution_phase_id': active_id}" mode="tree" colspan="4">
-                                <tree string="Risk Coverage" editable="bottom">
-                                    <field name="risk_description"/>
-                                    <field name="risk_rating"/>
-                                    <field name="assertion_type"/>
-                                    <field name="is_significant" widget="boolean_toggle"/>
-                                    <field name="coverage_percent" widget="progressbar"/>
-                                    <field name="is_fully_addressed"/>
-                                </tree>
-                            </field>
+                    <notebook class="o_execution_tabs">
+                        <page name="section_30" string="3.0 - Dashboard" class="o_execution_tab_page">
+                            <div id="section-3-0" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.0</span>
+                                    <span class="o_onboarding_card_title">Execution Dashboard</span>
+                                    <span class="o_onboarding_card_ref">ISA 330 / Risk Coverage</span>
+                                </div>
+                                <field name="execution_risk_line_ids" context="{'default_execution_phase_id': active_id}" mode="tree" colspan="4">
+                                    <tree string="Risk Coverage" editable="bottom">
+                                        <field name="risk_description"/>
+                                        <field name="risk_rating"/>
+                                        <field name="assertion_type"/>
+                                        <field name="is_significant" widget="boolean_toggle"/>
+                                        <field name="coverage_percent" widget="progressbar"/>
+                                        <field name="is_fully_addressed"/>
+                                    </tree>
+                                </field>
+                            </div>
                         </page>
-                        <page string="Controls">
-                            <group>
-                                <field name="checklist_controls_linked" widget="boolean_toggle"/>
-                                <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
-                                <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
-                            </group>
-                            <field name="control_test_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                        <page name="section_31" string="3.1 - Controls" class="o_execution_tab_page">
+                            <div id="section-3-1" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.1</span>
+                                    <span class="o_onboarding_card_title">Tests of Controls</span>
+                                    <span class="o_onboarding_card_ref">ISA 330 / ISA 265</span>
+                                </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="checklist_controls_linked" widget="boolean_toggle"/>
+                                    <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
+                                    <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
+                                </group>
+                                <field name="control_test_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
                                 <tree string="Tests of Controls" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="control_name"/>
@@ -195,16 +208,23 @@
                                     </group>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="Substantive">
-                            <group>
-                                <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
-                                <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
-                            </group>
-                            <field name="substantive_area_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
-                                <tree editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="area_code"/>
+                        <page name="section_32" string="3.2 - Substantive" class="o_execution_tab_page">
+                            <div id="section-3-2" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.2</span>
+                                    <span class="o_onboarding_card_title">Substantive Procedures</span>
+                                    <span class="o_onboarding_card_ref">ISA 330 / ISA 500</span>
+                                </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
+                                    <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
+                                </group>
+                                <field name="substantive_area_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="area_code"/>
                                     <field name="status" widget="statusbar" statusbar_visible="red,amber,green"/>
                                     <field name="exception_count"/>
                                     <field name="conclusion"/>
@@ -263,31 +283,38 @@
                                     </group>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="Sampling">
-                            <group>
-                                <field name="checklist_sampling_signed" widget="boolean_toggle"/>
-                            </group>
-                            <field name="sampling_request_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
-                                <tree string="Sampling" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="method"/>
-                                    <field name="risk_level"/>
-                                    <field name="population_size"/>
-                                    <field name="sample_size"/>
-                                    <field name="state"/>
-                                </tree>
-                                <form string="Sampling Request">
-                                    <sheet>
-                                        <group>
-                                            <field name="name"/>
-                                            <field name="execution_phase_id" readonly="1"/>
-                                            <field name="control_test_id"/>
-                                            <field name="substantive_procedure_id"/>
-                                        </group>
-                                        <group>
-                                            <field name="population_description"/>
-                                            <field name="population_amount"/>
+                        <page name="section_33" string="3.3 - Sampling" class="o_execution_tab_page">
+                            <div id="section-3-3" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.3</span>
+                                    <span class="o_onboarding_card_title">Audit Sampling</span>
+                                    <span class="o_onboarding_card_ref">ISA 530</span>
+                                </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="checklist_sampling_signed" widget="boolean_toggle"/>
+                                </group>
+                                <field name="sampling_request_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                    <tree string="Sampling" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="method"/>
+                                        <field name="risk_level"/>
+                                        <field name="population_size"/>
+                                        <field name="sample_size"/>
+                                        <field name="state"/>
+                                    </tree>
+                                    <form string="Sampling Request">
+                                        <sheet>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="execution_phase_id" readonly="1"/>
+                                                <field name="control_test_id"/>
+                                                <field name="substantive_procedure_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="population_description"/>
+                                                <field name="population_amount"/>
                                             <field name="population_size"/>
                                             <field name="tolerable_error"/>
                                             <field name="expected_error"/>
@@ -308,49 +335,63 @@
                                     </sheet>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="Evidence">
-                            <group>
-                                <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
-                            </group>
-                            <field name="evidence_item_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
-                                <tree string="Evidence Items" editable="bottom">
-                                    <field name="description"/>
-                                    <field name="assertion_type"/>
-                                    <field name="evidence_type"/>
-                                    <field name="reliability_score"/>
-                                    <field name="collected_by"/>
-                                    <field name="collected_on"/>
-                                </tree>
-                                <form string="Evidence Item">
-                                    <group>
+                        <page name="section_34" string="3.4 - Evidence" class="o_execution_tab_page">
+                            <div id="section-3-4" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.4</span>
+                                    <span class="o_onboarding_card_title">Audit Evidence</span>
+                                    <span class="o_onboarding_card_ref">ISA 500 / ISA 501</span>
+                                </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
+                                </group>
+                                <field name="evidence_item_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                    <tree string="Evidence Items" editable="bottom">
                                         <field name="description"/>
                                         <field name="assertion_type"/>
                                         <field name="evidence_type"/>
-                                        <field name="reliability_score" readonly="1"/>
-                                        <field name="control_test_id"/>
-                                        <field name="substantive_procedure_id"/>
-                                        <field name="isa_reference" readonly="1"/>
-                                    </group>
-                                    <group>
+                                        <field name="reliability_score"/>
                                         <field name="collected_by"/>
                                         <field name="collected_on"/>
-                                        <field name="locked" widget="boolean_toggle"/>
-                                    </group>
-                                    <group string="Attachments">
-                                        <field name="attachment_ids" widget="many2many_binary" filename="data"/>
-                                    </group>
-                                </form>
-                            </field>
+                                    </tree>
+                                    <form string="Evidence Item">
+                                        <group>
+                                            <field name="description"/>
+                                            <field name="assertion_type"/>
+                                            <field name="evidence_type"/>
+                                            <field name="reliability_score" readonly="1"/>
+                                            <field name="control_test_id"/>
+                                            <field name="substantive_procedure_id"/>
+                                            <field name="isa_reference" readonly="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="collected_by"/>
+                                            <field name="collected_on"/>
+                                            <field name="locked" widget="boolean_toggle"/>
+                                        </group>
+                                        <group string="Attachments">
+                                            <field name="attachment_ids" widget="many2many_binary" filename="data"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </div>
                         </page>
-                        <page string="Workpapers">
-                            <group>
-                                <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
-                            </group>
-                            <field name="workpaper_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
-                                <tree editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="name"/>
+                        <page name="section_35" string="3.5 - Workpapers" class="o_execution_tab_page">
+                            <div id="section-3-5" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.5</span>
+                                    <span class="o_onboarding_card_title">Audit Workpapers</span>
+                                    <span class="o_onboarding_card_ref">ISA 230</span>
+                                </div>
+                                <group class="o_onboarding_grid">
+                                    <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
+                                </group>
+                                <field name="workpaper_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
                                     <field name="workpaper_type"/>
                                     <field name="balance_amount"/>
                                     <field name="preparer_id"/>
@@ -382,32 +423,40 @@
                                     </footer>
                                 </form>
                             </field>
+                            </div>
                         </page>
-                        <page string="Sign-off">
-                            <group string="Checklist">
-                                <field name="checklist_controls_linked" widget="boolean_toggle"/>
-                                <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
-                                <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
-                                <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
-                                <field name="checklist_sampling_signed" widget="boolean_toggle"/>
-                                <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
-                                <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
-                            </group>
-                            <group string="Sign-offs">
-                                <field name="manager_signed_user_id" readonly="1"/>
-                                <field name="manager_signed_on" readonly="1"/>
-                                <field name="partner_signed_user_id" readonly="1"/>
-                                <field name="partner_signed_on" readonly="1"/>
-                                <field name="quality_reviewer_id" readonly="1"/>
-                                <field name="quality_reviewed_on" readonly="1"/>
-                            </group>
-                            <group string="Completion">
-                                <field name="execution_complete" readonly="1"/>
-                                <field name="execution_completed_on" readonly="1"/>
-                                <field name="phase_completion_certificate" readonly="1"/>
-                                <field name="can_finalize_execution" readonly="1"/>
-                            </group>
-                            <field name="missing_requirements_note" widget="html" readonly="1"/>
+                        <page name="section_36" string="3.6 - Sign-off" class="o_execution_tab_page">
+                            <div id="section-3-6" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">3.6</span>
+                                    <span class="o_onboarding_card_title">Execution Sign-off</span>
+                                    <span class="o_onboarding_card_ref">ISA 220 / ISQM-1</span>
+                                </div>
+                                <group string="Completion Checklist" class="o_onboarding_grid">
+                                    <field name="checklist_controls_linked" widget="boolean_toggle"/>
+                                    <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
+                                    <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
+                                    <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
+                                    <field name="checklist_sampling_signed" widget="boolean_toggle"/>
+                                    <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
+                                    <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
+                                </group>
+                                <group string="Sign-offs">
+                                    <field name="manager_signed_user_id" readonly="1"/>
+                                    <field name="manager_signed_on" readonly="1"/>
+                                    <field name="partner_signed_user_id" readonly="1"/>
+                                    <field name="partner_signed_on" readonly="1"/>
+                                    <field name="quality_reviewer_id" readonly="1"/>
+                                    <field name="quality_reviewed_on" readonly="1"/>
+                                </group>
+                                <group string="Completion">
+                                    <field name="execution_complete" readonly="1"/>
+                                    <field name="execution_completed_on" readonly="1"/>
+                                    <field name="phase_completion_certificate" readonly="1"/>
+                                    <field name="can_finalize_execution" readonly="1"/>
+                                </group>
+                                <field name="missing_requirements_note" widget="html" readonly="1"/>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>
