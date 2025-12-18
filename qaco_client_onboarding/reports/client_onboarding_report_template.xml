@@ -25,7 +25,7 @@
                     <ul>
                         <t t-foreach="doc.branch_location_ids" t-as="branch">
                             <li>
-                                <t t-esc="branch.city_id.name or '—'"/>
+                                <t t-esc="dict(branch._fields['city'].selection).get(branch.city, '—')"/>
                                 <t t-if="branch.province_id">
                                     , <t t-esc="branch.province_id.name"/>
                                 </t>
