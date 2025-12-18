@@ -59,9 +59,8 @@ Features:
             'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
         ],
     },
-    'external_dependencies': {
-        'python': ['python-docx'],  # Optional: For Word document generation
-    },
+    # Note: python-docx and weasyprint are optional for Word/PDF generation
+    # If not installed, the system falls back to HTML-based downloads
     'installable': True,
     'application': False,
     'auto_install': True,
