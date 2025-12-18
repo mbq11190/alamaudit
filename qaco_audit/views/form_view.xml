@@ -35,8 +35,6 @@
                                 <field name="client_id" force_save="1"/>
                                 <field name="contact" widget="phone"/>
                                 <field name="audit_year" options="{'no_create': True}" widget = "many2many_tags"/>
-                                <field name="audit_location_1"/>
-                                <field name="legal_entity"/>
                             </group>
                             <group>
 <!--                                <field name="partner"/>-->
@@ -44,7 +42,6 @@
                                 <field name="firm_name" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="priority" widget="priority"/>
 <!--                                <field name="repeat"/>-->
-                                <field name="audit_location_2" widget="CopyClipboardChar" invisible="audit_location_1 != 'Client Premises'"/>
                                 <field name="team_id" options="{'no_create': True}" widget = "many2many_tags_avatar"/>
                                 <field name="qaco_audit_partner" options="{'no_create': True}"/>
 <!--                                <field name="client_signature" string="Client Sign"/>-->

@@ -41,8 +41,6 @@ class Qacoaudit(models.Model):
     firm_name = fields.Many2one('audit.firm.name', string='Firm Name', ondelete='set null')
     report_type = fields.Selection([('UDIN', 'UDIN'),('Agreed Upon Procedures','Agreed upon Procedures'), ('Internal Audit', 'Internal Audit'), ('3rd Party Audits', '3rd Party Audits')], string='Audit Type')
     udin_no = fields.Char(string='UDIN No',)
-    legal_entity = fields.Selection([('Pvt Company', 'Pvt Company'), ('SMC Company', 'SMC Company'), ('Public Company', 'Public Company'), ('Branch Office', 'Branch Office'), ('Govt Organisation', 'Govt Organisation'), ('NGO Sec 42', 'NGO Sec 42'),('NGO-Other', 'NGO-Other'), ('Partnership', 'Partnership'),
-                                    ('Sole Proprietorship', 'Sole Proprietorship'), ('Provident Fund', 'Provident Fund'), ('Pension Fund', 'Pension FUnd')], string='Legal Entity')
     share_capital = fields.Monetary(string='Paid-up Share Capital', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency')
     turnover = fields.Monetary(string='Turnover', currency_field='currency_id')
@@ -52,8 +50,6 @@ class Qacoaudit(models.Model):
         string='Audit Partner',
         domain="[('designation_id.name', '=', 'Partner')]"
     )
-    audit_location_1 = fields.Selection([('Client Premises', 'Client Premises'), ('QACO Office', 'QACO Office')], string='Audit Location')
-    audit_location_2 = fields.Char(string='Client Address', related='client_id.street', readonly=True)
     no_of_persons = fields.Integer(string='No of Persons Required', )
     scanned = fields.Selection([('Done/Saved', 'Done/Saved'), ('Not Yet', 'Not Yet'), ('NA', 'NA')], string='Data Scan Status')
     original_file = fields.Selection([('Stored In Office', 'Stored In Office'), ('Returned', 'Returned'), ('NA', 'NA')],
@@ -138,12 +134,12 @@ class Qacoaudit(models.Model):
                 missing_fields.append(self._fields['team_id'].string)
 
         if next_stage.id == 4:
-            for field in ['folder', 'legal_entity', 'qaco_audit_partner']:
+            for field in ['folder', 'qaco_audit_partner']:
                 if not getattr(self, field):
                     missing_fields.append(self._fields[field].string)
 
         if next_stage.id == 2:
-            for field in ['client_id', 'contact', 'audit_year', 'firm_name', 'report_type', 'audit_location_1']:
+            for field in ['client_id', 'contact', 'audit_year', 'firm_name', 'report_type']:
                 if not getattr(self, field):
                     missing_fields.append(self._fields[field].string)
 
