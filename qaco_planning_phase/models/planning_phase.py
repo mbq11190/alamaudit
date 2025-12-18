@@ -468,6 +468,18 @@ class PlanningPhase(models.Model):
 			}
 		}
 
+	def action_view_audit(self):
+		"""Open the related audit engagement record."""
+		self.ensure_one()
+		return {
+			'type': 'ir.actions.act_window',
+			'name': 'Audit Engagement',
+			'res_model': 'qaco.audit',
+			'view_mode': 'form',
+			'res_id': self.audit_id.id,
+			'target': 'current',
+		}
+
 	@api.constrains('materiality_percentage')
 	def _check_materiality_percentage(self):
 		for record in self:

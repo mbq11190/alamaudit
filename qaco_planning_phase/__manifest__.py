@@ -1,7 +1,7 @@
 {
     "name": "Audit Planning Phase - Pakistan Statutory Audit",
     "summary": "Zero-deficiency planning workflow for statutory audits in Pakistan",
-    "version": "17.0.1.1.0",
+    "version": "17.0.1.1.1",
     "author": "QACO",
     "website": "https://alamaudit.thinkoptimise.com",
     "license": "LGPL-3",
