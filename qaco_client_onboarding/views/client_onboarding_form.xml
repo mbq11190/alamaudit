@@ -106,7 +106,7 @@
                                 <group string="Branch &amp; Office Locations" class="o_onboarding_grid">
                                     <field name="branch_location_ids">
                                         <tree editable="bottom">
-                                            <field name="city"/>
+                                            <field name="city_id" string="City" options="{'no_create': True}"/>
                                             <field name="province_id" domain="[('country_id','=',country_id)]" options="{'no_create': True}"/>
                                             <field name="country_id" options="{'no_create': True}"/>
                                             <field name="address"/>
