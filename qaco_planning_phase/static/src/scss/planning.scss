@@ -1,0 +1,371 @@
+$audit-indigo: #2f2b4a;
+$audit-purple: #4b3c78;
+$audit-slate: #4b5563;
+$audit-charcoal: #2c2f36;
+$audit-amber: #d97706;
+$audit-green: #15803d;
+$audit-blue: #2563eb;
+$audit-grey: #94a3b8;
+$audit-bg: #f7f8fa;
+
+// ═══════════════════════════════════════════════════════════════════════════════════
+// AUTO-SAVE NOTIFICATION STYLING
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+.o_notification_manager {
+  .o_notification {
+    &.o_autosave_notification {
+      background: linear-gradient(135deg, rgba(21, 128, 61, 0.95), rgba(34, 197, 94, 0.95));
+      border-left: 4px solid $audit-green;
+      
+      .o_notification_content {
+        color: #fff;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Auto-save status indicator in form header
+.o_planning_autosave_status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(21, 128, 61, 0.1);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: $audit-green;
+  
+  &.saving {
+    background: rgba(217, 119, 6, 0.1);
+    color: $audit-amber;
+    
+    .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  &.locked {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+  
+  .autosave-icon {
+    font-size: 1rem;
+  }
+  
+  .autosave-time {
+    font-weight: 600;
+  }
+}
+
+.o_planning_form {
+  background: $audit-bg;
+
+  .o_planning_sheet {
+    background: $audit-bg;
+  }
+
+  .o_planning_command_bar {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid #e5e7eb;
+
+    .o_planning_actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .o_planning_btn {
+      min-width: 44px;
+      font-weight: 600;
+      border-radius: 6px;
+      text-transform: none;
+    }
+
+    .o_planning_btn-primary {
+      background: linear-gradient(90deg, $audit-indigo, $audit-purple);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .o_planning_btn-outline {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      color: $audit-charcoal;
+    }
+
+    .btn-outline-danger {
+      border-width: 1px;
+    }
+
+    .o_planning_status_area {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
+      min-width: 260px;
+    }
+  }
+
+  .o_planning_stepper .o_statusbar_status {
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    text-transform: capitalize;
+  }
+
+  .o_planning_health .o_statusbar_status {
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 600;
+    min-width: 130px;
+    text-align: center;
+  }
+
+  .o_planning_meta {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .o_planning_progress_card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+    .o_planning_progress_title {
+      font-weight: 600;
+      color: $audit-charcoal;
+      margin-bottom: 8px;
+    }
+
+    .o_progressbar {
+      height: 12px;
+      border-radius: 999px;
+      background: #edeff5;
+
+      .o_progressbar_fill {
+        background: linear-gradient(90deg, $audit-indigo, $audit-blue);
+      }
+    }
+
+  }
+
+  .o_planning_alerts {
+    display: grid;
+    gap: 8px;
+  }
+
+  .o_planning_banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #fcd34d;
+    background: #fff7ed;
+    color: #92400e;
+    font-weight: 600;
+  }
+
+  .o_planning_card {
+    margin: 12px 16px 20px;
+    padding: 0;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+
+    .o_planning_card_header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: linear-gradient(90deg, #f5f6fa, #eef2ff);
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .o_planning_card_number {
+      font-weight: 800;
+      color: $audit-indigo;
+    }
+
+    .o_planning_card_title {
+      font-weight: 700;
+      color: $audit-charcoal;
+    }
+
+    .o_planning_card_ref {
+      margin-left: auto;
+      font-weight: 600;
+      color: $audit-slate;
+      font-size: 13px;
+    }
+
+    .o_planning_grid {
+      padding: 14px 16px;
+      border-top: 1px solid #f1f5f9;
+      column-gap: 18px;
+
+      .o_field_widget input[readonly],
+      .o_field_widget textarea[readonly],
+      .o_field_widget.o_readonly_modifier {
+        background: #f8fafc;
+        border-color: #e5e7eb;
+        color: $audit-slate;
+      }
+
+      .o_input, .o_field_widget {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .o_planning_checklist tbody tr {
+    td { vertical-align: middle; }
+    .o_field_many2manytags { max-width: 240px; }
+  }
+
+  .o_planning_tabs {
+    margin: 0 16px 24px;
+    background: transparent;
+
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      border-bottom: none;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(47, 43, 74, 0.08);
+    }
+
+    .nav-item {
+      margin: 0;
+    }
+
+    .nav-link {
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      text-align: left;
+      color: $audit-slate;
+      background: #f9fafb;
+      min-height: 64px;
+      white-space: pre-line;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+      &::first-line {
+        font-size: 18px;
+        color: $audit-indigo;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+      }
+
+      &.active, &.active:hover {
+        background: linear-gradient(120deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.12));
+        color: $audit-charcoal;
+        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.2);
+      }
+    }
+
+    .tab-content {
+      margin-top: 18px;
+      border: none;
+      background: transparent;
+    }
+
+    .tab-pane {
+      padding: 0;
+      background: transparent;
+    }
+  }
+
+  .o_planning_file_cards {
+    .o_planning_kanban {
+      padding: 10px;
+    }
+
+    .o_planning_file_card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .o_planning_file_header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: $audit-charcoal;
+      font-weight: 700;
+    }
+
+    .o_planning_file_icon {
+      color: $audit-indigo;
+      font-size: 16px;
+    }
+
+    .o_planning_file_meta {
+      color: $audit-slate;
+      font-size: 13px;
+    }
+  }
+
+  .o_field_widget input[required],
+  .o_field_widget textarea[required],
+  .o_field_widget.o_required_modifier {
+    border-color: #ef4444;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 992px) {
+  .o_planning_form .o_planning_meta {
+    grid-template-columns: 1fr;
+  }
+
+  .o_planning_form .o_planning_command_bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .o_planning_form .o_planning_tabs .nav-tabs {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}

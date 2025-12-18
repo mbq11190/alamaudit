@@ -22,27 +22,46 @@
 							class="btn-link"/>
 					<field name="planning_complete" widget="boolean_button" options='{"terminology": "close"}' class="oe_right"/>
 				</header>
-				<sheet>
-					<group string="Basic Audit Information" colspan="4">
-						<group string="Engagement Details">
-							<field name="name" readonly="1" class="oe_inline"/>
-							<field name="audit_id" required="1" class="oe_inline"/>
-							<field name="client_id" readonly="1" class="oe_inline"/>
+				<sheet class="o_planning_sheet">
+					<div class="oe_title">
+						<h1>
+							<field name="name" readonly="1"/>
+						</h1>
+					</div>
+					
+					<!-- 1.0 Basic Audit Information Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">1.0</span>
+							<span class="o_planning_card_title">Basic Audit Information</span>
+							<span class="o_planning_card_ref">ISA 300</span>
+						</div>
+						<group class="o_planning_grid">
+							<group string="Engagement Details">
+								<field name="audit_id" required="1"/>
+								<field name="client_id" readonly="1"/>
+							</group>
+							<group string="Audit Period">
+								<field name="audit_type" required="1"/>
+								<field name="audit_period_from" required="1"/>
+								<field name="audit_period_to" required="1"/>
+								<field name="financial_year_end" required="1"/>
+							</group>
+							<group string="Previous Auditor">
+								<field name="previous_auditor"/>
+								<field name="audit_tenure_years" readonly="1"/>
+							</group>
 						</group>
-						<group string="Audit Period">
-							<field name="audit_type" required="1"/>
-							<field name="audit_period_from" required="1"/>
-							<field name="audit_period_to" required="1"/>
-							<field name="financial_year_end" required="1"/>
-						</group>
-						<group string="Previous Auditor">
-							<field name="previous_auditor"/>
-							<field name="audit_tenure_years" readonly="1"/>
-						</group>
-					</group>
-					<group string="Planning Phase Status Dashboard" colspan="4">
-						<label string="Overall Completion Status" for="completion_status" class="o_form_label"/>
-						<group>
+					</div>
+					
+					<!-- 1.1 Planning Phase Status Dashboard Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">1.1</span>
+							<span class="o_planning_card_title">Planning Phase Status Dashboard</span>
+							<span class="o_planning_card_ref">ISA 300 / ISQM-1</span>
+						</div>
+						<group class="o_planning_grid">
 							<field name="understanding_status" widget="progressbar" options='{"editable": true}'/>
 							<field name="analytics_status" widget="progressbar" options='{"editable": true}'/>
 							<field name="materiality_status" widget="progressbar" options='{"editable": true}'/>
@@ -50,230 +69,475 @@
 							<field name="risk_status" widget="progressbar" options='{"editable": true}'/>
 							<field name="completion_status" widget="progressbar" options='{"editable": true}'/>
 						</group>
-					</group>
-					<group string="Planning Requirements Status" modifiers='{"invisible": [["can_finalize_planning", "=", true]]}'>
-						<field name="missing_requirements_note" nolabel="1" readonly="1"/>
-					</group>
-					<notebook>
-						<page string="Entity &amp; Environment (ISA 315)" modifiers='{"invisible": [["understanding_status", "=", "green"]]}'>
-							<group string="Industry &amp; Business Overview" colspan="2">
+						<div modifiers='{"invisible": [["can_finalize_planning", "=", true]]}'>
+							<div class="alert alert-warning mt-3">
+								<i class="fa fa-exclamation-triangle me-2"/>
+								<strong>Planning Requirements:</strong>
+								<field name="missing_requirements_note" nolabel="1" readonly="1"/>
+							</div>
+						</div>
+					</div>
+					<!-- 2.0 Entity & Environment Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.0</span>
+							<span class="o_planning_card_title">Entity &amp; Environment</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<group string="Industry &amp; Business Overview">
 								<field name="industry_type" required="1"/>
 								<field name="industry_id"/>
-								<field name="business_model" nolabel="1" placeholder="Describe the business model, revenue sources, key products/services, major customers and suppliers..."/>
 							</group>
-							<group string="Organizational Structure" colspan="2">
-								<field name="organizational_structure" nolabel="1" placeholder="Describe organizational structure, key personnel, reporting lines, governance framework..."/>
-							</group>
-							<group string="Operational Footprint" colspan="2">
-								<field name="operational_locations" nolabel="1" placeholder="List all operational locations, branches, warehouses, and their significance..."/>
-							</group>
-							<group string="Key Contracts &amp; Arrangements" colspan="2">
-								<field name="key_contracts" nolabel="1" placeholder="Document key contractual arrangements: long-term supply contracts, franchises, leases, joint ventures..."/>
-							</group>
-							<group string="Regulatory Framework - Pakistan" colspan="2">
-								<field name="applicable_regulators" widget="many2many_tags" placeholder="Select applicable regulators..."/>
-								<field name="regulatory_filings_status"/>
-								<field name="regulatory_penalties" nolabel="1" placeholder="Document any regulatory penalties, litigations, or compliance issues..."/>
-								<field name="compliance_certificates" nolabel="1" placeholder="Status of compliance certificates, licenses, registrations..."/>
-							</group>
-							<group string="Related Parties &amp; Group Structure (ISA 550)" colspan="2">
-								<field name="related_parties_summary" nolabel="1" placeholder="Identify all related parties, nature of relationships, and control relationships..."/>
-								<field name="group_structure" nolabel="1" placeholder="Describe group structure, ownership, and organizational hierarchy..."/>
-								<field name="intra_group_transactions" nolabel="1" placeholder="Document intra-group transactions, pricing policies, and significant arrangements..."/>
-							</group>
-							<group string="Fraud Risk Assessment (ISA 240)" colspan="2">
-								<field name="fraud_incentives" nolabel="1" placeholder="Identify incentives/pressures that might predispose management/employees to commit fraud..."/>
-								<field name="fraud_opportunities" nolabel="1" placeholder="Identify opportunities for fraud due to control weaknesses or complex transactions..."/>
-								<field name="fraud_attitudes" nolabel="1" placeholder="Assess attitudes/rationalizations that might justify fraudulent financial reporting..."/>
-								<field name="fraud_risk_assessment" nolabel="1" placeholder="Overall fraud risk assessment and conclusions..."/>
-							</group>
-						</page>
-						<page string="Analytical Procedures (ISA 520)" modifiers='{"invisible": [["analytics_status", "=", "green"]]}'>
-							<group string="Financial Data for Analysis" colspan="2">
+							<field name="business_model" nolabel="1" placeholder="Describe the business model, revenue sources, key products/services, major customers and suppliers..."/>
+						</group>
+					</div>
+					
+					<!-- 2.1 Organizational Structure Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.1</span>
+							<span class="o_planning_card_title">Organizational Structure</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="organizational_structure" nolabel="1" placeholder="Describe organizational structure, key personnel, reporting lines, governance framework..."/>
+						</group>
+					</div>
+					
+					<!-- 2.2 Operational Footprint Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.2</span>
+							<span class="o_planning_card_title">Operational Footprint</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="operational_locations" nolabel="1" placeholder="List all operational locations, branches, warehouses, and their significance..."/>
+						</group>
+					</div>
+					
+					<!-- 2.3 Key Contracts & Arrangements Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.3</span>
+							<span class="o_planning_card_title">Key Contracts &amp; Arrangements</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="key_contracts" nolabel="1" placeholder="Document key contractual arrangements: long-term supply contracts, franchises, leases, joint ventures..."/>
+						</group>
+					</div>
+					
+					<!-- 2.4 Regulatory Framework - Pakistan Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.4</span>
+							<span class="o_planning_card_title">Regulatory Framework - Pakistan</span>
+							<span class="o_planning_card_ref">ISA 315 / Pakistan Laws</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="applicable_regulators" widget="many2many_tags" placeholder="Select applicable regulators..."/>
+							<field name="regulatory_filings_status"/>
+							<field name="regulatory_penalties" nolabel="1" placeholder="Document any regulatory penalties, litigations, or compliance issues..."/>
+							<field name="compliance_certificates" nolabel="1" placeholder="Status of compliance certificates, licenses, registrations..."/>
+						</group>
+					</div>
+					
+					<!-- 2.5 Related Parties & Group Structure Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.5</span>
+							<span class="o_planning_card_title">Related Parties &amp; Group Structure</span>
+							<span class="o_planning_card_ref">ISA 550</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="related_parties_summary" nolabel="1" placeholder="Identify all related parties, nature of relationships, and control relationships..."/>
+							<field name="group_structure" nolabel="1" placeholder="Describe group structure, ownership, and organizational hierarchy..."/>
+							<field name="intra_group_transactions" nolabel="1" placeholder="Document intra-group transactions, pricing policies, and significant arrangements..."/>
+						</group>
+					</div>
+					
+					<!-- 2.6 Fraud Risk Assessment Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">2.6</span>
+							<span class="o_planning_card_title">Fraud Risk Assessment</span>
+							<span class="o_planning_card_ref">ISA 240</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="fraud_incentives" nolabel="1" placeholder="Identify incentives/pressures that might predispose management/employees to commit fraud..."/>
+							<field name="fraud_opportunities" nolabel="1" placeholder="Identify opportunities for fraud due to control weaknesses or complex transactions..."/>
+							<field name="fraud_attitudes" nolabel="1" placeholder="Assess attitudes/rationalizations that might justify fraudulent financial reporting..."/>
+							<field name="fraud_risk_assessment" nolabel="1" placeholder="Overall fraud risk assessment and conclusions..."/>
+						</group>
+					</div>
+					<!-- 3.0 Analytical Procedures Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">3.0</span>
+							<span class="o_planning_card_title">Analytical Procedures</span>
+							<span class="o_planning_card_ref">ISA 520</span>
+						</div>
+						<group class="o_planning_grid">
+							<group string="Financial Data for Analysis">
 								<field name="prior_year_fs_attachment_ids" widget="many2many_binary" string="Prior Year Financial Statements (Last 3 Years)"/>
 								<field name="current_year_tb_attachment_ids" widget="many2many_binary" string="Current Year Trial Balance &amp; Draft FS"/>
 							</group>
-							<group string="Industry Benchmarks &amp; Comparisons" colspan="2">
-								<field name="industry_benchmarks" nolabel="1" placeholder="Industry benchmarks, competitor analysis, economic indicators relevant to the entity..."/>
-							</group>
-							<group string="Trend &amp; Ratio Analysis" colspan="2">
-								<field name="trend_analysis" nolabel="1" placeholder="3-5 year trend analysis of key financial statement line items..."/>
-								<field name="ratio_analysis_summary" nolabel="1" placeholder="Profitability, liquidity, solvency, and efficiency ratio analysis..."/>
-								<field name="analytical_expectations" nolabel="1" placeholder="Analytical expectations vs actual results with explanations for variances..."/>
-							</group>
-							<group string="Significant Fluctuations Analysis" colspan="2">
-								<field name="significant_fluctuations" nolabel="1" placeholder="Analysis of significant fluctuations (&gt;10% or materiality) with management inquiries..."/>
-							</group>
-							<group string="Going Concern Assessment (ISA 570)" colspan="2">
-								<field name="going_concern_assessment" nolabel="1" placeholder="Assessment of going concern assumption, indicators of going concern issues..."/>
-							</group>
-						</page>
-						<page string="Materiality (ISA 320)" modifiers='{"invisible": [["materiality_status", "=", "green"]]}'>
-							<group string="Materiality Benchmark Selection" colspan="2">
+						</group>
+					</div>
+					
+					<!-- 3.1 Industry Benchmarks & Comparisons Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">3.1</span>
+							<span class="o_planning_card_title">Industry Benchmarks &amp; Comparisons</span>
+							<span class="o_planning_card_ref">ISA 520</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="industry_benchmarks" nolabel="1" placeholder="Industry benchmarks, competitor analysis, economic indicators relevant to the entity..."/>
+						</group>
+					</div>
+					
+					<!-- 3.2 Trend & Ratio Analysis Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">3.2</span>
+							<span class="o_planning_card_title">Trend &amp; Ratio Analysis</span>
+							<span class="o_planning_card_ref">ISA 520</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="trend_analysis" nolabel="1" placeholder="3-5 year trend analysis of key financial statement line items..."/>
+							<field name="ratio_analysis_summary" nolabel="1" placeholder="Profitability, liquidity, solvency, and efficiency ratio analysis..."/>
+							<field name="analytical_expectations" nolabel="1" placeholder="Analytical expectations vs actual results with explanations for variances..."/>
+						</group>
+					</div>
+					
+					<!-- 3.3 Significant Fluctuations Analysis Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">3.3</span>
+							<span class="o_planning_card_title">Significant Fluctuations Analysis</span>
+							<span class="o_planning_card_ref">ISA 520</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="significant_fluctuations" nolabel="1" placeholder="Analysis of significant fluctuations (&gt;10% or materiality) with management inquiries..."/>
+						</group>
+					</div>
+					
+					<!-- 3.4 Going Concern Assessment Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">3.4</span>
+							<span class="o_planning_card_title">Going Concern Assessment</span>
+							<span class="o_planning_card_ref">ISA 570</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="going_concern_assessment" nolabel="1" placeholder="Assessment of going concern assumption, indicators of going concern issues..."/>
+						</group>
+					</div>
+					<!-- 4.0 Materiality Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">4.0</span>
+							<span class="o_planning_card_title">Materiality</span>
+							<span class="o_planning_card_ref">ISA 320</span>
+						</div>
+						<group class="o_planning_grid">
+							<group string="Materiality Benchmark Selection">
 								<field name="materiality_benchmark" required="1"/>
 								<field name="materiality_percentage" required="1"/>
 								<field name="custom_benchmark_value" modifiers='{"required": [["materiality_benchmark", "=", "custom"]], "invisible": [["materiality_benchmark", "!=", "custom"]]}'/>
 							</group>
-							<group string="Materiality Justification" colspan="2">
-								<field name="materiality_justification" nolabel="1" required="1" placeholder="Justify benchmark selection considering entity circumstances, industry practices, and ISA 320 guidance..."/>
-							</group>
-							<group string="Calculated Materiality Amounts" colspan="2">
-								<field name="overall_materiality" readonly="1"/>
-								<field name="performance_materiality" readonly="1"/>
-								<field name="clearly_trivial_threshold" readonly="1"/>
-							</group>
-							<group string="Materiality Documentation" colspan="2">
-								<field name="materiality_worksheet_attachment_ids" widget="many2many_binary" string="Materiality Calculation Worksheets &amp; Documentation"/>
-							</group>
-						</page>
-						<page string="Internal Controls (ISA 315)" modifiers='{"invisible": [["control_status", "=", "green"]]}'>
-							<group string="Control Environment Assessment" colspan="2">
+							<field name="materiality_justification" nolabel="1" required="1" placeholder="Justify benchmark selection considering entity circumstances, industry practices, and ISA 320 guidance..."/>
+						</group>
+					</div>
+					
+					<!-- 4.1 Calculated Materiality Amounts Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">4.1</span>
+							<span class="o_planning_card_title">Calculated Materiality Amounts</span>
+							<span class="o_planning_card_ref">ISA 320</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="overall_materiality" readonly="1"/>
+							<field name="performance_materiality" readonly="1"/>
+							<field name="clearly_trivial_threshold" readonly="1"/>
+						</group>
+					</div>
+					
+					<!-- 4.2 Materiality Documentation Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">4.2</span>
+							<span class="o_planning_card_title">Materiality Documentation</span>
+							<span class="o_planning_card_ref">ISA 320</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="materiality_worksheet_attachment_ids" widget="many2many_binary" string="Materiality Calculation Worksheets &amp; Documentation"/>
+						</group>
+					</div>
+					<!-- 5.0 Internal Controls Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">5.0</span>
+							<span class="o_planning_card_title">Internal Controls</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<group string="Control Environment Assessment">
 								<field name="control_environment_rating" required="1" widget="radio"/>
 								<field name="entity_level_controls_rating" required="1" widget="radio"/>
 								<field name="risk_assessment_rating" required="1" widget="radio"/>
 							</group>
-							<group string="Control Activities &amp; Monitoring" colspan="2">
+							<group string="Control Activities &amp; Monitoring">
 								<field name="control_activities_rating" required="1" widget="radio"/>
 								<field name="monitoring_controls_rating" required="1" widget="radio"/>
 								<field name="itgc_rating" required="1" widget="radio"/>
 								<field name="internal_audit_function" widget="radio"/>
 							</group>
-							<group string="Control Reliance Strategy" colspan="2">
-								<field name="reliance_on_controls" readonly="1"/>
-								<field name="control_assessment_summary" nolabel="1" placeholder="Overall control assessment summary and conclusions regarding reliance strategy..."/>
-							</group>
-							<group string="Internal Control Documentation" colspan="2">
-								<field name="internal_control_attachment_ids" widget="many2many_binary" string="Control Questionnaires, Walkthrough Documentation, and Assessment Sheets"/>
-								<field name="process_flow_attachment_ids" widget="many2many_binary" string="Process Flowcharts for Significant Cycles"/>
-							</group>
-						</page>
-						<page string="Risk &amp; Strategy (ISA 315, 330)" modifiers='{"invisible": [["risk_status", "=", "green"]]}'>
-							<group string="Risk Register" colspan="2">
-								<field name="risk_register_line_ids" nolabel="1" context="{'default_planning_phase_id': active_id}">
-									<tree editable="bottom" default_order="sequence">
-										<field name="sequence" widget="handle"/>
-										<field name="account_cycle"/>
-										<field name="risk_description"/>
-										<field name="risk_rating" widget="selection_badge"/>
-										<field name="is_significant_risk"/>
-										<field name="fs_level_risk"/>
-										<field name="assertion_type"/>
-									</tree>
-									<form>
-										<group>
-											<group string="Risk Identification">
-												<field name="account_cycle"/>
-												<field name="risk_description"/>
-												<field name="fs_level_risk"/>
-												<field name="assertion_type"/>
-											</group>
-											<group string="Risk Assessment">
-												<field name="risk_rating"/>
-												<field name="is_significant_risk"/>
-												<field name="likelihood"/>
-												<field name="magnitude"/>
-											</group>
+						</group>
+					</div>
+					
+					<!-- 5.1 Control Reliance Strategy Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">5.1</span>
+							<span class="o_planning_card_title">Control Reliance Strategy</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="reliance_on_controls" readonly="1"/>
+							<field name="control_assessment_summary" nolabel="1" placeholder="Overall control assessment summary and conclusions regarding reliance strategy..."/>
+						</group>
+					</div>
+					
+					<!-- 5.2 Internal Control Documentation Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">5.2</span>
+							<span class="o_planning_card_title">Internal Control Documentation</span>
+							<span class="o_planning_card_ref">ISA 315</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="internal_control_attachment_ids" widget="many2many_binary" string="Control Questionnaires, Walkthrough Documentation, and Assessment Sheets"/>
+							<field name="process_flow_attachment_ids" widget="many2many_binary" string="Process Flowcharts for Significant Cycles"/>
+						</group>
+					</div>
+					<!-- 6.0 Risk Register Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">6.0</span>
+							<span class="o_planning_card_title">Risk Register</span>
+							<span class="o_planning_card_ref">ISA 315 / ISA 330</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="risk_register_line_ids" nolabel="1" context="{'default_planning_phase_id': active_id}">
+								<tree editable="bottom" default_order="sequence">
+									<field name="sequence" widget="handle"/>
+									<field name="account_cycle"/>
+									<field name="risk_description"/>
+									<field name="risk_rating" widget="selection_badge"/>
+									<field name="is_significant_risk"/>
+									<field name="fs_level_risk"/>
+									<field name="assertion_type"/>
+								</tree>
+								<form>
+									<group>
+										<group string="Risk Identification">
+											<field name="account_cycle"/>
+											<field name="risk_description"/>
+											<field name="fs_level_risk"/>
+											<field name="assertion_type"/>
 										</group>
-										<group string="ISA Risk Classification">
-											<field name="isa_240_risk"/>
-											<field name="isa_540_risk"/>
-											<field name="isa_550_risk"/>
-											<field name="isa_570_risk"/>
+										<group string="Risk Assessment">
+											<field name="risk_rating"/>
+											<field name="is_significant_risk"/>
+											<field name="likelihood"/>
+											<field name="magnitude"/>
 										</group>
-										<group string="Root Cause &amp; Impact">
-											<field name="root_cause"/>
-											<field name="impact_on_fs"/>
-										</group>
-										<group string="Audit Response">
-											<field name="planned_procedures"/>
-											<field name="nature_of_procedures"/>
-											<field name="timing_of_procedures"/>
-											<field name="extent_of_procedures"/>
-											<field name="link_to_audit_program"/>
-										</group>
-									</form>
-								</field>
+									</group>
+									<group string="ISA Risk Classification">
+										<field name="isa_240_risk"/>
+										<field name="isa_540_risk"/>
+										<field name="isa_550_risk"/>
+										<field name="isa_570_risk"/>
+									</group>
+									<group string="Root Cause &amp; Impact">
+										<field name="root_cause"/>
+										<field name="impact_on_fs"/>
+									</group>
+									<group string="Audit Response">
+										<field name="planned_procedures"/>
+										<field name="nature_of_procedures"/>
+										<field name="timing_of_procedures"/>
+										<field name="extent_of_procedures"/>
+										<field name="link_to_audit_program"/>
+									</group>
+								</form>
+							</field>
+						</group>
+					</div>
+					
+					<!-- 6.1 Overall Audit Strategy Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">6.1</span>
+							<span class="o_planning_card_title">Overall Audit Strategy</span>
+							<span class="o_planning_card_ref">ISA 300 / ISA 330</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="audit_approach" nolabel="1" required="1" placeholder="Describe overall audit approach, nature/timing/extent of procedures, reliance strategy..."/>
+						</group>
+					</div>
+					
+					<!-- 6.2 Specialized Resources Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">6.2</span>
+							<span class="o_planning_card_title">Specialized Resources</span>
+							<span class="o_planning_card_ref">ISA 620 / ISA 600</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="use_of_experts"/>
+							<field name="experts_details" nolabel="1" modifiers='{"invisible": [["use_of_experts", "=", false]]}' placeholder="Scope of expert work, qualifications, coordination procedures..."/>
+							<field name="use_of_caats"/>
+							<field name="caats_details" nolabel="1" modifiers='{"invisible": [["use_of_caats", "=", false]]}' placeholder="CAATs tools, data analytics approach, specific procedures..."/>
+							<field name="component_auditors_involved"/>
+							<field name="component_auditors_details" nolabel="1" modifiers='{"invisible": [["component_auditors_involved", "=", false]]}' placeholder="Component auditor coordination, instructions, review procedures..."/>
+						</group>
+					</div>
+					
+					<!-- 6.3 Staffing & Timeline Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">6.3</span>
+							<span class="o_planning_card_title">Staffing &amp; Timeline</span>
+							<span class="o_planning_card_ref">ISA 300</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="staffing_plan" nolabel="1" placeholder="Staffing plan, team composition, experience levels, supervision arrangements..."/>
+							<field name="audit_timeline" nolabel="1" placeholder="Detailed audit timeline, key milestones, interim and final procedures..."/>
+							<field name="budget_hours" string="Planned Budget (Hours)"/>
+						</group>
+					</div>
+					
+					<!-- 6.4 Risk & Strategy Documentation Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">6.4</span>
+							<span class="o_planning_card_title">Risk &amp; Strategy Documentation</span>
+							<span class="o_planning_card_ref">ISA 300</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="risk_register_attachment_ids" widget="many2many_binary" string="Risk Register Files"/>
+							<field name="audit_strategy_attachment_ids" widget="many2many_binary" string="Audit Strategy Documentation"/>
+						</group>
+					</div>
+					<!-- 7.0 Planning Memorandum Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">7.0</span>
+							<span class="o_planning_card_title">Planning Memorandum</span>
+							<span class="o_planning_card_ref">ISA 300</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="planning_memo_summary" nolabel="1" placeholder="Executive summary of planning memorandum for partner review..."/>
+						</group>
+					</div>
+					
+					<!-- 7.1 Regulatory Compliance - Pakistan Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">7.1</span>
+							<span class="o_planning_card_title">Regulatory Compliance - Pakistan</span>
+							<span class="o_planning_card_ref">ICAP / SECP / AOB</span>
+						</div>
+						<group class="o_planning_grid">
+							<field name="icap_compliance_check" string="ICAP Standards Compliance Verified"/>
+							<field name="secp_requirements_met" string="SECP Requirements Addressed"/>
+							<field name="aob_guidelines_considered" string="AOB Guidelines Considered"/>
+						</group>
+					</div>
+					
+					<!-- 7.2 Mandatory Attachments - Zero Deficiency Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">7.2</span>
+							<span class="o_planning_card_title">Mandatory Attachments - Zero Deficiency</span>
+							<span class="o_planning_card_ref">ISA 230 / Pakistan Laws</span>
+						</div>
+						<group class="o_planning_grid">
+							<p class="text-muted mb-3">The following attachments are mandatory for ICAP/AOB compliance:</p>
+							<field name="organogram_attachment_ids" widget="many2many_binary" string="Organogram"/>
+							<field name="engagement_letter_attachment_ids" widget="many2many_binary" string="Engagement Letter"/>
+							<field name="board_minutes_attachment_ids" widget="many2many_binary" string="BOD/Audit Committee Minutes"/>
+							<field name="related_party_attachment_ids" widget="many2many_binary" string="Related Party Schedules"/>
+							<field name="analytical_summary_attachment_ids" widget="many2many_binary" string="Analytical Summary"/>
+							<field name="legal_compliance_attachment_ids" widget="many2many_binary" string="Legal &amp; Compliance Docs"/>
+							<field name="previous_audit_reports_attachment_ids" widget="many2many_binary" string="Previous Audit Reports"/>
+						</group>
+					</div>
+					
+					<!-- 7.3 Master Checklist - Zero Deficiency Target Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">7.3</span>
+							<span class="o_planning_card_title">Master Checklist - Zero Deficiency Target</span>
+							<span class="o_planning_card_ref">ISQM-1 / Pakistan Standards</span>
+						</div>
+						<div class="alert alert-info m-3">
+							<i class="fa fa-info-circle me-2"/>
+							<strong>Complete ALL checklist items for zero deficiency compliance</strong>
+						</div>
+						<group class="o_planning_grid">
+							<group col="4">
+								<field name="checklist_engagement_letter" readonly="1"/>
+								<field name="checklist_entity_understanding" readonly="1"/>
+								<field name="checklist_fraud_brainstormed" readonly="1"/>
+								<field name="checklist_analytics_performed" readonly="1"/>
 							</group>
-							<group string="Overall Audit Strategy" colspan="2">
-								<field name="audit_approach" nolabel="1" required="1" placeholder="Describe overall audit approach, nature/timing/extent of procedures, reliance strategy..."/>
+							<group col="4">
+								<field name="checklist_materiality_finalized" readonly="1"/>
+								<field name="checklist_controls_assessed" readonly="1"/>
+								<field name="checklist_risks_linked" readonly="1"/>
+								<field name="checklist_strategy_signed" readonly="1"/>
 							</group>
-							<group string="Specialized Resources" colspan="2">
-								<field name="use_of_experts"/>
-								<field name="experts_details" nolabel="1" modifiers='{"invisible": [["use_of_experts", "=", false]]}' placeholder="Scope of expert work, qualifications, coordination procedures..."/>
-								<field name="use_of_caats"/>
-								<field name="caats_details" nolabel="1" modifiers='{"invisible": [["use_of_caats", "=", false]]}' placeholder="CAATs tools, data analytics approach, specific procedures..."/>
-								<field name="component_auditors_involved"/>
-								<field name="component_auditors_details" nolabel="1" modifiers='{"invisible": [["component_auditors_involved", "=", false]]}' placeholder="Component auditor coordination, instructions, review procedures..."/>
+							<group col="4">
+								<field name="checklist_independence_confirmed" readonly="1"/>
+								<field name="checklist_partner_manager_review" readonly="1"/>
+								<field name="checklist_icap_standards" readonly="1"/>
+								<field name="checklist_secp_requirements" readonly="1"/>
 							</group>
-							<group string="Staffing &amp; Timeline" colspan="2">
-								<field name="staffing_plan" nolabel="1" placeholder="Staffing plan, team composition, experience levels, supervision arrangements..."/>
-								<field name="audit_timeline" nolabel="1" placeholder="Detailed audit timeline, key milestones, interim and final procedures..."/>
-								<field name="budget_hours" string="Planned Budget (Hours)"/>
+							<group col="4">
+								<field name="checklist_aob_guidelines" readonly="1"/>
 							</group>
-							<group string="Risk &amp; Strategy Documentation" colspan="2">
-								<field name="risk_register_attachment_ids" widget="many2many_binary" string="Risk Register Files"/>
-								<field name="audit_strategy_attachment_ids" widget="many2many_binary" string="Audit Strategy Documentation"/>
+						</group>
+					</div>
+					
+					<!-- 7.4 Sign-offs & Approvals Card -->
+					<div class="o_planning_card">
+						<div class="o_planning_card_header">
+							<span class="o_planning_card_number">7.4</span>
+							<span class="o_planning_card_title">Sign-offs &amp; Approvals</span>
+							<span class="o_planning_card_ref">ISQM-1</span>
+						</div>
+						<group class="o_planning_grid">
+							<group string="Manager Sign-off">
+								<field name="manager_signed_user_id" readonly="1"/>
+								<field name="manager_signed_on" readonly="1"/>
 							</group>
-						</page>
-						<page string="Documentation &amp; Completion (ISA 300)">
-							<group string="Planning Memorandum" colspan="2">
-								<field name="planning_memo_summary" nolabel="1" placeholder="Executive summary of planning memorandum for partner review..."/>
+							<group string="Partner Sign-off">
+								<field name="partner_signed_user_id" readonly="1"/>
+								<field name="partner_signed_on" readonly="1"/>
 							</group>
-							<group string="Regulatory Compliance - Pakistan" colspan="2">
-								<field name="icap_compliance_check" string="ICAP Standards Compliance Verified"/>
-								<field name="secp_requirements_met" string="SECP Requirements Addressed"/>
-								<field name="aob_guidelines_considered" string="AOB Guidelines Considered"/>
+							<group string="Quality Review">
+								<field name="quality_reviewer_id" readonly="1"/>
+								<field name="quality_reviewed_on" readonly="1"/>
 							</group>
-							<group string="Mandatory Attachments - Zero Deficiency" colspan="2">
-								<label string="The following attachments are mandatory for ICAP/AOB compliance:" class="o_form_label" for="organogram_attachment_ids"/>
-								<field name="organogram_attachment_ids" widget="many2many_binary" string="Organogram"/>
-								<field name="engagement_letter_attachment_ids" widget="many2many_binary" string="Engagement Letter"/>
-								<field name="board_minutes_attachment_ids" widget="many2many_binary" string="BOD/Audit Committee Minutes"/>
-								<field name="related_party_attachment_ids" widget="many2many_binary" string="Related Party Schedules"/>
-								<field name="analytical_summary_attachment_ids" widget="many2many_binary" string="Analytical Summary"/>
-								<field name="legal_compliance_attachment_ids" widget="many2many_binary" string="Legal &amp; Compliance Docs"/>
-								<field name="previous_audit_reports_attachment_ids" widget="many2many_binary" string="Previous Audit Reports"/>
-							</group>
-							<group string="Master Checklist - Zero Deficiency Target" colspan="4">
-								<label string="Complete ALL checklist items for zero deficiency compliance:" class="o_form_label" for="checklist_engagement_letter"/>
-								<group col="4">
-									<field name="checklist_engagement_letter" readonly="1"/>
-									<field name="checklist_entity_understanding" readonly="1"/>
-									<field name="checklist_fraud_brainstormed" readonly="1"/>
-									<field name="checklist_analytics_performed" readonly="1"/>
-								</group>
-								<group col="4">
-									<field name="checklist_materiality_finalized" readonly="1"/>
-									<field name="checklist_controls_assessed" readonly="1"/>
-									<field name="checklist_risks_linked" readonly="1"/>
-									<field name="checklist_strategy_signed" readonly="1"/>
-								</group>
-								<group col="4">
-									<field name="checklist_independence_confirmed" readonly="1"/>
-									<field name="checklist_partner_manager_review" readonly="1"/>
-									<field name="checklist_icap_standards" readonly="1"/>
-									<field name="checklist_secp_requirements" readonly="1"/>
-								</group>
-								<group col="4">
-									<field name="checklist_aob_guidelines" readonly="1"/>
-								</group>
-							</group>
-							<group string="Sign-offs &amp; Approvals" colspan="2">
-								<group string="Manager Sign-off">
-									<field name="manager_signed_user_id" readonly="1"/>
-									<field name="manager_signed_on" readonly="1"/>
-								</group>
-								<group string="Partner Sign-off">
-									<field name="partner_signed_user_id" readonly="1"/>
-									<field name="partner_signed_on" readonly="1"/>
-								</group>
-								<group string="Quality Review">
-									<field name="quality_reviewer_id" readonly="1"/>
-									<field name="quality_reviewed_on" readonly="1"/>
-								</group>
-							</group>
-						</page>
-					</notebook>
+						</group>
+					</div>
 				</sheet>
 				<div class="oe_chatter">
 					<field name="message_follower_ids" widget="mail_followers"/>
