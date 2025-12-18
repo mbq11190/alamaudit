@@ -598,6 +598,10 @@ class ClientOnboarding(models.Model):
             record.write({'state': 'locked'})
             record._log_action('Locked onboarding for final authorization')
 
+    def action_view_state(self):
+        """Dummy action for stat button - just refreshes the view."""
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class OnboardingBranchLocation(models.Model):
     _name = 'qaco.onboarding.branch.location'
