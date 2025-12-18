@@ -296,6 +296,27 @@
                                     <field name="enhanced_due_diligence_attachment" invisible="not enhanced_due_diligence_required" widget="binary"/>
                                 </group>
 
+                                <!-- Fit & Proper Template Downloads -->
+                                <div class="o_fit_proper_downloads mt-3 mb-4">
+                                    <div class="alert alert-info d-flex align-items-center">
+                                        <span class="fa fa-info-circle me-2"/>
+                                        <span class="flex-grow-1">
+                                            <strong>Fit &amp; Proper Assessment Template</strong> – Download the template, complete for each director/key management, and upload as signed evidence above.
+                                        </span>
+                                    </div>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <a href="/onboarding/template/fit_proper/docx" class="btn btn-primary" target="_blank" title="Download Word Template">
+                                            <span class="fa fa-file-word-o me-1"/> Download Word Template (.docx)
+                                        </a>
+                                        <a href="/onboarding/template/fit_proper/pdf" class="btn btn-secondary" target="_blank" title="Download PDF Template">
+                                            <span class="fa fa-file-pdf-o me-1"/> Download PDF Template (.pdf)
+                                        </a>
+                                        <a href="/onboarding/template/fit_proper/html" class="btn btn-outline-secondary" target="_blank" title="View/Print HTML Template">
+                                            <span class="fa fa-print me-1"/> View/Print (HTML)
+                                        </a>
+                                    </div>
+                                </div>
+
                                 <!-- Mandatory Governance Risk Notes -->
                                 <separator string="Mandatory Governance Risk Assessment"/>
                                 <group class="o_onboarding_grid">

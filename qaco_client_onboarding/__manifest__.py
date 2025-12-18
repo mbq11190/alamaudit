@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'QACO Client Onboarding',
-    'version': '17.0.1.4.0',
+    'version': '17.0.1.5.0',
     'category': 'Audit',
     'summary': 'Client Onboarding Phase with Auto-Save & Auto-Generated Reports',
     'description': """
@@ -25,6 +25,7 @@ Features:
   • Engagement Authorization Memorandum (ISA 210, ISQM-1)
 - ICAP QCR Ready documentation
 - Time-stamped, Partner-signed reports
+- Downloadable Fit & Proper Assessment Template (Word/PDF)
 - Notebooks with Save & Next functionality:
   • Auto-save every 30 seconds
   • Draft recovery and session persistence
@@ -57,6 +58,9 @@ Features:
             'qaco_client_onboarding/static/src/js/save_next_widget.js',
             'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
         ],
+    },
+    'external_dependencies': {
+        'python': ['python-docx'],  # Optional: For Word document generation
     },
     'installable': True,
     'application': False,
