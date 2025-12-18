@@ -154,22 +154,22 @@ class ClientOnboarding(models.Model):
     # Section 1.1: Mandatory Narratives (cannot be blank)
     legal_existence_verification = fields.Text(
         string='Legal Existence Verification',
-        required=True,
+        tracking=True,
         help='Describe how legal existence was verified (e.g., certificate of incorporation, company registry search, legal opinion).',
     )
     group_structure_risk = fields.Text(
         string='Group / Holding / Subsidiary Structure Risk',
-        required=True,
+        tracking=True,
         help='Assess risks arising from group structure, intercompany transactions, related party complexity, and consolidation issues.',
     )
     foreign_ownership_exposure = fields.Text(
         string='Foreign Ownership Exposure',
-        required=True,
+        tracking=True,
         help='Document foreign ownership percentage, jurisdictions involved, repatriation restrictions, and cross-border regulatory implications.',
     )
     ubo_risk_summary = fields.Text(
         string='Ultimate Beneficial Owner Risk Summary',
-        required=True,
+        tracking=True,
         help='Summarize UBO identification process, any PEP exposure, sanctions screening results, and residual risks.',
     )
     # Section 1.1: Mandatory Attachments
@@ -198,34 +198,33 @@ class ClientOnboarding(models.Model):
     # Section 1.2: Mandatory Compliance Assessment Notes
     applicable_laws_regulators = fields.Text(
         string='Applicable Laws & Regulators',
-        required=True,
+        tracking=True,
         help='List all applicable laws, regulations, and regulatory bodies governing the client (e.g., Companies Act, SECP, SBP, FBR, sector-specific regulators).',
     )
     filing_history_gaps = fields.Text(
         string='Filing History and Compliance Gaps',
-        required=True,
+        tracking=True,
         help='Document filing history with regulators, identify any gaps, late filings, or non-compliance issues.',
     )
     inspection_enforcement_exposure = fields.Text(
         string='Inspection / Enforcement Exposure',
-        required=True,
+        tracking=True,
         help='Summarize any regulatory inspections, enforcement actions, show-cause notices, or pending investigations.',
     )
     litigation_penalties_note = fields.Text(
         string='Litigation & Penalties',
-        required=True,
+        tracking=True,
         help='Document any litigation, fines, penalties, or adverse regulatory findings against the client.',
     )
     # Section 1.2: Mandatory Conclusion
     regulatory_framework_acceptable = fields.Selection(
         [('yes', 'Yes'), ('no', 'No')],
         string='Regulatory Framework Acceptable',
-        required=True,
+        tracking=True,
         help='Confirm whether the regulatory framework applicable to the client is acceptable for engagement.',
     )
     regulatory_framework_conclusion = fields.Text(
         string='Regulatory Framework Conclusion',
-        required=True,
         help='Provide justification for the conclusion on regulatory framework acceptability.',
     )
 
@@ -241,22 +240,22 @@ class ClientOnboarding(models.Model):
     # Section 1.3: Mandatory Governance Risk Notes
     board_independence_assessment = fields.Text(
         string='Board Independence Assessment',
-        required=True,
+        tracking=True,
         help='Assess board composition, proportion of independent directors, potential conflicts of interest, and effectiveness of oversight.',
     )
     audit_committee_competence = fields.Text(
         string='Audit Committee Existence & Competence',
-        required=True,
+        tracking=True,
         help='Document existence of audit committee, member qualifications, financial expertise, meeting frequency, and effectiveness.',
     )
     political_exposure_note = fields.Text(
         string='Political Exposure',
-        required=True,
+        tracking=True,
         help='Assess political connections, PEP involvement, government contracts, and associated reputational/regulatory risks.',
     )
     dominant_shareholder_risk = fields.Text(
         string='Dominant Shareholder Risk',
-        required=True,
+        tracking=True,
         help='Evaluate risks from concentrated ownership, related party influence, minority shareholder protection, and governance override.',
     )
     # Section 1.3: Mandatory Evidence Attachments
@@ -280,10 +279,10 @@ class ClientOnboarding(models.Model):
     fit_proper_confirmation_attachment_name = fields.Char(string='Fit & Proper Confirmation Filename')
 
     # Section 4: Pre-Acceptance Risk
-    management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating', required=True)
-    management_integrity_comment = fields.Text(string='Management Integrity Justification', required=True)
+    management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating', tracking=True)
+    management_integrity_comment = fields.Text(string='Management Integrity Justification')
     litigation_history = fields.Text(string='Litigation History')
-    fraud_history = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='History of Fraud or Penalties', required=True, default='no')
+    fraud_history = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='History of Fraud or Penalties', default='no', tracking=True)
     fraud_explanation = fields.Text(string='Fraud or Penalty Details')
     aml_risk_rating = fields.Selection(AML_RATING, string='AML/CTF Risk Rating', compute='_compute_aml_risk_rating', store=True)
     business_risk_profile = fields.Text(string='Business Risk Profile')
@@ -299,56 +298,56 @@ class ClientOnboarding(models.Model):
     integrity_risk_level = fields.Selection(
         RISK_LEVEL_SELECTION,
         string='Integrity Risk Level',
-        required=True,
+        tracking=True,
         help='Conclude the overall integrity risk level.',
     )
     integrity_risk_summary = fields.Text(
         string='Integrity Risk Summary',
-        required=True,
+        tracking=True,
         help='Summarize management integrity concerns, background check findings, reputation issues, and justification for the risk level.',
     )
     business_risk_level = fields.Selection(
         RISK_LEVEL_SELECTION,
         string='Business Risk Level',
-        required=True,
+        tracking=True,
         help='Conclude the overall business risk level.',
     )
     business_risk_summary = fields.Text(
         string='Business Risk Summary',
-        required=True,
+        tracking=True,
         help='Summarize industry risks, competitive pressures, financial stability, and justification for the risk level.',
     )
     fraud_risk_level = fields.Selection(
         RISK_LEVEL_SELECTION,
         string='Fraud Risk Level',
-        required=True,
+        tracking=True,
         help='Conclude the overall fraud risk level.',
     )
     fraud_risk_summary = fields.Text(
         string='Fraud Risk Summary',
-        required=True,
+        tracking=True,
         help='Summarize fraud risk indicators, control environment, management override risks, and justification for the risk level.',
     )
     going_concern_level = fields.Selection(
         RISK_LEVEL_SELECTION,
         string='Going Concern Risk Level',
-        required=True,
+        tracking=True,
         help='Conclude the going concern risk level.',
     )
     going_concern_indicators = fields.Text(
         string='Going Concern Indicators',
-        required=True,
+        tracking=True,
         help='Document going concern indicators, liquidity issues, debt covenants, operational losses, and justification for the risk level.',
     )
     reputation_risk_level = fields.Selection(
         RISK_LEVEL_SELECTION,
         string='Reputation Risk Level',
-        required=True,
+        tracking=True,
         help='Conclude the reputation risk to the firm.',
     )
     reputation_risk_to_firm = fields.Text(
         string='Reputation Risk to Firm',
-        required=True,
+        tracking=True,
         help='Assess reputational risk to the firm from this engagement, media exposure, controversial activities, and justification for the risk level.',
     )
 
@@ -367,13 +366,11 @@ class ClientOnboarding(models.Model):
     # Section 1.5: Mandatory Attachments
     independence_declaration_attachment = fields.Binary(
         string='Independence Declaration (Before Engagement)',
-        required=True,
         help='Attach signed independence declaration form completed before engagement acceptance.',
     )
     independence_declaration_attachment_name = fields.Char(string='Independence Declaration Filename')
     fee_dependency_calculation_attachment = fields.Binary(
         string='Fee Dependency Calculation',
-        required=True,
         help='Attach fee dependency calculation workpaper demonstrating compliance with 15% threshold.',
     )
     fee_dependency_calculation_attachment_name = fields.Char(string='Fee Dependency Calculation Filename')
@@ -405,30 +402,30 @@ class ClientOnboarding(models.Model):
     # Section 1.6: Mandatory Professional Clearance Note
     pcl_reason_for_change = fields.Text(
         string='Reason for Change of Auditors',
-        required=True,
+        tracking=True,
         help='Document the stated reason for change of auditors. Include client explanation and any corroborating evidence.',
     )
     pcl_disputes_unpaid_fees = fields.Text(
         string='Disputes / Unpaid Fees',
-        required=True,
+        tracking=True,
         help='Document any outstanding disputes or unpaid fees with predecessor. State "None identified" if applicable.',
     )
     pcl_access_to_working_papers = fields.Text(
         string='Access to Working Papers',
-        required=True,
+        tracking=True,
         help='Document the status of access to predecessor working papers. Include any limitations or refusals.',
     )
     pcl_ethical_concerns_raised = fields.Text(
         string='Ethical Concerns Raised',
-        required=True,
+        tracking=True,
         help='Document any ethical concerns raised by predecessor or identified during clearance process. State "None raised" if applicable.',
     )
 
     # Section 1.6: Mandatory Conclusion
     pcl_no_barrier_conclusion = fields.Boolean(
         string='No Professional or Ethical Barrier Exists',
-        required=True,
         default=False,
+        tracking=True,
         help='Confirm: "No professional or ethical barrier exists to accepting this engagement." Must be True to proceed.',
     )
 
@@ -447,43 +444,43 @@ class ClientOnboarding(models.Model):
     # Section 1.7: Mandatory Management Acknowledgement Checklist
     mgmt_ack_responsibility_fs = fields.Boolean(
         string='Responsibility for Financial Statements',
-        required=True,
         default=False,
+        tracking=True,
         help='Management acknowledges responsibility for preparation and fair presentation of financial statements.',
     )
     mgmt_ack_responsibility_ic = fields.Boolean(
         string='Responsibility for Internal Control',
-        required=True,
         default=False,
+        tracking=True,
         help='Management acknowledges responsibility for internal control relevant to preparation of financial statements.',
     )
     mgmt_ack_access_to_records = fields.Boolean(
         string='Access to Records',
-        required=True,
         default=False,
+        tracking=True,
         help='Management confirms unrestricted access to all records, documentation, and personnel.',
     )
     mgmt_ack_going_concern = fields.Boolean(
         string='Going Concern Responsibility',
-        required=True,
         default=False,
+        tracking=True,
         help='Management acknowledges responsibility for assessing going concern and providing related disclosures.',
     )
 
     # Section 1.7: Mandatory Partner Judgment Note
     partner_judgment_acceptable = fields.Text(
         string='Why Engagement is Acceptable',
-        required=True,
+        tracking=True,
         help='Document the partner\'s professional judgment on why this engagement is acceptable. Include key factors considered.',
     )
     partner_judgment_safeguards = fields.Text(
         string='Safeguards Imposed',
-        required=True,
+        tracking=True,
         help='Document any safeguards imposed to address identified risks. State "No additional safeguards required" if applicable.',
     )
     partner_judgment_conditions = fields.Text(
         string='Conditions (if any)',
-        required=True,
+        tracking=True,
         help='Document any conditions attached to acceptance. State "No conditions" if engagement is accepted unconditionally.',
     )
 
@@ -573,39 +570,39 @@ class ClientOnboarding(models.Model):
     fam_engagement_risk_level = fields.Selection(
         [('low', 'Low'), ('moderate', 'Moderate'), ('high', 'High')],
         string='Engagement Risk Level',
-        required=True,
+        tracking=True,
         help='Partner must explicitly state the overall engagement risk level.',
     )
     fam_engagement_risk_justification = fields.Text(
         string='Engagement Risk Justification',
-        required=True,
+        tracking=True,
         help='Document the basis for the engagement risk level conclusion.',
     )
     fam_independence_conclusion = fields.Text(
         string='Independence Conclusion',
-        required=True,
+        tracking=True,
         help='Partner must explicitly state the independence conclusion for the engagement team.',
     )
     fam_fraud_risk_conclusion = fields.Text(
         string='Fraud Risk Conclusion',
-        required=True,
+        tracking=True,
         help='Partner must explicitly state the fraud risk conclusion and response strategy.',
     )
     fam_resource_sufficiency = fields.Text(
         string='Resource Sufficiency',
-        required=True,
+        tracking=True,
         help='Partner must confirm sufficiency of resources (staff competence, time, budget) to complete the engagement.',
     )
     fam_isqm1_compliance = fields.Boolean(
         string='ISQM-1 Compliance Confirmed',
-        required=True,
         default=False,
+        tracking=True,
         help='Partner confirms the engagement complies with firm\'s ISQM-1 quality management system.',
     )
     fam_final_decision = fields.Selection(
         ENGAGEMENT_DECISION_SELECTION,
         string='Final Acceptance Decision',
-        required=True,
+        tracking=True,
         help='Partner must explicitly select: Accept, Accept with Safeguards, or Reject. No silent acceptance allowed.',
     )
     fam_safeguards_imposed = fields.Text(
