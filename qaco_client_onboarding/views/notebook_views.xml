@@ -523,7 +523,7 @@
          ═══════════════════════════════════════════════════════════════════════════════════ -->
     <menuitem id="menu_onboarding_notebooks_root" 
               name="📓 Notebooks"
-              parent="qaco_audit.menu_qaco_audit_root"
+              parent="qaco_audit.menu_root"
               sequence="50"/>
     
     <menuitem id="menu_onboarding_notebooks" 
