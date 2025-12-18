@@ -1568,6 +1568,124 @@ class ClientOnboarding(models.Model):
                 }
         return {'type': 'ir.actions.act_window_close'}
 
+    # ═══════════════════════════════════════════════════════════════════════════════════
+    # 🔄 AUTO-SAVE FUNCTIONALITY (ISA 230 / ISQM-1 Compliant)
+    # ═══════════════════════════════════════════════════════════════════════════════════
+
+    @api.model
+    def autosave(self, record_id, values):
+        """
+        Safe auto-save endpoint for client onboarding form.
+        
+        Called by JavaScript every 10 seconds or on field change.
+        Respects partner approval lock and maintains full audit trail.
+        
+        Args:
+            record_id: ID of the onboarding record
+            values: Dictionary of field values to save
+            
+        Returns:
+            dict: Status of the save operation
+            
+        Raises:
+            ValidationError: If record is locked after Partner Approval
+        """
+        record = self.browse(record_id)
+        
+        if not record.exists():
+            return {'status': 'error', 'message': 'Record not found'}
+        
+        # GLOBAL BLOCKER: No auto-save after Partner Approval
+        if record.state in ['partner_approved', 'locked']:
+            return {
+                'status': 'locked',
+                'message': 'Record is locked after Partner Approval. No further edits allowed.'
+            }
+        
+        # Filter out read-only and computed fields that shouldn't be saved
+        safe_fields = self._get_autosave_safe_fields()
+        filtered_values = {k: v for k, v in values.items() if k in safe_fields}
+        
+        if not filtered_values:
+            return {'status': 'skipped', 'message': 'No saveable fields in payload'}
+        
+        try:
+            # Use write() to ensure audit trail is captured via mail.thread
+            record.write(filtered_values)
+            
+            return {
+                'status': 'saved',
+                'message': 'Auto-saved successfully',
+                'timestamp': fields.Datetime.now().isoformat(),
+                'fields_saved': list(filtered_values.keys())
+            }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': str(e)
+            }
+
+    @api.model
+    def _get_autosave_safe_fields(self):
+        """
+        Return list of fields that are safe to auto-save.
+        Excludes computed, readonly, and system fields.
+        """
+        # All notes fields (1.0 - 1.10)
+        notes_fields = [
+            'notes_10', 'notes_11', 'notes_12', 'notes_13', 'notes_14',
+            'notes_15', 'notes_16', 'notes_17', 'notes_18', 'notes_19', 'notes_110',
+        ]
+        
+        # Editable selection and boolean fields
+        selection_fields = [
+            'entity_type', 'other_entity_description',
+            'primary_regulator', 'other_regulator_description',
+            'financial_framework', 'other_framework_description',
+            'management_integrity', 'client_acceptance_decision',
+            'engagement_decision', 'engagement_justification',
+            'fam_final_decision', 'fam_safeguards_imposed', 'fam_rejection_reason',
+        ]
+        
+        # Text and char fields for narratives
+        narrative_fields = [
+            'industry_overview', 'regulatory_environment',
+            'fraud_risk_narrative', 'going_concern_narrative',
+            'related_party_narrative', 'significant_risks_narrative',
+            'it_environment_narrative', 'group_audit_narrative',
+            'aml_overall_assessment', 'aml_conclusion',
+            'communication_narrative', 'resource_plan_narrative',
+        ]
+        
+        # Risk assessment fields
+        risk_fields = [
+            'inherent_risk_assessment', 'fraud_risk_level',
+            'going_concern_indicator', 'related_party_risk',
+            'aml_country_risk', 'aml_customer_risk', 'aml_product_risk',
+        ]
+        
+        # Checkbox and toggle fields
+        boolean_fields = [
+            'pcl_no_barrier_conclusion', 'partner_signoff_complete',
+            'is_first_year_audit', 'is_group_audit',
+            'has_internal_audit', 'has_audit_committee',
+        ]
+        
+        return notes_fields + selection_fields + narrative_fields + risk_fields + boolean_fields
+
+    def get_autosave_status(self):
+        """
+        Return current auto-save status for the record.
+        Used by JavaScript to determine if auto-save should be active.
+        """
+        self.ensure_one()
+        return {
+            'is_locked': self.state in ['partner_approved', 'locked'],
+            'can_autosave': self.state in ['draft', 'under_review'],
+            'last_write_date': self.write_date.isoformat() if self.write_date else None,
+            'state': self.state,
+        }
+
 
 class OnboardingBranchLocation(models.Model):
     _name = 'qaco.onboarding.branch.location'

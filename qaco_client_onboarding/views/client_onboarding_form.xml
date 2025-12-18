@@ -16,7 +16,7 @@
         <field name="name">qaco.client.onboarding.form</field>
         <field name="model">qaco.client.onboarding</field>
         <field name="arch" type="xml">
-            <form string="Client Onboarding" class="o_onboarding_form">
+            <form string="Client Onboarding" class="o_onboarding_form" js_class="onboarding_autosave_form">
                 <header>
                     <button name="action_generate_acceptance_report" type="object" string="Generate Acceptance Report" 
                             class="oe_highlight" icon="fa-file-pdf-o"/>

@@ -8,6 +8,58 @@ $audit-blue: #2563eb;
 $audit-grey: #94a3b8;
 $audit-bg: #f7f8fa;
 
+// ═══════════════════════════════════════════════════════════════════════════════════
+// AUTO-SAVE NOTIFICATION STYLING
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+.o_notification_manager {
+  .o_notification {
+    &.o_autosave_notification {
+      background: linear-gradient(135deg, rgba(21, 128, 61, 0.95), rgba(34, 197, 94, 0.95));
+      border-left: 4px solid $audit-green;
+      
+      .o_notification_content {
+        color: #fff;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Auto-save status indicator in form header
+.o_onboarding_autosave_status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(21, 128, 61, 0.1);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: $audit-green;
+  
+  &.saving {
+    background: rgba(217, 119, 6, 0.1);
+    color: $audit-amber;
+    
+    .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  &.locked {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+  
+  .autosave-icon {
+    font-size: 1rem;
+  }
+  
+  .autosave-time {
+    font-weight: 600;
+  }
+}
+
 .o_onboarding_form {
   background: $audit-bg;
 
