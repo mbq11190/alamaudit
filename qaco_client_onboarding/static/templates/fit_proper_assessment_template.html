@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fit & Proper Assessment & Confirmation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.35;
+            margin: 35px 40px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #1a365d;
+            font-size: 16pt;
+            margin-bottom: 5px;
+            border-bottom: 3px solid #2b6cb0;
+            padding-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        .header-info {
+            background-color: #ebf8ff;
+            border: 1px solid #bee3f8;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .header-info table {
+            width: 100%;
+            border: none;
+        }
+        .header-info td {
+            border: none;
+            padding: 4px 10px;
+            vertical-align: top;
+        }
+        .header-info .label {
+            font-weight: bold;
+            color: #2c5282;
+            width: 120px;
+        }
+        .header-info .value {
+            color: #1a202c;
+            border-bottom: 1px dotted #a0aec0;
+        }
+        h2 {
+            background-color: #2b6cb0;
+            color: white;
+            padding: 7px 12px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 11pt;
+            border-radius: 3px;
+        }
+        h3 {
+            color: #2c5282;
+            border-bottom: 1px solid #cbd5e0;
+            padding-bottom: 4px;
+            margin-top: 15px;
+            font-size: 10.5pt;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+        th, td {
+            border: 1px solid #cbd5e0;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 10pt;
+        }
+        th {
+            background-color: #edf2f7;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .checkbox {
+            font-family: 'Segoe UI Symbol', sans-serif;
+        }
+        .field-input {
+            border-bottom: 1px solid #4a5568;
+            min-width: 180px;
+            display: inline-block;
+            color: #1a202c;
+        }
+        .field-value {
+            font-weight: 600;
+            color: #2b6cb0;
+        }
+        .signature-line {
+            border-bottom: 1px solid #4a5568;
+            min-width: 220px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        .notes-box {
+            border: 1px solid #cbd5e0;
+            min-height: 60px;
+            padding: 8px;
+            margin-top: 8px;
+            background-color: #f7fafc;
+        }
+        .declaration-box {
+            border: 2px solid #2c5282;
+            padding: 12px 15px;
+            margin: 15px 0;
+            background-color: #f7fafc;
+            border-radius: 4px;
+        }
+        .status-box {
+            border: 2px solid #276749;
+            padding: 12px 15px;
+            margin: 15px 0;
+            background-color: #f0fff4;
+            border-radius: 4px;
+        }
+        .conclusion-box {
+            border-left: 4px solid #2b6cb0;
+            padding: 10px 15px;
+            margin: 15px 0;
+            background-color: #ebf8ff;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 8.5pt;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+        }
+        .mandatory-note {
+            font-size: 9pt;
+            color: #718096;
+            font-style: italic;
+        }
+        @media print {
+            body { margin: 15px; font-size: 9.5pt; }
+            h2 { page-break-after: avoid; }
+            table { page-break-inside: avoid; }
+            .declaration-box, .status-box { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>📄 FIT & PROPER ASSESSMENT & CONFIRMATION</h1>
+<p class="subtitle">(Consolidated Master Template)</p>
+
+<!-- Auto-filled Header Information -->
+<div class="header-info">
+    <table>
+        <tr>
+            <td class="label">Entity Name:</td>
+            <td class="value"><span class="field-value" id="entity_name">{{ENTITY_NAME}}</span></td>
+            <td class="label">Audit Period:</td>
+            <td class="value"><span class="field-value" id="audit_period">{{AUDIT_PERIOD}}</span></td>
+        </tr>
+        <tr>
+            <td class="label">Generated:</td>
+            <td class="value"><span class="field-value" id="generated_date">{{GENERATED_DATE}}</span></td>
+            <td class="label">Reference:</td>
+            <td class="value"><span class="field-value" id="reference">{{REFERENCE}}</span></td>
+        </tr>
+    </table>
+</div>
+
+<h2>A. ENTITY & INDIVIDUAL IDENTIFICATION</h2>
+<table>
+    <tr>
+        <th style="width: 30%;">Particular</th>
+        <th>Details</th>
+    </tr>
+    <tr>
+        <td>Entity Name</td>
+        <td><span class="field-value">{{ENTITY_NAME}}</span></td>
+    </tr>
+    <tr>
+        <td>Legal Status</td>
+        <td>
+            <span class="checkbox">☐</span> Private &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Listed &nbsp;&nbsp;
+            <span class="checkbox">☐</span> NGO / NPO &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Other
+        </td>
+    </tr>
+    <tr>
+        <td>Registration / NTN</td>
+        <td><span class="field-input">&nbsp;</span></td>
+    </tr>
+    <tr>
+        <td>Individual Name</td>
+        <td><span class="field-input">&nbsp;</span></td>
+    </tr>
+    <tr>
+        <td>CNIC / Passport No.</td>
+        <td><span class="field-input">&nbsp;</span></td>
+    </tr>
+    <tr>
+        <td>Nationality</td>
+        <td><span class="field-input">&nbsp;</span></td>
+    </tr>
+    <tr>
+        <td>Role Assessed</td>
+        <td>
+            <span class="checkbox">☐</span> Director &nbsp;&nbsp;
+            <span class="checkbox">☐</span> CEO &nbsp;&nbsp;
+            <span class="checkbox">☐</span> CFO &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Key Management &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Trustee
+        </td>
+    </tr>
+    <tr>
+        <td>Date of Appointment</td>
+        <td><span class="field-input">&nbsp;</span></td>
+    </tr>
+    <tr>
+        <td>Date of Assessment</td>
+        <td><span class="field-input">&nbsp;</span></td>
+    </tr>
+    <tr>
+        <td>Applicable Regulator</td>
+        <td>
+            <span class="checkbox">☐</span> SECP &nbsp;&nbsp;
+            <span class="checkbox">☐</span> SBP &nbsp;&nbsp;
+            <span class="checkbox">☐</span> NGO &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Other: <span class="field-input" style="min-width: 80px;">&nbsp;</span>
+        </td>
+    </tr>
+</table>
+
+<h2>B. INTEGRITY, HONESTY & REPUTATION ASSESSMENT</h2>
+<p class="mandatory-note">(Mandatory – Companies Act 2017 / ISQM-1 / IESBA)</p>
+<table>
+    <tr>
+        <th style="width: 50%;">Criteria</th>
+        <th style="width: 8%;">Yes</th>
+        <th style="width: 8%;">No</th>
+        <th>Remarks</th>
+    </tr>
+    <tr>
+        <td>No criminal conviction involving fraud, dishonesty, or moral turpitude</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No pending prosecution or investigation</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No adverse regulatory enforcement or penalty</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Not disqualified under Companies Act, 2017</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No history of willful default or financial misconduct</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+</table>
+
+<h2>C. COMPETENCE & EXPERIENCE ASSESSMENT</h2>
+<table>
+    <tr>
+        <th style="width: 50%;">Criteria</th>
+        <th style="width: 8%;">Yes</th>
+        <th style="width: 8%;">No</th>
+        <th>Remarks</th>
+    </tr>
+    <tr>
+        <td>Relevant academic qualification</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Relevant professional / industry experience</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Adequate understanding of entity's business</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Knowledge of applicable laws & regulations</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Financial literacy (mandatory for directors / audit committee)</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+</table>
+
+<h2>D. FINANCIAL SOUNDNESS</h2>
+<table>
+    <tr>
+        <th style="width: 50%;">Criteria</th>
+        <th style="width: 8%;">Yes</th>
+        <th style="width: 8%;">No</th>
+        <th>Remarks</th>
+    </tr>
+    <tr>
+        <td>Not declared insolvent or bankrupt</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No overdue taxes or statutory defaults</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No material unpaid liabilities to lenders</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No adverse credit information</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+</table>
+
+<h2>E. INDEPENDENCE & CONFLICT OF INTEREST</h2>
+<table>
+    <tr>
+        <th style="width: 50%;">Criteria</th>
+        <th style="width: 8%;">Yes</th>
+        <th style="width: 8%;">No</th>
+        <th>Remarks</th>
+    </tr>
+    <tr>
+        <td>No conflict with entity's interests</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>No prohibited related-party relationships</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>All actual / potential conflicts disclosed</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Not holding incompatible positions</td>
+        <td><span class="checkbox">☐</span></td>
+        <td><span class="checkbox">☐</span></td>
+        <td></td>
+    </tr>
+</table>
+
+<h2>F. AML / CFT, PEP & SANCTIONS SCREENING</h2>
+<p class="mandatory-note">(Mandatory – AML Act / ISQM-1)</p>
+<table>
+    <tr>
+        <th style="width: 35%;">Check</th>
+        <th style="width: 30%;">Status</th>
+        <th>Evidence Reference</th>
+    </tr>
+    <tr>
+        <td>Politically Exposed Person (PEP)</td>
+        <td>
+            <span class="checkbox">☐</span> Clear &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Identified
+        </td>
+        <td>Screening report</td>
+    </tr>
+    <tr>
+        <td>Sanctions (UN / OFAC / EU)</td>
+        <td>
+            <span class="checkbox">☐</span> Clear &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Flagged
+        </td>
+        <td>Screening report</td>
+    </tr>
+    <tr>
+        <td>Country Risk</td>
+        <td>
+            <span class="checkbox">☐</span> Low &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Medium &nbsp;&nbsp;
+            <span class="checkbox">☐</span> High
+        </td>
+        <td>Narrative</td>
+    </tr>
+    <tr>
+        <td>Source of Wealth / Income</td>
+        <td>
+            <span class="checkbox">☐</span> Reasonable &nbsp;&nbsp;
+            <span class="checkbox">☐</span> Concern
+        </td>
+        <td>Explanation</td>
+    </tr>
+</table>
+
+<h2>G. ENHANCED DUE DILIGENCE (EDD) – IF APPLICABLE</h2>
+<p><strong>EDD Trigger(s):</strong></p>
+<p style="margin-left: 15px;">
+    <span class="checkbox">☐</span> PEP &nbsp;&nbsp;&nbsp;
+    <span class="checkbox">☐</span> Foreign national (high-risk jurisdiction) &nbsp;&nbsp;&nbsp;
+    <span class="checkbox">☐</span> Complex ownership / nominee structure &nbsp;&nbsp;&nbsp;
+    <span class="checkbox">☐</span> Adverse media
+</p>
+<p><strong>EDD Procedures Performed:</strong></p>
+<div class="notes-box"></div>
+
+<h2>H. OVERALL FIT & PROPER ASSESSMENT (AUDITOR / FIRM)</h2>
+<div class="status-box">
+    <p><strong>Assessment Outcome:</strong></p>
+    <p style="margin-left: 15px;">
+        <span class="checkbox">☐</span> <strong>Fit & Proper</strong><br>
+        <span class="checkbox">☐</span> <strong>Fit & Proper with Conditions</strong><br>
+        <span class="checkbox">☐</span> <strong>Not Fit & Proper</strong>
+    </p>
+    <p><strong>Conditions / Safeguards (if any):</strong></p>
+    <div class="notes-box" style="min-height: 50px;"></div>
+</div>
+
+<div class="conclusion-box">
+    <p><strong>Conclusion:</strong></p>
+    <p>Based on the above assessment, the individual <strong>meets / does not meet</strong> the Fit & Proper criteria under applicable laws, regulations, and ethical requirements.</p>
+</div>
+
+<h2>I. DECLARATION BY THE INDIVIDUAL (CONFIRMATION)</h2>
+<div class="declaration-box">
+    <p><strong>I hereby confirm that:</strong></p>
+    <ul style="margin-left: 10px;">
+        <li>The information provided above is true, complete, and accurate.</li>
+        <li>I have disclosed all relevant information, including conflicts of interest and regulatory matters.</li>
+        <li>I undertake to immediately inform the Company and auditors of any material change affecting my Fit & Proper status.</li>
+    </ul>
+    <br>
+    <table style="border: none; width: 100%;">
+        <tr>
+            <td style="border: none; width: 50%;">Name: <span class="signature-line">&nbsp;</span></td>
+            <td style="border: none;">Date: <span class="signature-line" style="min-width: 120px;">&nbsp;</span></td>
+        </tr>
+        <tr>
+            <td style="border: none;" colspan="2">Signature: <span class="signature-line" style="min-width: 300px;">&nbsp;</span></td>
+        </tr>
+    </table>
+</div>
+
+<h2>J. AUDITOR / FIRM CONFIRMATION & SIGN-OFF</h2>
+<div class="declaration-box">
+    <p><strong>We confirm that the Fit & Proper assessment and confirmation has been conducted and reviewed in accordance with:</strong></p>
+    <ul style="margin-left: 10px;">
+        <li>Companies Act, 2017</li>
+        <li>ISQM-1</li>
+        <li>IESBA Code of Ethics</li>
+        <li>SECP / SBP / applicable regulatory requirements</li>
+    </ul>
+    <br>
+    <table style="border: none; width: 100%;">
+        <tr>
+            <td style="border: none; width: 50%;">Engagement Partner: <span class="signature-line">&nbsp;</span></td>
+            <td style="border: none;">Date: <span class="signature-line" style="min-width: 120px;">&nbsp;</span></td>
+        </tr>
+        <tr>
+            <td style="border: none;" colspan="2">Signature: <span class="signature-line" style="min-width: 300px;">&nbsp;</span></td>
+        </tr>
+    </table>
+</div>
+
+<div class="footer">
+    <p><strong>Fit & Proper Assessment & Confirmation</strong> | Companies Act 2017 / ISQM-1 / IESBA Compliant</p>
+    <p>Generated by QACO Audit System | {{GENERATED_DATE}}</p>
+</div>
+
+</body>
+</html>

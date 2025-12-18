@@ -301,19 +301,19 @@
                                     <div class="alert alert-info d-flex align-items-center">
                                         <span class="fa fa-info-circle me-2"/>
                                         <span class="flex-grow-1">
-                                            <strong>Fit &amp; Proper Assessment Template</strong> – Download the template, complete for each director/key management, and upload as signed evidence above.
+                                            <strong>Fit &amp; Proper Assessment &amp; Confirmation Template</strong> – Download the consolidated template (auto-filled with client name &amp; period), complete for each director/key management, and upload as signed evidence above.
                                         </span>
                                     </div>
                                     <div class="d-flex gap-2 mt-2">
-                                        <a href="/onboarding/template/fit_proper/docx" class="btn btn-primary" target="_blank" title="Download Word Template">
-                                            <span class="fa fa-file-word-o me-1"/> Download Word Template (.docx)
-                                        </a>
-                                        <a href="/onboarding/template/fit_proper/pdf" class="btn btn-secondary" target="_blank" title="Download PDF Template">
-                                            <span class="fa fa-file-pdf-o me-1"/> Download PDF Template (.pdf)
-                                        </a>
-                                        <a href="/onboarding/template/fit_proper/html" class="btn btn-outline-secondary" target="_blank" title="View/Print HTML Template">
+                                        <button name="action_download_fit_proper_docx" type="object" class="btn btn-primary" title="Download Word Template (Auto-filled)">
+                                            <span class="fa fa-file-word-o me-1"/> Download Word (.docx)
+                                        </button>
+                                        <button name="action_download_fit_proper_pdf" type="object" class="btn btn-secondary" title="Download PDF Template (Auto-filled)">
+                                            <span class="fa fa-file-pdf-o me-1"/> Download PDF (.pdf)
+                                        </button>
+                                        <button name="action_download_fit_proper_html" type="object" class="btn btn-outline-secondary" title="View/Print HTML Template (Auto-filled)">
                                             <span class="fa fa-print me-1"/> View/Print (HTML)
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
 

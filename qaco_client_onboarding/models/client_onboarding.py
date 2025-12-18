@@ -1683,6 +1683,36 @@ class ClientOnboarding(models.Model):
             'state': self.state,
         }
 
+    # -------------------------------------------------------------------------
+    # Fit & Proper Template Download Actions
+    # -------------------------------------------------------------------------
+    def action_download_fit_proper_docx(self):
+        """Download Fit & Proper template as Word document with auto-filled client info."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/onboarding/template/fit_proper/docx?onboarding_id={self.id}',
+            'target': 'new',
+        }
+
+    def action_download_fit_proper_pdf(self):
+        """Download Fit & Proper template as PDF with auto-filled client info."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/onboarding/template/fit_proper/pdf?onboarding_id={self.id}',
+            'target': 'new',
+        }
+
+    def action_download_fit_proper_html(self):
+        """Download/View Fit & Proper template as HTML with auto-filled client info."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/onboarding/template/fit_proper/html?onboarding_id={self.id}',
+            'target': 'new',
+        }
+
 
 class OnboardingBranchLocation(models.Model):
     _name = 'qaco.onboarding.branch.location'
