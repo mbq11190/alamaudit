@@ -3,8 +3,7 @@ from . import audit_checklist
 from . import assertion_tag
 from . import risk_fs
 from . import risk_assertion
-from . import fraud_risk
-from . import laws_compliance
-from . import internal_control
-from . import materiality
-from . import sampling
+from . import planning_main
+from . import planning_tabs_p1_p6
+from . import planning_tabs_p7_p13
+from . import planning_program
