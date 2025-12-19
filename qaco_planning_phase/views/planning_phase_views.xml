@@ -40,12 +40,14 @@
 					</div>
 					
 					<notebook class="o_planning_tabs">
-						<!-- P-1: Engagement Overview & Planning Control -->
-						<page name="section_p1" string="P-1: Engagement Overview" class="o_planning_tab_page">
-							<div id="section-p-1" class="o_planning_card">
+						<!-- ========================================== -->
+						<!-- P-1: Engagement Setup                      -->
+						<!-- ========================================== -->
+						<page name="section_p1" string="P-1: Engagement Setup" class="o_planning_tab_page">
+							<div class="o_planning_card">
 								<div class="o_planning_card_header">
 									<span class="o_planning_card_number">P-1</span>
-									<span class="o_planning_card_title">Engagement Overview &amp; Planning Control</span>
+									<span class="o_planning_card_title">Engagement Setup</span>
 									<span class="o_planning_card_ref">ISA 210/220/ISQM-1</span>
 								</div>
 								<group class="o_planning_grid">
@@ -66,7 +68,6 @@
 								</group>
 							</div>
 							
-							<!-- P-1.1 Planning Phase Status Dashboard -->
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
 									<span class="o_planning_card_number">P-1.1</span>
@@ -91,7 +92,9 @@
 							</div>
 						</page>
 						
-						<!-- P-2: Understanding the Entity & Its Environment -->
+						<!-- ========================================== -->
+						<!-- P-2: Entity & Environment                  -->
+						<!-- ========================================== -->
 						<page name="section_p2" string="P-2: Entity &amp; Environment" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
@@ -110,7 +113,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.1</span>
+									<span class="o_planning_card_number">P-2.1</span>
 									<span class="o_planning_card_title">Organizational Structure</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
@@ -121,7 +124,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.2</span>
+									<span class="o_planning_card_number">P-2.2</span>
 									<span class="o_planning_card_title">Operational Footprint</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
@@ -132,7 +135,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.3</span>
+									<span class="o_planning_card_number">P-2.3</span>
 									<span class="o_planning_card_title">Key Contracts &amp; Arrangements</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
@@ -140,10 +143,7 @@
 									<field name="key_contracts" nolabel="1" placeholder="Document key contractual arrangements: long-term supply contracts, franchises, leases, joint ventures..."/>
 								</group>
 							</div>
-						</page>
-						
-						<!-- P-2.4 - Regulatory & Compliance -->
-						<page name="section_p2_4" string="P-2.4 - Regulatory" class="o_planning_tab_page">
+							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
 									<span class="o_planning_card_number">P-2.4</span>
@@ -157,142 +157,11 @@
 									<field name="compliance_certificates" nolabel="1" placeholder="Status of compliance certificates, licenses, registrations..."/>
 								</group>
 							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.5</span>
-									<span class="o_planning_card_title">Related Parties &amp; Group Structure</span>
-									<span class="o_planning_card_ref">ISA 550</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="related_parties_summary" nolabel="1" placeholder="Identify all related parties, nature of relationships, and control relationships..."/>
-									<field name="group_structure" nolabel="1" placeholder="Describe group structure, ownership, and organizational hierarchy..."/>
-									<field name="intra_group_transactions" nolabel="1" placeholder="Document intra-group transactions, pricing policies, and significant arrangements..."/>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.6</span>
-									<span class="o_planning_card_title">Fraud Risk Assessment</span>
-									<span class="o_planning_card_ref">ISA 240</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="fraud_incentives" nolabel="1" placeholder="Identify incentives/pressures that might predispose management/employees to commit fraud..."/>
-									<field name="fraud_opportunities" nolabel="1" placeholder="Identify opportunities for fraud due to control weaknesses or complex transactions..."/>
-									<field name="fraud_attitudes" nolabel="1" placeholder="Assess attitudes/rationalizations that might justify fraudulent financial reporting..."/>
-									<field name="fraud_risk_assessment" nolabel="1" placeholder="Overall fraud risk assessment and conclusions..."/>
-								</group>
-							</div>
 						</page>
 						
-						<!-- P-8: Preliminary Analytical Procedures -->
-						<page name="section_p8" string="P-8: Analytics" class="o_planning_tab_page">
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-8</span>
-									<span class="o_planning_card_title">Preliminary Analytical Procedures</span>
-									<span class="o_planning_card_ref">ISA 520</span>
-								</div>
-								<group class="o_planning_grid">
-									<group string="Financial Data for Analysis">
-										<field name="prior_year_fs_attachment_ids" widget="many2many_binary" string="Prior Year Financial Statements (Last 3 Years)"/>
-										<field name="current_year_tb_attachment_ids" widget="many2many_binary" string="Current Year Trial Balance &amp; Draft FS"/>
-									</group>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">3.1</span>
-									<span class="o_planning_card_title">Industry Benchmarks &amp; Comparisons</span>
-									<span class="o_planning_card_ref">ISA 520</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="industry_benchmarks" nolabel="1" placeholder="Industry benchmarks, competitor analysis, economic indicators relevant to the entity..."/>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">3.2</span>
-									<span class="o_planning_card_title">Trend &amp; Ratio Analysis</span>
-									<span class="o_planning_card_ref">ISA 520</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="trend_analysis" nolabel="1" placeholder="3-5 year trend analysis of key financial statement line items..."/>
-									<field name="ratio_analysis_summary" nolabel="1" placeholder="Profitability, liquidity, solvency, and efficiency ratio analysis..."/>
-									<field name="analytical_expectations" nolabel="1" placeholder="Analytical expectations vs actual results with explanations for variances..."/>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">3.3</span>
-									<span class="o_planning_card_title">Significant Fluctuations Analysis</span>
-									<span class="o_planning_card_ref">ISA 520</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="significant_fluctuations" nolabel="1" placeholder="Analysis of significant fluctuations (&gt;10% or materiality) with management inquiries..."/>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">3.4</span>
-									<span class="o_planning_card_title">Going Concern Assessment</span>
-									<span class="o_planning_card_ref">ISA 570</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="going_concern_assessment" nolabel="1" placeholder="Assessment of going concern assumption, indicators of going concern issues..."/>
-								</group>
-							</div>
-						</page>
-						
-						<!-- P-6: Materiality & Performance Materiality -->
-						<page name="section_p6" string="P-6: Materiality" class="o_planning_tab_page">
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-6</span>
-									<span class="o_planning_card_title">Materiality &amp; Performance Materiality</span>
-									<span class="o_planning_card_ref">ISA 320</span>
-								</div>
-								<group class="o_planning_grid">
-									<group string="Materiality Benchmark Selection">
-										<field name="materiality_benchmark"/>
-										<field name="materiality_percentage"/>
-										<field name="custom_benchmark_value" required="materiality_benchmark == 'custom'" invisible="materiality_benchmark != 'custom'"/>
-									</group>
-									<field name="materiality_justification" nolabel="1" placeholder="Justify benchmark selection considering entity circumstances, industry practices, and ISA 320 guidance..."/>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">4.1</span>
-									<span class="o_planning_card_title">Calculated Materiality Amounts</span>
-									<span class="o_planning_card_ref">ISA 320</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="overall_materiality" readonly="1"/>
-									<field name="performance_materiality" readonly="1"/>
-									<field name="clearly_trivial_threshold" readonly="1"/>
-								</group>
-							</div>
-							
-							<div class="o_planning_card">
-								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">4.2</span>
-									<span class="o_planning_card_title">Materiality Documentation</span>
-									<span class="o_planning_card_ref">ISA 320</span>
-								</div>
-								<group class="o_planning_grid">
-									<field name="materiality_worksheet_attachment_ids" widget="many2many_binary" string="Materiality Calculation Worksheets &amp; Documentation"/>
-								</group>
-							</div>
-						</page>
-						
-						<!-- P-3: Understanding Internal Control & IT Environment -->
+						<!-- ========================================== -->
+						<!-- P-3: Internal Controls                     -->
+						<!-- ========================================== -->
 						<page name="section_p3" string="P-3: Internal Controls" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
@@ -317,7 +186,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">5.1</span>
+									<span class="o_planning_card_number">P-3.1</span>
 									<span class="o_planning_card_title">Control Reliance Strategy</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
@@ -329,7 +198,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">5.2</span>
+									<span class="o_planning_card_number">P-3.2</span>
 									<span class="o_planning_card_title">Internal Control Documentation</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
@@ -340,11 +209,112 @@
 							</div>
 						</page>
 						
-						<!-- P-4/P-5 - Risk Assessment & Response -->
-						<page name="section_p4_p5" string="P-4/P-5 - Risk Assessment" class="o_planning_tab_page">
+						<!-- ========================================== -->
+						<!-- P-4: Analytics                             -->
+						<!-- ========================================== -->
+						<page name="section_p4" string="P-4: Analytics" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
 									<span class="o_planning_card_number">P-4</span>
+									<span class="o_planning_card_title">Preliminary Analytical Procedures</span>
+									<span class="o_planning_card_ref">ISA 520</span>
+								</div>
+								<group class="o_planning_grid">
+									<group string="Financial Data for Analysis">
+										<field name="prior_year_fs_attachment_ids" widget="many2many_binary" string="Prior Year Financial Statements (Last 3 Years)"/>
+										<field name="current_year_tb_attachment_ids" widget="many2many_binary" string="Current Year Trial Balance &amp; Draft FS"/>
+									</group>
+								</group>
+							</div>
+							
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-4.1</span>
+									<span class="o_planning_card_title">Industry Benchmarks &amp; Comparisons</span>
+									<span class="o_planning_card_ref">ISA 520</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="industry_benchmarks" nolabel="1" placeholder="Industry benchmarks, competitor analysis, economic indicators relevant to the entity..."/>
+								</group>
+							</div>
+							
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-4.2</span>
+									<span class="o_planning_card_title">Trend &amp; Ratio Analysis</span>
+									<span class="o_planning_card_ref">ISA 520</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="trend_analysis" nolabel="1" placeholder="3-5 year trend analysis of key financial statement line items..."/>
+									<field name="ratio_analysis_summary" nolabel="1" placeholder="Profitability, liquidity, solvency, and efficiency ratio analysis..."/>
+									<field name="analytical_expectations" nolabel="1" placeholder="Analytical expectations vs actual results with explanations for variances..."/>
+								</group>
+							</div>
+							
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-4.3</span>
+									<span class="o_planning_card_title">Significant Fluctuations Analysis</span>
+									<span class="o_planning_card_ref">ISA 520</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="significant_fluctuations" nolabel="1" placeholder="Analysis of significant fluctuations (&gt;10% or materiality) with management inquiries..."/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-5: Materiality                           -->
+						<!-- ========================================== -->
+						<page name="section_p5" string="P-5: Materiality" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-5</span>
+									<span class="o_planning_card_title">Materiality &amp; Performance Materiality</span>
+									<span class="o_planning_card_ref">ISA 320</span>
+								</div>
+								<group class="o_planning_grid">
+									<group string="Materiality Benchmark Selection">
+										<field name="materiality_benchmark"/>
+										<field name="materiality_percentage"/>
+										<field name="custom_benchmark_value" required="materiality_benchmark == 'custom'" invisible="materiality_benchmark != 'custom'"/>
+									</group>
+									<field name="materiality_justification" nolabel="1" placeholder="Justify benchmark selection considering entity circumstances, industry practices, and ISA 320 guidance..."/>
+								</group>
+							</div>
+							
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-5.1</span>
+									<span class="o_planning_card_title">Calculated Materiality Amounts</span>
+									<span class="o_planning_card_ref">ISA 320</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="overall_materiality" readonly="1"/>
+									<field name="performance_materiality" readonly="1"/>
+									<field name="clearly_trivial_threshold" readonly="1"/>
+								</group>
+							</div>
+							
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-5.2</span>
+									<span class="o_planning_card_title">Materiality Documentation</span>
+									<span class="o_planning_card_ref">ISA 320</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="materiality_worksheet_attachment_ids" widget="many2many_binary" string="Materiality Calculation Worksheets &amp; Documentation"/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-6: Risk Assessment                       -->
+						<!-- ========================================== -->
+						<page name="section_p6" string="P-6: Risk Assessment" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-6</span>
 									<span class="o_planning_card_title">Risk Register</span>
 									<span class="o_planning_card_ref">ISA 315 / ISA 330</span>
 								</div>
@@ -395,10 +365,102 @@
 									</field>
 								</group>
 							</div>
-							
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-7: Fraud                                 -->
+						<!-- ========================================== -->
+						<page name="section_p7" string="P-7: Fraud" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-5.1</span>
+									<span class="o_planning_card_number">P-7</span>
+									<span class="o_planning_card_title">Fraud Risk Assessment</span>
+									<span class="o_planning_card_ref">ISA 240</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="fraud_incentives" nolabel="1" placeholder="Identify incentives/pressures that might predispose management/employees to commit fraud..."/>
+									<field name="fraud_opportunities" nolabel="1" placeholder="Identify opportunities for fraud due to control weaknesses or complex transactions..."/>
+									<field name="fraud_attitudes" nolabel="1" placeholder="Assess attitudes/rationalizations that might justify fraudulent financial reporting..."/>
+									<field name="fraud_risk_assessment" nolabel="1" placeholder="Overall fraud risk assessment and conclusions..."/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-8: Going Concern                         -->
+						<!-- ========================================== -->
+						<page name="section_p8" string="P-8: Going Concern" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-8</span>
+									<span class="o_planning_card_title">Going Concern Assessment</span>
+									<span class="o_planning_card_ref">ISA 570</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="going_concern_assessment" nolabel="1" placeholder="Assessment of going concern assumption, indicators of going concern issues..."/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-9: Laws & Regulations                    -->
+						<!-- ========================================== -->
+						<page name="section_p9" string="P-9: Laws &amp; Regulations" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-9</span>
+									<span class="o_planning_card_title">Laws &amp; Regulations Compliance</span>
+									<span class="o_planning_card_ref">ISA 250</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="regulatory_penalties" nolabel="1" placeholder="Document any regulatory penalties, litigations, or compliance issues..."/>
+									<field name="compliance_certificates" nolabel="1" placeholder="Status of compliance certificates, licenses, registrations..."/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-10: Related Parties                      -->
+						<!-- ========================================== -->
+						<page name="section_p10" string="P-10: Related Parties" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-10</span>
+									<span class="o_planning_card_title">Related Parties &amp; Group Structure</span>
+									<span class="o_planning_card_ref">ISA 550</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="related_parties_summary" nolabel="1" placeholder="Identify all related parties, nature of relationships, and control relationships..."/>
+									<field name="group_structure" nolabel="1" placeholder="Describe group structure, ownership, and organizational hierarchy..."/>
+									<field name="intra_group_transactions" nolabel="1" placeholder="Document intra-group transactions, pricing policies, and significant arrangements..."/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-11: Group Audit                          -->
+						<!-- ========================================== -->
+						<page name="section_p11" string="P-11: Group Audit" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-11</span>
+									<span class="o_planning_card_title">Group Audit Considerations</span>
+									<span class="o_planning_card_ref">ISA 600</span>
+								</div>
+								<group class="o_planning_grid">
+									<field name="component_auditors_involved"/>
+									<field name="component_auditors_details" nolabel="1" invisible="not component_auditors_involved" placeholder="Component auditor coordination, instructions, review procedures..."/>
+								</group>
+							</div>
+						</page>
+						
+						<!-- ========================================== -->
+						<!-- P-12: Audit Strategy                       -->
+						<!-- ========================================== -->
+						<page name="section_p12" string="P-12: Audit Strategy" class="o_planning_tab_page">
+							<div class="o_planning_card">
+								<div class="o_planning_card_header">
+									<span class="o_planning_card_number">P-12</span>
 									<span class="o_planning_card_title">Overall Audit Strategy</span>
 									<span class="o_planning_card_ref">ISA 300 / ISA 330</span>
 								</div>
@@ -409,7 +471,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-5.2</span>
+									<span class="o_planning_card_number">P-12.1</span>
 									<span class="o_planning_card_title">Specialized Resources</span>
 									<span class="o_planning_card_ref">ISA 620 / ISA 600</span>
 								</div>
@@ -418,14 +480,12 @@
 									<field name="experts_details" nolabel="1" invisible="not use_of_experts" placeholder="Scope of expert work, qualifications, coordination procedures..."/>
 									<field name="use_of_caats"/>
 									<field name="caats_details" nolabel="1" invisible="not use_of_caats" placeholder="CAATs tools, data analytics approach, specific procedures..."/>
-									<field name="component_auditors_involved"/>
-									<field name="component_auditors_details" nolabel="1" invisible="not component_auditors_involved" placeholder="Component auditor coordination, instructions, review procedures..."/>
 								</group>
 							</div>
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-5.3</span>
+									<span class="o_planning_card_number">P-12.2</span>
 									<span class="o_planning_card_title">Staffing &amp; Timeline</span>
 									<span class="o_planning_card_ref">ISA 300</span>
 								</div>
@@ -438,7 +498,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-5.4</span>
+									<span class="o_planning_card_number">P-12.3</span>
 									<span class="o_planning_card_title">Risk &amp; Strategy Documentation</span>
 									<span class="o_planning_card_ref">ISA 300</span>
 								</div>
@@ -449,8 +509,10 @@
 							</div>
 						</page>
 						
-						<!-- P-13 - APM & Approval -->
-						<page name="section_p13" string="P-13 - APM &amp; Approval" class="o_planning_tab_page">
+						<!-- ========================================== -->
+						<!-- P-13: Planning Review                      -->
+						<!-- ========================================== -->
+						<page name="section_p13" string="P-13: Planning Review" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
 									<span class="o_planning_card_number">P-13.0</span>
