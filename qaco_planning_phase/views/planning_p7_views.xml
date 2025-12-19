@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-7: Fraud Risk Considerations                -->
+    <!-- ISA 240                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-7 Form View -->
+    <record id="view_planning_p7_fraud_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.form</field>
+        <field name="model">qaco.planning.p7.fraud</field>
+        <field name="arch" type="xml">
+            <form string="P-7: Fraud Risk Considerations">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 240 | Fraud Risk Considerations</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Assessment">
+                            <field name="overall_fraud_risk"/>
+                            <field name="fraud_risks_identified"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Fraud Triangle Assessment -->
+                        <page string="Fraud Triangle" name="triangle">
+                            <group string="Pressure / Incentive">
+                                <group>
+                                    <field name="pressure_rating"/>
+                                </group>
+                                <field name="pressure_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Opportunity">
+                                <group>
+                                    <field name="opportunity_rating"/>
+                                </group>
+                                <field name="opportunity_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Rationalization / Attitude">
+                                <group>
+                                    <field name="rationalization_rating"/>
+                                </group>
+                                <field name="rationalization_factors" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Fraud Risk Factors -->
+                        <page string="Fraud Risk Factors" name="risk_factors">
+                            <group string="Fraud Risk Factors Identified">
+                                <field name="fraud_risk_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Industry-Specific Fraud Risks">
+                                <field name="industry_fraud_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Historical Fraud Information">
+                                <field name="historical_fraud" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Management Override -->
+                        <page string="Management Override" name="override">
+                            <group string="Management Override Risk">
+                                <group>
+                                    <field name="management_override_level"/>
+                                </group>
+                                <field name="override_risk_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Journal Entry Testing">
+                                <field name="journal_entry_testing" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Accounting Estimates Review">
+                                <field name="estimates_review" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Unusual Transactions">
+                                <field name="unusual_transactions" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Revenue Recognition -->
+                        <page string="Revenue Recognition" name="revenue">
+                            <group string="Revenue Recognition Fraud Risk">
+                                <group>
+                                    <field name="revenue_fraud_presumption"/>
+                                    <field name="revenue_presumption_rebutted"/>
+                                </group>
+                            </group>
+                            <group string="Revenue Recognition Assessment">
+                                <field name="revenue_fraud_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Rebuttal Documentation" invisible="not revenue_presumption_rebutted">
+                                <field name="rebuttal_documentation" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Specific Revenue Risks">
+                                <field name="specific_revenue_risks" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Team Discussion -->
+                        <page string="Team Discussion" name="discussion">
+                            <group string="Fraud Brainstorming Session">
+                                <group>
+                                    <field name="brainstorming_date"/>
+                                    <field name="brainstorming_attendees"/>
+                                </group>
+                            </group>
+                            <group string="Discussion Points">
+                                <field name="discussion_points" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Fraud Scenarios Considered">
+                                <field name="fraud_scenarios" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Conclusions">
+                                <field name="discussion_conclusions" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Inquiries -->
+                        <page string="Inquiries" name="inquiries">
+                            <group string="Management Inquiries">
+                                <field name="management_inquiries" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Internal Audit Inquiries">
+                                <field name="internal_audit_inquiries" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="TCWG Inquiries">
+                                <field name="tcwg_inquiries" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Other Inquiries">
+                                <field name="other_inquiries" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Planned Responses -->
+                        <page string="Planned Responses" name="responses">
+                            <group string="Overall Audit Response">
+                                <field name="overall_fraud_response" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Specific Fraud Responses">
+                                <field name="specific_fraud_responses" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Unpredictability Elements">
+                                <field name="unpredictability_elements" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Professional Skepticism">
+                                <field name="professional_skepticism" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Fraud Risk Documentation">
+                                <field name="fraud_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Brainstorming Notes">
+                                <field name="brainstorming_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Conclusion & Sign-off -->
+                        <page string="Conclusion &amp; Sign-off" name="conclusion">
+                            <group string="Fraud Risk Conclusion">
+                                <field name="fraud_conclusion" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Summary">
+                                    <field name="overall_fraud_risk" readonly="1"/>
+                                    <field name="fraud_risks_identified" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-7 Tree View -->
+    <record id="view_planning_p7_fraud_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.tree</field>
+        <field name="model">qaco.planning.p7.fraud</field>
+        <field name="arch" type="xml">
+            <tree string="P-7: Fraud Risk">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="overall_fraud_risk"/>
+                <field name="fraud_risks_identified"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-7 Action -->
+    <record id="action_planning_p7_fraud" model="ir.actions.act_window">
+        <field name="name">P-7: Fraud Risk</field>
+        <field name="res_model">qaco.planning.p7.fraud</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-7 Fraud Risk Consideration
+            </p>
+            <p>
+                Document fraud risk assessment per ISA 240.
+            </p>
+        </field>
+    </record>
+
+</odoo>

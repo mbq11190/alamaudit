@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-8: Going Concern Assessment                 -->
+    <!-- ISA 570                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-8 Form View -->
+    <record id="view_planning_p8_going_concern_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p8.going.concern.form</field>
+        <field name="model">qaco.planning.p8.going.concern</field>
+        <field name="arch" type="xml">
+            <form string="P-8: Going Concern Assessment">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 570 | Going Concern Assessment</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Assessment">
+                            <field name="going_concern_conclusion"/>
+                            <field name="material_uncertainty_exists"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Financial Indicators -->
+                        <page string="Financial Indicators" name="financial">
+                            <group string="Financial Indicators">
+                                <field name="financial_indicators" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Financial Metrics">
+                                <group>
+                                    <field name="net_liability_position"/>
+                                    <field name="negative_operating_cash_flow"/>
+                                    <field name="adverse_key_ratios"/>
+                                </group>
+                                <group>
+                                    <field name="substantial_operating_losses"/>
+                                    <field name="inability_to_pay_creditors"/>
+                                    <field name="inability_to_obtain_financing"/>
+                                </group>
+                            </group>
+                            <group string="Financial Indicator Assessment">
+                                <field name="financial_indicator_assessment" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Operating Indicators -->
+                        <page string="Operating Indicators" name="operating">
+                            <group string="Operating Indicators">
+                                <field name="operating_indicators" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Operating Factors">
+                                <group>
+                                    <field name="management_intentions"/>
+                                    <field name="loss_of_key_management"/>
+                                    <field name="loss_of_major_market"/>
+                                </group>
+                                <group>
+                                    <field name="labor_difficulties"/>
+                                    <field name="shortage_of_supplies"/>
+                                    <field name="emergence_of_competitor"/>
+                                </group>
+                            </group>
+                            <group string="Operating Indicator Assessment">
+                                <field name="operating_indicator_assessment" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Legal/Regulatory Indicators -->
+                        <page string="Legal/Regulatory" name="legal">
+                            <group string="Legal/Regulatory Indicators">
+                                <field name="legal_indicators" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Legal/Regulatory Factors">
+                                <group>
+                                    <field name="non_compliance_capital"/>
+                                    <field name="pending_legal_proceedings"/>
+                                    <field name="changes_in_law"/>
+                                </group>
+                                <group>
+                                    <field name="license_revocation"/>
+                                </group>
+                            </group>
+                            <group string="Legal/Regulatory Assessment">
+                                <field name="legal_indicator_assessment" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Other Indicators -->
+                        <page string="Other Indicators" name="other">
+                            <group string="Other Indicators">
+                                <field name="other_indicators" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Industry/Economic Factors">
+                                <field name="industry_economic_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="COVID-19 / Pandemic Impact">
+                                <field name="pandemic_impact" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Management Plans -->
+                        <page string="Management Plans" name="plans">
+                            <group string="Management's Plans">
+                                <field name="management_plans" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Feasibility Assessment">
+                                <field name="plans_feasibility" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Supporting Documentation">
+                                <field name="plans_supporting_docs" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Audit Procedures on Management Plans">
+                                <field name="plans_audit_procedures" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Period of Assessment -->
+                        <page string="Assessment Period" name="period">
+                            <group string="Period of Assessment">
+                                <group>
+                                    <field name="assessment_period_months"/>
+                                    <field name="assessment_date"/>
+                                </group>
+                            </group>
+                            <group string="Adequacy of Management's Assessment Period">
+                                <field name="assessment_period_adequacy" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Events Beyond Assessment Period">
+                                <field name="events_beyond_period" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Inquiries & Procedures -->
+                        <page string="Inquiries &amp; Procedures" name="inquiries">
+                            <group string="Inquiries of Management">
+                                <field name="management_inquiries" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Audit Procedures Performed">
+                                <field name="audit_procedures_performed" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Written Representations">
+                                <field name="written_representations" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Disclosure Assessment -->
+                        <page string="Disclosures" name="disclosures">
+                            <group string="Disclosure Assessment">
+                                <field name="disclosure_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Material Uncertainty Disclosure">
+                                <field name="material_uncertainty_disclosure" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Reporting Implications">
+                                <field name="reporting_implications" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Going Concern Documentation">
+                                <field name="going_concern_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Management Representations">
+                                <field name="representation_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 10: Conclusion & Sign-off -->
+                        <page string="Conclusion &amp; Sign-off" name="conclusion">
+                            <group string="Going Concern Conclusion">
+                                <field name="going_concern_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Assessment Summary">
+                                    <field name="going_concern_conclusion" readonly="1"/>
+                                    <field name="material_uncertainty_exists" readonly="1"/>
+                                </group>
+                                <group string="Report Impact">
+                                    <field name="report_modification"/>
+                                    <field name="emphasis_of_matter"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-8 Tree View -->
+    <record id="view_planning_p8_going_concern_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p8.going.concern.tree</field>
+        <field name="model">qaco.planning.p8.going.concern</field>
+        <field name="arch" type="xml">
+            <tree string="P-8: Going Concern">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="going_concern_conclusion"/>
+                <field name="material_uncertainty_exists"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-8 Action -->
+    <record id="action_planning_p8_going_concern" model="ir.actions.act_window">
+        <field name="name">P-8: Going Concern</field>
+        <field name="res_model">qaco.planning.p8.going.concern</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-8 Going Concern Assessment
+            </p>
+            <p>
+                Document going concern assessment per ISA 570.
+            </p>
+        </field>
+    </record>
+
+</odoo>

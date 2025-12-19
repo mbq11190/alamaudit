@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-2: Understanding the Entity & Environment   -->
+    <!-- ISA 315                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-2 Form View -->
+    <record id="view_planning_p2_entity_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p2.entity.form</field>
+        <field name="model">qaco.planning.p2.entity</field>
+        <field name="arch" type="xml">
+            <form string="P-2: Understanding the Entity &amp; Environment">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 315 | Understanding the Entity &amp; Its Environment</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Industry">
+                            <field name="industry_id"/>
+                            <field name="industry_type"/>
+                            <field name="it_complexity"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Nature of Business -->
+                        <page string="Nature of Business" name="nature">
+                            <group string="Principal Business Activities">
+                                <field name="nature_of_business" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Principal Activities">
+                                <field name="principal_activities" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Products and Services">
+                                <field name="products_services" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Market Position &amp; Competition">
+                                <field name="market_position" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Ownership & Governance -->
+                        <page string="Ownership &amp; Governance" name="governance">
+                            <group string="Ownership Structure">
+                                <field name="ownership_structure" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Governance Structure">
+                                <field name="governance_structure" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Management Personnel">
+                                <field name="key_management" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Management Philosophy &amp; Operating Style">
+                                <field name="management_philosophy" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Board Oversight of Financial Reporting">
+                                <field name="board_oversight" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Industry & Economic Factors -->
+                        <page string="Industry &amp; Economic Factors" name="industry">
+                            <group string="Industry Conditions">
+                                <field name="industry_conditions" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Economic Conditions">
+                                <field name="economic_conditions" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Regulatory Environment">
+                                <field name="regulatory_environment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Technology Environment">
+                                <field name="technology_environment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Applicable Regulators">
+                                <field name="applicable_regulators" widget="many2many_tags"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Business Model & Revenue -->
+                        <page string="Business Model &amp; Revenue" name="business_model">
+                            <group string="Business Model">
+                                <field name="business_model" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Revenue Streams">
+                                <field name="revenue_streams" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Cost Structure">
+                                <field name="cost_structure" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Contractual Arrangements">
+                                <field name="key_contracts" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Supply Chain &amp; Key Suppliers">
+                                <field name="supply_chain" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Organizational Structure -->
+                        <page string="Organizational Structure" name="organization">
+                            <group string="Organizational Structure">
+                                <field name="organizational_structure" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Operational Locations">
+                                <field name="operational_locations" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Business Processes">
+                                <field name="key_processes" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Outsourced Functions">
+                                <field name="outsourced_functions" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: IT Environment -->
+                        <page string="IT Environment" name="it">
+                            <group string="IT Environment Overview">
+                                <field name="it_environment_overview" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Applications">
+                                <field name="key_applications" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Organogram Files">
+                                <field name="organogram_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Process Flowcharts">
+                                <field name="process_flow_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Other Supporting Documents">
+                                <field name="other_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Summary & Sign-off -->
+                        <page string="Summary &amp; Sign-off" name="summary">
+                            <group string="Entity Understanding Summary (ISA 315)">
+                                <field name="entity_understanding_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                            <group string="Reviewer Notes">
+                                <field name="reviewer_notes" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-2 Tree View -->
+    <record id="view_planning_p2_entity_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p2.entity.tree</field>
+        <field name="model">qaco.planning.p2.entity</field>
+        <field name="arch" type="xml">
+            <tree string="P-2: Entity Understanding">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="industry_type"/>
+                <field name="it_complexity"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-2 Action -->
+    <record id="action_planning_p2_entity" model="ir.actions.act_window">
+        <field name="name">P-2: Entity Understanding</field>
+        <field name="res_model">qaco.planning.p2.entity</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-2 Entity Understanding record
+            </p>
+            <p>
+                Document understanding of the entity and its environment per ISA 315.
+            </p>
+        </field>
+    </record>
+
+</odoo>

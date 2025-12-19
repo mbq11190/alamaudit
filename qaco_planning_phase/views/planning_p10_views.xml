@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-10: Related Party Transactions              -->
+    <!-- ISA 550                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-10 Form View -->
+    <record id="view_planning_p10_related_parties_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p10.related.parties.form</field>
+        <field name="model">qaco.planning.p10.related.parties</field>
+        <field name="arch" type="xml">
+            <form string="P-10: Related Party Transactions">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 550 | Related Party Transactions</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Assessment">
+                            <field name="rpt_risk_level"/>
+                            <field name="significant_rpt_identified"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Related Parties Register -->
+                        <page string="Related Parties" name="parties">
+                            <group string="Related Parties Identification">
+                                <field name="related_party_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="party_name"/>
+                                        <field name="relationship_type"/>
+                                        <field name="relationship_nature"/>
+                                        <field name="ownership_percentage"/>
+                                        <field name="identification_source"/>
+                                        <field name="notes"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Understanding Entity's Related Parties">
+                                <field name="understanding_related_parties" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Related Party Transactions -->
+                        <page string="Transactions" name="transactions">
+                            <group string="Related Party Transactions">
+                                <field name="rpt_line_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="related_party_id"/>
+                                        <field name="transaction_type"/>
+                                        <field name="transaction_description"/>
+                                        <field name="transaction_amount"/>
+                                        <field name="terms_conditions"/>
+                                        <field name="business_rationale"/>
+                                        <field name="arms_length"/>
+                                        <field name="disclosure_risk"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Risk Assessment -->
+                        <page string="Risk Assessment" name="risk">
+                            <group string="RPT Risk Assessment">
+                                <field name="rpt_risk_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Fraud Risk Indicators">
+                                <field name="rpt_fraud_indicators" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Significant Risks from RPT">
+                                <field name="significant_rpt_risks" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Audit Procedures -->
+                        <page string="Audit Procedures" name="procedures">
+                            <group string="Risk Assessment Procedures">
+                                <field name="risk_assessment_procedures" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Identification Procedures">
+                                <field name="identification_procedures" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Substantive Procedures">
+                                <field name="substantive_procedures" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Procedures for Previously Unidentified RPT">
+                                <field name="unidentified_rpt_procedures" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Authorization & Approval -->
+                        <page string="Authorization" name="authorization">
+                            <group string="Authorization Assessment">
+                                <field name="authorization_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Board/Shareholder Approval">
+                                <field name="board_approval" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Arm's Length Basis Assessment">
+                                <field name="arms_length_assessment" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Disclosures -->
+                        <page string="Disclosures" name="disclosures">
+                            <group string="Disclosure Requirements">
+                                <field name="disclosure_requirements" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Disclosure Adequacy Assessment">
+                                <field name="disclosure_adequacy" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="IAS 24 Compliance">
+                                <field name="ias24_compliance" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Management Representations -->
+                        <page string="Representations" name="representations">
+                            <group string="Written Representations Required">
+                                <field name="written_representations" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Representations Obtained">
+                                <field name="representations_obtained" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Communication -->
+                        <page string="Communication" name="communication">
+                            <group string="Communication to Management">
+                                <field name="management_communication" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Communication to TCWG">
+                                <field name="tcwg_communication" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Related Party Documentation">
+                                <field name="rpt_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Board Minutes/Approvals">
+                                <field name="approval_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 10: Conclusion & Sign-off -->
+                        <page string="Conclusion &amp; Sign-off" name="conclusion">
+                            <group string="Related Parties Conclusion">
+                                <field name="rpt_conclusion" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Summary">
+                                    <field name="rpt_risk_level" readonly="1"/>
+                                    <field name="significant_rpt_identified" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-10 Tree View -->
+    <record id="view_planning_p10_related_parties_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p10.related.parties.tree</field>
+        <field name="model">qaco.planning.p10.related.parties</field>
+        <field name="arch" type="xml">
+            <tree string="P-10: Related Parties">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="rpt_risk_level"/>
+                <field name="significant_rpt_identified"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-10 Action -->
+    <record id="action_planning_p10_related_parties" model="ir.actions.act_window">
+        <field name="name">P-10: Related Parties</field>
+        <field name="res_model">qaco.planning.p10.related.parties</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-10 Related Parties Assessment
+            </p>
+            <p>
+                Document related party transactions per ISA 550.
+            </p>
+        </field>
+    </record>
+
+    <!-- Related Party Line Tree View -->
+    <record id="view_related_party_line_tree" model="ir.ui.view">
+        <field name="name">qaco.related.party.line.tree</field>
+        <field name="model">qaco.related.party.line</field>
+        <field name="arch" type="xml">
+            <tree string="Related Parties" editable="bottom">
+                <field name="party_name"/>
+                <field name="relationship_type"/>
+                <field name="relationship_nature"/>
+                <field name="ownership_percentage"/>
+                <field name="identification_source"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- RPT Transaction Line Tree View -->
+    <record id="view_rpt_transaction_line_tree" model="ir.ui.view">
+        <field name="name">qaco.rpt.transaction.line.tree</field>
+        <field name="model">qaco.rpt.transaction.line</field>
+        <field name="arch" type="xml">
+            <tree string="RPT Transactions" editable="bottom">
+                <field name="related_party_id"/>
+                <field name="transaction_type"/>
+                <field name="transaction_description"/>
+                <field name="transaction_amount"/>
+                <field name="terms_conditions"/>
+                <field name="business_rationale"/>
+                <field name="arms_length"/>
+                <field name="disclosure_risk"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

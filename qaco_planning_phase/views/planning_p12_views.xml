@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-12: Audit Strategy & Plan                   -->
+    <!-- ISA 300                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-12 Form View -->
+    <record id="view_planning_p12_strategy_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p12.strategy.form</field>
+        <field name="model">qaco.planning.p12.strategy</field>
+        <field name="arch" type="xml">
+            <form string="P-12: Audit Strategy &amp; Plan">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 300 | Audit Strategy &amp; Plan</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Approach">
+                            <field name="overall_audit_approach"/>
+                            <field name="control_reliance_approach"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Overall Audit Strategy -->
+                        <page string="Audit Strategy" name="strategy">
+                            <group string="Overall Audit Strategy">
+                                <field name="audit_strategy" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Audit Scope">
+                                <field name="audit_scope" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Audit Matters (Expected)">
+                                <field name="expected_kam" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Nature, Timing, and Extent Direction">
+                                <field name="nature_timing_extent" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Key Audit Areas -->
+                        <page string="Key Audit Areas" name="areas">
+                            <group string="Key Audit Area Register">
+                                <field name="key_area_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="area_name"/>
+                                        <field name="risk_level"/>
+                                        <field name="assertion_focus"/>
+                                        <field name="audit_approach"/>
+                                        <field name="timing"/>
+                                        <field name="assigned_to"/>
+                                        <field name="budgeted_hours"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Control Reliance -->
+                        <page string="Control Reliance" name="controls">
+                            <group string="Control Reliance Decision">
+                                <group>
+                                    <field name="control_reliance_approach"/>
+                                </group>
+                                <field name="control_reliance_rationale" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Controls to be Tested">
+                                <field name="controls_to_test" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Control Testing Approach">
+                                <field name="control_testing_approach" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Substantive Approach -->
+                        <page string="Substantive Approach" name="substantive">
+                            <group string="Substantive Procedures Overview">
+                                <field name="substantive_overview" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Tests of Details">
+                                <field name="tests_of_details" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Substantive Analytical Procedures">
+                                <field name="substantive_analytics" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Sampling Approach -->
+                        <page string="Sampling" name="sampling">
+                            <group string="Sampling Methodology">
+                                <group>
+                                    <field name="sampling_methodology"/>
+                                </group>
+                                <field name="sampling_approach" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Sample Size Determination">
+                                <field name="sample_size_determination" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Sampling Risk Assessment">
+                                <field name="sampling_risk" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Use of Experts -->
+                        <page string="Experts" name="experts">
+                            <group string="Need for Experts">
+                                <group>
+                                    <field name="expert_required"/>
+                                </group>
+                            </group>
+                            <div invisible="not expert_required">
+                                <group string="Expert Register">
+                                    <field name="expert_ids" nolabel="1">
+                                        <tree editable="bottom">
+                                            <field name="expert_name"/>
+                                            <field name="expertise_area"/>
+                                            <field name="engagement_scope"/>
+                                            <field name="competence_assessment"/>
+                                            <field name="objectivity_assessment"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Expert Work Evaluation">
+                                    <field name="expert_work_evaluation" widget="html" nolabel="1"/>
+                                </group>
+                            </div>
+                            <group string="Internal Audit Reliance" invisible="expert_required">
+                                <field name="internal_audit_reliance" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Timing & Resources -->
+                        <page string="Timing &amp; Resources" name="timing">
+                            <group string="Audit Timeline">
+                                <group>
+                                    <field name="interim_start_date"/>
+                                    <field name="interim_end_date"/>
+                                    <field name="final_start_date"/>
+                                    <field name="final_end_date"/>
+                                </group>
+                                <group>
+                                    <field name="report_due_date"/>
+                                    <field name="agm_date"/>
+                                </group>
+                            </group>
+                            <group string="Resource Allocation">
+                                <field name="resource_allocation" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Budget Summary">
+                                <group>
+                                    <field name="total_budgeted_hours"/>
+                                    <field name="partner_hours"/>
+                                    <field name="manager_hours"/>
+                                    <field name="senior_hours"/>
+                                    <field name="staff_hours"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Direction, Supervision, Review -->
+                        <page string="Direction &amp; Supervision" name="supervision">
+                            <group string="Direction to Team">
+                                <field name="team_direction" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Supervision Approach">
+                                <field name="supervision_approach" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Review Approach">
+                                <field name="review_approach" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Communication Plan -->
+                        <page string="Communication" name="communication">
+                            <group string="Communication with TCWG">
+                                <field name="tcwg_communication_plan" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Communication with Management">
+                                <field name="management_communication_plan" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Team Communication">
+                                <field name="team_communication" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 10: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Audit Strategy Document">
+                                <field name="strategy_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Audit Programs">
+                                <field name="program_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 11: Conclusion & Sign-off -->
+                        <page string="Conclusion &amp; Sign-off" name="conclusion">
+                            <group string="Audit Plan Summary">
+                                <field name="audit_plan_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Summary">
+                                    <field name="overall_audit_approach" readonly="1"/>
+                                    <field name="control_reliance_approach" readonly="1"/>
+                                    <field name="total_budgeted_hours" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-12 Tree View -->
+    <record id="view_planning_p12_strategy_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p12.strategy.tree</field>
+        <field name="model">qaco.planning.p12.strategy</field>
+        <field name="arch" type="xml">
+            <tree string="P-12: Audit Strategy">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="overall_audit_approach"/>
+                <field name="control_reliance_approach"/>
+                <field name="total_budgeted_hours"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-12 Action -->
+    <record id="action_planning_p12_strategy" model="ir.actions.act_window">
+        <field name="name">P-12: Audit Strategy</field>
+        <field name="res_model">qaco.planning.p12.strategy</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-12 Audit Strategy &amp; Plan
+            </p>
+            <p>
+                Document audit strategy and plan per ISA 300.
+            </p>
+        </field>
+    </record>
+
+    <!-- Key Area Line Tree View -->
+    <record id="view_key_area_line_tree" model="ir.ui.view">
+        <field name="name">qaco.key.area.line.tree</field>
+        <field name="model">qaco.key.area.line</field>
+        <field name="arch" type="xml">
+            <tree string="Key Audit Areas" editable="bottom">
+                <field name="area_name"/>
+                <field name="risk_level"/>
+                <field name="assertion_focus"/>
+                <field name="audit_approach"/>
+                <field name="timing"/>
+                <field name="assigned_to"/>
+                <field name="budgeted_hours"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Expert Line Tree View -->
+    <record id="view_expert_line_tree" model="ir.ui.view">
+        <field name="name">qaco.expert.line.tree</field>
+        <field name="model">qaco.expert.line</field>
+        <field name="arch" type="xml">
+            <tree string="Experts" editable="bottom">
+                <field name="expert_name"/>
+                <field name="expertise_area"/>
+                <field name="engagement_scope"/>
+                <field name="competence_assessment"/>
+                <field name="objectivity_assessment"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

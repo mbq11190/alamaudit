@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-3: Internal Control Understanding           -->
+    <!-- ISA 315                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-3 Form View -->
+    <record id="view_planning_p3_controls_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p3.controls.form</field>
+        <field name="model">qaco.planning.p3.controls</field>
+        <field name="arch" type="xml">
+            <form string="P-3: Internal Control Understanding">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 315 | Internal Control Understanding</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Assessment">
+                            <field name="overall_control_assessment"/>
+                            <field name="reliance_on_controls"/>
+                            <field name="internal_audit_function"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Control Environment -->
+                        <page string="1. Control Environment" name="control_env">
+                            <group>
+                                <field name="control_environment_rating"/>
+                            </group>
+                            <group string="Control Environment Assessment">
+                                <field name="control_environment_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Tone at the Top">
+                                <field name="tone_at_top" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Organizational Structure &amp; Authority">
+                                <field name="organizational_structure" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Human Resource Policies">
+                                <field name="hr_policies" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Risk Assessment Process -->
+                        <page string="2. Risk Assessment Process" name="risk_process">
+                            <group>
+                                <field name="risk_assessment_process_rating"/>
+                            </group>
+                            <group string="Risk Assessment Process">
+                                <field name="risk_assessment_process" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Risk Identification Procedures">
+                                <field name="risk_identification" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Risk Evaluation &amp; Response">
+                                <field name="risk_evaluation" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Information System -->
+                        <page string="3. Information System" name="info_system">
+                            <group>
+                                <field name="information_system_rating"/>
+                            </group>
+                            <group string="Information System Overview">
+                                <field name="information_system_overview" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Accounting System">
+                                <field name="accounting_system" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Transaction Cycles">
+                                <field name="transaction_cycles" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Journal Entry Process">
+                                <field name="journal_entry_process" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Financial Reporting Process">
+                                <field name="financial_reporting" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: IT General Controls -->
+                        <page string="4. IT General Controls" name="itgc">
+                            <group>
+                                <field name="itgc_rating"/>
+                            </group>
+                            <group string="IT Environment">
+                                <field name="it_environment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Access Controls">
+                                <field name="access_controls" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Program Change Controls">
+                                <field name="program_change_controls" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="IT Operations">
+                                <field name="it_operations" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="System Development &amp; Acquisition">
+                                <field name="system_development" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Cybersecurity Controls">
+                                <field name="cybersecurity" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Control Activities -->
+                        <page string="5. Control Activities" name="control_activities">
+                            <group>
+                                <field name="control_activities_rating"/>
+                            </group>
+                            <group string="Control Activities Assessment">
+                                <field name="control_activities_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Authorization Controls">
+                                <field name="authorization_controls" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Segregation of Duties">
+                                <field name="segregation_of_duties" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Reconciliation Controls">
+                                <field name="reconciliation_controls" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Physical Controls">
+                                <field name="physical_controls" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Monitoring Controls -->
+                        <page string="6. Monitoring Controls" name="monitoring">
+                            <group>
+                                <field name="monitoring_controls_rating"/>
+                            </group>
+                            <group string="Monitoring Assessment">
+                                <field name="monitoring_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Internal Audit Assessment">
+                                <field name="internal_audit_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Audit Committee Oversight">
+                                <field name="audit_committee" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="External Communications">
+                                <field name="external_communications" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Walkthroughs -->
+                        <page string="Walkthroughs" name="walkthroughs">
+                            <group>
+                                <field name="walkthroughs_performed"/>
+                            </group>
+                            <group string="Revenue Cycle Walkthrough">
+                                <field name="revenue_cycle_walkthrough" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Purchases Cycle Walkthrough">
+                                <field name="purchases_cycle_walkthrough" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Payroll Cycle Walkthrough">
+                                <field name="payroll_cycle_walkthrough" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Other Cycle Walkthroughs">
+                                <field name="other_walkthroughs" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Control Reliance & Deficiencies -->
+                        <page string="Reliance &amp; Deficiencies" name="reliance">
+                            <group string="Controls Reliance">
+                                <field name="controls_to_test" widget="html"/>
+                                <field name="reliance_rationale" widget="html"/>
+                            </group>
+                            <group string="Control Deficiencies Identified">
+                                <field name="deficiencies_identified" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Communication to Management">
+                                <field name="management_communication" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Internal Control Documentation">
+                                <field name="internal_control_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Walkthrough Documentation">
+                                <field name="walkthrough_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Process Flowcharts">
+                                <field name="process_flow_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 10: Summary -->
+                        <page string="Summary &amp; Sign-off" name="summary">
+                            <group string="Internal Control Summary (Design Effectiveness Conclusion)">
+                                <field name="internal_control_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-3 Tree View -->
+    <record id="view_planning_p3_controls_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p3.controls.tree</field>
+        <field name="model">qaco.planning.p3.controls</field>
+        <field name="arch" type="xml">
+            <tree string="P-3: Internal Controls">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="overall_control_assessment"/>
+                <field name="reliance_on_controls"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-3 Action -->
+    <record id="action_planning_p3_controls" model="ir.actions.act_window">
+        <field name="name">P-3: Internal Controls</field>
+        <field name="res_model">qaco.planning.p3.controls</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-3 Internal Control Understanding record
+            </p>
+            <p>
+                Document internal control design and implementation per ISA 315.
+            </p>
+        </field>
+    </record>
+
+</odoo>

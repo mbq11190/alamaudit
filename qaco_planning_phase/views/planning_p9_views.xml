@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-9: Laws & Regulations Compliance            -->
+    <!-- ISA 250                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-9 Form View -->
+    <record id="view_planning_p9_laws_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p9.laws.form</field>
+        <field name="model">qaco.planning.p9.laws</field>
+        <field name="arch" type="xml">
+            <form string="P-9: Laws &amp; Regulations">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 250 | Laws &amp; Regulations Compliance</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Assessment">
+                            <field name="compliance_assessment"/>
+                            <field name="non_compliance_identified"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Applicable Laws (Direct Effect) -->
+                        <page string="Direct Effect Laws" name="direct">
+                            <group string="Laws with Direct Effect on Financial Statements">
+                                <field name="direct_effect_laws" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Applicable Laws Register">
+                                <field name="law_line_ids" nolabel="1" domain="[('law_type', '=', 'direct')]">
+                                    <tree editable="bottom">
+                                        <field name="law_name"/>
+                                        <field name="law_type" column_invisible="1"/>
+                                        <field name="regulator"/>
+                                        <field name="compliance_status"/>
+                                        <field name="audit_procedures"/>
+                                        <field name="findings"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Other Laws (Indirect Effect) -->
+                        <page string="Indirect Effect Laws" name="indirect">
+                            <group string="Laws with Indirect Effect">
+                                <field name="indirect_effect_laws" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Applicable Laws Register (Indirect)">
+                                <field name="law_line_ids" nolabel="1" domain="[('law_type', '=', 'indirect')]">
+                                    <tree editable="bottom">
+                                        <field name="law_name"/>
+                                        <field name="law_type" column_invisible="1"/>
+                                        <field name="regulator"/>
+                                        <field name="compliance_status"/>
+                                        <field name="audit_procedures"/>
+                                        <field name="findings"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Pakistan Regulatory Framework -->
+                        <page string="Pakistan Regulations" name="pakistan">
+                            <group string="Companies Act 2017">
+                                <field name="companies_act_compliance" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="SECP Requirements">
+                                <field name="secp_compliance" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="SBP Regulations (if applicable)">
+                                <field name="sbp_compliance" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="FBR / Tax Laws">
+                                <field name="fbr_compliance" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Provincial Revenue Authority">
+                                <field name="pra_compliance" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="AOB Requirements">
+                                <field name="aob_compliance" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Industry-Specific Regulations -->
+                        <page string="Industry Regulations" name="industry">
+                            <group string="Industry-Specific Regulations">
+                                <field name="industry_regulations" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Licensing Requirements">
+                                <field name="licensing_requirements" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Environmental Regulations">
+                                <field name="environmental_regulations" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Compliance Procedures -->
+                        <page string="Procedures" name="procedures">
+                            <group string="Understanding Entity's Compliance Framework">
+                                <field name="entity_compliance_framework" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Audit Procedures Planned">
+                                <field name="audit_procedures_planned" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Inquiries Made">
+                                <field name="inquiries_made" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Inspection of Correspondence">
+                                <field name="correspondence_inspection" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Non-Compliance Items -->
+                        <page string="Non-Compliance" name="non_compliance">
+                            <group string="Non-Compliance Items Identified">
+                                <field name="non_compliance_line_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="law_reference"/>
+                                        <field name="description"/>
+                                        <field name="nature"/>
+                                        <field name="materiality"/>
+                                        <field name="action_taken"/>
+                                        <field name="reporting_impact"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Non-Compliance Assessment">
+                                <field name="non_compliance_assessment" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Communication & Reporting -->
+                        <page string="Communication" name="communication">
+                            <group string="Communication to Management">
+                                <field name="management_communication" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Communication to TCWG">
+                                <field name="tcwg_communication" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Reporting to Regulators">
+                                <field name="regulator_reporting" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Impact on Audit Report">
+                                <field name="audit_report_impact" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Regulatory Correspondence">
+                                <field name="regulatory_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Compliance Documentation">
+                                <field name="compliance_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Conclusion & Sign-off -->
+                        <page string="Conclusion &amp; Sign-off" name="conclusion">
+                            <group string="Laws &amp; Regulations Conclusion">
+                                <field name="laws_conclusion" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Summary">
+                                    <field name="compliance_assessment" readonly="1"/>
+                                    <field name="non_compliance_identified" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-9 Tree View -->
+    <record id="view_planning_p9_laws_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p9.laws.tree</field>
+        <field name="model">qaco.planning.p9.laws</field>
+        <field name="arch" type="xml">
+            <tree string="P-9: Laws &amp; Regulations">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="compliance_assessment"/>
+                <field name="non_compliance_identified"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-9 Action -->
+    <record id="action_planning_p9_laws" model="ir.actions.act_window">
+        <field name="name">P-9: Laws &amp; Regulations</field>
+        <field name="res_model">qaco.planning.p9.laws</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-9 Laws &amp; Regulations Assessment
+            </p>
+            <p>
+                Document compliance assessment per ISA 250.
+            </p>
+        </field>
+    </record>
+
+    <!-- Law Line Tree View -->
+    <record id="view_law_line_tree" model="ir.ui.view">
+        <field name="name">qaco.law.line.tree</field>
+        <field name="model">qaco.law.line</field>
+        <field name="arch" type="xml">
+            <tree string="Applicable Laws" editable="bottom">
+                <field name="law_name"/>
+                <field name="law_type"/>
+                <field name="regulator"/>
+                <field name="compliance_status"/>
+                <field name="audit_procedures"/>
+                <field name="findings"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Non-Compliance Line Tree View -->
+    <record id="view_non_compliance_line_tree" model="ir.ui.view">
+        <field name="name">qaco.non.compliance.line.tree</field>
+        <field name="model">qaco.non.compliance.line</field>
+        <field name="arch" type="xml">
+            <tree string="Non-Compliance Items" editable="bottom">
+                <field name="law_reference"/>
+                <field name="description"/>
+                <field name="nature"/>
+                <field name="materiality"/>
+                <field name="action_taken"/>
+                <field name="reporting_impact"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

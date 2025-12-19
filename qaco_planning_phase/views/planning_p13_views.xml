@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-13: Approval & Planning Lock                -->
+    <!-- ISA 220 / ISQM-1                              -->
+    <!-- ============================================== -->
+
+    <!-- P-13 Form View -->
+    <record id="view_planning_p13_approval_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p13.approval.form</field>
+        <field name="model">qaco.planning.p13.approval</field>
+        <field name="arch" type="xml">
+            <form string="P-13: Approval &amp; Planning Lock">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock Planning" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_lock_planning" string="Lock Planning Phase" type="object" class="btn-primary"
+                            invisible="state != 'approved' or planning_locked" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_generate_apm" string="Generate APM" type="object" class="oe_stat_button" icon="fa-file-pdf-o"
+                                invisible="not planning_locked"/>
+                    </div>
+                    <widget name="web_ribbon" title="Planning Locked" bg_color="text-bg-success" invisible="not planning_locked"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 220 / ISQM-1 | Approval &amp; Planning Lock</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Status">
+                            <field name="all_tabs_approved"/>
+                            <field name="planning_locked"/>
+                            <field name="planning_lock_date" invisible="not planning_locked"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Planning Completion Checklist -->
+                        <page string="Completion Checklist" name="checklist">
+                            <group string="Planning Tabs Status">
+                                <field name="checklist_ids" nolabel="1">
+                                    <tree editable="bottom" create="false" delete="false">
+                                        <field name="tab_code"/>
+                                        <field name="tab_name"/>
+                                        <field name="isa_reference"/>
+                                        <field name="status" widget="badge" decoration-info="status == 'not_started'"
+                                               decoration-warning="status == 'in_progress'" decoration-success="status == 'approved'"/>
+                                        <field name="completed_by"/>
+                                        <field name="completed_on"/>
+                                        <field name="reviewed_by"/>
+                                        <field name="reviewed_on"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <button name="action_refresh_checklist" string="Refresh Status" type="object" class="btn-secondary"/>
+                        </page>
+
+                        <!-- Tab 2: Quality Review -->
+                        <page string="Quality Review" name="quality">
+                            <group string="Quality Review Summary">
+                                <field name="quality_review_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Issues Identified">
+                                <field name="issues_identified" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Resolution of Issues">
+                                <field name="issues_resolution" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: EQCR -->
+                        <page string="EQCR" name="eqcr">
+                            <group string="Engagement Quality Control Review">
+                                <group>
+                                    <field name="eqcr_required"/>
+                                    <field name="eqcr_reviewer_id" invisible="not eqcr_required"/>
+                                </group>
+                            </group>
+                            <div invisible="not eqcr_required">
+                                <group string="EQCR Scope">
+                                    <field name="eqcr_scope" widget="html" nolabel="1"/>
+                                </group>
+                                <group string="EQCR Findings">
+                                    <field name="eqcr_findings" widget="html" nolabel="1"/>
+                                </group>
+                                <group string="EQCR Conclusion">
+                                    <field name="eqcr_conclusion" widget="html" nolabel="1"/>
+                                </group>
+                                <group string="EQCR Sign-off">
+                                    <group>
+                                        <field name="eqcr_signed_on"/>
+                                    </group>
+                                </group>
+                            </div>
+                        </page>
+
+                        <!-- Tab 4: Partner Sign-off -->
+                        <page string="Partner Sign-off" name="partner_signoff">
+                            <group string="Partner Review">
+                                <field name="partner_review_notes" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Partner Confirmation">
+                                <group>
+                                    <field name="partner_confirmed_resources"/>
+                                    <field name="partner_confirmed_strategy"/>
+                                    <field name="partner_confirmed_timing"/>
+                                    <field name="partner_confirmed_risks"/>
+                                </group>
+                            </group>
+                            <group string="Partner Sign-off">
+                                <group>
+                                    <field name="partner_signoff_user_id"/>
+                                    <field name="partner_signoff_date"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Planning Memorandum -->
+                        <page string="APM Summary" name="apm">
+                            <group string="Audit Planning Memorandum (APM) Summary">
+                                <field name="apm_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Planning Decisions">
+                                <field name="key_decisions" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Matters for Partner Attention">
+                                <field name="partner_attention_matters" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Changes to Planning -->
+                        <page string="Changes" name="changes" invisible="not planning_locked">
+                            <group string="Changes After Lock">
+                                <field name="change_log_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="change_date"/>
+                                        <field name="changed_by_id"/>
+                                        <field name="tab_affected"/>
+                                        <field name="change_description"/>
+                                        <field name="approved_by_id"/>
+                                        <field name="approval_date"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Signed APM">
+                                <field name="apm_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="EQCR Documentation">
+                                <field name="eqcr_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Other Approvals">
+                                <field name="approval_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Final Sign-off -->
+                        <page string="Final Sign-off" name="final">
+                            <group string="Planning Phase Completion">
+                                <field name="planning_completion_notes" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Status Summary">
+                                    <field name="all_tabs_approved" readonly="1"/>
+                                    <field name="planning_locked" readonly="1"/>
+                                    <field name="planning_lock_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-13 Tree View -->
+    <record id="view_planning_p13_approval_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p13.approval.tree</field>
+        <field name="model">qaco.planning.p13.approval</field>
+        <field name="arch" type="xml">
+            <tree string="P-13: Planning Approval">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="all_tabs_approved" widget="boolean"/>
+                <field name="planning_locked" widget="boolean"/>
+                <field name="planning_lock_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-13 Action -->
+    <record id="action_planning_p13_approval" model="ir.actions.act_window">
+        <field name="name">P-13: Planning Approval</field>
+        <field name="res_model">qaco.planning.p13.approval</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-13 Planning Approval &amp; Lock
+            </p>
+            <p>
+                Finalize and lock planning phase per ISA 220 / ISQM-1.
+            </p>
+        </field>
+    </record>
+
+    <!-- Planning Checklist Line Tree View -->
+    <record id="view_planning_checklist_line_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.checklist.line.tree</field>
+        <field name="model">qaco.planning.checklist.line</field>
+        <field name="arch" type="xml">
+            <tree string="Planning Checklist" create="false" delete="false">
+                <field name="tab_code"/>
+                <field name="tab_name"/>
+                <field name="isa_reference"/>
+                <field name="status" widget="badge"/>
+                <field name="completed_by"/>
+                <field name="completed_on"/>
+                <field name="reviewed_by"/>
+                <field name="reviewed_on"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Planning Change Log Line Tree View -->
+    <record id="view_planning_change_log_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.change.log.tree</field>
+        <field name="model">qaco.planning.change.log</field>
+        <field name="arch" type="xml">
+            <tree string="Change Log" editable="bottom">
+                <field name="change_date"/>
+                <field name="changed_by_id"/>
+                <field name="tab_affected"/>
+                <field name="change_description"/>
+                <field name="approved_by_id"/>
+                <field name="approval_date"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

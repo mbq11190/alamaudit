@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-1: Engagement Setup & Team Assignment Views  -->
+    <!-- ISA 210, ISA 220, ISQM-1                       -->
+    <!-- ============================================== -->
+
+    <!-- P-1 Form View -->
+    <record id="view_planning_p1_engagement_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p1.engagement.form</field>
+        <field name="model">qaco.planning.p1.engagement</field>
+        <field name="arch" type="xml">
+            <form string="P-1: Engagement Setup &amp; Team Assignment">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 210, ISA 220, ISQM-1 | Engagement Setup &amp; Team Assignment</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                            <field name="is_new_engagement"/>
+                            <field name="previous_auditor" invisible="is_new_engagement == False"/>
+                        </group>
+                        <group string="Audit Period">
+                            <field name="audit_period_from"/>
+                            <field name="audit_period_to"/>
+                            <field name="financial_year_end"/>
+                            <field name="reporting_deadline"/>
+                            <field name="agm_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Acceptance & Continuance -->
+                        <page string="Acceptance &amp; Continuance" name="acceptance">
+                            <group>
+                                <group string="Engagement Acceptance">
+                                    <field name="acceptance_approved"/>
+                                    <field name="acceptance_approved_by_id"/>
+                                    <field name="acceptance_date"/>
+                                </group>
+                                <group string="Engagement Letter">
+                                    <field name="engagement_letter_date"/>
+                                    <field name="engagement_letter_signed"/>
+                                    <field name="engagement_letter_attachment_ids" widget="many2many_binary"/>
+                                </group>
+                            </group>
+                            <group string="Acceptance/Continuance Checklist">
+                                <field name="acceptance_continuance_checklist" widget="html"/>
+                            </group>
+                            <group string="Previous Auditor Communication" invisible="is_new_engagement == False">
+                                <field name="previous_auditor_communication" widget="html"/>
+                            </group>
+                            <group string="Key Engagement Terms">
+                                <field name="engagement_letter_terms" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Independence & Ethics -->
+                        <page string="Independence &amp; Ethics" name="independence">
+                            <group>
+                                <group string="Independence Confirmation">
+                                    <field name="independence_confirmed"/>
+                                    <field name="conflict_of_interest_confirmed"/>
+                                </group>
+                                <group string="Threats Identified">
+                                    <field name="self_review_threat"/>
+                                    <field name="familiarity_threat"/>
+                                    <field name="intimidation_threat"/>
+                                    <field name="advocacy_threat"/>
+                                </group>
+                            </group>
+                            <group string="Independence Threats Assessment">
+                                <field name="independence_threats_identified" widget="html"/>
+                            </group>
+                            <group string="Conflict of Interest Assessment">
+                                <field name="conflict_assessment" widget="html"/>
+                            </group>
+                            <group string="Safeguards Applied">
+                                <field name="safeguards_applied" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Audit Team -->
+                        <page string="Audit Team" name="team">
+                            <group>
+                                <group string="Key Team Members">
+                                    <field name="engagement_partner_id"/>
+                                    <field name="engagement_manager_id"/>
+                                    <field name="senior_auditor_id"/>
+                                    <field name="it_specialist_id"/>
+                                </group>
+                                <group string="EQCR">
+                                    <field name="eqcr_required"/>
+                                    <field name="eqcr_id" invisible="eqcr_required == False"/>
+                                </group>
+                            </group>
+                            <group string="Other Team Members">
+                                <field name="team_member_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="Team Competence Assessment">
+                                <field name="team_competence_assessment" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Time Budget -->
+                        <page string="Time Budget" name="budget">
+                            <group>
+                                <group string="Planned Hours">
+                                    <field name="planned_hours_partner"/>
+                                    <field name="planned_hours_manager"/>
+                                    <field name="planned_hours_senior"/>
+                                    <field name="planned_hours_staff"/>
+                                    <field name="planned_hours_total"/>
+                                </group>
+                                <group string="Budget">
+                                    <field name="budget_amount"/>
+                                    <field name="currency_id"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Quality Objectives -->
+                        <page string="Quality Objectives (ISQM-1)" name="quality">
+                            <group string="Quality Objectives">
+                                <field name="quality_objectives" widget="html"/>
+                            </group>
+                            <group string="Quality Risks Identified">
+                                <field name="quality_risks_identified" widget="html"/>
+                            </group>
+                            <group string="Responses to Quality Risks">
+                                <field name="quality_responses" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Sign-off -->
+                        <page string="Sign-off" name="signoff">
+                            <group>
+                                <group string="Senior Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                </group>
+                                <group string="Manager Review">
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Partner Approval">
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                            </group>
+                            <group string="Reviewer Notes">
+                                <field name="reviewer_notes" widget="html"/>
+                            </group>
+                            <group string="Approval Notes">
+                                <field name="approval_notes" widget="html"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-1 Tree View -->
+    <record id="view_planning_p1_engagement_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p1.engagement.tree</field>
+        <field name="model">qaco.planning.p1.engagement</field>
+        <field name="arch" type="xml">
+            <tree string="P-1: Engagement Setup">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="engagement_partner_id"/>
+                <field name="engagement_manager_id"/>
+                <field name="audit_period_from"/>
+                <field name="audit_period_to"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-1 Search View -->
+    <record id="view_planning_p1_engagement_search" model="ir.ui.view">
+        <field name="name">qaco.planning.p1.engagement.search</field>
+        <field name="model">qaco.planning.p1.engagement</field>
+        <field name="arch" type="xml">
+            <search string="Search P-1">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="engagement_partner_id"/>
+                <filter name="not_started" string="Not Started" domain="[('state', '=', 'not_started')]"/>
+                <filter name="in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="completed" string="Completed" domain="[('state', '=', 'completed')]"/>
+                <filter name="reviewed" string="Reviewed" domain="[('state', '=', 'reviewed')]"/>
+                <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_client" string="Client" context="{'group_by': 'client_id'}"/>
+                    <filter name="group_by_partner" string="Partner" context="{'group_by': 'engagement_partner_id'}"/>
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- P-1 Action -->
+    <record id="action_planning_p1_engagement" model="ir.actions.act_window">
+        <field name="name">P-1: Engagement Setup</field>
+        <field name="res_model">qaco.planning.p1.engagement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first P-1 Engagement Setup record
+            </p>
+            <p>
+                Document engagement acceptance, team assignment, and independence per ISA 210, 220, and ISQM-1.
+            </p>
+        </field>
+    </record>
+
+</odoo>

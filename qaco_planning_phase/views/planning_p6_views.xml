@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-6: Risk of Material Misstatement            -->
+    <!-- ISA 315                                        -->
+    <!-- ============================================== -->
+
+    <!-- P-6 Form View -->
+    <record id="view_planning_p6_risk_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p6.risk.form</field>
+        <field name="model">qaco.planning.p6.risk</field>
+        <field name="arch" type="xml">
+            <form string="P-6: Risk of Material Misstatement">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 315 | Risk of Material Misstatement</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                        </group>
+                        <group string="Overall Risk Assessment">
+                            <field name="overall_risk_level"/>
+                            <field name="significant_risks_count"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Financial Statement Level Risks -->
+                        <page string="FS Level Risks" name="fs_risks">
+                            <group string="Financial Statement Level Risks">
+                                <field name="fs_level_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Pervasive Control Weaknesses">
+                                <field name="pervasive_control_weaknesses" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Entity-Wide Risks">
+                                <field name="entity_wide_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Audit Response to FS Level Risks">
+                                <field name="fs_risk_responses" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Assertion Level Risks -->
+                        <page string="Assertion Level Risks" name="assertion_risks">
+                            <group string="Risk Register">
+                                <field name="risk_register_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="account_area"/>
+                                        <field name="assertion"/>
+                                        <field name="risk_description"/>
+                                        <field name="inherent_risk"/>
+                                        <field name="control_risk"/>
+                                        <field name="combined_rmm"/>
+                                        <field name="significant_risk"/>
+                                        <field name="planned_response"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Significant Risks -->
+                        <page string="Significant Risks" name="significant_risks">
+                            <group string="Significant Risks Identified">
+                                <field name="significant_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Revenue Recognition Risk">
+                                <group>
+                                    <field name="revenue_recognition_risk"/>
+                                </group>
+                                <field name="revenue_risk_description" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Management Override Risk">
+                                <group>
+                                    <field name="management_override_risk"/>
+                                </group>
+                                <field name="override_risk_description" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Other Significant Risks">
+                                <field name="other_significant_risks" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Risk Heat Map -->
+                        <page string="Risk Heat Map" name="heat_map">
+                            <group string="Risk Heat Map Summary">
+                                <group>
+                                    <field name="high_risk_areas"/>
+                                    <field name="medium_risk_areas"/>
+                                    <field name="low_risk_areas"/>
+                                </group>
+                            </group>
+                            <group string="Heat Map Visualization / Narrative">
+                                <field name="heat_map_narrative" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Risk Factors -->
+                        <page string="Risk Factors" name="risk_factors">
+                            <group string="Inherent Risk Factors">
+                                <field name="inherent_risk_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Control Risk Factors">
+                                <field name="control_risk_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Industry-Specific Risks">
+                                <field name="industry_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Economic/Environmental Factors">
+                                <field name="economic_factors" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Audit Response -->
+                        <page string="Audit Response" name="response">
+                            <group string="Overall Audit Response">
+                                <field name="overall_audit_response" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Response to Significant Risks">
+                                <field name="significant_risk_responses" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Substantive Procedures Planned">
+                                <field name="substantive_procedures" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Control Testing Planned">
+                                <field name="control_testing_planned" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Linkage -->
+                        <page string="Linkage" name="linkage">
+                            <group string="Link to Materiality">
+                                <field name="link_to_materiality" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Link to Internal Controls">
+                                <field name="link_to_controls" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Link to Fraud Risk">
+                                <field name="link_to_fraud" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Link to Audit Programs">
+                                <field name="link_to_programs" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 8: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Risk Assessment Documentation">
+                                <field name="risk_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 9: Conclusion & Sign-off -->
+                        <page string="Conclusion &amp; Sign-off" name="conclusion">
+                            <group string="Risk Assessment Conclusion">
+                                <field name="risk_assessment_conclusion" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Summary">
+                                    <field name="overall_risk_level" readonly="1"/>
+                                    <field name="significant_risks_count" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Sign-off">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-6 Tree View -->
+    <record id="view_planning_p6_risk_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p6.risk.tree</field>
+        <field name="model">qaco.planning.p6.risk</field>
+        <field name="arch" type="xml">
+            <tree string="P-6: Risk Assessment">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="overall_risk_level"/>
+                <field name="significant_risks_count"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-6 Action -->
+    <record id="action_planning_p6_risk" model="ir.actions.act_window">
+        <field name="name">P-6: Risk Assessment</field>
+        <field name="res_model">qaco.planning.p6.risk</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-6 Risk Assessment
+            </p>
+            <p>
+                Document Risk of Material Misstatement per ISA 315.
+            </p>
+        </field>
+    </record>
+
+    <!-- Risk Register Line Model Views -->
+    <record id="view_risk_register_line_tree" model="ir.ui.view">
+        <field name="name">qaco.risk.register.line.tree</field>
+        <field name="model">qaco.risk.register.line</field>
+        <field name="arch" type="xml">
+            <tree string="Risk Register" editable="bottom">
+                <field name="account_area"/>
+                <field name="assertion"/>
+                <field name="risk_description"/>
+                <field name="inherent_risk"/>
+                <field name="control_risk"/>
+                <field name="combined_rmm"/>
+                <field name="significant_risk"/>
+                <field name="planned_response"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
