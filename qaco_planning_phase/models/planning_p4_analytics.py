@@ -73,6 +73,23 @@ class PlanningP4Analytics(models.Model):
         help='End date of the prior financial year for comparison'
     )
 
+    # ===== Financial Data Input - XML Compatible Field Names =====
+    # Current Year (short names for XML view compatibility)
+    current_total_assets = fields.Monetary(string='Total Assets (Current Year)', currency_field='currency_id')
+    current_total_liabilities = fields.Monetary(string='Total Liabilities (Current Year)', currency_field='currency_id')
+    current_equity = fields.Monetary(string='Equity (Current Year)', currency_field='currency_id')
+    current_revenue = fields.Monetary(string='Revenue (Current Year)', currency_field='currency_id')
+    current_cost_of_sales = fields.Monetary(string='Cost of Sales (Current Year)', currency_field='currency_id')
+    current_gross_profit = fields.Monetary(string='Gross Profit (Current Year)', currency_field='currency_id')
+
+    # Prior Year (short names for XML view compatibility)
+    prior_total_assets = fields.Monetary(string='Total Assets (Prior Year)', currency_field='currency_id')
+    prior_total_liabilities = fields.Monetary(string='Total Liabilities (Prior Year)', currency_field='currency_id')
+    prior_equity = fields.Monetary(string='Equity (Prior Year)', currency_field='currency_id')
+    prior_revenue = fields.Monetary(string='Revenue (Prior Year)', currency_field='currency_id')
+    prior_cost_of_sales = fields.Monetary(string='Cost of Sales (Prior Year)', currency_field='currency_id')
+    prior_gross_profit = fields.Monetary(string='Gross Profit (Prior Year)', currency_field='currency_id')
+
     # ===== Financial Data Input =====
     # Current Year
     current_year_revenue = fields.Monetary(string='Current Year Revenue', currency_field='currency_id')
@@ -107,6 +124,13 @@ class PlanningP4Analytics(models.Model):
     assets_variance_pct = fields.Float(string='Total Assets Variance %', compute='_compute_variances', store=True)
     budget_revenue_variance_pct = fields.Float(string='Budget Revenue Variance %', compute='_compute_variances', store=True)
 
+    # ===== YoY Change Percentages (XML View Compatible) =====
+    revenue_change_pct = fields.Float(string='Revenue Change %', compute='_compute_change_pct', store=True)
+    asset_change_pct = fields.Float(string='Asset Change %', compute='_compute_change_pct', store=True)
+    equity_change_pct = fields.Float(string='Equity Change %', compute='_compute_change_pct', store=True)
+    profit_change_pct = fields.Float(string='Profit Change %', compute='_compute_change_pct', store=True)
+    liability_change_pct = fields.Float(string='Liability Change %', compute='_compute_change_pct', store=True)
+
     # ===== Ratio Analysis =====
     current_year_gross_margin = fields.Float(string='CY Gross Margin %', compute='_compute_ratios', store=True)
     prior_year_gross_margin = fields.Float(string='PY Gross Margin %', compute='_compute_ratios', store=True)
@@ -116,10 +140,37 @@ class PlanningP4Analytics(models.Model):
     current_year_roe = fields.Float(string='CY Return on Equity %', compute='_compute_ratios', store=True)
     current_year_debt_ratio = fields.Float(string='CY Debt Ratio %', compute='_compute_ratios', store=True)
 
+    # ===== Liquidity Ratios (XML View Compatible) =====
+    current_ratio = fields.Float(string='Current Ratio')
+    quick_ratio = fields.Float(string='Quick Ratio')
+    cash_ratio = fields.Float(string='Cash Ratio')
+    working_capital = fields.Monetary(string='Working Capital', currency_field='currency_id')
+
+    # ===== Profitability Ratios (XML View Compatible) =====
+    gross_margin_pct = fields.Float(string='Gross Margin %')
+    net_margin_pct = fields.Float(string='Net Margin %')
+    return_on_assets = fields.Float(string='Return on Assets %')
+    return_on_equity = fields.Float(string='Return on Equity %')
+
+    # ===== Leverage Ratios (XML View Compatible) =====
+    debt_to_equity = fields.Float(string='Debt to Equity')
+    debt_ratio = fields.Float(string='Debt Ratio %')
+    interest_coverage = fields.Float(string='Interest Coverage')
+
+    # ===== Efficiency Ratios (XML View Compatible) =====
+    inventory_turnover = fields.Float(string='Inventory Turnover')
+    receivable_days = fields.Float(string='Receivable Days')
+    payable_days = fields.Float(string='Payable Days')
+    asset_turnover = fields.Float(string='Asset Turnover')
+
     # ===== Trend Analysis =====
     trend_analysis = fields.Html(
         string='3-5 Year Trend Analysis',
         help='Trend analysis over multiple years'
+    )
+    trend_observations = fields.Html(
+        string='Trend Observations',
+        help='Key observations from trend analysis'
     )
     seasonal_patterns = fields.Html(
         string='Seasonal Patterns',
@@ -130,10 +181,28 @@ class PlanningP4Analytics(models.Model):
         help='Comparison with industry benchmarks'
     )
 
+    # ===== Industry Comparison (XML View Compatible) =====
+    industry_benchmark = fields.Html(
+        string='Industry Benchmarks',
+        help='Key industry benchmark data'
+    )
+    peer_comparison = fields.Html(
+        string='Peer Comparison',
+        help='Comparison with peer companies'
+    )
+    industry_deviations = fields.Html(
+        string='Industry Deviations',
+        help='Deviations from industry norms'
+    )
+
     # ===== Anomaly Detection =====
     anomaly_flags = fields.Html(
         string='Automated Anomaly Flags',
         help='System-identified unusual items'
+    )
+    anomalies_identified = fields.Html(
+        string='Anomalies Identified',
+        help='List of identified anomalies'
     )
     significant_fluctuations = fields.Html(
         string='Significant Fluctuations (>10%)',
@@ -142,6 +211,28 @@ class PlanningP4Analytics(models.Model):
     unusual_transactions = fields.Html(
         string='Unusual Transactions Identified',
         help='Transactions requiring further investigation'
+    )
+    fraud_indicators = fields.Html(
+        string='Fraud Indicators',
+        help='Potential fraud risk indicators identified'
+    )
+    audit_focus_areas = fields.Html(
+        string='Audit Focus Areas',
+        help='Areas requiring enhanced audit procedures'
+    )
+
+    # ===== Management Inquiry (XML View Compatible) =====
+    management_explanations = fields.Html(
+        string='Management Explanations',
+        help='Explanations provided by management'
+    )
+    management_questions = fields.Html(
+        string='Questions for Management',
+        help='Questions to be discussed with management'
+    )
+    responses_received = fields.Html(
+        string='Responses Received',
+        help='Responses received from management'
     )
 
     # ===== Analytical Review Lines (One2Many) =====
