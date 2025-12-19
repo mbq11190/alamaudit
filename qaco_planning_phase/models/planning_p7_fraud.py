@@ -58,6 +58,14 @@ class PlanningP7Fraud(models.Model):
         store=True
     )
 
+    # ===== Overall Fraud Risk Summary (ISA 240) =====
+    fraud_risks_identified = fields.Integer(
+        string='Fraud Risks Identified',
+        compute='_compute_fraud_risks_identified',
+        store=True,
+        help='Number of fraud risks identified'
+    )
+
     # ===== Fraud Brainstorming Documentation =====
     brainstorming_date = fields.Date(
         string='Brainstorming Date',
