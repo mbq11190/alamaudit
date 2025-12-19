@@ -771,8 +771,8 @@ class PlanningP2Entity(models.Model):
         errors = []
 
         # Check if P-1 exists and is approved/locked
-        P1Model = self.env['qaco.planning.p1.engagement']
-        if P1Model._name in [m._name for m in self.env.registry.values()]:
+        if 'qaco.planning.p1.engagement' in self.env:
+            P1Model = self.env['qaco.planning.p1.engagement']
             p1 = P1Model.search([('audit_id', '=', self.audit_id.id)], limit=1)
             if not p1:
                 errors.append('P-1: Engagement Setup must be completed before P-2.')

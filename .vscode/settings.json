@@ -10,5 +10,11 @@
     "python.testing.unittestEnabled": true,
     "python.analysis.extraPaths": [
         "./typings"
-    ]
+    ],
+    "python.analysis.stubPath": "./typings",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "warning",
+        "reportMissingModuleSource": "none"
+    }
 }

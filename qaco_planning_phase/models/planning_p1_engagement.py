@@ -732,8 +732,8 @@ class PlanningP1Engagement(models.Model):
         errors = []
 
         # Check if client onboarding exists and is approved
-        Onboarding = self.env['qaco.client.onboarding']
-        if Onboarding._name in self.env:
+        if 'qaco.client.onboarding' in self.env:
+            Onboarding = self.env['qaco.client.onboarding']
             onboarding = Onboarding.search([
                 ('audit_id', '=', self.audit_id.id)
             ], limit=1)
