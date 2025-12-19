@@ -338,3 +338,20 @@ class Qacoaudit(models.Model):
             'target': 'current',
         }
 
+    def action_open_planning_phase(self):
+        """Open or create planning phase record for this audit"""
+        self.ensure_one()
+        planning = self.env['qaco.planning.phase'].search([('audit_id', '=', self.id)], limit=1)
+        if not planning:
+            planning = self.env['qaco.planning.phase'].create({
+                'audit_id': self.id,
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Planning Phase',
+            'res_model': 'qaco.planning.phase',
+            'res_id': planning.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+

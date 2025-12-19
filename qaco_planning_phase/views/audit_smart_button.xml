@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Smart button on qaco.audit form -->
+    <!-- Smart button on qaco.audit form to open Planning Phase -->
     <record id="view_qaco_audit_form_planning_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.planning.button</field>
         <field name="model">qaco.audit</field>
         <field name="inherit_id" ref="qaco_client_onboarding.view_qaco_audit_form_onboarding_button"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" type="action"
-                        name="%(action_open_planning_phase_from_audit)d"
+                <button class="oe_stat_button" type="object"
+                        name="action_open_planning_phase"
                         icon="fa-clipboard">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Planning</span>
