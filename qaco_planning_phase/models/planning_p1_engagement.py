@@ -218,6 +218,13 @@ class PlanningP1Engagement(models.Model):
         ondelete='cascade',
         index=True,
     )
+    planning_main_id = fields.Many2one(
+        'qaco.planning.main',
+        string='Planning Main',
+        ondelete='cascade',
+        index=True,
+        help='Link to main planning orchestrator (planning_base.py)',
+    )
     client_id = fields.Many2one(
         'res.partner',
         string='Client Name',
