@@ -1,4 +1,248 @@
 # -*- coding: utf-8 -*-
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError, UserError
+from datetime import datetime
+
+class AuditPlanningP10RelatedParties(models.Model):
+    _name = 'audit.planning.p10.related_parties'
+    _description = 'P-10: Related Parties Planning'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'engagement_id'
+    _order = 'id desc'
+
+    engagement_id = fields.Many2one('audit.engagement', required=True, ondelete='cascade', tracking=True)
+    audit_year_id = fields.Many2one('audit.year', required=True, tracking=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('review', 'Manager Review'),
+        ('partner', 'Partner Approval'),
+        ('locked', 'Locked'),
+    ], default='draft', tracking=True)
+
+    # SECTION A: Related Parties Listing
+    related_party_ids = fields.One2many('audit.planning.p10.related_party', 'related_parties_id', string='Related Parties', tracking=True)
+    related_parties_complete = fields.Boolean('All known related parties identified?', tracking=True)
+    changes_captured = fields.Boolean('Changes during the year captured?', tracking=True)
+
+    # SECTION B: Completeness Procedures
+    completeness_procedures = fields.Selection([
+        ('inquiry', 'Inquiry of management & TCWG'),
+        ('minutes', 'Review of board minutes'),
+        ('declarations', 'Review of declarations of interest'),
+        ('shareholder', 'Review of shareholder records'),
+        ('prior', 'Review of prior-year working papers'),
+    ], string='Procedures Performed', required=False, tracking=True)
+    completeness_procedures_multi = fields.Many2many('audit.p10.completeness.procedure', string='Procedures Performed (multi)', tracking=True)
+    completeness_results = fields.Text('Results of Procedures', required=True, tracking=True)
+
+    # SECTION C: RPT Listing
+    rpt_transaction_ids = fields.One2many('audit.planning.p10.rpt_transaction', 'related_parties_id', string='RPT Transactions', tracking=True)
+    rpt_all_captured = fields.Boolean('All RPTs captured?', tracking=True)
+    rpt_non_routine_highlighted = fields.Boolean('Non-routine transactions highlighted?', tracking=True)
+
+    # SECTION D: RPT Risk Assessment
+    rpt_risk_line_ids = fields.One2many('audit.planning.p10.rpt_risk_line', 'related_parties_id', string='RPT Risk Lines', tracking=True)
+
+    # SECTION E: Fraud & Concealment
+    risk_undisclosed_rpt = fields.Boolean('Risk of undisclosed RPTs?')
+    mgmt_override_indicators = fields.Boolean('Management dominance or override indicators?')
+    circular_transactions = fields.Boolean('Circular transactions identified?')
+    fraud_assessment = fields.Text("Auditor’s assessment (Fraud & Concealment)")
+
+    # SECTION F: Disclosure Requirements
+    disclosure_framework = fields.Selection([
+        ('ifrs', 'IFRS'),
+        ('ifrs_sme', 'IFRS for SMEs'),
+    ], string='Applicable Disclosure Framework', tracking=True)
+    disclosures_identified = fields.Boolean('Required disclosures identified?', tracking=True)
+    risk_incomplete_disclosure = fields.Boolean('Risk of incomplete disclosure?', tracking=True)
+    enhanced_disclosure_areas = fields.Text('Areas requiring enhanced disclosure', tracking=True)
+
+    # SECTION G: Audit Responses
+    planned_procedures = fields.Many2many('audit.p10.audit_procedure', string='Planned Procedures', tracking=True)
+    response_nature_timing_extent = fields.Text('Nature, timing, extent', tracking=True)
+    senior_team_involvement = fields.Boolean('Senior team involvement required?', tracking=True)
+
+    # SECTION H: Going Concern & Support
+    rpt_critical_liquidity = fields.Boolean('RPTs critical to liquidity/support?')
+    support_nature = fields.Text('Nature of support (loans, guarantees, waivers)')
+    enforceability_assessed = fields.Boolean('Enforceability assessed?')
+    disclosure_impact_assessed = fields.Boolean('Disclosure impact assessed?')
+
+    # SECTION I: Attachments
+    attachment_ids = fields.Many2many('ir.attachment', 'audit_p10_attachment_rel', 'related_parties_id', 'attachment_id', string='Attachments', help='Upload all required documents for P-10')
+
+    # SECTION J: Conclusion
+    conclusion_narrative = fields.Text('Conclusion & Professional Judgment', default="Related parties and related party transactions have been identified, assessed for completeness, and evaluated for risk in accordance with ISA 550. Appropriate audit responses and disclosure considerations have been determined.", required=True)
+    related_parties_complete_final = fields.Boolean('Related parties complete (final)?')
+    rpt_risks_assessed_linked = fields.Boolean('RPT risks assessed and linked?')
+    basis_established = fields.Boolean('Basis established for audit responses?')
+
+    # SECTION K: Review & Approval
+    prepared_by = fields.Many2one('res.users', string='Prepared By', tracking=True)
+    prepared_by_role = fields.Char('Prepared By Role')
+    prepared_by_date = fields.Datetime('Prepared By Date')
+    reviewed_by = fields.Many2one('res.users', string='Reviewed By (Manager)', tracking=True)
+    review_notes = fields.Text('Review Notes')
+    partner_approval = fields.Boolean('Partner Approval', tracking=True)
+    partner_comments = fields.Text('Partner Comments (Mandatory)')
+    locked = fields.Boolean('Locked', compute='_compute_locked', store=True)
+
+    # Audit trail fields
+    version_history = fields.Text('Version History')
+    reviewer_timestamps = fields.Text('Reviewer Timestamps')
+
+    # Pre-condition enforcement (to be implemented in create/write/onchange)
+
+    @api.model
+    def create(self, vals):
+        # Enforce pre-conditions: P-9 locked, P-2, P-6, P-7 available
+        engagement_id = vals.get('engagement_id')
+        audit_year_id = vals.get('audit_year_id')
+        if engagement_id and audit_year_id:
+            # Check P-9 (Laws & Regulations) is locked
+            p9 = self.env['audit.planning.p9.laws'].search([
+                ('engagement_id', '=', engagement_id),
+                ('audit_year_id', '=', audit_year_id),
+                ('locked', '=', True)
+            ], limit=1)
+            if not p9:
+                raise UserError(_('Cannot open P-10: P-9 (Laws & Regulations) must be partner-approved and locked.'))
+            # Check P-2, P-6, P-7 exist
+            for model, label in [
+                ('audit.planning.p2.entity', 'P-2 (Entity Understanding)'),
+                ('audit.planning.p6.risk', 'P-6 (Risk Assessment)'),
+                ('audit.planning.p7.fraud', 'P-7 (Fraud Assessment)')
+            ]:
+                exists = self.env[model].search([
+                    ('engagement_id', '=', engagement_id),
+                    ('audit_year_id', '=', audit_year_id)
+                ], limit=1)
+                if not exists:
+                    raise UserError(_(f'Cannot open P-10: {label} must be available.'))
+        return super().create(vals)
+
+    def write(self, vals):
+        # Enforce completeness and mandatory uploads before locking
+        if 'state' in vals and vals['state'] == 'locked':
+            for rec in self:
+                # At least two completeness procedures
+                if not rec.completeness_procedures_multi or len(rec.completeness_procedures_multi) < 2:
+                    raise UserError(_('At least two completeness procedures must be documented.'))
+                # Mandatory attachments
+                if not rec.attachment_ids or len(rec.attachment_ids) < 3:
+                    raise UserError(_('All mandatory document uploads must be attached before locking.'))
+        return super().write(vals)
+
+    @api.constrains('completeness_procedures_multi')
+    def _check_completeness_procedures(self):
+        for rec in self:
+            if rec.state == 'locked' and (not rec.completeness_procedures_multi or len(rec.completeness_procedures_multi) < 2):
+                raise ValidationError(_('At least two completeness procedures must be documented.'))
+
+    @api.constrains('attachment_ids')
+    def _check_attachments(self):
+        for rec in self:
+            if rec.state == 'locked' and (not rec.attachment_ids or len(rec.attachment_ids) < 3):
+                raise ValidationError(_('All mandatory document uploads must be attached before locking.'))
+
+    # TODO: Implement auto-import of related parties from onboarding/prior year, auto-linking to P-6, P-7, P-8, P-12 as per system rules.
+
+    @api.depends('partner_approval')
+    def _compute_locked(self):
+        for rec in self:
+            rec.locked = bool(rec.partner_approval)
+
+    def action_lock(self):
+        for rec in self:
+            if not rec.partner_approval:
+                raise UserError('Partner approval required to lock P-10.')
+            rec.write({'locked': True, 'state': 'locked'})
+
+    # TODO: Add methods for auto-import, auto-linking, audit trail, and system rules
+
+
+# SECTION A: Related Party (child)
+class AuditPlanningP10RelatedParty(models.Model):
+    _name = 'audit.planning.p10.related_party'
+    _description = 'P-10: Related Party'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc'
+
+    related_parties_id = fields.Many2one('audit.planning.p10.related_parties', required=True, ondelete='cascade')
+    name = fields.Char('Related Party Name', required=True)
+    party_type = fields.Selection([
+        ('parent', 'Parent'),
+        ('subsidiary', 'Subsidiary'),
+        ('associate', 'Associate / JV'),
+        ('director', 'Director / KMP'),
+        ('family', 'Close family member'),
+        ('common_control', 'Entity under common control'),
+    ], string='Party Type', required=True)
+    relationship_nature = fields.Char('Relationship Nature & Basis', required=True)
+    country = fields.Char('Country / Jurisdiction')
+    changes_during_year = fields.Boolean('Changes during year?')
+    changes_details = fields.Text('Details of changes (if any)')
+    # Checklist fields
+    known_identified = fields.Boolean('Known related party identified?')
+    changes_captured = fields.Boolean('Changes during year captured?')
+
+
+# SECTION C: RPT Transaction (child)
+class AuditPlanningP10RPTTransaction(models.Model):
+    _name = 'audit.planning.p10.rpt_transaction'
+    _description = 'P-10: Related Party Transaction'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc'
+
+    related_parties_id = fields.Many2one('audit.planning.p10.related_parties', required=True, ondelete='cascade')
+    related_party_id = fields.Many2one('audit.planning.p10.related_party', string='Related Party', required=True)
+    nature_of_transaction = fields.Char('Nature of Transaction', required=True)
+    period = fields.Char('Period')
+    amount = fields.Float('Amount')
+    terms_arms_length = fields.Boolean('Terms (Arms’ length?)')
+    approved_by_tcw = fields.Boolean('Approved by TCWG?')
+    non_routine = fields.Boolean('Non-routine transaction?')
+
+
+# SECTION D: RPT Risk Line (child)
+class AuditPlanningP10RPTRiskLine(models.Model):
+    _name = 'audit.planning.p10.rpt_risk_line'
+    _description = 'P-10: RPT Risk Line'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc'
+
+    related_parties_id = fields.Many2one('audit.planning.p10.related_parties', required=True, ondelete='cascade')
+    rpt_transaction_id = fields.Many2one('audit.planning.p10.rpt_transaction', string='RPT', required=True)
+    business_purpose = fields.Char('Business Purpose')
+    fraud_risk = fields.Boolean('Fraud Risk?')
+    disclosure_risk = fields.Boolean('Disclosure Risk?')
+    rpt_risk_level = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('significant', 'Significant'),
+    ], string='RPT Risk Level')
+    significant_flag = fields.Boolean('Significant Risk (auto-flag)', compute='_compute_significant_flag', store=True)
+    partner_override = fields.Boolean('Partner Override?')
+
+    @api.depends('rpt_transaction_id.non_routine', 'partner_override', 'rpt_risk_level')
+    def _compute_significant_flag(self):
+        for rec in self:
+            rec.significant_flag = rec.rpt_risk_level == 'significant' or (rec.rpt_transaction_id and rec.rpt_transaction_id.non_routine and not rec.partner_override)
+
+
+# Completeness Procedures (for Many2many)
+class AuditP10CompletenessProcedure(models.Model):
+    _name = 'audit.p10.completeness.procedure'
+    _description = 'P-10: Completeness Procedure Option'
+    name = fields.Char('Procedure', required=True)
+
+# Planned Procedures (for Many2many)
+class AuditP10AuditProcedure(models.Model):
+    _name = 'audit.p10.audit_procedure'
+    _description = 'P-10: Audit Procedure Option'
+    name = fields.Char('Procedure', required=True)# -*- coding: utf-8 -*-
 """
 P-10: Related Parties Planning
 Standard: ISA 550

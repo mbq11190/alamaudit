@@ -1,9 +1,240 @@
-# -*- coding: utf-8 -*-
-"""
-P-7: Fraud Risk Assessment
-Standard: ISA 240
-Purpose: Identify fraud risks and responses.
-"""
+    # -*- coding: utf-8 -*-
+    """
+    P-7: Fraud Risk Assessment (ISA 240, 315, 330, 570, 220, ISQM-1, Companies Act 2017, ICAP QCR/AOB)
+    Court-defensible, fully integrated with planning workflow.
+    """
+    
+    from odoo import api, fields, models
+    from odoo.exceptions import UserError, ValidationError
+    import logging
+    _logger = logging.getLogger(__name__)
+    
+    # =============================
+    # Parent Model: Fraud Risk Assessment
+    # =============================
+    class AuditPlanningP7Fraud(models.Model):
+        _name = 'audit.planning.p7.fraud'
+        _description = 'P-7: Fraud Risk Assessment'
+        _inherit = ['mail.thread', 'mail.activity.mixin']
+        _order = 'id desc'
+        
+        engagement_id = fields.Many2one('qaco.audit', string='Audit Engagement', required=True, ondelete='cascade', index=True, tracking=True)
+        audit_year = fields.Many2one('qaco.audit.year', string='Audit Year', required=True, ondelete='cascade', index=True)
+        partner_id = fields.Many2one('res.users', string='Engagement Partner', required=True)
+        planning_main_id = fields.Many2one('qaco.planning.main', string='Planning Phase', ondelete='cascade', index=True)
+        state = fields.Selection([
+            ('draft', 'Draft'),
+            ('prepared', 'Prepared'),
+            ('reviewed', 'Reviewed'),
+            ('locked', 'Locked'),
+        ], string='Status', default='draft', tracking=True, copy=False)
+        fraud_risk_line_ids = fields.One2many('audit.planning.p7.fraud_risk_line', 'fraud_id', string='Fraud Risk Register', required=True)
+        # Section A: Brainstorming
+        brainstorming_done = fields.Boolean(string='Brainstorming Session Conducted?')
+        brainstorming_date = fields.Date(string='Date of Session')
+        brainstorming_participants = fields.Char(string='Participants (Auto-list)', readonly=True)
+        brainstorming_mode = fields.Selection([
+            ('in_person', 'In-person'),
+            ('virtual', 'Virtual'),
+        ], string='Mode')
+        brainstorming_summary = fields.Text(string='Summary of Discussion')
+        brainstorming_susceptibility = fields.Boolean(string='Susceptibility of FS to fraud discussed?')
+        brainstorming_override = fields.Boolean(string='Management override risk discussed?')
+        brainstorming_revenue = fields.Boolean(string='Revenue recognition risks discussed?')
+        brainstorming_unpredictability = fields.Boolean(string='Unpredictability incorporated?')
+        # Section B: Management & TCWG Inquiries
+        mgmt_inquiries_done = fields.Boolean(string='Management inquiries performed?')
+        mgmt_assessment = fields.Text(string="Management's assessment of fraud risk")
+        mgmt_knowledge_fraud = fields.Boolean(string='Knowledge of actual/suspected fraud disclosed?')
+        tcwg_inquiries_done = fields.Boolean(string='Inquiries of TCWG performed?')
+        tcwg_results = fields.Text(string='Results of TCWG inquiries')
+        inquiries_documented = fields.Boolean(string='Inquiries documented?')
+        responses_consistent = fields.Boolean(string='Responses evaluated for consistency?')
+        # Section C: Fraud Risk Factors (ISA 240 Triangle)
+        factor_incentives = fields.Boolean(string='Incentives/Pressures Identified?')
+        factor_incentives_desc = fields.Text(string='Incentives/Pressures Description')
+        factor_opportunities = fields.Boolean(string='Opportunities Identified?')
+        factor_opportunities_desc = fields.Text(string='Opportunities Description')
+        factor_attitudes = fields.Boolean(string='Attitudes/Rationalization Identified?')
+        factor_attitudes_desc = fields.Text(string='Attitudes/Rationalization Description')
+        # Section E: Presumed Fraud Risks
+        presumed_revenue = fields.Boolean(string='Improper revenue recognition (Presumed)', default=True, readonly=True)
+        presumed_override = fields.Boolean(string='Management override of controls (Presumed)', default=True, readonly=True)
+        presumed_rebutted = fields.Boolean(string='Are presumed risks rebutted?')
+        presumed_rebuttal_justification = fields.Text(string='Rebuttal Justification')
+        presumed_partner_approval = fields.Boolean(string='Partner Approval for Rebuttal?')
+        # Section F: Management Override of Controls
+        planned_journal_entry = fields.Boolean(string='Planned journal entry testing?', default=True, readonly=True)
+        planned_estimate_review = fields.Boolean(string='Planned review of accounting estimates?', default=True, readonly=True)
+        planned_unusual_txn = fields.Boolean(string='Planned evaluation of significant unusual transactions?', default=True, readonly=True)
+        planned_unpredictability = fields.Text(string='Additional unpredictability procedures planned')
+        # Section G: Fraud-Related Controls Assessment
+        antifraud_controls_identified = fields.Boolean(string='Anti-fraud controls identified?')
+        antifraud_controls_effectiveness = fields.Selection([
+            ('effective', 'Effective'),
+            ('weak', 'Weak'),
+            ('none', 'Not present'),
+        ], string='Effectiveness of fraud controls')
+        antifraud_control_gaps = fields.Text(string='Control gaps increasing fraud risk')
+        # Section H: Linkage to Audit Responses
+        response_nature = fields.Selection([
+            ('expanded', 'Expanded substantive'),
+            ('forensic', 'Forensic-style'),
+            ('unpredictable', 'Unpredictable'),
+        ], string='Nature of response')
+        response_timing = fields.Selection([
+            ('interim', 'Interim'),
+            ('year_end', 'Year-end'),
+            ('surprise', 'Surprise'),
+        ], string='Timing adjustments')
+        response_extent = fields.Selection([
+            ('sample_increase', 'Sample size increase'),
+            ('full', '100% testing areas'),
+        ], string='Extent')
+        response_senior_involvement = fields.Boolean(string='Senior team involvement required?')
+        # Section I: Going-Concern & Fraud Interplay
+        fraud_linked_going_concern = fields.Boolean(string='Fraud indicators linked to going concern?')
+        fraud_impact_cashflow = fields.Text(string='Impact on cash flows / liquidity')
+        fraud_disclosure_risk = fields.Boolean(string='Disclosure risk identified?')
+        # Section J: Mandatory Document Uploads
+        attachment_ids = fields.Many2many('ir.attachment', 'audit_p7_fraud_attachment_rel', 'fraud_id', 'attachment_id', string='Required Attachments', help='Fraud brainstorming minutes, management/TCWG inquiry docs, fraud risk register')
+        mandatory_upload_check = fields.Boolean(string='Mandatory uploads present?')
+        # Section K: Conclusion & Professional Judgment
+        conclusion_narrative = fields.Text(string='Conclusion Narrative', required=True, default="Fraud risks, including presumed risks relating to revenue recognition and management override of controls, have been identified and assessed in accordance with ISA 240. Appropriate audit responses have been designed and linked to the overall audit strategy.")
+        fraud_risks_confirmed = fields.Boolean(string='Fraud risks fully identified?')
+        mandatory_responses_planned = fields.Boolean(string='Mandatory responses planned?')
+        linkage_to_strategy_confirmed = fields.Boolean(string='Linkage to audit strategy confirmed?')
+        # Section L: Review, Approval & Lock
+        prepared_by = fields.Many2one('res.users', string='Prepared By')
+        prepared_by_role = fields.Char(string='Prepared By Role')
+        prepared_date = fields.Datetime(string='Prepared Date')
+        reviewed_by = fields.Many2one('res.users', string='Reviewed By')
+        review_notes = fields.Text(string='Review Notes')
+        partner_approved = fields.Boolean(string='Partner Approved?')
+        partner_comments = fields.Text(string='Partner Comments (Mandatory)')
+        locked = fields.Boolean(string='Locked', compute='_compute_locked', store=True)
+        # Outputs
+        fraud_memo_pdf = fields.Binary(string='Fraud Risk Assessment Memorandum (PDF)')
+        fraud_register_export = fields.Binary(string='Fraud Risk Register Export')
+        fraud_procedures_checklist = fields.Binary(string='Mandatory Fraud Procedures Checklist')
+        # Audit trail
+        version_history = fields.Text(string='Version History')
+        reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+        
+        @api.depends('partner_approved')
+        def _compute_locked(self):
+            for rec in self:
+                rec.locked = bool(rec.partner_approved)
+        
+        def action_prepare(self):
+            self.state = 'prepared'
+            self.prepared_by = self.env.user.id
+            self.prepared_by_role = self.env.user.groups_id.mapped('name')
+            self.prepared_date = fields.Datetime.now()
+            self.message_post(body="P-7 prepared.")
+        
+        def action_review(self):
+            self.state = 'reviewed'
+            self.reviewed_by = self.env.user.id
+            self.message_post(body="P-7 reviewed.")
+        
+        def action_partner_approve(self):
+            if not self.partner_comments:
+                raise ValidationError("Partner comments are mandatory for approval.")
+            self.state = 'locked'
+            self.partner_approved = True
+            self.message_post(body="P-7 partner approved and locked.")
+        
+        @api.constrains('attachment_ids')
+        def _check_mandatory_uploads(self):
+            for rec in self:
+                if not rec.attachment_ids:
+                    raise ValidationError("Mandatory fraud assessment documents must be uploaded.")
+        
+        @api.constrains('fraud_risk_line_ids')
+        def _check_fraud_risk_lines(self):
+            for rec in self:
+                if not rec.fraud_risk_line_ids:
+                    raise ValidationError("At least one fraud risk line must be entered.")
+        
+        # Pre-conditions enforcement
+        @api.model
+        def create(self, vals):
+            # Enforce P-6 locked, P-5 finalized, P-3/P-4 available
+            planning = self.env['qaco.planning.main'].browse(vals.get('planning_main_id'))
+            if not planning or not planning.p6_partner_locked:
+                raise UserError("P-7 cannot be started until P-6 is partner-approved and locked.")
+            if not planning.p5_finalized or not planning.p3_outputs_ready or not planning.p4_outputs_ready:
+                raise UserError("P-7 requires finalized P-5, and outputs from P-3 and P-4.")
+            return super().create(vals)
+        
+    # =============================
+    # Child Model: Fraud Risk Line
+    # =============================
+    class AuditPlanningP7FraudRiskLine(models.Model):
+        _name = 'audit.planning.p7.fraud_risk_line'
+        _description = 'P-7: Fraud Risk Register Line'
+        _order = 'id desc'
+        
+        fraud_id = fields.Many2one('audit.planning.p7.fraud', string='Fraud Assessment', required=True, ondelete='cascade', index=True)
+        engagement_id = fields.Many2one('qaco.audit', string='Audit Engagement', required=True, ondelete='cascade', index=True)
+        audit_year = fields.Many2one('qaco.audit.year', string='Audit Year', required=True, ondelete='cascade', index=True)
+        fs_area = fields.Char(string='FS Area', required=True)
+        assertion = fields.Selection([
+            ('existence', 'Existence/Occurrence'),
+            ('completeness', 'Completeness'),
+            ('accuracy', 'Accuracy'),
+            ('valuation', 'Valuation'),
+            ('rights_obligations', 'Rights & Obligations'),
+            ('presentation', 'Presentation & Disclosure'),
+        ], string='Assertion', required=True)
+        fraud_scenario = fields.Text(string='Fraud Scenario', required=True)
+        risk_source = fields.Selection([
+            ('p2', 'P-2 Entity'),
+            ('p3', 'P-3 Controls'),
+            ('p4', 'P-4 Analytics'),
+            ('p6', 'P-6 RMM'),
+            ('other', 'Other'),
+        ], string='Source', required=True)
+        likelihood = fields.Selection([
+            ('low', 'Low'),
+            ('medium', 'Medium'),
+            ('high', 'High'),
+        ], string='Likelihood', required=True)
+        impact = fields.Selection([
+            ('low', 'Low'),
+            ('medium', 'Medium'),
+            ('high', 'High'),
+        ], string='Impact', required=True)
+        fraud_risk_level = fields.Selection([
+            ('low', 'Low'),
+            ('medium', 'Medium'),
+            ('high', 'High'),
+        ], string='Fraud Risk Level', compute='_compute_fraud_risk_level', store=True)
+        significant_risk = fields.Boolean(string='Significant Risk? (auto-link to P-6)', default=True, readonly=True)
+        # Audit trail
+        change_log = fields.Text(string='Change Log')
+        version_history = fields.Text(string='Version History')
+        reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+        
+        @api.depends('likelihood', 'impact')
+        def _compute_fraud_risk_level(self):
+            for rec in self:
+                if rec.likelihood == 'high' or rec.impact == 'high':
+                    rec.fraud_risk_level = 'high'
+                elif rec.likelihood == 'medium' or rec.impact == 'medium':
+                    rec.fraud_risk_level = 'medium'
+                else:
+                    rec.fraud_risk_level = 'low'
+        
+        # Audit trail logic
+        def write(self, vals):
+            self.message_post(body=f"Fraud risk line updated: {vals}")
+            return super().write(vals)
+        
+        def unlink(self):
+            self.message_post(body="Fraud risk line deleted.")
+            return super().unlink()
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError

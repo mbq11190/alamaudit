@@ -1,253 +1,774 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ============================================== -->
-    <!-- P-4: Preliminary Analytical Review            -->
-    <!-- ISA 520                                        -->
-    <!-- ============================================== -->
+    <!-- ============================================================ -->
+    <!-- P-4: Preliminary Analytical Procedures                       -->
+    <!-- ISA 520, ISA 315 (Revised), ISA 240, ISA 570 (Revised)       -->
+    <!-- ============================================================ -->
 
-    <!-- P-4 Form View -->
-    <record id="view_planning_p4_analytics_form" model="ir.ui.view">
-        <field name="name">qaco.planning.p4.analytics.form</field>
-        <field name="model">qaco.planning.p4.analytics</field>
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: FS Line Variance Analysis                 -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_fs_line_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.fs.line.tree</field>
+        <field name="model">qaco.planning.p4.fs.line</field>
         <field name="arch" type="xml">
-            <form string="P-4: Risk Identification &amp; Assessment (FS Level)">
-                <header>
-                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
-                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
-                            invisible="state != 'not_started'"/>
-                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
-                            invisible="state != 'in_progress'"/>
-                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
-                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
-                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
-                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
-                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
-                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 315 | Risk Identification &amp; Assessment (Financial Statement Level)</h3>
-                    </div>
-                    <group>
-                        <group string="Audit Information">
-                            <field name="audit_id" readonly="state != 'not_started'"/>
-                            <field name="client_id"/>
-                        </group>
-                        <group string="Financial Year">
-                            <field name="current_year_end"/>
-                            <field name="prior_year_end"/>
-                        </group>
-                    </group>
-
-                    <notebook>
-                        <!-- Tab 1: Financial Highlights -->
-                        <page string="Financial Highlights" name="highlights">
-                            <group string="Current Year Figures">
-                                <group>
-                                    <field name="current_total_assets"/>
-                                    <field name="current_total_liabilities"/>
-                                    <field name="current_equity"/>
-                                </group>
-                                <group>
-                                    <field name="current_revenue"/>
-                                    <field name="current_cost_of_sales"/>
-                                    <field name="current_gross_profit"/>
-                                </group>
-                            </group>
-                            <group string="Prior Year Figures">
-                                <group>
-                                    <field name="prior_total_assets"/>
-                                    <field name="prior_total_liabilities"/>
-                                    <field name="prior_equity"/>
-                                </group>
-                                <group>
-                                    <field name="prior_revenue"/>
-                                    <field name="prior_cost_of_sales"/>
-                                    <field name="prior_gross_profit"/>
-                                </group>
-                            </group>
-                        </page>
-
-                        <!-- Tab 2: Trend Analysis -->
-                        <page string="Trend Analysis" name="trends">
-                            <group string="Year-over-Year Changes">
-                                <group>
-                                    <field name="revenue_change_pct"/>
-                                    <field name="asset_change_pct"/>
-                                    <field name="equity_change_pct"/>
-                                </group>
-                                <group>
-                                    <field name="profit_change_pct"/>
-                                    <field name="liability_change_pct"/>
-                                </group>
-                            </group>
-                            <group string="Trend Analysis Narrative">
-                                <field name="trend_analysis" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Trend Observations">
-                                <field name="trend_observations" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 3: Ratio Analysis -->
-                        <page string="Ratio Analysis" name="ratios">
-                            <group string="Liquidity Ratios">
-                                <group>
-                                    <field name="current_ratio"/>
-                                    <field name="quick_ratio"/>
-                                    <field name="cash_ratio"/>
-                                </group>
-                                <group>
-                                    <field name="working_capital"/>
-                                </group>
-                            </group>
-                            <group string="Profitability Ratios">
-                                <group>
-                                    <field name="gross_margin_pct"/>
-                                    <field name="net_margin_pct"/>
-                                    <field name="return_on_assets"/>
-                                </group>
-                                <group>
-                                    <field name="return_on_equity"/>
-                                </group>
-                            </group>
-                            <group string="Leverage Ratios">
-                                <group>
-                                    <field name="debt_to_equity"/>
-                                    <field name="debt_ratio"/>
-                                    <field name="interest_coverage"/>
-                                </group>
-                            </group>
-                            <group string="Efficiency Ratios">
-                                <group>
-                                    <field name="inventory_turnover"/>
-                                    <field name="receivable_days"/>
-                                    <field name="payable_days"/>
-                                </group>
-                                <group>
-                                    <field name="asset_turnover"/>
-                                </group>
-                            </group>
-                        </page>
-
-                        <!-- Tab 4: Industry Comparison -->
-                        <page string="Industry Comparison" name="industry">
-                            <group string="Industry Benchmarks">
-                                <field name="industry_benchmark" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Peer Comparison">
-                                <field name="peer_comparison" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Deviations from Industry Norms">
-                                <field name="industry_deviations" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 5: Anomaly Identification -->
-                        <page string="Anomalies" name="anomalies">
-                            <group string="Anomalies &amp; Unusual Items">
-                                <field name="anomalies_identified" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Significant Fluctuations">
-                                <field name="significant_fluctuations" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Fraud Indicators">
-                                <field name="fraud_indicators" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Audit Focus Areas Identified">
-                                <field name="audit_focus_areas" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 6: Management Inquiry -->
-                        <page string="Management Inquiry" name="inquiry">
-                            <group string="Management Explanations">
-                                <field name="management_explanations" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Questions for Management">
-                                <field name="management_questions" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Responses Received">
-                                <field name="responses_received" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 7: Attachments -->
-                        <page string="Attachments" name="attachments">
-                            <group string="Financial Statements">
-                                <field name="financial_statement_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                            <group string="Trial Balance">
-                                <field name="trial_balance_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                            <group string="Supporting Analysis">
-                                <field name="analysis_attachment_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 8: Conclusion & Sign-off -->
-                        <page string="Conclusion &amp; Sign-off" name="conclusion">
-                            <group string="Analytical Review Conclusion">
-                                <field name="analytics_conclusion" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Impact on Audit Plan">
-                                <field name="impact_on_audit_plan" widget="html" nolabel="1"/>
-                            </group>
-                            <group>
-                                <group string="Sign-off">
-                                    <field name="senior_signed_user_id"/>
-                                    <field name="senior_signed_on"/>
-                                    <field name="manager_reviewed_user_id"/>
-                                    <field name="manager_reviewed_on"/>
-                                    <field name="partner_approved_user_id"/>
-                                    <field name="partner_approved_on"/>
-                                </group>
-                                <group string="ISA Reference">
-                                    <field name="isa_reference"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <!-- P-4 Tree View -->
-    <record id="view_planning_p4_analytics_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p4.analytics.tree</field>
-        <field name="model">qaco.planning.p4.analytics</field>
-        <field name="arch" type="xml">
-            <tree string="P-4: Analytics">
-                <field name="name"/>
-                <field name="client_id"/>
-                <field name="current_revenue"/>
-                <field name="revenue_change_pct"/>
-                <field name="state" widget="badge" decoration-info="state == 'not_started'"
-                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+            <tree string="FS Line Variance Analysis" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="fs_caption"/>
+                <field name="fs_category"/>
+                <field name="current_year"/>
+                <field name="prior_year"/>
+                <field name="variance" decoration-danger="variance &lt; 0"/>
+                <field name="variance_pct" decoration-danger="variance_pct &lt; 0" widget="percentage"/>
+                <field name="exceeds_threshold" widget="boolean_toggle"/>
+                <field name="explanation_required" invisible="1"/>
+                <field name="auditor_explanation"/>
+                <field name="risk_indicator" widget="badge" 
+                       decoration-danger="risk_indicator == 'high'"
+                       decoration-warning="risk_indicator == 'medium'"
+                       decoration-success="risk_indicator == 'low'"/>
             </tree>
         </field>
     </record>
 
-    <!-- P-4 Action -->
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Ratio Analysis Lines                      -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_ratio_line_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.ratio.line.tree</field>
+        <field name="model">qaco.planning.p4.ratio.line</field>
+        <field name="arch" type="xml">
+            <tree string="Ratio Analysis" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="category" widget="badge"/>
+                <field name="ratio_name"/>
+                <field name="formula"/>
+                <field name="current_year_value"/>
+                <field name="prior_year_value"/>
+                <field name="movement" decoration-danger="movement &lt; 0"/>
+                <field name="industry_benchmark"/>
+                <field name="is_unusual" widget="boolean_toggle"/>
+                <field name="auditor_analysis"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Budget Variance Lines                     -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_budget_line_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.budget.line.tree</field>
+        <field name="model">qaco.planning.p4.budget.line</field>
+        <field name="arch" type="xml">
+            <tree string="Budget vs Actual" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="line_item"/>
+                <field name="budget_amount"/>
+                <field name="actual_amount"/>
+                <field name="variance" decoration-danger="variance &lt; 0"/>
+                <field name="variance_pct" widget="percentage"/>
+                <field name="is_significant" widget="boolean_toggle"/>
+                <field name="management_explanation"/>
+                <field name="auditor_assessment"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Multi-Year Trend Lines                    -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_trend_line_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.trend.line.tree</field>
+        <field name="model">qaco.planning.p4.trend.line</field>
+        <field name="arch" type="xml">
+            <tree string="Multi-Year Trends" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="metric_name"/>
+                <field name="year_1"/>
+                <field name="year_2"/>
+                <field name="year_3"/>
+                <field name="year_4"/>
+                <field name="year_5"/>
+                <field name="trend_direction" widget="badge"
+                       decoration-success="trend_direction == 'increasing'"
+                       decoration-danger="trend_direction == 'decreasing'"
+                       decoration-info="trend_direction == 'stable'"
+                       decoration-warning="trend_direction == 'volatile'"/>
+                <field name="cagr"/>
+                <field name="is_unusual" widget="boolean_toggle"/>
+                <field name="auditor_comment"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Non-Financial Metrics                     -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_non_financial_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.non.financial.tree</field>
+        <field name="model">qaco.planning.p4.non.financial</field>
+        <field name="arch" type="xml">
+            <tree string="Non-Financial Metrics" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="metric_name"/>
+                <field name="metric_type" widget="badge"/>
+                <field name="current_value"/>
+                <field name="prior_value"/>
+                <field name="unit_of_measure"/>
+                <field name="change_pct" widget="percentage"/>
+                <field name="consistent_with_financial" widget="badge"
+                       decoration-success="consistent_with_financial == 'yes'"
+                       decoration-danger="consistent_with_financial == 'no'"
+                       decoration-warning="consistent_with_financial == 'partial'"/>
+                <field name="unusual_relationship" widget="boolean_toggle"/>
+                <field name="auditor_conclusion"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Fraud Indicators                          -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_fraud_indicator_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.fraud.indicator.tree</field>
+        <field name="model">qaco.planning.p4.fraud.indicator</field>
+        <field name="arch" type="xml">
+            <tree string="Fraud Indicators" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="indicator_type"/>
+                <field name="description"/>
+                <field name="evidence"/>
+                <field name="risk_level" widget="badge"
+                       decoration-danger="risk_level == 'high'"
+                       decoration-warning="risk_level == 'medium'"
+                       decoration-success="risk_level == 'low'"/>
+                <field name="escalated_to_p7" widget="boolean_toggle"/>
+                <field name="escalation_date"/>
+                <field name="auditor_response"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Going Concern Indicators                  -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_going_concern_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.going.concern.tree</field>
+        <field name="model">qaco.planning.p4.going.concern</field>
+        <field name="arch" type="xml">
+            <tree string="Going Concern Indicators" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="indicator_type"/>
+                <field name="description"/>
+                <field name="quantification"/>
+                <field name="period_applicable"/>
+                <field name="severity" widget="badge"
+                       decoration-danger="severity in ['high', 'critical']"
+                       decoration-warning="severity == 'medium'"
+                       decoration-success="severity == 'low'"/>
+                <field name="linked_to_p8" widget="boolean_toggle"/>
+                <field name="management_response"/>
+                <field name="auditor_assessment"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- MAIN MODEL: P-4 Form View                                    -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_analytics_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.analytics.form</field>
+        <field name="model">qaco.planning.p4.analytics</field>
+        <field name="arch" type="xml">
+            <form string="P-4: Preliminary Analytical Procedures">
+                <header>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="not_started,in_progress,completed,reviewed,locked"/>
+                    <button name="action_start_work" string="Start Work" type="object" 
+                            class="btn-primary" invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" 
+                            class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_manager_review" string="Manager Review" type="object" 
+                            class="btn-warning" invisible="state != 'completed'"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_partner_approve" string="Partner Approve" type="object" 
+                            class="btn-success" invisible="state != 'reviewed'"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" 
+                            class="btn-secondary" invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" 
+                            class="btn-danger" invisible="state != 'locked'"
+                            groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_create_risks_from_variances" type="object"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="state == 'not_started'">
+                            <field name="risks_created_in_p6" widget="statinfo" string="Risks to P-6"/>
+                        </button>
+                        <button name="action_escalate_to_p7" type="object"
+                                class="oe_stat_button" icon="fa-flag"
+                                invisible="state == 'not_started'">
+                            <span class="o_stat_text">Escalate Fraud</span>
+                        </button>
+                        <button name="action_link_gc_to_p8" type="object"
+                                class="oe_stat_button" icon="fa-chain"
+                                invisible="state == 'not_started'">
+                            <span class="o_stat_text">Link to P-8</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Locked" bg_color="bg-danger" 
+                            invisible="not is_locked"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 520 | Preliminary Analytical Procedures</h3>
+                    </div>
+                    <group>
+                        <group string="Engagement Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                            <field name="planning_main_id" invisible="1"/>
+                        </group>
+                        <group string="Settings">
+                            <field name="currency_id"/>
+                            <field name="isa_reference"/>
+                            <field name="is_locked" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- ================================================ -->
+                        <!-- SECTION A: Data Source Identification            -->
+                        <!-- ================================================ -->
+                        <page string="A. Data Source" name="section_a">
+                            <group string="Financial Data Source">
+                                <group>
+                                    <field name="data_source" widget="radio"/>
+                                    <field name="data_source_other" 
+                                           invisible="data_source != 'combination'"/>
+                                </group>
+                                <group>
+                                    <field name="currency_id"/>
+                                </group>
+                            </group>
+                            <group string="Period Covered">
+                                <group>
+                                    <field name="period_covered_start"/>
+                                    <field name="period_covered_end"/>
+                                </group>
+                                <group>
+                                    <field name="prior_year_start"/>
+                                    <field name="prior_year_end"/>
+                                </group>
+                            </group>
+                            <group string="Data Integrity Assessment">
+                                <group>
+                                    <field name="data_consistent_with_py" widget="radio"/>
+                                    <field name="data_consistency_notes" 
+                                           invisible="data_consistent_with_py != 'no'"
+                                           placeholder="Document inconsistencies..."/>
+                                </group>
+                                <group>
+                                    <field name="data_reliability_concerns" widget="radio"/>
+                                    <field name="data_reliability_notes"
+                                           invisible="data_reliability_concerns != 'yes'"
+                                           placeholder="Document reliability concerns..."/>
+                                </group>
+                            </group>
+                            <group string="Section A Checklist">
+                                <field name="checklist_a_data_source_identified"/>
+                                <field name="checklist_a_completeness_considered"/>
+                                <field name="checklist_a_limitations_documented"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION B: Comparative Financial Analysis        -->
+                        <!-- ================================================ -->
+                        <page string="B. YoY Analysis" name="section_b">
+                            <group string="Variance Thresholds">
+                                <group>
+                                    <field name="variance_threshold_pct"/>
+                                </group>
+                                <group>
+                                    <field name="materiality_benchmark"/>
+                                </group>
+                            </group>
+                            <separator string="Financial Statement Line Items"/>
+                            <field name="fs_line_ids" nolabel="1">
+                                <tree string="FS Line Variance Analysis" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="fs_caption"/>
+                                    <field name="fs_category"/>
+                                    <field name="current_year"/>
+                                    <field name="prior_year"/>
+                                    <field name="variance" decoration-danger="variance &lt; 0"/>
+                                    <field name="variance_pct" decoration-danger="variance_pct &lt; 0"/>
+                                    <field name="exceeds_threshold" widget="boolean_toggle"/>
+                                    <field name="auditor_explanation"/>
+                                    <field name="management_explanation"/>
+                                    <field name="risk_indicator" widget="badge"/>
+                                </tree>
+                            </field>
+                            <group string="Section B Checklist">
+                                <field name="checklist_b_significant_variances"/>
+                                <field name="checklist_b_explanations_obtained"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION C: Ratio Analysis                        -->
+                        <!-- ================================================ -->
+                        <page string="C. Ratio Analysis" name="section_c">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 520:</strong> Key financial ratios must be calculated and compared 
+                                against prior year and industry benchmarks.
+                            </div>
+                            <group>
+                                <button name="action_populate_standard_ratios" string="Populate Standard Ratios"
+                                        type="object" class="btn-secondary" icon="fa-list"/>
+                            </group>
+                            <separator string="Ratio Analysis Lines"/>
+                            <field name="ratio_line_ids" nolabel="1">
+                                <tree string="Ratio Analysis" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="category" widget="badge"/>
+                                    <field name="ratio_name"/>
+                                    <field name="formula"/>
+                                    <field name="current_year_value"/>
+                                    <field name="prior_year_value"/>
+                                    <field name="movement"/>
+                                    <field name="industry_benchmark"/>
+                                    <field name="is_unusual" widget="boolean_toggle"/>
+                                    <field name="auditor_analysis"/>
+                                </tree>
+                            </field>
+                            <group string="Summary Ratios (Quick Reference)">
+                                <group string="Profitability">
+                                    <field name="gross_margin_cy"/>
+                                    <field name="net_margin_cy"/>
+                                    <field name="operating_margin_cy"/>
+                                </group>
+                                <group string="Liquidity">
+                                    <field name="current_ratio_cy"/>
+                                    <field name="quick_ratio_cy"/>
+                                    <field name="cash_ratio_cy"/>
+                                </group>
+                                <group string="Solvency">
+                                    <field name="debt_to_equity_cy"/>
+                                    <field name="interest_coverage_cy"/>
+                                </group>
+                                <group string="Efficiency">
+                                    <field name="inventory_turnover_cy"/>
+                                    <field name="receivables_days_cy"/>
+                                    <field name="payables_days_cy"/>
+                                </group>
+                            </group>
+                            <group string="Ratio Analysis Conclusion">
+                                <field name="unexpected_ratio_movements" widget="radio"/>
+                                <field name="ratio_analysis_conclusion" widget="html" nolabel="1"
+                                       placeholder="Document auditor analysis and conclusion on ratio movements..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION D: Budget vs Actual                      -->
+                        <!-- ================================================ -->
+                        <page string="D. Budget Comparison" name="section_d">
+                            <group string="Budget Availability">
+                                <group>
+                                    <field name="budget_available" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="budget_not_available_reason"
+                                           invisible="budget_available != 'no'"
+                                           placeholder="Justify why budget comparison was not performed..."/>
+                                </group>
+                            </group>
+                            <separator string="Budget vs Actual Analysis" 
+                                       invisible="budget_available != 'yes'"/>
+                            <field name="budget_line_ids" nolabel="1"
+                                   invisible="budget_available != 'yes'">
+                                <tree string="Budget vs Actual" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="line_item"/>
+                                    <field name="budget_amount"/>
+                                    <field name="actual_amount"/>
+                                    <field name="variance" decoration-danger="variance &lt; 0"/>
+                                    <field name="variance_pct"/>
+                                    <field name="is_significant" widget="boolean_toggle"/>
+                                    <field name="management_explanation"/>
+                                    <field name="auditor_assessment"/>
+                                </tree>
+                            </field>
+                            <group string="Deviation Assessment" invisible="budget_available != 'yes'">
+                                <field name="significant_budget_deviations" widget="radio"/>
+                            </group>
+                            <group invisible="significant_budget_deviations != 'yes'">
+                                <field name="budget_management_explanation" widget="html"
+                                       placeholder="Management explanation for significant deviations..."/>
+                                <field name="budget_auditor_assessment" widget="html"
+                                       placeholder="Auditor assessment of management's explanation..."/>
+                            </group>
+                            <group string="Section D Checklist">
+                                <field name="checklist_d_budget_comparison"/>
+                                <field name="checklist_d_deviations_evaluated"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION E: Trend Analysis                        -->
+                        <!-- ================================================ -->
+                        <page string="E. Trend Analysis" name="section_e">
+                            <group string="Analysis Parameters">
+                                <field name="years_compared" widget="radio"/>
+                            </group>
+                            <separator string="Multi-Year Trend Data"/>
+                            <field name="trend_line_ids" nolabel="1">
+                                <tree string="Multi-Year Trends" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="metric_name"/>
+                                    <field name="year_1"/>
+                                    <field name="year_2"/>
+                                    <field name="year_3"/>
+                                    <field name="year_4"/>
+                                    <field name="year_5"/>
+                                    <field name="trend_direction" widget="badge"/>
+                                    <field name="cagr"/>
+                                    <field name="is_unusual" widget="boolean_toggle"/>
+                                    <field name="auditor_comment"/>
+                                </tree>
+                            </field>
+                            <group string="Trend Assessment">
+                                <group>
+                                    <field name="consistent_trends_identified" widget="radio"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="volatility_patterns_noted" widget="html"
+                                       placeholder="Document any volatility or unusual patterns observed..."/>
+                            </group>
+                            <group>
+                                <field name="trend_impact_on_risk" widget="html"
+                                       placeholder="How do identified trends affect audit risk assessment?"/>
+                            </group>
+                            <group>
+                                <field name="trend_correlation_with_p2" widget="html"
+                                       placeholder="Correlate trends with business understanding from P-2..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION F: Non-Financial Analytics               -->
+                        <!-- ================================================ -->
+                        <page string="F. Non-Financial" name="section_f">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 315 (Revised):</strong> Non-financial and operational metrics 
+                                must be considered and compared with financial results for consistency.
+                            </div>
+                            <separator string="Non-Financial Metrics"/>
+                            <field name="non_financial_ids" nolabel="1">
+                                <tree string="Non-Financial Metrics" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="metric_name"/>
+                                    <field name="metric_type" widget="badge"/>
+                                    <field name="current_value"/>
+                                    <field name="prior_value"/>
+                                    <field name="unit_of_measure"/>
+                                    <field name="change_pct"/>
+                                    <field name="consistent_with_financial" widget="badge"/>
+                                    <field name="unusual_relationship" widget="boolean_toggle"/>
+                                    <field name="auditor_conclusion"/>
+                                </tree>
+                            </field>
+                            <group string="Non-Financial Assessment">
+                                <group>
+                                    <field name="non_financial_consistency" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="unusual_relationships_identified" widget="radio"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="non_financial_conclusion" widget="html"
+                                       placeholder="Document auditor conclusion on non-financial analytics..."/>
+                            </group>
+                            <group string="Section F Checklist">
+                                <field name="checklist_f_non_financial_considered"/>
+                                <field name="checklist_f_alignment_assessed"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION G: Fraud Indicators                      -->
+                        <!-- ================================================ -->
+                        <page string="G. Fraud Indicators" name="section_g">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>ISA 240:</strong> Analytical procedures must be designed to 
+                                identify fraud risk indicators. Significant indicators must be escalated to P-7.
+                            </div>
+                            <group string="Fraud Indicator Quick Assessment">
+                                <group>
+                                    <field name="unusual_revenue_near_period_end" widget="radio"/>
+                                    <field name="margin_manipulation_indicators" widget="radio"/>
+                                    <field name="unexpected_expense_capitalization" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="cash_profit_inconsistencies" widget="radio"/>
+                                    <field name="override_red_flags" widget="radio"/>
+                                </group>
+                            </group>
+                            <separator string="Detailed Fraud Indicators"/>
+                            <field name="fraud_indicator_ids" nolabel="1">
+                                <tree string="Fraud Indicators" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="indicator_type"/>
+                                    <field name="description"/>
+                                    <field name="evidence"/>
+                                    <field name="risk_level" widget="badge"/>
+                                    <field name="escalated_to_p7" widget="boolean_toggle"/>
+                                    <field name="escalation_date"/>
+                                    <field name="auditor_response"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="fraud_indicators_conclusion" widget="html"
+                                       placeholder="Document conclusion on fraud indicators from analytics..."/>
+                            </group>
+                            <group string="Section G Checklist">
+                                <field name="checklist_g_fraud_assessed"/>
+                                <field name="checklist_g_escalated_to_p7"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION H: Going Concern                         -->
+                        <!-- ================================================ -->
+                        <page string="H. Going Concern" name="section_h">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>ISA 570 (Revised):</strong> Early warning indicators of going concern 
+                                issues must be identified at the planning stage. Red flags auto-link to P-8.
+                            </div>
+                            <group string="Going Concern Quick Assessment">
+                                <group>
+                                    <field name="recurring_losses" widget="radio"/>
+                                    <field name="negative_operating_cash_flows" widget="radio"/>
+                                    <field name="liquidity_stress_indicators" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="breach_of_covenants" widget="radio"/>
+                                    <field name="dependency_on_external_financing" widget="radio"/>
+                                </group>
+                            </group>
+                            <separator string="Detailed Going Concern Indicators"/>
+                            <field name="going_concern_ids" nolabel="1">
+                                <tree string="Going Concern Indicators" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="indicator_type"/>
+                                    <field name="description"/>
+                                    <field name="quantification"/>
+                                    <field name="period_applicable"/>
+                                    <field name="severity" widget="badge"/>
+                                    <field name="linked_to_p8" widget="boolean_toggle"/>
+                                    <field name="management_response"/>
+                                    <field name="auditor_assessment"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="going_concern_conclusion" widget="html"
+                                       placeholder="Document early warning conclusion on going concern..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION I: Risk Linkage                          -->
+                        <!-- ================================================ -->
+                        <page string="I. Risk Linkage" name="section_i">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Auto-Flow:</strong> Significant unexplained variances auto-create 
+                                risks in P-6. Analytical anomalies influence P-12 audit strategy.
+                            </div>
+                            <group string="Linkage Status">
+                                <group>
+                                    <field name="risks_created_in_p6"/>
+                                    <field name="strategy_impact_documented"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="risk_linkage_narrative" widget="html"
+                                       placeholder="Document how analytical findings influence risk assessment..."/>
+                            </group>
+                            <group>
+                                <field name="sample_size_impact" widget="html"
+                                       placeholder="How do analytical results affect planned sample sizes and procedures?"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION J: Document Uploads                      -->
+                        <!-- ================================================ -->
+                        <page string="J. Documents" name="section_j">
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Mandatory:</strong> System will block progression if required 
+                                documents are not uploaded.
+                            </div>
+                            <group string="Required Attachments">
+                                <field name="trial_balance_ids" widget="many2many_binary"/>
+                                <field name="prior_year_fs_ids" widget="many2many_binary"/>
+                                <field name="budget_forecast_ids" widget="many2many_binary"/>
+                                <field name="management_explanations_ids" widget="many2many_binary"/>
+                                <field name="analytical_workpapers_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Document Checklist">
+                                <field name="checklist_j_trial_balance"/>
+                                <field name="checklist_j_prior_year_fs"/>
+                                <field name="checklist_j_budget"/>
+                                <field name="checklist_j_mgmt_explanations"/>
+                                <field name="checklist_j_workpapers"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION K: Conclusion                            -->
+                        <!-- ================================================ -->
+                        <page string="K. Conclusion" name="section_k">
+                            <group string="P-4 Conclusion Statement">
+                                <field name="conclusion_narrative" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Final Confirmations">
+                                <field name="confirm_analytics_complete"/>
+                                <field name="confirm_results_in_risk"/>
+                                <field name="confirm_proceed_to_p5"/>
+                            </group>
+                            <group>
+                                <button name="action_generate_analytical_memo" 
+                                        string="Generate Analytical Memo (PDF)"
+                                        type="object" class="btn-primary" icon="fa-file-pdf-o"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION L: Review &amp; Approval                 -->
+                        <!-- ================================================ -->
+                        <page string="L. Approval" name="section_l">
+                            <group string="Prepared By">
+                                <group>
+                                    <field name="prepared_by_id"/>
+                                    <field name="prepared_by_role"/>
+                                </group>
+                                <group>
+                                    <field name="prepared_on"/>
+                                </group>
+                            </group>
+                            <group string="Manager Review">
+                                <group>
+                                    <field name="reviewed_by_id"/>
+                                    <field name="reviewed_on"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="review_notes" widget="html"
+                                       placeholder="Manager review notes (mandatory before partner approval)..."/>
+                            </group>
+                            <group string="Partner Approval">
+                                <group>
+                                    <field name="partner_approved" widget="radio"/>
+                                    <field name="partner_approved_by_id"/>
+                                </group>
+                                <group>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="partner_comments" widget="html"
+                                       placeholder="Partner comments (mandatory for approval)..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- P-4 Tree View                                                -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_analytics_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.analytics.tree</field>
+        <field name="model">qaco.planning.p4.analytics</field>
+        <field name="arch" type="xml">
+            <tree string="P-4: Preliminary Analytical Procedures"
+                  decoration-muted="state == 'not_started'"
+                  decoration-info="state == 'in_progress'"
+                  decoration-warning="state in ['completed', 'reviewed']"
+                  decoration-success="state == 'locked'">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <field name="data_source"/>
+                <field name="period_covered_end"/>
+                <field name="risks_created_in_p6"/>
+                <field name="state" widget="badge"
+                       decoration-muted="state == 'not_started'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-warning="state in ['completed', 'reviewed']"
+                       decoration-success="state == 'locked'"/>
+                <field name="partner_approved_by_id"/>
+                <field name="partner_approved_on"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- P-4 Search View                                              -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p4_analytics_search" model="ir.ui.view">
+        <field name="name">qaco.planning.p4.analytics.search</field>
+        <field name="model">qaco.planning.p4.analytics</field>
+        <field name="arch" type="xml">
+            <search string="Search P-4 Analytics">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <separator/>
+                <filter string="Not Started" name="not_started" domain="[('state', '=', 'not_started')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Reviewed" name="reviewed" domain="[('state', '=', 'reviewed')]"/>
+                <filter string="Locked" name="locked" domain="[('state', '=', 'locked')]"/>
+                <separator/>
+                <filter string="Has Fraud Indicators" name="has_fraud" 
+                        domain="[('fraud_indicator_ids', '!=', False)]"/>
+                <filter string="Has GC Indicators" name="has_gc" 
+                        domain="[('going_concern_ids', '!=', False)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Data Source" name="group_source" context="{'group_by': 'data_source'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- P-4 Action                                                   -->
+    <!-- ============================================================ -->
     <record id="action_planning_p4_analytics" model="ir.actions.act_window">
-        <field name="name">P-4: Risk Identification &amp; Assessment (FS Level)</field>
+        <field name="name">P-4: Preliminary Analytics</field>
         <field name="res_model">qaco.planning.p4.analytics</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_planning_p4_analytics_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-4 Risk Identification &amp; Assessment (Financial Statement Level)
+                No Preliminary Analytical Procedures found
             </p>
             <p>
-                Document risk identification and assessment at financial statement level per ISA 315.
+                P-4 documents the preliminary analytical procedures performed at the planning stage 
+                in compliance with ISA 520. This includes comparative analysis, ratio analysis, 
+                trend analysis, and identification of fraud and going concern indicators.
             </p>
         </field>
     </record>

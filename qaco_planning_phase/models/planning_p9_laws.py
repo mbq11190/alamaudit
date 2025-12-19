@@ -1,5 +1,200 @@
 # -*- coding: utf-8 -*-
 """
+P-9: Laws & Regulations (Compliance Risk Assessment)
+ISA 250/315/330/240/570/220/ISQM-1/Companies Act 2017/ICAP QCR/AOB
+Court-defensible, fully integrated with planning workflow.
+"""
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+import logging
+_logger = logging.getLogger(__name__)
+
+# =============================
+# Parent Model: Laws & Regulations Assessment
+# =============================
+class AuditPlanningP9LawsRegulations(models.Model):
+    _name = 'audit.planning.p9.laws_regulations'
+    _description = 'P-9: Laws & Regulations (Compliance Risk Assessment)'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc'
+
+    engagement_id = fields.Many2one('qaco.audit', string='Audit Engagement', required=True, ondelete='cascade', index=True, tracking=True)
+    audit_year = fields.Many2one('qaco.audit.year', string='Audit Year', required=True, ondelete='cascade', index=True)
+    partner_id = fields.Many2one('res.users', string='Engagement Partner', required=True)
+    planning_main_id = fields.Many2one('qaco.planning.main', string='Planning Phase', ondelete='cascade', index=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('prepared', 'Prepared'),
+        ('reviewed', 'Reviewed'),
+        ('locked', 'Locked'),
+    ], string='Status', default='draft', tracking=True, copy=False)
+    compliance_line_ids = fields.One2many('audit.planning.p9.compliance_line', 'laws_regulations_id', string='Compliance Lines', required=True)
+    # Section A: Identification of Applicable Laws & Regulations
+    law_companies_act = fields.Boolean(string='Companies Act, 2017')
+    law_income_tax = fields.Boolean(string='Income Tax Ordinance, 2001')
+    law_sales_tax = fields.Boolean(string='Sales Tax Act / Federal Excise Act')
+    law_zakat = fields.Boolean(string='Zakat & Ushr Ordinance, 1980')
+    law_secp = fields.Boolean(string='SECP Regulations / SBP Prudential Regulations')
+    law_sector_specific = fields.Char(string='Sector-specific Laws')
+    law_ngo_donor = fields.Boolean(string='NGO / Donor Regulations')
+    law_foreign = fields.Boolean(string='Foreign Regulations')
+    all_laws_identified = fields.Boolean(string='All relevant laws identified?')
+    industry_regulations_covered = fields.Boolean(string='Industry-specific regulations covered?')
+    # Section C: Regulatory Authorities & Oversight
+    regulator_id = fields.Many2one('res.partner', string='Primary Regulator')
+    inspection_frequency = fields.Char(string='Frequency of Inspections')
+    last_inspection_date = fields.Date(string='Last Inspection Date')
+    last_inspection_findings = fields.Text(string='Findings from Last Inspection')
+    outstanding_regulatory_matters = fields.Boolean(string='Outstanding Regulatory Matters?')
+    oversight_understood = fields.Boolean(string='Oversight understood?')
+    prior_findings_considered = fields.Boolean(string='Prior findings considered?')
+    # Section D: Compliance History & Known Non-Compliance
+    known_non_compliance = fields.Boolean(string='Known Instances of Non-Compliance?')
+    non_compliance_nature = fields.Text(string='Nature of Non-Compliance')
+    non_compliance_periods = fields.Char(string='Period(s) Affected')
+    non_compliance_status = fields.Selection([
+        ('resolved', 'Resolved'),
+        ('ongoing', 'Ongoing'),
+        ('disputed', 'Disputed'),
+    ], string='Status')
+    non_compliance_impact = fields.Char(string='Financial Impact (Actual/Potential)')
+    # Section F: Fraud & Illegal Acts Consideration
+    illegal_acts_indicators = fields.Boolean(string='Indicators of Illegal Acts Identified?')
+    mgmt_involvement_suspected = fields.Boolean(string='Management Involvement Suspected?')
+    whistleblower_complaints = fields.Boolean(string='Whistleblower Complaints / Media Reports?')
+    fraud_risk_impact = fields.Text(string='Impact on Fraud Risk Assessment')
+    # Section G: Management Representations & Inquiries
+    mgmt_representations_obtained = fields.Boolean(string='Management Representations Obtained?')
+    inquiry_results_summary = fields.Text(string='Inquiry Results Summary')
+    contradictions_identified = fields.Boolean(string='Contradictions Identified?')
+    legal_counsel_needed = fields.Boolean(string='Need for Legal Counsel Involvement?')
+    inquiries_documented = fields.Boolean(string='Inquiries documented?')
+    responses_evaluated = fields.Boolean(string='Responses evaluated?')
+    # Section H: Audit Responses to Compliance Risks
+    planned_substantive_testing = fields.Boolean(string='Planned Substantive Testing?')
+    planned_legal_confirmations = fields.Boolean(string='Planned Legal Confirmations?')
+    planned_regulatory_review = fields.Boolean(string='Planned Regulatory Correspondence Review?')
+    response_nature_timing_extent = fields.Text(string='Nature, Timing, Extent')
+    specialist_involvement = fields.Boolean(string='Specialist Involvement Required?')
+    # Section I: Impact on Going Concern & Reporting
+    non_compliance_impacts_gc = fields.Boolean(string='Non-compliance Impacts GC?')
+    disclosure_required = fields.Boolean(string='Disclosure Required?')
+    reporting_modification = fields.Boolean(string='Possible Reporting Modification?')
+    gc_reporting_basis = fields.Text(string='Basis for Conclusion')
+    # Section J: Mandatory Document Uploads
+    attachment_ids = fields.Many2many('ir.attachment', 'audit_p9_laws_attachment_rel', 'laws_id', 'attachment_id', string='Required Attachments', help='Statutory filings, regulatory correspondence, legal opinions, compliance letters, mgmt rep drafts')
+    mandatory_upload_check = fields.Boolean(string='Mandatory uploads present?')
+    # Section K: Conclusion & Professional Judgment
+    conclusion_narrative = fields.Text(string='Conclusion Narrative', required=True, default="Relevant laws and regulations applicable to the entity have been identified and considered in accordance with ISA 250. Risks of material non-compliance have been assessed, and appropriate audit responses and reporting implications have been determined.")
+    laws_considered = fields.Boolean(string='Laws & regulations adequately considered?')
+    compliance_risks_assessed = fields.Boolean(string='Compliance risks assessed and linked?')
+    audit_response_basis = fields.Boolean(string='Basis established for audit responses?')
+    # Section L: Review, Approval & Lock
+    prepared_by = fields.Many2one('res.users', string='Prepared By')
+    prepared_by_role = fields.Char(string='Prepared By Role')
+    prepared_date = fields.Datetime(string='Prepared Date')
+    reviewed_by = fields.Many2one('res.users', string='Reviewed By')
+    review_notes = fields.Text(string='Review Notes')
+    partner_approved = fields.Boolean(string='Partner Approved?')
+    partner_comments = fields.Text(string='Partner Comments (Mandatory)')
+    locked = fields.Boolean(string='Locked', compute='_compute_locked', store=True)
+    # Outputs
+    laws_memo_pdf = fields.Binary(string='Laws & Regulations Compliance Assessment Memorandum (PDF)')
+    compliance_risk_register = fields.Binary(string='Compliance Risk Register')
+    # Audit trail
+    version_history = fields.Text(string='Version History')
+    reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+
+    @api.depends('partner_approved')
+    def _compute_locked(self):
+        for rec in self:
+            rec.locked = bool(rec.partner_approved)
+
+    def action_prepare(self):
+        self.state = 'prepared'
+        self.prepared_by = self.env.user.id
+        self.prepared_by_role = self.env.user.groups_id.mapped('name')
+        self.prepared_date = fields.Datetime.now()
+        self.message_post(body="P-9 prepared.")
+
+    def action_review(self):
+        self.state = 'reviewed'
+        self.reviewed_by = self.env.user.id
+        self.message_post(body="P-9 reviewed.")
+
+    def action_partner_approve(self):
+        if not self.partner_comments:
+            raise ValidationError("Partner comments are mandatory for approval.")
+        self.state = 'locked'
+        self.partner_approved = True
+        self.message_post(body="P-9 partner approved and locked.")
+
+    @api.constrains('attachment_ids')
+    def _check_mandatory_uploads(self):
+        for rec in self:
+            if not rec.attachment_ids:
+                raise ValidationError("Mandatory compliance assessment documents must be uploaded.")
+
+    @api.constrains('compliance_line_ids')
+    def _check_compliance_lines(self):
+        for rec in self:
+            if not rec.compliance_line_ids:
+                raise ValidationError("At least one compliance line must be entered.")
+
+    # Pre-conditions enforcement
+    @api.model
+    def create(self, vals):
+        planning = self.env['qaco.planning.main'].browse(vals.get('planning_main_id'))
+        if not planning or not planning.p8_partner_locked:
+            raise UserError("P-9 cannot be started until P-8 is partner-approved and locked.")
+        if not planning.p6_finalized or not planning.p2_completed:
+            raise UserError("P-9 requires finalized P-6 and completed P-2.")
+        return super().create(vals)
+
+# =============================
+# Child Model: Compliance Line
+# =============================
+class AuditPlanningP9ComplianceLine(models.Model):
+    _name = 'audit.planning.p9.compliance_line'
+    _description = 'P-9: Compliance Line'
+    _order = 'id desc'
+
+    laws_regulations_id = fields.Many2one('audit.planning.p9.laws_regulations', string='Laws & Regulations Assessment', required=True, ondelete='cascade', index=True)
+    law = fields.Char(string='Law / Regulation', required=True)
+    direct_effect = fields.Boolean(string='Direct Effect on FS?')
+    indirect_effect = fields.Boolean(string='Indirect Effect?')
+    effect_basis = fields.Text(string='Basis')
+    area_affected = fields.Char(string='Area Affected')
+    nature_of_risk = fields.Text(string='Nature of Risk')
+    likelihood = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Likelihood')
+    impact = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Impact')
+    compliance_risk_level = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Compliance Risk Level')
+    # Audit trail
+    change_log = fields.Text(string='Change Log')
+    version_history = fields.Text(string='Version History')
+    reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+
+    def write(self, vals):
+        self.message_post(body=f"Compliance line updated: {vals}")
+        return super().write(vals)
+
+    def unlink(self):
+        self.message_post(body="Compliance line deleted.")
+        return super().unlink()
+# -*- coding: utf-8 -*-
+"""
 P-9: Laws & Regulations
 Standard: ISA 250
 Purpose: Identify compliance risks.

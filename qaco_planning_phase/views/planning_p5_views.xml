@@ -1,276 +1,685 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ============================================== -->
-    <!-- P-5: Materiality                              -->
-    <!-- ISA 320                                        -->
-    <!-- ============================================== -->
+    <!-- ============================================================ -->
+    <!-- P-5: Materiality & Performance Materiality                   -->
+    <!-- ISA 320, ISA 450                                             -->
+    <!-- ============================================================ -->
 
-    <!-- P-5 Form View -->
-    <record id="view_planning_p5_materiality_form" model="ir.ui.view">
-        <field name="name">qaco.planning.p5.materiality.form</field>
-        <field name="model">qaco.planning.p5.materiality</field>
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Specific Materiality Items                -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p5_specific_materiality_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.specific.materiality.tree</field>
+        <field name="model">qaco.planning.p5.specific.materiality</field>
         <field name="arch" type="xml">
-            <form string="P-5: Risk Assessment (Assertion Level)">
-                <header>
-                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
-                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
-                            invisible="state != 'not_started'"/>
-                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
-                            invisible="state != 'in_progress'"/>
-                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
-                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
-                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
-                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
-                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
-                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 315 | Risk Assessment (Assertion Level)</h3>
-                    </div>
+            <tree string="Specific Materiality Items" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="class_or_balance"/>
+                <field name="reason_category" widget="badge"/>
+                <field name="specific_materiality"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="as_pct_of_om" string="% of OM"/>
+                <field name="justification"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Component Materiality                     -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p5_component_materiality_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.component.materiality.tree</field>
+        <field name="model">qaco.planning.p5.component.materiality</field>
+        <field name="arch" type="xml">
+            <tree string="Component Materiality" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="component_name"/>
+                <field name="component_type" widget="badge"/>
+                <field name="component_significance" widget="badge"
+                       decoration-danger="component_significance == 'significant'"
+                       decoration-info="component_significance == 'non_significant'"/>
+                <field name="component_materiality"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="allocation_basis"/>
+                <field name="allocation_notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Materiality Revision Log                  -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p5_revision_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.revision.tree</field>
+        <field name="model">qaco.planning.p5.revision</field>
+        <field name="arch" type="xml">
+            <tree string="Materiality Revisions">
+                <field name="revision_date"/>
+                <field name="revision_stage" widget="badge"/>
+                <field name="previous_om"/>
+                <field name="revised_om"/>
+                <field name="previous_pm"/>
+                <field name="revised_pm"/>
+                <field name="revision_reason"/>
+                <field name="revised_by_id"/>
+                <field name="partner_approved" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_planning_p5_revision_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.revision.form</field>
+        <field name="model">qaco.planning.p5.revision</field>
+        <field name="arch" type="xml">
+            <form string="Materiality Revision">
+                <group>
                     <group>
-                        <group string="Audit Information">
-                            <field name="audit_id" readonly="state != 'not_started'"/>
-                            <field name="client_id"/>
-                        </group>
-                        <group string="Overall Status">
-                            <field name="materiality_finalized"/>
-                            <field name="revision_required"/>
-                        </group>
+                        <field name="revision_date"/>
+                        <field name="revision_stage"/>
+                        <field name="revised_by_id"/>
                     </group>
-
-                    <notebook>
-                        <!-- Tab 1: Benchmark Selection -->
-                        <page string="Benchmark Selection" name="benchmark">
-                            <group>
-                                <group string="Benchmark">
-                                    <field name="benchmark_type"/>
-                                    <field name="benchmark_amount"/>
-                                </group>
-                                <group string="Benchmark Selection Rationale">
-                                    <field name="benchmark_rationale" widget="html" nolabel="1"/>
-                                </group>
-                            </group>
-                            <group string="Alternative Benchmarks Considered">
-                                <field name="alternative_benchmarks" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="User Base Analysis">
-                                <field name="user_base_analysis" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 2: Overall Materiality -->
-                        <page string="Overall Materiality" name="overall">
-                            <group>
-                                <group string="Materiality Percentage">
-                                    <field name="materiality_percentage"/>
-                                </group>
-                                <group string="Calculated Materiality">
-                                    <field name="overall_materiality"/>
-                                </group>
-                            </group>
-                            <group string="Percentage Justification">
-                                <field name="percentage_rationale" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Prior Year Comparison">
-                                <group>
-                                    <field name="prior_year_materiality"/>
-                                    <field name="materiality_change_pct"/>
-                                </group>
-                            </group>
-                            <group string="Prior Year Comparison Narrative">
-                                <field name="prior_year_comparison" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 3: Performance Materiality -->
-                        <page string="Performance Materiality" name="performance">
-                            <group>
-                                <group string="Performance Materiality Percentage">
-                                    <field name="performance_materiality_pct"/>
-                                </group>
-                                <group string="Calculated Performance Materiality">
-                                    <field name="performance_materiality"/>
-                                </group>
-                            </group>
-                            <group string="Factors Considered">
-                                <field name="pm_factors_considered" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Justification for Percentage">
-                                <field name="pm_justification" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 4: Tolerable Misstatement -->
-                        <page string="Tolerable Misstatement" name="tolerable">
-                            <group>
-                                <group string="Trivial Threshold">
-                                    <field name="trivial_threshold_pct"/>
-                                    <field name="trivial_threshold"/>
-                                </group>
-                                <group string="SAD Limit">
-                                    <field name="sad_threshold"/>
-                                </group>
-                            </group>
-                            <group string="Threshold Justification">
-                                <field name="threshold_justification" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 5: Specific Materiality -->
-                        <page string="Specific Materiality" name="specific">
-                            <group string="Specific Materiality Lines">
-                                <field name="specific_materiality_ids" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="account_area"/>
-                                        <field name="specific_amount"/>
-                                        <field name="rationale"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group string="Specific Materiality Narrative">
-                                <field name="specific_materiality_narrative" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 6: Qualitative Factors -->
-                        <page string="Qualitative Factors" name="qualitative">
-                            <group string="Qualitative Considerations">
-                                <field name="qualitative_factors" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Regulatory Considerations">
-                                <field name="regulatory_considerations" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Sensitive Items">
-                                <field name="sensitive_items" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 7: Revision Log -->
-                        <page string="Revision Log" name="revision">
-                            <group string="Materiality Revisions">
-                                <field name="revision_line_ids" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="revision_date"/>
-                                        <field name="revised_by_id"/>
-                                        <field name="previous_materiality"/>
-                                        <field name="revised_materiality"/>
-                                        <field name="revision_reason"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group string="Latest Revision Notes">
-                                <field name="revision_notes" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 8: Attachments -->
-                        <page string="Attachments" name="attachments">
-                            <group string="Materiality Calculation Workpapers">
-                                <field name="materiality_attachment_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 9: Conclusion & Sign-off -->
-                        <page string="Conclusion &amp; Sign-off" name="conclusion">
-                            <group string="Materiality Summary">
-                                <field name="materiality_summary" widget="html" nolabel="1"/>
-                            </group>
-                            <group>
-                                <group string="Final Materiality Values">
-                                    <field name="overall_materiality" readonly="1"/>
-                                    <field name="performance_materiality" readonly="1"/>
-                                    <field name="trivial_threshold" readonly="1"/>
-                                </group>
-                                <group string="Status">
-                                    <field name="materiality_finalized"/>
-                                </group>
-                            </group>
-                            <group>
-                                <group string="Sign-off">
-                                    <field name="senior_signed_user_id"/>
-                                    <field name="senior_signed_on"/>
-                                    <field name="manager_reviewed_user_id"/>
-                                    <field name="manager_reviewed_on"/>
-                                    <field name="partner_approved_user_id"/>
-                                    <field name="partner_approved_on"/>
-                                </group>
-                                <group string="ISA Reference">
-                                    <field name="isa_reference"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                    <group>
+                        <field name="previous_om"/>
+                        <field name="revised_om"/>
+                        <field name="previous_pm"/>
+                        <field name="revised_pm"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="revision_reason" placeholder="Document reason for revision per ISA 320.12-13..."/>
+                    <field name="partner_approved"/>
+                </group>
             </form>
         </field>
     </record>
 
-    <!-- P-5 Tree View -->
+    <!-- ============================================================ -->
+    <!-- CHILD MODEL VIEWS: Qualitative Sensitivity Items             -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p5_qualitative_item_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.qualitative.item.tree</field>
+        <field name="model">qaco.planning.p5.qualitative.item</field>
+        <field name="arch" type="xml">
+            <tree string="Qualitative Sensitivity Items" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="sensitivity_area"/>
+                <field name="other_description" invisible="sensitivity_area != 'other'"/>
+                <field name="applies_to_entity" widget="boolean_toggle"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- MAIN MODEL: P-5 Form View                                    -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p5_materiality_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.materiality.form</field>
+        <field name="model">qaco.planning.p5.materiality</field>
+        <field name="arch" type="xml">
+            <form string="P-5: Materiality &amp; Performance Materiality">
+                <header>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="not_started,in_progress,completed,reviewed,locked"/>
+                    <button name="action_start_work" string="Start Work" type="object" 
+                            class="btn-primary" invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" 
+                            class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_manager_review" string="Manager Review" type="object" 
+                            class="btn-warning" invisible="state != 'completed'"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_partner_approve" string="Partner Approve" type="object" 
+                            class="btn-success" invisible="state != 'reviewed'"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" 
+                            class="btn-secondary" invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" 
+                            class="btn-danger" invisible="state != 'locked'"
+                            groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_revise_materiality" type="object"
+                                class="oe_stat_button" icon="fa-refresh"
+                                invisible="state in ['not_started', 'locked']">
+                            <span class="o_stat_text">Revise</span>
+                        </button>
+                        <button name="action_generate_materiality_memo" type="object"
+                                class="oe_stat_button" icon="fa-file-pdf-o"
+                                invisible="state == 'not_started'">
+                            <span class="o_stat_text">Generate Memo</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Locked" bg_color="bg-danger" 
+                            invisible="not is_locked"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 320 | Materiality &amp; Performance Materiality</h3>
+                    </div>
+                    <group>
+                        <group string="Engagement Information">
+                            <field name="audit_id" readonly="state != 'not_started'"/>
+                            <field name="client_id"/>
+                            <field name="planning_main_id" invisible="1"/>
+                        </group>
+                        <group string="Materiality Summary">
+                            <field name="overall_materiality" class="oe_inline"/>
+                            <field name="performance_materiality" class="oe_inline"/>
+                            <field name="clearly_trivial_threshold" class="oe_inline"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="is_locked" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- ================================================ -->
+                        <!-- SECTION A: Purpose & Context                     -->
+                        <!-- ================================================ -->
+                        <page string="A. Purpose &amp; Context" name="section_a">
+                            <group string="Intended Users of Financial Statements">
+                                <group>
+                                    <field name="user_shareholders"/>
+                                    <field name="user_lenders"/>
+                                    <field name="user_regulators"/>
+                                    <field name="user_donors"/>
+                                </group>
+                                <group>
+                                    <field name="user_employees"/>
+                                    <field name="user_suppliers"/>
+                                    <field name="user_other"/>
+                                    <field name="user_other_description" 
+                                           invisible="not user_other"/>
+                                </group>
+                            </group>
+                            <group string="User Sensitivity Assessment">
+                                <group>
+                                    <field name="user_sensitivity" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="user_sensitivity_notes"
+                                           placeholder="Document rationale for sensitivity assessment..."/>
+                                </group>
+                            </group>
+                            <group string="Entity Status">
+                                <group>
+                                    <field name="entity_status" widget="radio"/>
+                                </group>
+                            </group>
+                            <group invisible="entity_status != 'listed_pie'">
+                                <field name="pie_considerations" widget="html"
+                                       placeholder="Document additional PIE considerations..."/>
+                            </group>
+                            <group string="Section A Checklist">
+                                <field name="checklist_a_users_identified"/>
+                                <field name="checklist_a_sensitivity_assessed"/>
+                                <field name="checklist_a_pie_applied"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION B: Benchmark Selection                   -->
+                        <!-- ================================================ -->
+                        <page string="B. Benchmark" name="section_b">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>CRITICAL JUDGMENT:</strong> Benchmark selection must be 
+                                documented with clear justification per ISA 320.
+                            </div>
+                            <group string="Benchmark Selection">
+                                <group>
+                                    <field name="benchmark_type" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="benchmark_amount" 
+                                           invisible="benchmark_type == 'custom'"/>
+                                    <field name="custom_benchmark_name"
+                                           invisible="benchmark_type != 'custom'"/>
+                                    <field name="custom_benchmark_amount"
+                                           invisible="benchmark_type != 'custom'"/>
+                                </group>
+                            </group>
+                            <group string="Benchmark Stability">
+                                <group>
+                                    <field name="benchmark_stability" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="benchmark_stability_notes"
+                                           placeholder="Document stability assessment..."/>
+                                </group>
+                            </group>
+                            <group string="Benchmark Justification (MANDATORY)">
+                                <field name="benchmark_justification" widget="html" nolabel="1"
+                                       placeholder="Document why this benchmark is appropriate for the entity..."/>
+                            </group>
+                            <group string="Prior Year Consistency">
+                                <group>
+                                    <field name="prior_year_benchmark_type"/>
+                                    <field name="benchmark_consistent_with_py" widget="radio"/>
+                                </group>
+                            </group>
+                            <group invisible="benchmark_consistent_with_py != 'no'">
+                                <field name="benchmark_change_justification"
+                                       placeholder="Justify why benchmark changed from prior year..."/>
+                            </group>
+                            <group string="Section B Checklist">
+                                <field name="checklist_b_benchmark_appropriate"/>
+                                <field name="checklist_b_consistent_or_justified"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION C: Overall Materiality                   -->
+                        <!-- ================================================ -->
+                        <page string="C. Overall Materiality" name="section_c">
+                            <group string="Materiality Calculation">
+                                <group>
+                                    <field name="materiality_percentage"/>
+                                    <field name="overall_materiality" readonly="1" class="oe_inline text-primary"/>
+                                </group>
+                                <group>
+                                    <field name="firm_min_pct"/>
+                                    <field name="firm_max_pct"/>
+                                    <field name="outside_firm_threshold" widget="boolean" 
+                                           decoration-danger="outside_firm_threshold"/>
+                                </group>
+                            </group>
+                            <group string="Exception Justification" 
+                                   invisible="not outside_firm_threshold">
+                                <field name="threshold_exception_justification" nolabel="1"
+                                       placeholder="REQUIRED: Justify why percentage is outside firm policy thresholds..."/>
+                            </group>
+                            <group string="Prior Year Comparison">
+                                <group>
+                                    <field name="prior_year_om"/>
+                                    <field name="om_change_pct" 
+                                           decoration-danger="om_change_pct &gt; 10 or om_change_pct &lt; -10"/>
+                                </group>
+                            </group>
+                            <group invisible="om_change_pct &lt; 10 and om_change_pct &gt; -10">
+                                <field name="om_change_explanation" widget="html"
+                                       placeholder="MANDATORY: Explain significant change from prior year..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION D: Performance Materiality               -->
+                        <!-- ================================================ -->
+                        <page string="D. Performance Materiality" name="section_d">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 320:</strong> Performance materiality must be set at an amount 
+                                less than overall materiality to reduce the risk that aggregate 
+                                misstatements exceed overall materiality.
+                            </div>
+                            <group string="PM Calculation">
+                                <group>
+                                    <field name="pm_percentage"/>
+                                    <field name="performance_materiality" readonly="1" 
+                                           class="oe_inline text-primary"/>
+                                </group>
+                            </group>
+                            <group string="Factors Considered in Determining PM">
+                                <group>
+                                    <field name="pm_risk_of_misstatement" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="pm_control_environment" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="pm_prior_year_misstatements" widget="radio"/>
+                                </group>
+                            </group>
+                            <group string="PM Rationale">
+                                <field name="pm_rationale" widget="html" nolabel="1"
+                                       placeholder="Document rationale for PM percentage considering above factors..."/>
+                            </group>
+                            <group string="Section D Checklist">
+                                <field name="checklist_d_pm_sufficiently_lower"/>
+                                <field name="checklist_d_risk_rationale"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION E: Clearly Trivial Threshold             -->
+                        <!-- ================================================ -->
+                        <page string="E. Trivial Threshold" name="section_e">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 450:</strong> Clearly trivial threshold determines which 
+                                misstatements need not be accumulated for evaluation.
+                            </div>
+                            <group string="CTT Calculation">
+                                <group>
+                                    <field name="ctt_percentage"/>
+                                    <field name="clearly_trivial_threshold" readonly="1"
+                                           class="oe_inline text-primary"/>
+                                </group>
+                            </group>
+                            <group string="Basis for CTT Selection">
+                                <field name="ctt_basis" widget="html" nolabel="1"
+                                       placeholder="Document rationale for CTT percentage..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION F: Qualitative Materiality               -->
+                        <!-- ================================================ -->
+                        <page string="F. Qualitative" name="section_f">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Non-Numeric but Mandatory:</strong> Certain items are 
+                                sensitive to users regardless of their monetary size.
+                            </div>
+                            <group string="Areas Sensitive Regardless of Size">
+                                <group>
+                                    <field name="qual_related_parties"/>
+                                    <field name="qual_directors_remuneration"/>
+                                    <field name="qual_regulatory_disclosures"/>
+                                    <field name="qual_covenant_breaches"/>
+                                </group>
+                                <group>
+                                    <field name="qual_zakat_tax"/>
+                                    <field name="qual_segment_info"/>
+                                    <field name="qual_eps"/>
+                                    <field name="qual_other"/>
+                                </group>
+                            </group>
+                            <separator string="Detailed Qualitative Sensitivity Items"/>
+                            <field name="qualitative_item_ids" nolabel="1">
+                                <tree string="Qualitative Items" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sensitivity_area"/>
+                                    <field name="other_description"/>
+                                    <field name="applies_to_entity" widget="boolean_toggle"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                            <group string="Narrative on Qualitative Materiality">
+                                <field name="qualitative_narrative" widget="html" nolabel="1"
+                                       placeholder="Document qualitative considerations affecting materiality judgments..."/>
+                            </group>
+                            <group string="Section F Checklist">
+                                <field name="checklist_f_qualitative_considered"/>
+                                <field name="checklist_f_regulatory_addressed"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION G: Risk-Adjusted Materiality             -->
+                        <!-- ================================================ -->
+                        <page string="G. Risk-Adjusted" name="section_g">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Advanced:</strong> Materiality may need adjustment based on 
+                                engagement-level risk factors.
+                            </div>
+                            <group string="Overall Engagement Risk">
+                                <field name="overall_engagement_risk" widget="radio"/>
+                            </group>
+                            <group string="Adjustment Factors">
+                                <group>
+                                    <field name="adjust_high_fraud_risk"/>
+                                    <field name="adjust_weak_controls"/>
+                                    <field name="adjust_going_concern"/>
+                                </group>
+                                <group>
+                                    <field name="adjust_first_year"/>
+                                    <field name="adjust_complex_transactions"/>
+                                </group>
+                            </group>
+                            <group string="Risk Adjustment">
+                                <group>
+                                    <field name="risk_adjustment_applied"/>
+                                    <field name="revised_pm" invisible="not risk_adjustment_applied"/>
+                                </group>
+                            </group>
+                            <group invisible="not risk_adjustment_applied">
+                                <field name="risk_adjustment_justification" widget="html"
+                                       placeholder="MANDATORY: Justify risk adjustment..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION H: Component Materiality                 -->
+                        <!-- ================================================ -->
+                        <page string="H. Component/Group" name="section_h">
+                            <group string="Group Audit Assessment">
+                                <group>
+                                    <field name="is_group_audit" widget="radio"/>
+                                </group>
+                                <group invisible="is_group_audit != 'yes'">
+                                    <field name="component_materiality_required" widget="radio"/>
+                                </group>
+                            </group>
+                            <separator string="Component Materiality"
+                                       invisible="component_materiality_required != 'yes'"/>
+                            <field name="component_materiality_ids" nolabel="1"
+                                   invisible="component_materiality_required != 'yes'">
+                                <tree string="Component Materiality" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="component_name"/>
+                                    <field name="component_type" widget="badge"/>
+                                    <field name="component_significance" widget="badge"/>
+                                    <field name="component_materiality"/>
+                                    <field name="allocation_basis"/>
+                                    <field name="allocation_notes"/>
+                                </tree>
+                            </field>
+                            <group invisible="component_materiality_required != 'yes'">
+                                <field name="component_allocation_basis" widget="html"
+                                       placeholder="Document methodology for allocating materiality to components..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION I: Execution Linkage                     -->
+                        <!-- ================================================ -->
+                        <page string="I. Execution Linkage" name="section_i">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Auto-Flow:</strong> Materiality figures automatically flow to 
+                                execution modules. No manual override allowed without partner justification.
+                            </div>
+                            <group string="Linkage Status">
+                                <group>
+                                    <field name="linkage_sampling" readonly="1"/>
+                                    <field name="linkage_substantive" readonly="1"/>
+                                    <field name="linkage_misstatement" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="linkage_evaluation" readonly="1"/>
+                                    <field name="linkage_report" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="linkage_notes" widget="html"
+                                       placeholder="Document how materiality flows to execution modules..."/>
+                            </group>
+                            <group string="Manual Override (Exceptional)">
+                                <field name="manual_override_requested"/>
+                            </group>
+                            <group invisible="not manual_override_requested">
+                                <field name="override_partner_justification" widget="html"
+                                       placeholder="MANDATORY: Partner justification for override..."/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION J: Documents                             -->
+                        <!-- ================================================ -->
+                        <page string="J. Documents" name="section_j">
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Mandatory:</strong> System will block progression if required 
+                                documents are not uploaded.
+                            </div>
+                            <group string="Required Attachments">
+                                <field name="materiality_worksheet_ids" widget="many2many_binary"/>
+                                <field name="prior_year_reference_ids" widget="many2many_binary"/>
+                                <field name="partner_approval_evidence_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Document Checklist">
+                                <field name="checklist_j_worksheet"/>
+                                <field name="checklist_j_prior_year"/>
+                                <field name="checklist_j_partner_evidence"/>
+                            </group>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION K: Conclusion                            -->
+                        <!-- ================================================ -->
+                        <page string="K. Conclusion" name="section_k">
+                            <group string="P-5 Conclusion Statement">
+                                <field name="conclusion_narrative" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="Specific Materiality Items (if applicable)"/>
+                            <field name="specific_materiality_ids" nolabel="1">
+                                <tree string="Specific Materiality" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="class_or_balance"/>
+                                    <field name="reason_category" widget="badge"/>
+                                    <field name="specific_materiality"/>
+                                    <field name="as_pct_of_om"/>
+                                    <field name="justification"/>
+                                </tree>
+                            </field>
+                            <group string="Final Confirmations">
+                                <field name="confirm_materiality_appropriate"/>
+                                <field name="confirm_embedded_in_strategy"/>
+                                <field name="confirm_proceed_to_p6"/>
+                            </group>
+                            <separator string="Materiality Revision History"/>
+                            <field name="revision_ids" nolabel="1" readonly="1">
+                                <tree string="Revision History">
+                                    <field name="revision_date"/>
+                                    <field name="revision_stage" widget="badge"/>
+                                    <field name="previous_om"/>
+                                    <field name="revised_om"/>
+                                    <field name="revision_reason"/>
+                                    <field name="revised_by_id"/>
+                                    <field name="partner_approved"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ================================================ -->
+                        <!-- SECTION L: Approval                              -->
+                        <!-- ================================================ -->
+                        <page string="L. Approval" name="section_l">
+                            <group string="Prepared By">
+                                <group>
+                                    <field name="prepared_by_id"/>
+                                    <field name="prepared_by_role"/>
+                                </group>
+                                <group>
+                                    <field name="prepared_on"/>
+                                </group>
+                            </group>
+                            <group string="Manager Review">
+                                <group>
+                                    <field name="reviewed_by_id"/>
+                                    <field name="reviewed_on"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="review_notes" widget="html"
+                                       placeholder="Manager review notes (mandatory before partner approval)..."/>
+                            </group>
+                            <group string="Partner Approval">
+                                <group>
+                                    <field name="partner_approved" widget="radio"/>
+                                    <field name="partner_approved_by_id"/>
+                                </group>
+                                <group>
+                                    <field name="partner_approved_on"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="partner_comments" widget="html"
+                                       placeholder="Partner comments (mandatory for approval)..."/>
+                            </group>
+                            <group>
+                                <field name="isa_reference"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- P-5 Tree View                                                -->
+    <!-- ============================================================ -->
     <record id="view_planning_p5_materiality_tree" model="ir.ui.view">
         <field name="name">qaco.planning.p5.materiality.tree</field>
         <field name="model">qaco.planning.p5.materiality</field>
         <field name="arch" type="xml">
-            <tree string="P-5: Materiality">
+            <tree string="P-5: Materiality"
+                  decoration-muted="state == 'not_started'"
+                  decoration-info="state == 'in_progress'"
+                  decoration-warning="state in ['completed', 'reviewed']"
+                  decoration-success="state == 'locked'">
                 <field name="name"/>
+                <field name="audit_id"/>
                 <field name="client_id"/>
                 <field name="benchmark_type"/>
                 <field name="overall_materiality"/>
                 <field name="performance_materiality"/>
-                <field name="state" widget="badge" decoration-info="state == 'not_started'"
-                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+                <field name="clearly_trivial_threshold"/>
+                <field name="state" widget="badge"
+                       decoration-muted="state == 'not_started'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-warning="state in ['completed', 'reviewed']"
+                       decoration-success="state == 'locked'"/>
+                <field name="partner_approved_by_id"/>
             </tree>
         </field>
     </record>
 
-    <!-- P-5 Action -->
+    <!-- ============================================================ -->
+    <!-- P-5 Search View                                              -->
+    <!-- ============================================================ -->
+    <record id="view_planning_p5_materiality_search" model="ir.ui.view">
+        <field name="name">qaco.planning.p5.materiality.search</field>
+        <field name="model">qaco.planning.p5.materiality</field>
+        <field name="arch" type="xml">
+            <search string="Search P-5 Materiality">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <separator/>
+                <filter string="Not Started" name="not_started" domain="[('state', '=', 'not_started')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Reviewed" name="reviewed" domain="[('state', '=', 'reviewed')]"/>
+                <filter string="Locked" name="locked" domain="[('state', '=', 'locked')]"/>
+                <separator/>
+                <filter string="Outside Firm Threshold" name="outside_threshold" 
+                        domain="[('outside_firm_threshold', '=', True)]"/>
+                <filter string="Risk Adjusted" name="risk_adjusted" 
+                        domain="[('risk_adjustment_applied', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Benchmark" name="group_benchmark" context="{'group_by': 'benchmark_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- P-5 Action                                                   -->
+    <!-- ============================================================ -->
     <record id="action_planning_p5_materiality" model="ir.actions.act_window">
-        <field name="name">P-5: Risk Assessment (Assertion Level)</field>
+        <field name="name">P-5: Materiality</field>
         <field name="res_model">qaco.planning.p5.materiality</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_planning_p5_materiality_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-5 Risk Assessment (Assertion Level)
+                No Materiality Determinations found
             </p>
             <p>
-                Document risk assessment at assertion level per ISA 315.
+                P-5 documents the determination of overall materiality, performance materiality, 
+                and clearly trivial thresholds in compliance with ISA 320 and ISA 450. This includes 
+                both quantitative calculations and qualitative considerations.
             </p>
-        </field>
-    </record>
-
-    <!-- Specific Materiality Line Model Views (for embedded use) -->
-    <record id="view_specific_materiality_line_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p5.specific.materiality.tree</field>
-        <field name="model">qaco.planning.p5.specific.materiality</field>
-        <field name="arch" type="xml">
-            <tree string="Specific Materiality Lines" editable="bottom">
-                <field name="account_area"/>
-                <field name="specific_amount"/>
-                <field name="rationale"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Materiality Revision Line Model Views (for embedded use) -->
-    <record id="view_materiality_revision_line_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p5.revision.tree</field>
-        <field name="model">qaco.planning.p5.revision</field>
-        <field name="arch" type="xml">
-            <tree string="Materiality Revisions" editable="bottom">
-                <field name="revision_date"/>
-                <field name="revised_by_id"/>
-                <field name="previous_materiality"/>
-                <field name="revised_materiality"/>
-                <field name="revision_reason"/>
-            </tree>
         </field>
     </record>
 

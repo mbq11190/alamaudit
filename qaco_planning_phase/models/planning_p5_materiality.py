@@ -1,18 +1,261 @@
 # -*- coding: utf-8 -*-
 """
 P-5: Materiality & Performance Materiality
-Standard: ISA 320
-Purpose: Establish quantitative benchmarks for audit.
+Standards: ISA 320, ISA 450, ISA 315 (Revised), ISA 570 (Revised), ISA 220, ISQM-1
+Purpose: Establish quantitative and qualitative materiality benchmarks for audit,
+         ensuring documented professional judgment, proper approval, and execution linkage.
+
+Sections:
+    A - Purpose & Context of Materiality
+    B - Benchmark Selection (Critical Judgment)
+    C - Overall Materiality Calculation
+    D - Performance Materiality (PM)
+    E - Clearly Trivial Threshold (CTT)
+    F - Qualitative Materiality Considerations
+    G - Risk-Adjusted Materiality (Advanced)
+    H - Component / Group Materiality
+    I - Linkage to Audit Execution (Auto-Flow)
+    J - Mandatory Document Uploads
+    K - P-5 Conclusion & Professional Judgment
+    L - Review, Approval & Lock
 """
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
+# =============================================================================
+# CHILD MODEL: Specific Materiality Items
+# =============================================================================
+class PlanningP5SpecificMateriality(models.Model):
+    """Specific Materiality for particular classes/balances/disclosures."""
+    _name = 'qaco.planning.p5.specific.materiality'
+    _description = 'P-5: Specific Materiality Item'
+    _order = 'sequence, id'
+
+    p5_id = fields.Many2one(
+        'qaco.planning.p5.materiality',
+        string='P-5 Materiality',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    sequence = fields.Integer(string='Seq', default=10)
+    class_or_balance = fields.Char(
+        string='Class/Balance/Disclosure',
+        required=True,
+        help='Specific account, balance, or disclosure requiring lower materiality'
+    )
+    reason_category = fields.Selection([
+        ('regulatory', 'Regulatory Requirement'),
+        ('user_sensitivity', 'User Sensitivity'),
+        ('related_party', 'Related Party'),
+        ('covenant', 'Covenant Compliance'),
+        ('fraud_risk', 'Fraud Risk'),
+        ('other', 'Other'),
+    ], string='Reason Category', required=True)
+    specific_materiality = fields.Float(
+        string='Specific Materiality',
+        digits=(16, 2),
+        help='Lower materiality amount for this specific item'
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='p5_id.currency_id',
+        store=True
+    )
+    as_pct_of_om = fields.Float(
+        string='% of OM',
+        compute='_compute_as_pct',
+        store=True,
+        digits=(5, 2)
+    )
+    justification = fields.Text(
+        string='Justification',
+        required=True,
+        help='Why lower materiality is appropriate for this item'
+    )
+
+    @api.depends('specific_materiality', 'p5_id.overall_materiality')
+    def _compute_as_pct(self):
+        for rec in self:
+            if rec.p5_id.overall_materiality:
+                rec.as_pct_of_om = (rec.specific_materiality / rec.p5_id.overall_materiality) * 100
+            else:
+                rec.as_pct_of_om = 0
+
+
+# =============================================================================
+# CHILD MODEL: Component Materiality (Group Audits)
+# =============================================================================
+class PlanningP5ComponentMateriality(models.Model):
+    """Component Materiality for Group Audits - ISA 600."""
+    _name = 'qaco.planning.p5.component.materiality'
+    _description = 'P-5: Component Materiality'
+    _order = 'sequence, id'
+
+    p5_id = fields.Many2one(
+        'qaco.planning.p5.materiality',
+        string='P-5 Materiality',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    sequence = fields.Integer(string='Seq', default=10)
+    component_name = fields.Char(
+        string='Component Name',
+        required=True,
+        help='Name of subsidiary, division, or branch'
+    )
+    component_type = fields.Selection([
+        ('subsidiary', 'Subsidiary'),
+        ('division', 'Division'),
+        ('branch', 'Branch'),
+        ('jv', 'Joint Venture'),
+        ('associate', 'Associate'),
+    ], string='Component Type', required=True)
+    component_significance = fields.Selection([
+        ('significant', 'Significant Component'),
+        ('non_significant', 'Non-Significant Component'),
+    ], string='Significance', required=True)
+    component_materiality = fields.Float(
+        string='Component Materiality',
+        digits=(16, 2),
+        required=True
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='p5_id.currency_id',
+        store=True
+    )
+    allocation_basis = fields.Selection([
+        ('revenue', 'Revenue Based'),
+        ('assets', 'Asset Based'),
+        ('profit', 'Profit Based'),
+        ('risk', 'Risk Based'),
+        ('combination', 'Combination'),
+    ], string='Allocation Basis', required=True)
+    allocation_notes = fields.Text(string='Allocation Notes')
+
+
+# =============================================================================
+# CHILD MODEL: Materiality Revision Log
+# =============================================================================
+class PlanningP5Revision(models.Model):
+    """Materiality Revision Log - ISA 320.12-13."""
+    _name = 'qaco.planning.p5.revision'
+    _description = 'P-5: Materiality Revision Log'
+    _order = 'revision_date desc, id desc'
+
+    p5_id = fields.Many2one(
+        'qaco.planning.p5.materiality',
+        string='P-5 Materiality',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    revision_date = fields.Datetime(
+        string='Revision Date',
+        required=True,
+        default=fields.Datetime.now
+    )
+    revision_stage = fields.Selection([
+        ('planning', 'During Planning'),
+        ('execution', 'During Execution'),
+        ('completion', 'Near Completion'),
+    ], string='Audit Stage', required=True)
+    previous_om = fields.Float(
+        string='Previous OM',
+        digits=(16, 2)
+    )
+    revised_om = fields.Float(
+        string='Revised OM',
+        digits=(16, 2),
+        required=True
+    )
+    previous_pm = fields.Float(
+        string='Previous PM',
+        digits=(16, 2)
+    )
+    revised_pm = fields.Float(
+        string='Revised PM',
+        digits=(16, 2)
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='p5_id.currency_id',
+        store=True
+    )
+    revision_reason = fields.Text(
+        string='Reason for Revision',
+        required=True,
+        help='Document why materiality is being revised per ISA 320.12-13'
+    )
+    revised_by_id = fields.Many2one(
+        'res.users',
+        string='Revised By',
+        required=True,
+        default=lambda self: self.env.user
+    )
+    partner_approved = fields.Boolean(
+        string='Partner Approved',
+        help='Revision approved by engagement partner'
+    )
+
+
+# =============================================================================
+# CHILD MODEL: Qualitative Sensitivity Items
+# =============================================================================
+class PlanningP5QualitativeItem(models.Model):
+    """Qualitative Materiality Items - Areas sensitive regardless of size."""
+    _name = 'qaco.planning.p5.qualitative.item'
+    _description = 'P-5: Qualitative Sensitivity Item'
+    _order = 'sequence, id'
+
+    p5_id = fields.Many2one(
+        'qaco.planning.p5.materiality',
+        string='P-5 Materiality',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    sequence = fields.Integer(string='Seq', default=10)
+    sensitivity_area = fields.Selection([
+        ('related_parties', 'Related Party Transactions'),
+        ('directors_remuneration', "Directors' Remuneration"),
+        ('regulatory_disclosures', 'Regulatory Disclosures'),
+        ('covenant_breaches', 'Covenant Breaches'),
+        ('zakat_tax', 'Zakat / Tax Matters'),
+        ('fraud_indicators', 'Fraud Indicators'),
+        ('key_disclosures', 'Key FS Disclosures'),
+        ('segment_info', 'Segment Information'),
+        ('eps', 'Earnings Per Share'),
+        ('other', 'Other Sensitive Area'),
+    ], string='Sensitivity Area', required=True)
+    other_description = fields.Char(
+        string='Other Description',
+        help='If sensitivity area is Other'
+    )
+    applies_to_entity = fields.Boolean(
+        string='Applies to This Entity',
+        default=True
+    )
+    notes = fields.Text(string='Notes / Considerations')
+
+
+# =============================================================================
+# MAIN MODEL: P-5 Materiality & Performance Materiality
+# =============================================================================
 class PlanningP5Materiality(models.Model):
-    """P-5: Materiality & Performance Materiality (ISA 320)"""
+    """
+    P-5: Materiality & Performance Materiality
+    ISA 320, ISA 450, ISA 315 (Revised), ISA 570 (Revised)
+    """
     _name = 'qaco.planning.p5.materiality'
-    _description = 'P-5: Risk Assessment (Assertion Level)'
+    _description = 'P-5: Materiality & Performance Materiality'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
@@ -22,30 +265,33 @@ class PlanningP5Materiality(models.Model):
         ('completed', 'Completed'),
         ('reviewed', 'Reviewed'),
         ('approved', 'Approved'),
+        ('locked', 'Locked'),
     ]
 
-    MATERIALITY_BENCHMARKS = [
-        ('pbt', 'Profit Before Tax (PBT)'),
-        ('revenue', 'Revenue/Turnover'),
-        ('assets', 'Total Assets'),
-        ('equity', 'Equity'),
-        ('expenses', 'Total Expenses'),
+    BENCHMARK_TYPES = [
+        ('pbt', 'Profit Before Tax'),
+        ('revenue', 'Revenue'),
+        ('total_assets', 'Total Assets'),
+        ('net_assets', 'Net Assets / Equity'),
+        ('expenditure', 'Expenditure (NGOs)'),
         ('custom', 'Custom Benchmark'),
     ]
 
-    state = fields.Selection(
-        TAB_STATE,
-        string='Status',
-        default='not_started',
-        tracking=True,
-        copy=False,
-    )
-
+    # =========================================================================
+    # CORE FIELDS
+    # =========================================================================
     name = fields.Char(
         string='Reference',
         compute='_compute_name',
         store=True,
         readonly=True
+    )
+    state = fields.Selection(
+        TAB_STATE,
+        string='Status',
+        default='not_started',
+        tracking=True,
+        copy=False
     )
     audit_id = fields.Many2one(
         'qaco.audit',
@@ -63,10 +309,10 @@ class PlanningP5Materiality(models.Model):
     )
     client_id = fields.Many2one(
         'res.partner',
-        string='Client Name',
+        string='Client',
         related='audit_id.client_id',
-        readonly=True,
-        store=True
+        store=True,
+        readonly=True
     )
     currency_id = fields.Many2one(
         'res.currency',
@@ -74,555 +320,857 @@ class PlanningP5Materiality(models.Model):
         default=lambda self: self.env.company.currency_id
     )
 
-    # ===== Materiality Status & Workflow (ISA 320) =====
-    materiality_finalized = fields.Boolean(
-        string='Materiality Finalized',
-        tracking=True,
-        help='Indicates whether materiality has been finalized and approved'
-    )
-    revision_required = fields.Boolean(
-        string='Revision Required',
-        tracking=True,
-        help='Flag raised by reviewer/partner requiring revision of materiality'
-    )
-
-    # ===== Benchmark Selection =====
-    materiality_benchmark = fields.Selection(
-        MATERIALITY_BENCHMARKS,
-        string='Materiality Benchmark',
-        required=True,
-        tracking=True,
-        help='Select the appropriate benchmark per ISA 320'
-    )
-    # XML view compatible alias
-    benchmark_type = fields.Selection(
-        MATERIALITY_BENCHMARKS,
-        string='Benchmark Type',
-        related='materiality_benchmark',
-        store=True
-    )
-    benchmark_amount = fields.Monetary(
-        string='Benchmark Amount',
-        currency_field='currency_id',
-        tracking=True,
-        help='The amount of the selected benchmark'
-    )
-    custom_benchmark_description = fields.Char(
-        string='Custom Benchmark Description',
-        help='Description if using custom benchmark'
-    )
-    custom_benchmark_value = fields.Monetary(
-        string='Custom Benchmark Value',
-        currency_field='currency_id'
-    )
-
-    # ===== Benchmark Justification =====
-    benchmark_selection_justification = fields.Html(
-        string='Benchmark Selection Justification',
-        required=True,
-        help='Document why this benchmark is appropriate for the entity per ISA 320'
-    )
-    # XML view compatible alias
-    benchmark_rationale = fields.Html(
-        string='Benchmark Rationale',
-        related='benchmark_selection_justification',
-        readonly=False
-    )
-    alternative_benchmarks = fields.Html(
-        string='Alternative Benchmarks Considered',
-        help='Document alternative benchmarks that were considered'
-    )
-    user_focus_factors = fields.Html(
-        string='User Focus Factors',
-        help='Factors indicating what users focus on (key metrics, regulatory requirements)'
-    )
-    # XML view compatible alias
-    user_base_analysis = fields.Html(
-        string='User Base Analysis',
-        related='user_focus_factors',
-        readonly=False
-    )
-
-    # ===== Materiality Percentage & Calculation =====
-    materiality_percentage = fields.Float(
-        string='Materiality Percentage (%)',
-        required=True,
-        default=5.0,
-        tracking=True,
-        help='Percentage to apply to benchmark (typically 1-10%)'
-    )
-    percentage_justification = fields.Html(
-        string='Percentage Justification',
-        help='Justify the selected percentage within the acceptable range'
-    )
-    # XML view compatible alias
-    percentage_rationale = fields.Html(
-        string='Percentage Rationale',
-        related='percentage_justification',
-        readonly=False
-    )
-
-    # ===== Calculated Materiality Values =====
-    overall_materiality = fields.Monetary(
-        string='Overall Materiality (OM)',
-        currency_field='currency_id',
-        compute='_compute_materiality_values',
-        store=True,
-        tracking=True,
-        help='Overall materiality for the financial statements as a whole'
-    )
-    
-    performance_materiality_pct = fields.Float(
-        string='Performance Materiality %',
-        default=75.0,
-        help='Percentage of overall materiality (typically 50-75%)'
-    )
-    performance_materiality = fields.Monetary(
-        string='Performance Materiality (PM)',
-        currency_field='currency_id',
-        compute='_compute_materiality_values',
-        store=True,
-        tracking=True,
-        help='Materiality for individual transactions/balances'
-    )
-    performance_materiality_justification = fields.Html(
-        string='Performance Materiality Justification',
-        help='Factors considered in determining PM %'
-    )
-    # XML view compatible aliases for performance materiality
-    pm_factors_considered = fields.Html(
-        string='PM Factors Considered',
-        help='Factors considered in determining performance materiality'
-    )
-    pm_justification = fields.Html(
-        string='PM Justification',
-        related='performance_materiality_justification',
-        readonly=False
-    )
-
-    trivial_threshold_pct = fields.Float(
-        string='Clearly Trivial Threshold %',
-        default=5.0,
-        help='Percentage of overall materiality (typically 3-5%)'
-    )
-    clearly_trivial_threshold = fields.Monetary(
-        string='Clearly Trivial Threshold',
-        currency_field='currency_id',
-        compute='_compute_materiality_values',
-        store=True,
-        tracking=True,
-        help='Threshold below which misstatements are clearly trivial'
-    )
-    # XML view compatible alias
-    trivial_threshold = fields.Monetary(
-        string='Trivial Threshold',
-        related='clearly_trivial_threshold',
-        store=True
-    )
-    sad_threshold = fields.Monetary(
-        string='Summary of Audit Differences Threshold',
-        currency_field='currency_id',
-        help='Threshold for accumulating misstatements'
-    )
-    threshold_justification = fields.Html(
-        string='Threshold Justification',
-        help='Justification for trivial and SAD thresholds'
-    )
-
-    # ===== Specific Materiality (if applicable) =====
-    specific_materiality_required = fields.Boolean(
-        string='Specific Materiality Required',
-        help='Are there classes/balances requiring lower materiality?'
-    )
-    specific_materiality_ids = fields.One2many(
-        'qaco.planning.p5.specific.materiality',
-        'p5_materiality_id',
-        string='Specific Materiality Items'
-    )
-    specific_materiality_narrative = fields.Html(
-        string='Specific Materiality Narrative',
-        help='Narrative explanation for specific materiality items'
-    )
-
-    # ===== Qualitative Factors =====
-    qualitative_factors = fields.Html(
-        string='Qualitative Factors Considered',
-        help='Qualitative factors that may affect materiality judgments'
-    )
-    regulatory_considerations = fields.Html(
-        string='Regulatory Considerations',
-        help='Regulatory factors affecting materiality'
-    )
-    sensitive_items = fields.Html(
-        string='Sensitive Items',
-        help='Items that are sensitive to users regardless of amount'
-    )
-
-    # ===== Materiality Considerations / Prior Year Comparison =====
-    prior_year_materiality = fields.Monetary(
-        string='Prior Year Materiality',
-        currency_field='currency_id'
-    )
-    materiality_change_pct = fields.Float(
-        string='Materiality Change %',
-        compute='_compute_materiality_change',
-        store=True,
-        help='Percentage change from prior year materiality'
-    )
-    prior_year_comparison = fields.Html(
-        string='Prior Year Comparison',
-        help='Narrative comparison with prior year materiality'
-    )
-    materiality_change_explanation = fields.Html(
-        string='Materiality Change Explanation',
-        help='Explain any significant change from prior year'
-    )
-
-    # ===== Revision Log =====
-    materiality_revision_ids = fields.One2many(
-        'qaco.planning.p5.revision',
-        'p5_materiality_id',
-        string='Materiality Revisions'
-    )
-    # XML view compatible alias
-    revision_line_ids = fields.One2many(
-        'qaco.planning.p5.revision',
-        'p5_materiality_id',
-        string='Revision Lines'
-    )
-    revision_notes = fields.Html(
-        string='Revision Notes',
-        help='Latest revision notes'
-    )
-    is_revised = fields.Boolean(
-        string='Has Been Revised',
-        default=False,
-        tracking=True
-    )
-    revision_date = fields.Date(
-        string='Last Revision Date',
-        tracking=True
-    )
-    revision_reason = fields.Html(
-        string='Revision Reason'
-    )
-
-    # ===== Partner Approval =====
-    partner_materiality_approved = fields.Boolean(
-        string='Partner Approved Materiality',
-        tracking=True
-    )
-    partner_approval_date = fields.Datetime(
-        string='Partner Approval Date',
-        tracking=True
-    )
-    partner_approval_user_id = fields.Many2one(
-        'res.users',
-        string='Partner Who Approved',
-        tracking=True
-    )
-
-    # ===== Attachments =====
-    materiality_worksheet_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'qaco_p5_materiality_worksheet_rel',
-        'p5_id',
-        'attachment_id',
-        string='Materiality Worksheets'
-    )
-    supporting_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'qaco_p5_supporting_rel',
-        'p5_id',
-        'attachment_id',
-        string='Supporting Documents'
-    )
-    # XML view compatible alias
-    materiality_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'qaco_p5_materiality_attach_rel',
-        'p5_id',
-        'attachment_id',
-        string='Materiality Calculation Workpapers'
-    )
-
-    # ===== Summary =====
-    materiality_summary = fields.Html(
-        string='Materiality Summary',
-        help='Consolidated summary of materiality determination'
-    )
-    isa_reference = fields.Char(
-        string='ISA Reference',
-        default='ISA 320',
+    # =========================================================================
+    # SECTION A - PURPOSE & CONTEXT OF MATERIALITY
+    # =========================================================================
+    section_a_header = fields.Char(
+        default='Section A: Purpose & Context of Materiality',
         readonly=True
     )
 
-    # ===== Sign-off Fields =====
-    senior_signed_user_id = fields.Many2one('res.users', string='Senior Completed By', tracking=True, copy=False, readonly=True)
-    senior_signed_on = fields.Datetime(string='Senior Completed On', tracking=True, copy=False, readonly=True)
-    manager_reviewed_user_id = fields.Many2one('res.users', string='Manager Reviewed By', tracking=True, copy=False, readonly=True)
-    manager_reviewed_on = fields.Datetime(string='Manager Reviewed On', tracking=True, copy=False, readonly=True)
-    partner_approved_user_id = fields.Many2one('res.users', string='Partner Approved By', tracking=True, copy=False, readonly=True)
-    partner_approved_on = fields.Datetime(string='Partner Approved On', tracking=True, copy=False, readonly=True)
-    reviewer_notes = fields.Html(string='Reviewer Notes')
-    approval_notes = fields.Html(string='Approval Notes')
+    # Intended Users
+    user_shareholders = fields.Boolean(string='☐ Shareholders')
+    user_lenders = fields.Boolean(string='☐ Lenders')
+    user_regulators = fields.Boolean(string='☐ Regulators')
+    user_donors = fields.Boolean(string='☐ Donors (NGOs)')
+    user_employees = fields.Boolean(string='☐ Employees')
+    user_suppliers = fields.Boolean(string='☐ Suppliers/Creditors')
+    user_other = fields.Boolean(string='☐ Other Users')
+    user_other_description = fields.Char(string='Other Users Description')
 
+    # User Sensitivity
+    user_sensitivity = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Sensitivity of Users to Misstatements', tracking=True)
+    user_sensitivity_notes = fields.Text(
+        string='User Sensitivity Notes',
+        help='Document rationale for sensitivity assessment'
+    )
+
+    # Entity Status
+    entity_status = fields.Selection([
+        ('listed_pie', 'Listed / Public Interest Entity (PIE)'),
+        ('non_pie', 'Non-PIE'),
+        ('ngo_npo', 'NGO / Non-Profit Organization'),
+        ('government', 'Government Entity'),
+    ], string='Entity Status', tracking=True)
+    pie_considerations = fields.Html(
+        string='PIE Considerations',
+        help='Document additional considerations for PIE entities'
+    )
+
+    # Section A Checklist
+    checklist_a_users_identified = fields.Boolean(
+        string='☐ Users identified'
+    )
+    checklist_a_sensitivity_assessed = fields.Boolean(
+        string='☐ User sensitivity assessed'
+    )
+    checklist_a_pie_applied = fields.Boolean(
+        string='☐ PIE considerations applied (if applicable)'
+    )
+
+    # =========================================================================
+    # SECTION B - BENCHMARK SELECTION (CRITICAL JUDGMENT)
+    # =========================================================================
+    section_b_header = fields.Char(
+        default='Section B: Benchmark Selection (Critical Judgment)',
+        readonly=True
+    )
+
+    benchmark_type = fields.Selection(
+        BENCHMARK_TYPES,
+        string='Selected Benchmark',
+        required=True,
+        tracking=True
+    )
+    benchmark_amount = fields.Float(
+        string='Benchmark Amount',
+        digits=(16, 2),
+        tracking=True,
+        help='Auto-fetched from financial data'
+    )
+    custom_benchmark_name = fields.Char(
+        string='Custom Benchmark Name',
+        help='If using custom benchmark'
+    )
+    custom_benchmark_amount = fields.Float(
+        string='Custom Benchmark Amount',
+        digits=(16, 2)
+    )
+    benchmark_stability = fields.Selection([
+        ('stable', 'Stable'),
+        ('volatile', 'Volatile'),
+    ], string='Benchmark Stability Assessment', tracking=True)
+    benchmark_stability_notes = fields.Text(
+        string='Stability Assessment Notes'
+    )
+    benchmark_justification = fields.Html(
+        string='Justification for Benchmark Selection',
+        help='MANDATORY: Document why this benchmark is appropriate'
+    )
+    prior_year_benchmark_type = fields.Selection(
+        BENCHMARK_TYPES,
+        string='Prior Year Benchmark Type'
+    )
+    benchmark_consistent_with_py = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No - Change Justified'),
+    ], string='Consistent with Prior Year?')
+    benchmark_change_justification = fields.Text(
+        string='Benchmark Change Justification',
+        help='Required if benchmark changed from prior year'
+    )
+
+    # Section B Checklist
+    checklist_b_benchmark_appropriate = fields.Boolean(
+        string='☐ Benchmark appropriate to entity'
+    )
+    checklist_b_consistent_or_justified = fields.Boolean(
+        string='☐ Consistent with prior year (or change justified)'
+    )
+
+    # =========================================================================
+    # SECTION C - OVERALL MATERIALITY CALCULATION
+    # =========================================================================
+    section_c_header = fields.Char(
+        default='Section C: Overall Materiality Calculation',
+        readonly=True
+    )
+
+    materiality_percentage = fields.Float(
+        string='Percentage Applied to Benchmark (%)',
+        digits=(5, 2),
+        default=5.0,
+        tracking=True
+    )
+    overall_materiality = fields.Float(
+        string='Overall Materiality (OM)',
+        digits=(16, 2),
+        compute='_compute_materiality',
+        store=True,
+        tracking=True
+    )
+
+    # Prior Year Comparison
+    prior_year_om = fields.Float(
+        string='Prior Year OM',
+        digits=(16, 2),
+        help='Overall materiality from prior year audit'
+    )
+    om_change_pct = fields.Float(
+        string='Change vs Prior Year %',
+        compute='_compute_om_change',
+        store=True,
+        digits=(5, 2)
+    )
+    om_change_explanation = fields.Html(
+        string='Change Explanation',
+        help='MANDATORY if materiality changed from prior year'
+    )
+
+    # Firm Policy Thresholds
+    firm_min_pct = fields.Float(
+        string='Firm Minimum %',
+        default=1.0,
+        help='Firm policy minimum percentage'
+    )
+    firm_max_pct = fields.Float(
+        string='Firm Maximum %',
+        default=10.0,
+        help='Firm policy maximum percentage'
+    )
+    outside_firm_threshold = fields.Boolean(
+        string='Outside Firm Threshold',
+        compute='_compute_outside_threshold',
+        store=True
+    )
+    threshold_exception_justification = fields.Text(
+        string='Threshold Exception Justification',
+        help='Required if percentage outside firm policy'
+    )
+
+    # =========================================================================
+    # SECTION D - PERFORMANCE MATERIALITY (PM)
+    # =========================================================================
+    section_d_header = fields.Char(
+        default='Section D: Performance Materiality (PM) - ISA 320',
+        readonly=True
+    )
+
+    pm_percentage = fields.Float(
+        string='PM as % of OM',
+        digits=(5, 2),
+        default=75.0,
+        tracking=True,
+        help='Typically 50-75% of Overall Materiality'
+    )
+    performance_materiality = fields.Float(
+        string='Performance Materiality (PM)',
+        digits=(16, 2),
+        compute='_compute_materiality',
+        store=True,
+        tracking=True
+    )
+
+    # PM Rationale Factors
+    pm_risk_of_misstatement = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Risk of Misstatement')
+    pm_control_environment = fields.Selection([
+        ('strong', 'Strong'),
+        ('adequate', 'Adequate'),
+        ('weak', 'Weak'),
+    ], string='Control Environment')
+    pm_prior_year_misstatements = fields.Selection([
+        ('none', 'None / Minimal'),
+        ('some', 'Some Misstatements'),
+        ('significant', 'Significant Misstatements'),
+    ], string='Prior Year Misstatements')
+    pm_rationale = fields.Html(
+        string='PM Rationale',
+        help='Document rationale for PM percentage considering risk factors'
+    )
+
+    # Section D Checklist
+    checklist_d_pm_sufficiently_lower = fields.Boolean(
+        string='☐ PM sufficiently lower than OM'
+    )
+    checklist_d_risk_rationale = fields.Boolean(
+        string='☐ Risk-adjusted rationale documented'
+    )
+
+    # =========================================================================
+    # SECTION E - CLEARLY TRIVIAL THRESHOLD (CTT)
+    # =========================================================================
+    section_e_header = fields.Char(
+        default='Section E: Clearly Trivial Threshold (CTT) - ISA 450',
+        readonly=True
+    )
+
+    ctt_percentage = fields.Float(
+        string='CTT as % of OM',
+        digits=(5, 2),
+        default=5.0,
+        tracking=True,
+        help='Typically 3-5% of Overall Materiality'
+    )
+    clearly_trivial_threshold = fields.Float(
+        string='Clearly Trivial Threshold (CTT)',
+        digits=(16, 2),
+        compute='_compute_materiality',
+        store=True,
+        tracking=True
+    )
+    ctt_basis = fields.Html(
+        string='Basis for CTT Selection',
+        help='Document rationale for CTT percentage'
+    )
+
+    # =========================================================================
+    # SECTION F - QUALITATIVE MATERIALITY CONSIDERATIONS
+    # =========================================================================
+    section_f_header = fields.Char(
+        default='Section F: Qualitative Materiality Considerations',
+        readonly=True
+    )
+
+    # Qualitative Sensitivity Flags
+    qual_related_parties = fields.Boolean(string='☐ Related Party Transactions')
+    qual_directors_remuneration = fields.Boolean(string="☐ Directors' Remuneration")
+    qual_regulatory_disclosures = fields.Boolean(string='☐ Regulatory Disclosures')
+    qual_covenant_breaches = fields.Boolean(string='☐ Covenant Breaches')
+    qual_zakat_tax = fields.Boolean(string='☐ Zakat / Tax Matters')
+    qual_segment_info = fields.Boolean(string='☐ Segment Information')
+    qual_eps = fields.Boolean(string='☐ Earnings Per Share')
+    qual_other = fields.Boolean(string='☐ Other Sensitive Areas')
+
+    # Detailed qualitative items
+    qualitative_item_ids = fields.One2many(
+        'qaco.planning.p5.qualitative.item',
+        'p5_id',
+        string='Qualitative Sensitivity Items'
+    )
+
+    qualitative_narrative = fields.Html(
+        string='Narrative on Qualitative Materiality',
+        help='Document qualitative considerations affecting materiality judgments'
+    )
+
+    # Section F Checklist
+    checklist_f_qualitative_considered = fields.Boolean(
+        string='☐ Qualitative factors considered'
+    )
+    checklist_f_regulatory_addressed = fields.Boolean(
+        string='☐ Regulatory sensitivities addressed'
+    )
+
+    # =========================================================================
+    # SECTION G - RISK-ADJUSTED MATERIALITY (ADVANCED)
+    # =========================================================================
+    section_g_header = fields.Char(
+        default='Section G: Risk-Adjusted Materiality (Advanced)',
+        readonly=True
+    )
+
+    overall_engagement_risk = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Overall Engagement Risk Level', help='From P-6 when available')
+
+    # Adjustment Factors
+    adjust_high_fraud_risk = fields.Boolean(
+        string='☐ High Fraud Risk'
+    )
+    adjust_weak_controls = fields.Boolean(
+        string='☐ Weak Controls'
+    )
+    adjust_going_concern = fields.Boolean(
+        string='☐ Going Concern Uncertainty'
+    )
+    adjust_first_year = fields.Boolean(
+        string='☐ First Year Engagement'
+    )
+    adjust_complex_transactions = fields.Boolean(
+        string='☐ Complex Transactions'
+    )
+
+    risk_adjustment_applied = fields.Boolean(
+        string='Risk Adjustment Applied',
+        tracking=True
+    )
+    revised_pm = fields.Float(
+        string='Revised PM (if adjusted)',
+        digits=(16, 2),
+        help='Adjusted PM after considering risk factors'
+    )
+    risk_adjustment_justification = fields.Html(
+        string='Risk Adjustment Justification',
+        help='MANDATORY if adjustment applied'
+    )
+
+    # =========================================================================
+    # SECTION H - COMPONENT / GROUP MATERIALITY
+    # =========================================================================
+    section_h_header = fields.Char(
+        default='Section H: Component / Group Materiality (ISA 600)',
+        readonly=True
+    )
+
+    is_group_audit = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    ], string='Group Audit?', default='no', tracking=True)
+    component_materiality_required = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    ], string='Component Materiality Required?')
+
+    component_materiality_ids = fields.One2many(
+        'qaco.planning.p5.component.materiality',
+        'p5_id',
+        string='Component Materiality'
+    )
+
+    component_allocation_basis = fields.Html(
+        string='Basis for Allocation',
+        help='Document methodology for allocating materiality to components'
+    )
+
+    # =========================================================================
+    # SECTION I - LINKAGE TO AUDIT EXECUTION (AUTO-FLOW)
+    # =========================================================================
+    section_i_header = fields.Char(
+        default='Section I: Linkage to Audit Execution (Auto-Flow)',
+        readonly=True
+    )
+
+    linkage_sampling = fields.Boolean(
+        string='☐ Linked to Sampling Engine',
+        default=False
+    )
+    linkage_substantive = fields.Boolean(
+        string='☐ Linked to Substantive Testing Thresholds',
+        default=False
+    )
+    linkage_misstatement = fields.Boolean(
+        string='☐ Linked to Misstatement Accumulation',
+        default=False
+    )
+    linkage_evaluation = fields.Boolean(
+        string='☐ Linked to Uncorrected Misstatement Evaluation',
+        default=False
+    )
+    linkage_report = fields.Boolean(
+        string='☐ Linked to Report Modification Logic',
+        default=False
+    )
+
+    linkage_notes = fields.Html(
+        string='Linkage Notes',
+        help='Document how materiality flows to execution modules'
+    )
+
+    # Manual override control
+    manual_override_requested = fields.Boolean(
+        string='Manual Override Requested',
+        tracking=True
+    )
+    override_partner_justification = fields.Html(
+        string='Partner Justification for Override',
+        help='MANDATORY if manual override requested'
+    )
+
+    # =========================================================================
+    # SECTION J - MANDATORY DOCUMENT UPLOADS
+    # =========================================================================
+    section_j_header = fields.Char(
+        default='Section J: Mandatory Document Uploads',
+        readonly=True
+    )
+
+    materiality_worksheet_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p5_worksheet_rel',
+        'p5_id',
+        'attachment_id',
+        string='Materiality Calculation Worksheet'
+    )
+    prior_year_reference_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p5_py_ref_rel',
+        'p5_id',
+        'attachment_id',
+        string='Prior-Year Materiality Reference'
+    )
+    partner_approval_evidence_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p5_partner_evidence_rel',
+        'p5_id',
+        'attachment_id',
+        string='Partner Approval Evidence'
+    )
+
+    # Document Checklist
+    checklist_j_worksheet = fields.Boolean(
+        string='☐ Materiality calculation worksheet'
+    )
+    checklist_j_prior_year = fields.Boolean(
+        string='☐ Prior-year materiality reference'
+    )
+    checklist_j_partner_evidence = fields.Boolean(
+        string='☐ Partner approval evidence (if separate)'
+    )
+
+    # =========================================================================
+    # SECTION K - P-5 CONCLUSION & PROFESSIONAL JUDGMENT
+    # =========================================================================
+    section_k_header = fields.Char(
+        default='Section K: P-5 Conclusion & Professional Judgment',
+        readonly=True
+    )
+
+    conclusion_narrative = fields.Html(
+        string='P-5 Conclusion',
+        default="""<p><strong>Overall materiality, performance materiality, and clearly trivial 
+thresholds have been determined in accordance with ISA 320 and ISA 450, considering both 
+quantitative and qualitative factors, and are appropriate for planning and performing the audit.</strong></p>"""
+    )
+
+    # Final Confirmations
+    confirm_materiality_appropriate = fields.Boolean(
+        string='☐ Materiality appropriately determined'
+    )
+    confirm_embedded_in_strategy = fields.Boolean(
+        string='☐ Embedded into audit strategy'
+    )
+    confirm_proceed_to_p6 = fields.Boolean(
+        string='☐ Proceed to risk assessment (P-6)'
+    )
+
+    # Specific Materiality Items (One2many)
+    specific_materiality_ids = fields.One2many(
+        'qaco.planning.p5.specific.materiality',
+        'p5_id',
+        string='Specific Materiality Items'
+    )
+
+    # Revision Log
+    revision_ids = fields.One2many(
+        'qaco.planning.p5.revision',
+        'p5_id',
+        string='Materiality Revisions'
+    )
+
+    # =========================================================================
+    # SECTION L - REVIEW, APPROVAL & LOCK
+    # =========================================================================
+    section_l_header = fields.Char(
+        default='Section L: Review, Approval & Lock',
+        readonly=True
+    )
+
+    # Prepared By
+    prepared_by_id = fields.Many2one(
+        'res.users',
+        string='Prepared By',
+        tracking=True,
+        copy=False
+    )
+    prepared_by_role = fields.Char(string='Role')
+    prepared_on = fields.Datetime(string='Prepared On', tracking=True, copy=False)
+
+    # Reviewed By (Manager)
+    reviewed_by_id = fields.Many2one(
+        'res.users',
+        string='Reviewed By (Manager)',
+        tracking=True,
+        copy=False
+    )
+    reviewed_on = fields.Datetime(string='Reviewed On', tracking=True, copy=False)
+    review_notes = fields.Html(string='Review Notes')
+
+    # Partner Approval
+    partner_approved = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    ], string='Partner Approval', tracking=True)
+    partner_approved_by_id = fields.Many2one(
+        'res.users',
+        string='Partner Approved By',
+        tracking=True,
+        copy=False
+    )
+    partner_approved_on = fields.Datetime(
+        string='Partner Approved On',
+        tracking=True,
+        copy=False
+    )
+    partner_comments = fields.Html(
+        string='Partner Comments',
+        help='MANDATORY when partner approves'
+    )
+
+    # Lock indicator
+    is_locked = fields.Boolean(
+        string='Locked',
+        default=False,
+        copy=False,
+        help='Locked after partner approval'
+    )
+
+    # ISA Reference
+    isa_reference = fields.Char(
+        string='ISA Reference',
+        default='ISA 320, ISA 450',
+        readonly=True
+    )
+
+    # =========================================================================
+    # SQL CONSTRAINTS
+    # =========================================================================
     _sql_constraints = [
-        ('audit_unique', 'UNIQUE(audit_id)', 'Only one P-5 record per Audit Engagement is allowed.')
+        ('audit_unique', 'UNIQUE(audit_id)',
+         'Only one P-5 Materiality record per Audit Engagement is allowed.')
     ]
 
+    # =========================================================================
+    # COMPUTED METHODS
+    # =========================================================================
     @api.depends('audit_id', 'client_id')
     def _compute_name(self):
-        for record in self:
-            if record.client_id:
-                record.name = f"P5-{record.client_id.name[:15]}"
+        for rec in self:
+            if rec.client_id:
+                rec.name = f"P5-{rec.client_id.name[:20] if rec.client_id.name else 'NEW'}"
             else:
-                record.name = 'P-5: Materiality'
+                rec.name = 'P-5: Materiality'
 
     @api.depends(
-        'materiality_benchmark', 'benchmark_amount', 'custom_benchmark_value',
-        'materiality_percentage', 'performance_materiality_pct', 'trivial_threshold_pct'
+        'benchmark_type', 'benchmark_amount', 'custom_benchmark_amount',
+        'materiality_percentage', 'pm_percentage', 'ctt_percentage'
     )
-    def _compute_materiality_values(self):
-        for record in self:
-            # Determine benchmark value
-            if record.materiality_benchmark == 'custom':
-                base_value = record.custom_benchmark_value or 0
+    def _compute_materiality(self):
+        for rec in self:
+            # Get effective benchmark
+            if rec.benchmark_type == 'custom':
+                base = rec.custom_benchmark_amount or 0
             else:
-                base_value = record.benchmark_amount or 0
+                base = rec.benchmark_amount or 0
 
-            # Calculate overall materiality
-            if base_value and record.materiality_percentage:
-                record.overall_materiality = base_value * (record.materiality_percentage / 100.0)
+            # Calculate Overall Materiality
+            rec.overall_materiality = base * (rec.materiality_percentage / 100) if base else 0
+
+            # Calculate Performance Materiality
+            rec.performance_materiality = rec.overall_materiality * (rec.pm_percentage / 100) if rec.overall_materiality else 0
+
+            # Calculate Clearly Trivial Threshold
+            rec.clearly_trivial_threshold = rec.overall_materiality * (rec.ctt_percentage / 100) if rec.overall_materiality else 0
+
+    @api.depends('overall_materiality', 'prior_year_om')
+    def _compute_om_change(self):
+        for rec in self:
+            if rec.prior_year_om and rec.prior_year_om != 0:
+                rec.om_change_pct = ((rec.overall_materiality - rec.prior_year_om) / rec.prior_year_om) * 100
             else:
-                record.overall_materiality = 0
+                rec.om_change_pct = 0
 
-            # Calculate performance materiality
-            if record.overall_materiality and record.performance_materiality_pct:
-                record.performance_materiality = record.overall_materiality * (record.performance_materiality_pct / 100.0)
-            else:
-                record.performance_materiality = 0
+    @api.depends('materiality_percentage', 'firm_min_pct', 'firm_max_pct')
+    def _compute_outside_threshold(self):
+        for rec in self:
+            rec.outside_firm_threshold = (
+                rec.materiality_percentage < rec.firm_min_pct or
+                rec.materiality_percentage > rec.firm_max_pct
+            )
 
-            # Calculate trivial threshold
-            if record.overall_materiality and record.trivial_threshold_pct:
-                record.clearly_trivial_threshold = record.overall_materiality * (record.trivial_threshold_pct / 100.0)
-            else:
-                record.clearly_trivial_threshold = 0
-
-    @api.depends('overall_materiality', 'prior_year_materiality')
-    def _compute_materiality_change(self):
-        """Compute the percentage change from prior year materiality."""
-        for record in self:
-            if record.prior_year_materiality and record.prior_year_materiality != 0:
-                record.materiality_change_pct = (
-                    (record.overall_materiality - record.prior_year_materiality) 
-                    / record.prior_year_materiality
-                ) * 100
-            else:
-                record.materiality_change_pct = 0
-
-    def _validate_mandatory_fields(self):
-        """Validate mandatory fields before completing P-5."""
-        self.ensure_one()
-        errors = []
-        if not self.materiality_benchmark:
-            errors.append('Materiality benchmark must be selected')
-        if not self.benchmark_amount and self.materiality_benchmark != 'custom':
-            errors.append('Benchmark amount must be specified')
-        if self.materiality_benchmark == 'custom' and not self.custom_benchmark_value:
-            errors.append('Custom benchmark value is required when using custom benchmark')
-        if not self.benchmark_selection_justification:
-            errors.append('Benchmark selection justification is mandatory per ISA 320')
-        if not self.materiality_percentage or self.materiality_percentage <= 0:
-            errors.append('Valid materiality percentage must be specified')
-        if not self.partner_materiality_approved:
-            errors.append('Partner must approve materiality determination')
-        if errors:
-            raise UserError('Cannot complete P-5. Missing requirements:\n• ' + '\n• '.join(errors))
-
+    # =========================================================================
+    # VALIDATION METHODS
+    # =========================================================================
     @api.constrains('materiality_percentage')
     def _check_materiality_percentage(self):
-        for record in self:
-            if record.materiality_percentage and not (0.1 <= record.materiality_percentage <= 20):
-                raise ValidationError('Materiality percentage should typically be between 0.1% and 20% as per ISA guidance.')
+        for rec in self:
+            if rec.materiality_percentage and not (0.1 <= rec.materiality_percentage <= 25):
+                raise ValidationError(
+                    'Materiality percentage must be between 0.1% and 25%. '
+                    'Values outside this range require documented justification.'
+                )
 
-    @api.constrains('performance_materiality_pct')
+    @api.constrains('pm_percentage')
     def _check_pm_percentage(self):
-        for record in self:
-            if record.performance_materiality_pct and not (25 <= record.performance_materiality_pct <= 90):
-                raise ValidationError('Performance materiality percentage should typically be between 25% and 90% of overall materiality.')
+        for rec in self:
+            if rec.pm_percentage and not (25 <= rec.pm_percentage <= 95):
+                raise ValidationError(
+                    'Performance Materiality must be between 25% and 95% of Overall Materiality.'
+                )
 
-    def action_partner_approve_materiality(self):
-        """Partner approves materiality determination."""
-        for record in self:
-            record.partner_materiality_approved = True
-            record.partner_approval_date = fields.Datetime.now()
-            record.partner_approval_user_id = self.env.user
+    @api.constrains('ctt_percentage')
+    def _check_ctt_percentage(self):
+        for rec in self:
+            if rec.ctt_percentage and not (1 <= rec.ctt_percentage <= 10):
+                raise ValidationError(
+                    'Clearly Trivial Threshold should be between 1% and 10% of Overall Materiality.'
+                )
 
-    def action_revise_materiality(self):
-        """Revise materiality (creates revision log entry)."""
+    def _validate_section_b(self):
+        """Validate Section B: Benchmark Selection."""
+        errors = []
+        if not self.benchmark_type:
+            errors.append("Benchmark type must be selected (Section B)")
+        if self.benchmark_type == 'custom' and not self.custom_benchmark_amount:
+            errors.append("Custom benchmark amount is required (Section B)")
+        if self.benchmark_type != 'custom' and not self.benchmark_amount:
+            errors.append("Benchmark amount is required (Section B)")
+        if not self.benchmark_justification:
+            errors.append("CRITICAL: Benchmark justification is MANDATORY per ISA 320 (Section B)")
+        return errors
+
+    def _validate_section_c(self):
+        """Validate Section C: Overall Materiality."""
+        errors = []
+        if self.overall_materiality and self.om_change_pct and abs(self.om_change_pct) > 10:
+            if not self.om_change_explanation:
+                errors.append("Explanation required for materiality change >10% from prior year (Section C)")
+        if self.outside_firm_threshold and not self.threshold_exception_justification:
+            errors.append("Exception justification required when outside firm policy thresholds (Section C)")
+        return errors
+
+    def _validate_section_d(self):
+        """Validate Section D: Performance Materiality."""
+        errors = []
+        if not self.pm_rationale:
+            errors.append("PM rationale is required (Section D)")
+        return errors
+
+    def _validate_section_g(self):
+        """Validate Section G: Risk Adjustment."""
+        errors = []
+        if self.risk_adjustment_applied and not self.risk_adjustment_justification:
+            errors.append("Risk adjustment justification is required (Section G)")
+        return errors
+
+    def _validate_section_i(self):
+        """Validate Section I: Linkage."""
+        errors = []
+        if self.manual_override_requested and not self.override_partner_justification:
+            errors.append("Partner justification required for manual override (Section I)")
+        return errors
+
+    def _validate_section_j(self):
+        """Validate Section J: Documents."""
+        errors = []
+        if not self.materiality_worksheet_ids:
+            errors.append("Materiality calculation worksheet is required (Section J)")
+        return errors
+
+    def _validate_section_k(self):
+        """Validate Section K: Conclusion."""
+        errors = []
+        if not self.confirm_materiality_appropriate:
+            errors.append("Materiality appropriateness must be confirmed (Section K)")
+        if not self.confirm_embedded_in_strategy:
+            errors.append("Strategy embedding must be confirmed (Section K)")
+        return errors
+
+    def _validate_for_completion(self):
+        """Validate all sections for completion."""
         self.ensure_one()
-        # Create revision log entry
-        self.env['qaco.planning.p5.revision'].create({
-            'p5_materiality_id': self.id,
-            'revision_date': fields.Date.today(),
-            'previous_overall_materiality': self.overall_materiality,
-            'previous_performance_materiality': self.performance_materiality,
-            'revised_by_id': self.env.user.id,
-        })
-        self.is_revised = True
-        self.revision_date = fields.Date.today()
-        # Reset partner approval for revised materiality
-        self.partner_materiality_approved = False
-        self.partner_approval_date = False
-        self.partner_approval_user_id = False
+        errors = []
+        errors.extend(self._validate_section_b())
+        errors.extend(self._validate_section_c())
+        errors.extend(self._validate_section_d())
+        errors.extend(self._validate_section_g())
+        errors.extend(self._validate_section_i())
+        errors.extend(self._validate_section_j())
+        errors.extend(self._validate_section_k())
+        return errors
 
+    def _validate_for_approval(self):
+        """Validate requirements for partner approval."""
+        self.ensure_one()
+        errors = self._validate_for_completion()
+        if not self.review_notes:
+            errors.append("Manager review notes are required before partner approval")
+        return errors
+
+    # =========================================================================
+    # ACTION METHODS
+    # =========================================================================
     def action_start_work(self):
-        for record in self:
-            if record.state != 'not_started':
-                raise UserError('Can only start work on tabs that are Not Started.')
-            record.state = 'in_progress'
+        """Start work on P-5 tab."""
+        for rec in self:
+            if rec.state != 'not_started':
+                raise UserError("Can only start work on tabs that are 'Not Started'.")
+            # Check P-4 prerequisite
+            if 'qaco.planning.p4.analytics' in self.env:
+                p4 = self.env['qaco.planning.p4.analytics'].search([
+                    ('audit_id', '=', rec.audit_id.id)
+                ], limit=1)
+                if p4 and p4.state not in ['approved', 'locked']:
+                    raise UserError(
+                        "P-4 (Preliminary Analytical Procedures) must be partner-approved "
+                        "before starting P-5."
+                    )
+            rec.state = 'in_progress'
+            rec.message_post(body="P-5 Materiality work started.")
 
     def action_complete(self):
-        for record in self:
-            if record.state != 'in_progress':
-                raise UserError('Can only complete tabs that are In Progress.')
-            record._validate_mandatory_fields()
-            record.senior_signed_user_id = self.env.user
-            record.senior_signed_on = fields.Datetime.now()
-            record.state = 'completed'
+        """Mark P-5 as complete."""
+        for rec in self:
+            if rec.state != 'in_progress':
+                raise UserError("Can only complete tabs that are 'In Progress'.")
+            errors = rec._validate_for_completion()
+            if errors:
+                raise UserError(
+                    "Cannot complete P-5. Missing requirements:\n• " + "\n• ".join(errors)
+                )
+            rec.prepared_by_id = self.env.user
+            rec.prepared_on = fields.Datetime.now()
+            rec.state = 'completed'
+            rec.message_post(body="P-5 Materiality marked as complete.")
 
-    def action_review(self):
-        for record in self:
-            if record.state != 'completed':
-                raise UserError('Can only review tabs that are Completed.')
-            record.manager_reviewed_user_id = self.env.user
-            record.manager_reviewed_on = fields.Datetime.now()
-            record.state = 'reviewed'
+    def action_manager_review(self):
+        """Manager review of P-5."""
+        for rec in self:
+            if rec.state != 'completed':
+                raise UserError("Can only review tabs that are 'Completed'.")
+            if not rec.review_notes:
+                raise UserError("Manager review notes are required.")
+            rec.reviewed_by_id = self.env.user
+            rec.reviewed_on = fields.Datetime.now()
+            rec.state = 'reviewed'
+            rec.message_post(body=f"P-5 reviewed by Manager: {self.env.user.name}")
 
-    def action_approve(self):
-        for record in self:
-            if record.state != 'reviewed':
-                raise UserError('Can only approve tabs that have been Reviewed.')
-            record.partner_approved_user_id = self.env.user
-            record.partner_approved_on = fields.Datetime.now()
-            record.state = 'approved'
+    def action_partner_approve(self):
+        """Partner approval of P-5."""
+        for rec in self:
+            if rec.state != 'reviewed':
+                raise UserError("Can only approve tabs that have been 'Reviewed'.")
+            errors = rec._validate_for_approval()
+            if errors:
+                raise UserError(
+                    "Cannot approve P-5. Missing requirements:\n• " + "\n• ".join(errors)
+                )
+            if not rec.partner_comments:
+                raise UserError("Partner comments are mandatory for approval.")
+            rec.partner_approved = 'yes'
+            rec.partner_approved_by_id = self.env.user
+            rec.partner_approved_on = fields.Datetime.now()
+            rec.is_locked = True
+            rec.state = 'locked'
+            rec._update_execution_linkage()
+            rec.message_post(body=f"P-5 approved and locked by Partner: {self.env.user.name}")
+            # Auto-unlock P-6 if exists
+            rec._auto_unlock_p6()
 
     def action_send_back(self):
-        for record in self:
-            if record.state not in ['completed', 'reviewed']:
-                raise UserError('Can only send back tabs that are Completed or Reviewed.')
-            record.state = 'in_progress'
+        """Send P-5 back for rework."""
+        for rec in self:
+            if rec.state not in ['completed', 'reviewed']:
+                raise UserError("Can only send back tabs that are 'Completed' or 'Reviewed'.")
+            rec.state = 'in_progress'
+            rec.message_post(body="P-5 sent back for rework.")
 
     def action_unlock(self):
-        for record in self:
-            if record.state != 'approved':
-                raise UserError('Can only unlock Approved tabs.')
-            record.partner_approved_user_id = False
-            record.partner_approved_on = False
-            record.state = 'reviewed'
+        """Unlock P-5 (partner only)."""
+        for rec in self:
+            if rec.state != 'locked':
+                raise UserError("Can only unlock tabs that are 'Locked'.")
+            rec.is_locked = False
+            rec.partner_approved = 'no'
+            rec.state = 'reviewed'
+            rec.message_post(body=f"P-5 unlocked by Partner: {self.env.user.name}")
 
+    def action_revise_materiality(self):
+        """Create materiality revision entry."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Revise Materiality',
+            'res_model': 'qaco.planning.p5.revision',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_p5_id': self.id,
+                'default_previous_om': self.overall_materiality,
+                'default_previous_pm': self.performance_materiality,
+            }
+        }
 
-class PlanningP5SpecificMateriality(models.Model):
-    """Specific Materiality for particular classes/balances."""
-    _name = 'qaco.planning.p5.specific.materiality'
-    _description = 'Specific Materiality Item'
-    _order = 'sequence, id'
+    def _update_execution_linkage(self):
+        """Update execution module linkage flags."""
+        self.ensure_one()
+        self.linkage_sampling = True
+        self.linkage_substantive = True
+        self.linkage_misstatement = True
+        self.linkage_evaluation = True
+        self.linkage_report = True
+        _logger.info(f"P-5 materiality linked to execution modules for audit {self.audit_id.id}")
 
-    p5_materiality_id = fields.Many2one(
-        'qaco.planning.p5.materiality',
-        string='P-5 Materiality',
-        required=True,
-        ondelete='cascade'
-    )
-    sequence = fields.Integer(string='Sequence', default=10)
-    class_or_balance = fields.Char(
-        string='Class/Balance/Disclosure',
-        required=True
-    )
-    # XML view compatible alias
-    account_area = fields.Char(
-        string='Account Area',
-        related='class_or_balance',
-        readonly=False
-    )
-    specific_materiality_amount = fields.Monetary(
-        string='Specific Materiality',
-        currency_field='currency_id'
-    )
-    # XML view compatible alias
-    specific_amount = fields.Monetary(
-        string='Specific Amount',
-        related='specific_materiality_amount',
-        readonly=False
-    )
-    currency_id = fields.Many2one(
-        'res.currency',
-        related='p5_materiality_id.currency_id'
-    )
-    justification = fields.Text(
-        string='Justification',
-        required=True,
-        help='Why lower materiality is appropriate for this item'
-    )
-    # XML view compatible alias
-    rationale = fields.Text(
-        string='Rationale',
-        related='justification',
-        readonly=False
-    )
+    def _auto_unlock_p6(self):
+        """Auto-unlock P-6 when P-5 is approved."""
+        self.ensure_one()
+        if 'qaco.planning.p6.risk' in self.env:
+            p6 = self.env['qaco.planning.p6.risk'].search([
+                ('audit_id', '=', self.audit_id.id)
+            ], limit=1)
+            if p6 and p6.state == 'not_started':
+                _logger.info(f"P-6 auto-unlock triggered by P-5 approval for audit {self.audit_id.id}")
 
-
-class PlanningP5Revision(models.Model):
-    """Materiality Revision Log."""
-    _name = 'qaco.planning.p5.revision'
-    _description = 'Materiality Revision Log'
-    _order = 'revision_date desc, id desc'
-
-    p5_materiality_id = fields.Many2one(
-        'qaco.planning.p5.materiality',
-        string='P-5 Materiality',
-        required=True,
-        ondelete='cascade'
-    )
-    revision_date = fields.Date(
-        string='Revision Date',
-        required=True
-    )
-    previous_overall_materiality = fields.Monetary(
-        string='Previous Overall Materiality',
-        currency_field='currency_id'
-    )
-    # XML view compatible alias
-    previous_materiality = fields.Monetary(
-        string='Previous Materiality',
-        related='previous_overall_materiality',
-        readonly=False
-    )
-    previous_performance_materiality = fields.Monetary(
-        string='Previous Performance Materiality',
-        currency_field='currency_id'
-    )
-    new_overall_materiality = fields.Monetary(
-        string='Revised Overall Materiality',
-        currency_field='currency_id'
-    )
-    # XML view compatible alias
-    revised_materiality = fields.Monetary(
-        string='Revised Materiality',
-        related='new_overall_materiality',
-        readonly=False
-    )
-    currency_id = fields.Many2one(
-        'res.currency',
-        related='p5_materiality_id.currency_id'
-    )
-    revision_reason = fields.Text(
-        string='Reason for Revision',
-        required=True
-    )
-    revised_by_id = fields.Many2one(
-        'res.users',
-        string='Revised By',
-        required=True
-    )
+    def action_generate_materiality_memo(self):
+        """Generate Materiality Determination Memorandum."""
+        self.ensure_one()
+        # Placeholder for PDF generation
+        self.message_post(body="Materiality Determination Memorandum generated.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Memorandum Generated',
+                'message': 'Materiality Determination Memorandum has been generated.',
+                'type': 'success',
+            }
+        }

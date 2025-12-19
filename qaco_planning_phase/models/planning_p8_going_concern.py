@@ -1,6 +1,192 @@
 # -*- coding: utf-8 -*-
 """
 P-8: Going Concern (Preliminary Assessment)
+ISA 570/315/330/240/220/ISQM-1/Companies Act 2017/ICAP QCR/AOB
+Court-defensible, fully integrated with planning workflow.
+"""
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+import logging
+_logger = logging.getLogger(__name__)
+
+# =============================
+# Parent Model: Going Concern Assessment
+# =============================
+class AuditPlanningP8GoingConcern(models.Model):
+    _name = 'audit.planning.p8.going_concern'
+    _description = 'P-8: Going Concern (Preliminary Assessment)'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc'
+
+    engagement_id = fields.Many2one('qaco.audit', string='Audit Engagement', required=True, ondelete='cascade', index=True, tracking=True)
+    audit_year = fields.Many2one('qaco.audit.year', string='Audit Year', required=True, ondelete='cascade', index=True)
+    partner_id = fields.Many2one('res.users', string='Engagement Partner', required=True)
+    planning_main_id = fields.Many2one('qaco.planning.main', string='Planning Phase', ondelete='cascade', index=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('prepared', 'Prepared'),
+        ('reviewed', 'Reviewed'),
+        ('locked', 'Locked'),
+    ], string='Status', default='draft', tracking=True, copy=False)
+    gc_indicator_line_ids = fields.One2many('audit.planning.p8.gc_indicator_line', 'going_concern_id', string='GC Indicators', required=True)
+    # Section A: Basis of Assessment & Period Covered
+    assessment_period = fields.Char(string='Assessment Period (≥ 12 months)')
+    fs_basis = fields.Selection([
+        ('going_concern', 'Going Concern'),
+        ('other', 'Other'),
+    ], string='Financial Statements Basis')
+    assessment_timing = fields.Char(string="Auditor's Assessment Timing")
+    sources_management_accounts = fields.Boolean(string='Management Accounts')
+    sources_cashflow_forecasts = fields.Boolean(string='Cash-flow Forecasts')
+    sources_financing_agreements = fields.Boolean(string='Financing Agreements')
+    sources_budgets = fields.Boolean(string='Budgets / Business Plans')
+    period_adequate = fields.Boolean(string='Period adequate per ISA 570?')
+    sources_appropriate = fields.Boolean(string='Sources identified and appropriate?')
+    # Section D: Financing & Liquidity Indicators
+    financing_facilities = fields.Char(string='Availability of Financing Facilities')
+    reliance_short_term = fields.Boolean(string='Reliance on Short-term Borrowings?')
+    ability_refinance = fields.Boolean(string='Ability to Refinance Debt?')
+    shareholder_support = fields.Boolean(string='Dependence on Shareholder Support?')
+    donor_funding = fields.Boolean(string='Government/Donor Funding Reliance?')
+    financing_sources_assessed = fields.Boolean(string='Financing sources assessed?')
+    liquidity_stress_evaluated = fields.Boolean(string='Liquidity stress evaluated?')
+    # Section E: Legal, Regulatory & External Indicators
+    pending_litigation = fields.Boolean(string='Pending Litigation with Material Impact?')
+    regulatory_actions = fields.Boolean(string='Regulatory Actions / Penalties?')
+    adverse_market = fields.Boolean(string='Adverse Market/Economic Conditions?')
+    political_uncertainty = fields.Boolean(string='Political/Policy Uncertainty?')
+    disclosure_risk_flag = fields.Boolean(string='Disclosure Risk Flagged?')
+    # Section F: Management’s Going-Concern Assessment
+    mgmt_gc_assessment_done = fields.Boolean(string='Management GC Assessment Performed?')
+    mgmt_basis = fields.Char(string="Basis of Management's Assessment")
+    mgmt_key_assumptions = fields.Text(string='Key Assumptions Used')
+    mgmt_period_covered = fields.Char(string='Period Covered by Management Assessment')
+    mgmt_consistency = fields.Boolean(string="Consistency with Auditor's Understanding?")
+    mgmt_assessment_obtained = fields.Boolean(string='Management assessment obtained?')
+    mgmt_assumptions_evaluated = fields.Boolean(string='Assumptions evaluated for reasonableness?')
+    # Section G: Management Plans to Mitigate Risks
+    mgmt_planned_actions = fields.Text(string='Planned Actions')
+    mgmt_plan_status = fields.Selection([
+        ('planned', 'Planned'),
+        ('in_progress', 'In Progress'),
+        ('implemented', 'Implemented'),
+    ], string='Status')
+    mgmt_plan_feasibility = fields.Text(string='Feasibility Assessment (Auditor)')
+    mgmt_plan_third_party = fields.Boolean(string='Dependency on Third-party Support?')
+    unsupported_plans_flag = fields.Boolean(string='Unsupported plans increase GC risk?')
+    # Section H: Preliminary Going-Concern Conclusion
+    material_uncertainty = fields.Boolean(string='Material Uncertainty Identified?')
+    significant_doubt = fields.Boolean(string='Significant Doubt Exists?')
+    gc_conclusion_basis = fields.Text(string='Basis for Conclusion')
+    gc_disclosure_implications = fields.Boolean(string='Disclosure Implications Identified?')
+    # Section J: Mandatory Document Uploads
+    attachment_ids = fields.Many2many('ir.attachment', 'audit_p8_gc_attachment_rel', 'gc_id', 'attachment_id', string='Required Attachments', help='Cash-flow forecasts, financing agreements, management GC assessment, support letters, correspondence')
+    mandatory_upload_check = fields.Boolean(string='Mandatory uploads present?')
+    # Section K: Conclusion & Professional Judgment
+    conclusion_narrative = fields.Text(string='Conclusion Narrative', required=True, default="Based on the preliminary assessment performed in accordance with ISA 570 (Revised), indicators of going-concern risk have been identified and evaluated. Management’s assessment and plans have been considered, and appropriate implications for audit strategy and reporting have been determined.")
+    gc_assessment_completed = fields.Boolean(string='GC assessment completed?')
+    risks_classified = fields.Boolean(string='Risks appropriately classified?')
+    strategy_implications_identified = fields.Boolean(string='Audit strategy implications identified?')
+    # Section L: Review, Approval & Lock
+    prepared_by = fields.Many2one('res.users', string='Prepared By')
+    prepared_by_role = fields.Char(string='Prepared By Role')
+    prepared_date = fields.Datetime(string='Prepared Date')
+    reviewed_by = fields.Many2one('res.users', string='Reviewed By')
+    review_notes = fields.Text(string='Review Notes')
+    partner_approved = fields.Boolean(string='Partner Approved?')
+    partner_comments = fields.Text(string='Partner Comments (Mandatory)')
+    locked = fields.Boolean(string='Locked', compute='_compute_locked', store=True)
+    # Outputs
+    gc_memo_pdf = fields.Binary(string='GC Assessment Memorandum (PDF)')
+    gc_risk_summary = fields.Binary(string='GC Risk Summary')
+    # Audit trail
+    version_history = fields.Text(string='Version History')
+    reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+
+    @api.depends('partner_approved')
+    def _compute_locked(self):
+        for rec in self:
+            rec.locked = bool(rec.partner_approved)
+
+    def action_prepare(self):
+        self.state = 'prepared'
+        self.prepared_by = self.env.user.id
+        self.prepared_by_role = self.env.user.groups_id.mapped('name')
+        self.prepared_date = fields.Datetime.now()
+        self.message_post(body="P-8 prepared.")
+
+    def action_review(self):
+        self.state = 'reviewed'
+        self.reviewed_by = self.env.user.id
+        self.message_post(body="P-8 reviewed.")
+
+    def action_partner_approve(self):
+        if not self.partner_comments:
+            raise ValidationError("Partner comments are mandatory for approval.")
+        self.state = 'locked'
+        self.partner_approved = True
+        self.message_post(body="P-8 partner approved and locked.")
+
+    @api.constrains('attachment_ids')
+    def _check_mandatory_uploads(self):
+        for rec in self:
+            if not rec.attachment_ids:
+                raise ValidationError("Mandatory GC assessment documents must be uploaded.")
+
+    @api.constrains('gc_indicator_line_ids')
+    def _check_gc_indicator_lines(self):
+        for rec in self:
+            if not rec.gc_indicator_line_ids:
+                raise ValidationError("At least one GC indicator line must be entered.")
+
+    # Pre-conditions enforcement
+    @api.model
+    def create(self, vals):
+        planning = self.env['qaco.planning.main'].browse(vals.get('planning_main_id'))
+        if not planning or not planning.p7_partner_locked:
+            raise UserError("P-8 cannot be started until P-7 is partner-approved and locked.")
+        if not planning.p6_finalized or not planning.p4_outputs_ready or not planning.p5_finalized:
+            raise UserError("P-8 requires finalized P-6, and outputs from P-4 and P-5.")
+        return super().create(vals)
+
+# =============================
+# Child Model: GC Indicator Line
+# =============================
+class AuditPlanningP8GCIndicatorLine(models.Model):
+    _name = 'audit.planning.p8.gc_indicator_line'
+    _description = 'P-8: GC Indicator Line'
+    _order = 'id desc'
+
+    going_concern_id = fields.Many2one('audit.planning.p8.going_concern', string='Going Concern Assessment', required=True, ondelete='cascade', index=True)
+    indicator_type = fields.Selection([
+        ('financial', 'Financial'),
+        ('operating', 'Operating'),
+        ('liquidity', 'Financing/Liquidity'),
+        ('legal', 'Legal/Regulatory/External'),
+    ], string='Indicator Type', required=True)
+    indicator = fields.Char(string='Indicator', required=True)
+    present = fields.Boolean(string='Present?')
+    details = fields.Text(string='Details')
+    risk_level = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Risk Level')
+    # Audit trail
+    change_log = fields.Text(string='Change Log')
+    version_history = fields.Text(string='Version History')
+    reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+
+    def write(self, vals):
+        self.message_post(body=f"GC indicator line updated: {vals}")
+        return super().write(vals)
+
+    def unlink(self):
+        self.message_post(body="GC indicator line deleted.")
+        return super().unlink()
+# -*- coding: utf-8 -*-
+"""
+P-8: Going Concern (Preliminary Assessment)
 Standard: ISA 570
 Purpose: Assess entity's ability to continue as a going concern.
 """
