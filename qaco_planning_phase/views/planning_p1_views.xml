@@ -1,182 +1,636 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ============================================== -->
-    <!-- P-1: Engagement Setup & Team Assignment Views  -->
-    <!-- ISA 210, ISA 220, ISQM-1                       -->
-    <!-- ============================================== -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         P-1: ENGAGEMENT SETUP & TEAM ASSIGNMENT
+         ISA 210, ISA 220, ISQM-1 Compliant Views
+         Pakistan Statutory Audit Requirements (Companies Act 2017)
+         ═══════════════════════════════════════════════════════════════════════════ -->
 
-    <!-- P-1 Form View -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         FORM VIEW: P-1 ENGAGEMENT SETUP
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="view_planning_p1_engagement_form" model="ir.ui.view">
         <field name="name">qaco.planning.p1.engagement.form</field>
         <field name="model">qaco.planning.p1.engagement</field>
         <field name="arch" type="xml">
-            <form string="P-1: Engagement Overview &amp; Planning Control">
+            <form string="P-1: Engagement Setup &amp; Team Assignment">
+                <!-- Header with State Machine & Action Buttons -->
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
-                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
-                            invisible="state != 'not_started'"/>
-                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
-                            invisible="state != 'in_progress'"/>
-                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
-                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
-                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
-                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
-                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
-                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_start_work"
+                            string="Start Work"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="qaco_audit.group_audit_trainee"/>
+                    <button name="action_complete"
+                            string="Mark Complete"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'in_progress'"
+                            groups="qaco_audit.group_audit_trainee"/>
+                    <button name="action_manager_review"
+                            string="Manager Review"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'completed'"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_partner_approve"
+                            string="Partner Approve"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'reviewed'"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back"
+                            string="Send Back"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_lock"
+                            string="Lock"
+                            type="object"
+                            class="btn-warning"
+                            invisible="state != 'approved'"
+                            confirm="This will permanently lock P-1 per ISA 230. Continue?"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_unlock"
+                            string="Unlock"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['approved', 'locked']"
+                            confirm="This will unlock P-1 for revision. Continue?"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_progress,completed,reviewed,approved"/>
                 </header>
+
                 <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 210, ISA 220, ISQM-1 | Engagement Setup &amp; Team Assignment</h3>
+                    <!-- Locked Alert Banner -->
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not is_locked">
+                        <strong>🔒 This section is locked.</strong>
+                        Partner approval has been granted. Contact Partner to unlock for changes.
                     </div>
-                    <group>
-                        <group string="Audit Information">
-                            <field name="audit_id" readonly="state != 'not_started'"/>
-                            <field name="client_id"/>
-                            <field name="is_new_engagement"/>
-                            <field name="previous_auditor" invisible="is_new_engagement == False"/>
-                        </group>
-                        <group string="Audit Period">
-                            <field name="audit_period_from"/>
-                            <field name="audit_period_to"/>
-                            <field name="financial_year_end"/>
-                            <field name="reporting_deadline"/>
-                            <field name="agm_date"/>
-                        </group>
-                    </group>
 
+                    <!-- Smart Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h3 class="text-muted">
+                            <field name="client_id" readonly="1" options="{'no_open': True}"/> |
+                            <field name="engagement_type" readonly="1"/>
+                        </h3>
+                    </div>
+
+                    <!-- Status Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Risk Level</small>
+                                    <h5><field name="engagement_risk_level" widget="badge"
+                                              decoration-danger="engagement_risk_level == 'high'"
+                                              decoration-warning="engagement_risk_level == 'medium'"
+                                              decoration-success="engagement_risk_level == 'low'"/></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Total Hours</small>
+                                    <h5><field name="grand_total_hours"/></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Team Members</small>
+                                    <h5><field name="total_team_members"/></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Fee Risk</small>
+                                    <h5><field name="fee_risk_assessment" widget="badge"
+                                              decoration-danger="fee_risk_assessment == 'high'"
+                                              decoration-warning="fee_risk_assessment == 'medium'"
+                                              decoration-success="fee_risk_assessment == 'low'"/></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Notebook with Sections A-J -->
                     <notebook>
-                        <!-- Tab 1: Acceptance & Continuance -->
-                        <page string="Acceptance &amp; Continuance" name="acceptance">
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION A: ENGAGEMENT IDENTIFICATION
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="A. Engagement ID" name="section_a_engagement">
                             <group>
-                                <group string="Engagement Acceptance">
-                                    <field name="acceptance_approved"/>
-                                    <field name="acceptance_approved_by_id"/>
-                                    <field name="acceptance_date"/>
+                                <group string="Client &amp; Engagement Details">
+                                    <field name="audit_id" readonly="1"/>
+                                    <field name="planning_phase_id" invisible="1"/>
+                                    <field name="client_id" readonly="1"/>
+                                    <field name="firm_id" readonly="1"/>
+                                    <field name="engagement_type" readonly="is_locked"/>
                                 </group>
-                                <group string="Engagement Letter">
-                                    <field name="engagement_letter_date"/>
-                                    <field name="engagement_letter_signed"/>
-                                    <field name="engagement_letter_attachment_ids" widget="many2many_binary"/>
+                                <group string="Audit Period">
+                                    <field name="financial_year_end" readonly="is_locked"/>
+                                    <field name="audit_period_from" readonly="is_locked"/>
+                                    <field name="audit_period_to" readonly="is_locked"/>
                                 </group>
                             </group>
-                            <group string="Acceptance/Continuance Checklist">
-                                <field name="acceptance_continuance_checklist" widget="html"/>
+
+                            <group>
+                                <group string="Reporting Framework">
+                                    <field name="reporting_framework" readonly="is_locked"/>
+                                    <field name="auditing_standards" readonly="1"/>
+                                </group>
+                                <group string="Confirmation">
+                                    <field name="engagement_letter_consistent" readonly="is_locked"/>
+                                </group>
                             </group>
-                            <group string="Previous Auditor Communication" invisible="is_new_engagement == False">
-                                <field name="previous_auditor_communication" widget="html"/>
-                            </group>
-                            <group string="Key Engagement Terms">
-                                <field name="engagement_letter_terms" widget="html"/>
+
+                            <group string="ISA 210 Compliance Notes" class="mt-3">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>ISA 210 – Agreeing the Terms of Audit Engagements:</strong>
+                                    <ul class="mb-0">
+                                        <li>Ensure management responsibilities are clearly defined in engagement letter</li>
+                                        <li>Verify acceptable financial reporting framework is identified</li>
+                                        <li>Confirm agreement on scope and form of auditor's report</li>
+                                    </ul>
+                                </div>
                             </group>
                         </page>
 
-                        <!-- Tab 2: Independence & Ethics -->
-                        <page string="Independence &amp; Ethics" name="independence">
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION B: PARTNER & LEADERSHIP
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="B. Leadership" name="section_b_leadership">
                             <group>
-                                <group string="Independence Confirmation">
+                                <group string="Engagement Partner (ISA 220.12)">
+                                    <field name="engagement_partner_id" readonly="is_locked"/>
+                                    <field name="partner_icap_no" readonly="is_locked"/>
+                                    <field name="partner_eligible_listed" readonly="is_locked"/>
+                                    <field name="partner_eligible_pie" readonly="is_locked"/>
+                                    <field name="partner_eligible_high_risk" readonly="is_locked"/>
+                                </group>
+                                <group string="Partner Confirmations">
+                                    <field name="partner_competence_confirmed" readonly="is_locked"/>
+                                    <field name="partner_independence_confirmed" readonly="is_locked"/>
+                                    <field name="partner_workload_adequate" readonly="is_locked"/>
+                                </group>
+                            </group>
+
+                            <group string="Engagement Quality Control Review (ISQM-1)">
+                                <group>
+                                    <field name="eqcr_required" readonly="is_locked"/>
+                                    <field name="eqcr_reason" readonly="is_locked"
+                                           invisible="not eqcr_required"/>
+                                </group>
+                                <group>
+                                    <field name="eqcr_partner_id" readonly="is_locked"
+                                           invisible="not eqcr_required"/>
+                                    <field name="eqcr_reason_narrative" readonly="is_locked"
+                                           invisible="not eqcr_required"
+                                           placeholder="Detailed reason for EQCR requirement..."/>
+                                </group>
+                            </group>
+
+                            <group string="Leadership Responsibilities (ISA 220)" class="mt-3">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>ISA 220 – Quality Management for an Audit:</strong>
+                                    <ul class="mb-0">
+                                        <li>Engagement partner takes overall responsibility for quality</li>
+                                        <li>Partner ensures adequate resources and competent team assignment</li>
+                                        <li>Direction, supervision, and review must be planned and performed</li>
+                                        <li>Engagement partner remains responsible even when delegating tasks</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION C: TEAM COMPOSITION
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="C. Team" name="section_c_team">
+                            <group string="Engagement Team Composition (ISA 220.25)">
+                                <div class="alert alert-warning" role="alert"
+                                     invisible="team_collectively_competent">
+                                    <strong>⚠️ Action Required:</strong>
+                                    Team collective competence must be confirmed for ISA 220 compliance.
+                                </div>
+                            </group>
+
+                            <field name="team_member_ids" readonly="is_locked"
+                                   context="{'default_p1_id': active_id}">
+                                <tree string="Team Members" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="role"/>
+                                    <field name="user_id"/>
+                                    <field name="qualification"/>
+                                    <field name="icap_registration_no"/>
+                                    <field name="experience_years"/>
+                                    <field name="has_industry_experience"/>
+                                    <field name="assigned_hours"/>
+                                    <field name="competence_confirmed"/>
                                     <field name="independence_confirmed"/>
-                                    <field name="conflict_of_interest_confirmed"/>
-                                </group>
-                                <group string="Threats Identified">
-                                    <field name="self_review_threat"/>
-                                    <field name="familiarity_threat"/>
-                                    <field name="intimidation_threat"/>
-                                    <field name="advocacy_threat"/>
-                                </group>
-                            </group>
-                            <group string="Independence Threats Assessment">
-                                <field name="independence_threats_identified" widget="html"/>
-                            </group>
-                            <group string="Conflict of Interest Assessment">
-                                <field name="conflict_assessment" widget="html"/>
-                            </group>
-                            <group string="Safeguards Applied">
-                                <field name="safeguards_applied" widget="html"/>
-                            </group>
-                        </page>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
 
-                        <!-- Tab 3: Audit Team -->
-                        <page string="Audit Team" name="team">
                             <group>
-                                <group string="Key Team Members">
-                                    <field name="engagement_partner_id"/>
-                                    <field name="engagement_manager_id"/>
-                                    <field name="senior_auditor_id"/>
-                                    <field name="it_specialist_id"/>
+                                <group string="Team Assessment">
+                                    <field name="team_collectively_competent" readonly="is_locked"/>
+                                    <field name="industry_expertise_available" readonly="is_locked"/>
+                                    <field name="supervision_structure_defined" readonly="is_locked"/>
                                 </group>
-                                <group string="EQCR">
-                                    <field name="eqcr_required"/>
-                                    <field name="eqcr_id" invisible="eqcr_required == False"/>
+                                <group string="Prior Experience">
+                                    <field name="prior_similar_experience" readonly="is_locked"/>
+                                    <field name="prior_experience_details" readonly="is_locked"
+                                           invisible="not prior_similar_experience"/>
                                 </group>
                             </group>
-                            <group string="Other Team Members">
-                                <field name="team_member_ids" widget="many2many_tags"/>
-                            </group>
-                            <group string="Team Competence Assessment">
-                                <field name="team_competence_assessment" widget="html"/>
-                            </group>
-                        </page>
 
-                        <!-- Tab 4: Time Budget -->
-                        <page string="Time Budget" name="budget">
-                            <group>
-                                <group string="Planned Hours">
-                                    <field name="planned_hours_partner"/>
-                                    <field name="planned_hours_manager"/>
-                                    <field name="planned_hours_senior"/>
-                                    <field name="planned_hours_staff"/>
-                                    <field name="planned_hours_total"/>
+                            <group string="Team Competence Assessment" class="mt-3">
+                                <field name="team_competence_assessment" readonly="is_locked" nolabel="1"
+                                       placeholder="Document assessment of collective team competence (ISA 220)..."/>
+                            </group>
+
+                            <group string="Summary" class="mt-3">
+                                <group>
+                                    <field name="total_team_members" readonly="1"/>
                                 </group>
-                                <group string="Budget">
-                                    <field name="budget_amount"/>
-                                    <field name="currency_id"/>
+                                <group>
+                                    <field name="total_assigned_hours" readonly="1"/>
                                 </group>
                             </group>
                         </page>
 
-                        <!-- Tab 5: Quality Objectives -->
-                        <page string="Quality Objectives (ISQM-1)" name="quality">
-                            <group string="Quality Objectives">
-                                <field name="quality_objectives" widget="html"/>
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION D: SPECIALISTS
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="D. Specialists" name="section_d_specialists">
+                            <group>
+                                <group string="Specialist Requirements (ISA 620)">
+                                    <field name="specialist_required" readonly="is_locked"/>
+                                </group>
                             </group>
-                            <group string="Quality Risks Identified">
-                                <field name="quality_risks_identified" widget="html"/>
+
+                            <group invisible="not specialist_required">
+                                <group string="Types of Specialists Needed">
+                                    <field name="specialist_it_auditor" readonly="is_locked"/>
+                                    <field name="specialist_valuation" readonly="is_locked"/>
+                                    <field name="specialist_tax" readonly="is_locked"/>
+                                    <field name="specialist_actuary" readonly="is_locked"/>
+                                    <field name="specialist_other" readonly="is_locked"/>
+                                    <field name="specialist_other_desc" readonly="is_locked"
+                                           invisible="not specialist_other"/>
+                                </group>
+                                <group string="Specialist Confirmations">
+                                    <field name="specialist_competence_evaluated" readonly="is_locked"/>
+                                    <field name="specialist_scope_defined" readonly="is_locked"/>
+                                </group>
                             </group>
-                            <group string="Responses to Quality Risks">
-                                <field name="quality_responses" widget="html"/>
+
+                            <group invisible="not specialist_required" string="Reason for Specialist &amp; Timing">
+                                <field name="specialist_reason" readonly="is_locked" nolabel="1"
+                                       placeholder="Document the audit area requiring specialized expertise, nature of work to be performed..."/>
+                            </group>
+
+                            <group invisible="not specialist_required" string="Planned Timing">
+                                <field name="specialist_timing" readonly="is_locked" nolabel="1"
+                                       placeholder="When will specialist work be performed..."/>
+                            </group>
+
+                            <group string="Common Areas Requiring Specialists" class="mt-3"
+                                   invisible="specialist_required">
+                                <div class="alert alert-info" role="alert">
+                                    <ul class="mb-0">
+                                        <li><strong>Actuarial:</strong> Pension obligations, insurance liabilities</li>
+                                        <li><strong>Valuation:</strong> Investment properties, biological assets, complex financial instruments</li>
+                                        <li><strong>Legal:</strong> Litigation provisions, regulatory matters</li>
+                                        <li><strong>IT:</strong> Complex system controls, data analytics</li>
+                                        <li><strong>Tax:</strong> Complex tax provisions, transfer pricing</li>
+                                    </ul>
+                                </div>
                             </group>
                         </page>
 
-                        <!-- Tab 6: Sign-off -->
-                        <page string="Sign-off" name="signoff">
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION E: TIME BUDGET
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="E. Budget" name="section_e_budget">
+                            <group string="Time Budget by Audit Phase">
+                                <field name="time_budget_line_ids" readonly="is_locked"
+                                       context="{'default_p1_id': active_id}">
+                                    <tree string="Time Budget" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="phase"/>
+                                        <field name="partner_hours"/>
+                                        <field name="manager_hours"/>
+                                        <field name="senior_hours"/>
+                                        <field name="staff_hours"/>
+                                        <field name="total_hours" readonly="1" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </group>
+
                             <group>
-                                <group string="Senior Sign-off">
-                                    <field name="senior_signed_user_id"/>
-                                    <field name="senior_signed_on"/>
+                                <group string="Budget Summary">
+                                    <field name="total_partner_hours" readonly="1"/>
+                                    <field name="total_manager_hours" readonly="1"/>
+                                    <field name="total_senior_hours" readonly="1"/>
+                                    <field name="total_staff_hours" readonly="1"/>
+                                    <field name="grand_total_hours" readonly="1"/>
                                 </group>
-                                <group string="Manager Review">
-                                    <field name="manager_reviewed_user_id"/>
-                                    <field name="manager_reviewed_on"/>
+                                <group string="Fee &amp; Risk">
+                                    <field name="budget_amount" readonly="is_locked"/>
+                                    <field name="fee_risk_assessment" readonly="is_locked"/>
                                 </group>
                             </group>
+
+                            <group string="Budget Adequacy Conclusion" class="mt-3">
+                                <field name="budget_adequacy_conclusion" readonly="is_locked" nolabel="1"
+                                       placeholder="Document conclusion on budget adequacy, basis for budget allocation, and any concerns..."/>
+                            </group>
+
+                            <group string="Key Dates" class="mt-3">
+                                <group>
+                                    <field name="reporting_deadline" readonly="is_locked"/>
+                                </group>
+                                <group>
+                                    <field name="agm_date" readonly="is_locked"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION F: INDEPENDENCE RECONFIRMATION
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="F. Independence" name="section_f_independence">
                             <group>
-                                <group string="Partner Approval">
-                                    <field name="partner_approved_user_id"/>
-                                    <field name="partner_approved_on"/>
+                                <group string="Independence Confirmation (IESBA Code)">
+                                    <field name="independence_team_reconfirmed" readonly="is_locked"/>
+                                    <field name="new_threats_identified" readonly="is_locked"/>
+                                </group>
+                                <group string="Independence Checklist">
+                                    <field name="no_prohibited_relationships" readonly="is_locked"/>
+                                    <field name="no_fee_dependency_threat" readonly="is_locked"/>
+                                    <field name="no_self_review_threat" readonly="is_locked"/>
                                 </group>
                             </group>
-                            <group string="Reviewer Notes">
-                                <field name="reviewer_notes" widget="html"/>
+
+                            <group string="Safeguards Applied" class="mt-3"
+                                   invisible="not new_threats_identified">
+                                <field name="safeguards_applied" readonly="is_locked" nolabel="1"
+                                       placeholder="Document safeguards applied to reduce threats to acceptable level..."/>
                             </group>
-                            <group string="Approval Notes">
-                                <field name="approval_notes" widget="html"/>
+
+                            <group string="IESBA Code Requirements" class="mt-3">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Independence Requirements:</strong>
+                                    <ul class="mb-0">
+                                        <li>All team members must confirm independence before engagement commencement</li>
+                                        <li>Document any threats identified and safeguards applied</li>
+                                        <li>No prohibited relationships or financial interests</li>
+                                        <li>Fee dependency and self-review threats must be assessed</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION G: ENGAGEMENT RISK
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="G. Risk" name="section_g_risk">
+                            <group>
+                                <group string="Engagement Risk Assessment">
+                                    <field name="engagement_risk_level" readonly="is_locked"/>
+                                </group>
+                            </group>
+
+                            <group string="Risk Factors">
+                                <group string="Staffing &amp; Resources">
+                                    <field name="staffing_challenges" readonly="is_locked"/>
+                                    <field name="staffing_challenges_detail" readonly="is_locked"
+                                           invisible="not staffing_challenges"
+                                           placeholder="Staff availability, skill gaps, training needs..."/>
+                                </group>
+                                <group string="Timing Constraints">
+                                    <field name="timing_constraints" readonly="is_locked"/>
+                                    <field name="timing_constraints_detail" readonly="is_locked"
+                                           invisible="not timing_constraints"
+                                           placeholder="Tight deadlines, client delays, peak season conflicts..."/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="New Staff/Systems">
+                                    <field name="new_staff_systems" readonly="is_locked"/>
+                                    <field name="new_staff_systems_detail" readonly="is_locked"
+                                           invisible="not new_staff_systems"
+                                           placeholder="Training needs, system familiarization..."/>
+                                </group>
+                            </group>
+
+                            <group string="Feasibility Assessment" class="mt-3">
+                                <group>
+                                    <field name="feasibility_deadline" readonly="is_locked"
+                                           placeholder="Assessment of ability to complete within deadline..."/>
+                                </group>
+                                <group>
+                                    <field name="management_availability" readonly="is_locked"
+                                           placeholder="Availability of client management and records..."/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION H: DOCUMENT UPLOADS
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="H. Documents" name="section_h_documents">
+                            <group string="Required Documentation">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>ISA/ISQM-1 Required Documentation:</strong>
+                                    Upload all mandatory documents to support engagement acceptance and planning.
+                                </div>
+                            </group>
+
+                            <group>
+                                <group string="Engagement Documentation">
+                                    <field name="engagement_letter_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                                <group string="Independence Documentation">
+                                    <field name="team_independence_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                            </group>
+
+                            <group invisible="not eqcr_required">
+                                <group string="EQCR Documentation">
+                                    <field name="eqcr_appointment_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                            </group>
+
+                            <group invisible="not specialist_required">
+                                <group string="Specialist Documentation">
+                                    <field name="specialist_engagement_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                            </group>
+
+                            <group string="Document Checklist" class="mt-3">
+                                <div class="alert alert-warning" role="alert"
+                                     invisible="engagement_letter_attachment_ids">
+                                    ⚠️ Signed Engagement Letter is mandatory
+                                </div>
+                                <div class="alert alert-warning" role="alert"
+                                     invisible="team_independence_attachment_ids">
+                                    ⚠️ Team Independence Declarations are mandatory
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION I: CONCLUSION
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="I. Conclusion" name="section_i_conclusion">
+                            <group string="P-1 Conclusion &amp; Professional Judgment">
+                                <field name="conclusion_narrative" readonly="is_locked" nolabel="1"
+                                       placeholder="Document the engagement partner's professional judgment regarding:
+• Appropriateness of engagement acceptance/continuance
+• Sufficiency of resources allocated
+• Team competence and experience
+• Identified risks and planned responses
+• Any concerns or matters requiring attention during the audit..."/>
+                            </group>
+
+                            <group string="Final Confirmations" class="mt-3">
+                                <group>
+                                    <field name="engagement_appropriately_resourced" readonly="is_locked"/>
+                                    <field name="quality_management_met" readonly="is_locked"/>
+                                </group>
+                                <group>
+                                    <field name="proceed_planning_approved" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="ISA 220 Partner Responsibilities Checklist" class="mt-3">
+                                <div class="alert alert-info" role="alert">
+                                    <ul class="mb-0">
+                                        <li>✓ Overall responsibility for quality has been assumed</li>
+                                        <li>✓ Ethical requirements including independence have been fulfilled</li>
+                                        <li>✓ Client acceptance and continuance is appropriate</li>
+                                        <li>✓ Adequate resources have been assigned</li>
+                                        <li>✓ Direction, supervision, and review have been planned</li>
+                                        <li>✓ Professional skepticism will be exercised</li>
+                                        <li>✓ Consultation will occur on difficult matters</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION J: REVIEW & APPROVAL
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="J. Approval" name="section_j_approval">
+                            <group string="Preparation">
+                                <group>
+                                    <field name="prepared_by_id" readonly="1"/>
+                                    <field name="prepared_on" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="Manager Review" class="mt-3">
+                                <group>
+                                    <field name="reviewed_by_id" readonly="1"/>
+                                    <field name="reviewed_on" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="Partner Approval" class="mt-3">
+                                <group>
+                                    <field name="partner_approved" readonly="1"/>
+                                    <field name="partner_approved_by_id" readonly="1"/>
+                                    <field name="partner_approved_on" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="partner_comments" readonly="is_locked or state not in ['reviewed', 'approved']"
+                                           placeholder="Partner comments are mandatory for approval..."/>
+                                </group>
+                            </group>
+
+                            <group string="Record Status" class="mt-3">
+                                <group>
+                                    <field name="is_locked" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="Approval Summary" class="mt-3">
+                                <div class="row text-center">
+                                    <div class="col-md-4">
+                                        <div class="card"
+                                             invisible="not prepared_by_id">
+                                            <div class="card-body py-2 bg-success text-white">
+                                                <strong>✓ Prepared</strong><br/>
+                                                <small><field name="prepared_by_id" readonly="1" nolabel="1"/></small><br/>
+                                                <small><field name="prepared_on" readonly="1" nolabel="1"/></small>
+                                            </div>
+                                        </div>
+                                        <div class="card"
+                                             invisible="prepared_by_id">
+                                            <div class="card-body py-2 bg-secondary text-white">
+                                                <strong>○ Pending Preparation</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card"
+                                             invisible="not reviewed_by_id">
+                                            <div class="card-body py-2 bg-success text-white">
+                                                <strong>✓ Reviewed</strong><br/>
+                                                <small><field name="reviewed_by_id" readonly="1" nolabel="1"/></small><br/>
+                                                <small><field name="reviewed_on" readonly="1" nolabel="1"/></small>
+                                            </div>
+                                        </div>
+                                        <div class="card"
+                                             invisible="reviewed_by_id">
+                                            <div class="card-body py-2 bg-secondary text-white">
+                                                <strong>○ Pending Review</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card"
+                                             invisible="not partner_approved">
+                                            <div class="card-body py-2 bg-success text-white">
+                                                <strong>✓ Approved</strong><br/>
+                                                <small><field name="partner_approved_by_id" readonly="1" nolabel="1"/></small><br/>
+                                                <small><field name="partner_approved_on" readonly="1" nolabel="1"/></small>
+                                            </div>
+                                        </div>
+                                        <div class="card"
+                                             invisible="partner_approved">
+                                            <div class="card-body py-2 bg-secondary text-white">
+                                                <strong>○ Pending Approval</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
+
+                <!-- Chatter -->
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
@@ -186,58 +640,150 @@
         </field>
     </record>
 
-    <!-- P-1 Tree View -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         TREE VIEW: P-1 ENGAGEMENT LIST
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="view_planning_p1_engagement_tree" model="ir.ui.view">
         <field name="name">qaco.planning.p1.engagement.tree</field>
         <field name="model">qaco.planning.p1.engagement</field>
         <field name="arch" type="xml">
-            <tree string="P-1: Engagement Setup">
+            <tree string="P-1: Engagement Setup"
+                  decoration-danger="engagement_risk_level == 'high'"
+                  decoration-warning="engagement_risk_level == 'medium'"
+                  decoration-success="state == 'approved'">
                 <field name="name"/>
                 <field name="client_id"/>
+                <field name="engagement_type"/>
                 <field name="engagement_partner_id"/>
-                <field name="engagement_manager_id"/>
-                <field name="audit_period_from"/>
-                <field name="audit_period_to"/>
-                <field name="state" widget="badge" decoration-info="state == 'not_started'"
-                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+                <field name="engagement_risk_level" widget="badge"
+                       decoration-danger="engagement_risk_level == 'high'"
+                       decoration-warning="engagement_risk_level == 'medium'"
+                       decoration-success="engagement_risk_level == 'low'"/>
+                <field name="grand_total_hours" sum="Total Hours"/>
+                <field name="total_team_members"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'in_progress'"
+                       decoration-warning="state == 'completed'"
+                       decoration-success="state in ['reviewed', 'approved']"
+                       decoration-muted="state == 'locked'"/>
             </tree>
         </field>
     </record>
 
-    <!-- P-1 Search View -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         SEARCH VIEW
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="view_planning_p1_engagement_search" model="ir.ui.view">
         <field name="name">qaco.planning.p1.engagement.search</field>
         <field name="model">qaco.planning.p1.engagement</field>
         <field name="arch" type="xml">
-            <search string="Search P-1">
+            <search string="Search P-1 Engagements">
                 <field name="name"/>
                 <field name="client_id"/>
                 <field name="engagement_partner_id"/>
-                <filter name="not_started" string="Not Started" domain="[('state', '=', 'not_started')]"/>
-                <filter name="in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
-                <filter name="completed" string="Completed" domain="[('state', '=', 'completed')]"/>
-                <filter name="reviewed" string="Reviewed" domain="[('state', '=', 'reviewed')]"/>
-                <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Reviewed" name="reviewed" domain="[('state', '=', 'reviewed')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Locked" name="locked" domain="[('state', '=', 'locked')]"/>
+                <separator/>
+                <filter string="High Risk" name="high_risk" domain="[('engagement_risk_level', '=', 'high')]"/>
+                <filter string="EQCR Required" name="eqcr" domain="[('eqcr_required', '=', True)]"/>
+                <filter string="Specialists Required" name="specialists" domain="[('specialist_required', '=', True)]"/>
+                <separator/>
                 <group expand="0" string="Group By">
-                    <filter name="group_by_client" string="Client" context="{'group_by': 'client_id'}"/>
-                    <filter name="group_by_partner" string="Partner" context="{'group_by': 'engagement_partner_id'}"/>
-                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'engagement_partner_id'}"/>
+                    <filter string="Risk Level" name="group_risk" context="{'group_by': 'engagement_risk_level'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <!-- P-1 Action -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         TEAM MEMBER FORM VIEW
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <record id="view_planning_p1_team_member_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p1.team.member.form</field>
+        <field name="model">qaco.planning.p1.team.member</field>
+        <field name="arch" type="xml">
+            <form string="Team Member">
+                <sheet>
+                    <group>
+                        <group string="Member Details">
+                            <field name="sequence"/>
+                            <field name="role"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Qualifications">
+                            <field name="qualification"/>
+                            <field name="icap_registration_no"/>
+                            <field name="experience_years"/>
+                            <field name="has_industry_experience"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Assignment">
+                            <field name="assigned_hours"/>
+                        </group>
+                        <group string="Confirmations">
+                            <field name="competence_confirmed"/>
+                            <field name="independence_confirmed"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         TIME BUDGET FORM VIEW
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <record id="view_planning_p1_time_budget_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p1.time.budget.form</field>
+        <field name="model">qaco.planning.p1.time.budget</field>
+        <field name="arch" type="xml">
+            <form string="Time Budget Line">
+                <sheet>
+                    <group>
+                        <group string="Phase">
+                            <field name="sequence"/>
+                            <field name="phase"/>
+                        </group>
+                        <group string="Hours Allocation">
+                            <field name="partner_hours"/>
+                            <field name="manager_hours"/>
+                            <field name="senior_hours"/>
+                            <field name="staff_hours"/>
+                            <field name="total_hours" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         ACTION: P-1 Engagement Setup (Standalone)
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="action_planning_p1_engagement" model="ir.actions.act_window">
-        <field name="name">P-1: Engagement Overview &amp; Planning Control</field>
+        <field name="name">P-1: Engagement Setup</field>
         <field name="res_model">qaco.planning.p1.engagement</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-1 Engagement Overview &amp; Planning Control
+                Create your first P-1 Engagement Setup record
             </p>
             <p>
-                Document engagement acceptance, team assignment, and independence per ISA 210, 220, and ISQM-1.
+                P-1 documents engagement acceptance, team assignment, independence confirmation,
+                and resource planning per ISA 210, ISA 220, and ISQM-1.
             </p>
         </field>
     </record>

@@ -94,3 +94,9 @@ access_qaco_materiality_setting_trainee,qaco.materiality.setting.trainee,model_q
 access_qaco_materiality_setting_manager,qaco.materiality.setting.manager,model_qaco_materiality_setting,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_checklist_trainee,qaco.planning.checklist.trainee,model_qaco_planning_checklist,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_checklist_manager,qaco.planning.checklist.manager,model_qaco_planning_checklist,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_p1_team_member_trainee,qaco.planning.p1.team.member.trainee,model_qaco_planning_p1_team_member,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p1_team_member_manager,qaco.planning.p1.team.member.manager,model_qaco_planning_p1_team_member,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_p1_team_member_partner,qaco.planning.p1.team.member.partner,model_qaco_planning_p1_team_member,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_planning_p1_time_budget_trainee,qaco.planning.p1.time.budget.trainee,model_qaco_planning_p1_time_budget,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p1_time_budget_manager,qaco.planning.p1.time.budget.manager,model_qaco_planning_p1_time_budget,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_p1_time_budget_partner,qaco.planning.p1.time.budget.partner,model_qaco_planning_p1_time_budget,qaco_audit.group_audit_partner,1,1,1,1
