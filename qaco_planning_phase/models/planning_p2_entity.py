@@ -115,7 +115,7 @@ class PlanningP2Entity(models.Model):
     industry_type = fields.Selection(
         INDUSTRY_TYPES,
         string='Industry Sector',
-        required=True
+        default='other'
     )
     industry_conditions = fields.Html(
         string='Industry Conditions',
