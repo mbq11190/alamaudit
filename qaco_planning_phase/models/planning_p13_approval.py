@@ -77,6 +77,25 @@ class PlanningP13Approval(models.Model):
         compute='_compute_all_tabs_complete',
         store=True
     )
+    
+    # Alias for XML compatibility
+    all_tabs_approved = fields.Boolean(
+        related='all_tabs_complete',
+        string='All Tabs Approved',
+        readonly=False
+    )
+    planning_lock_date = fields.Datetime(
+        related='planning_locked_date',
+        string='Planning Lock Date',
+        readonly=False
+    )
+    
+    # Dynamic checklist One2many
+    checklist_ids = fields.One2many(
+        'qaco.planning.checklist.line',
+        'p13_approval_id',
+        string='Planning Checklist'
+    )
 
     # ===== Planning Review Notes =====
     manager_review_notes = fields.Html(
@@ -109,6 +128,20 @@ class PlanningP13Approval(models.Model):
     partner_reviewer_id = fields.Many2one(
         'res.users',
         string='Partner Reviewer'
+    )
+    
+    # Quality Review fields for XML compatibility
+    quality_review_summary = fields.Html(
+        string='Quality Review Summary',
+        help='Summary of quality review performed'
+    )
+    issues_identified = fields.Html(
+        string='Issues Identified',
+        help='Issues identified during quality review'
+    )
+    issues_resolution = fields.Html(
+        string='Issues Resolution',
+        help='Resolution of identified issues'
     )
 
     # ===== EQCR (Engagement Quality Control Review) =====
@@ -145,6 +178,28 @@ class PlanningP13Approval(models.Model):
         string='EQCR Resolution',
         help='Resolution of matters raised by EQCR'
     )
+    
+    # EQCR aliases for XML compatibility
+    eqcr_scope = fields.Html(
+        related='eqcr_criteria',
+        string='EQCR Scope',
+        readonly=False
+    )
+    eqcr_findings = fields.Html(
+        related='eqcr_matters_raised',
+        string='EQCR Findings',
+        readonly=False
+    )
+    eqcr_conclusion = fields.Html(
+        related='eqcr_resolution',
+        string='EQCR Conclusion',
+        readonly=False
+    )
+    eqcr_signed_on = fields.Datetime(
+        related='eqcr_review_date',
+        string='EQCR Signed On',
+        readonly=False
+    )
 
     # ===== Quality Standards Compliance =====
     icap_standards_compliant = fields.Boolean(
@@ -177,6 +232,24 @@ class PlanningP13Approval(models.Model):
     )
     partner_signoff_notes = fields.Html(
         string='Partner Sign-off Notes'
+    )
+    
+    # Partner confirmation fields for XML compatibility
+    partner_confirmed_resources = fields.Boolean(
+        string='Resources Confirmed',
+        help='Partner confirms resources are adequate'
+    )
+    partner_confirmed_strategy = fields.Boolean(
+        string='Strategy Confirmed',
+        help='Partner confirms audit strategy is appropriate'
+    )
+    partner_confirmed_timing = fields.Boolean(
+        string='Timing Confirmed',
+        help='Partner confirms audit timing is realistic'
+    )
+    partner_confirmed_risks = fields.Boolean(
+        string='Risks Confirmed',
+        help='Partner confirms risks have been properly addressed'
     )
 
     # ===== Planning Lock =====
@@ -216,6 +289,27 @@ class PlanningP13Approval(models.Model):
         string='APM Approved',
         tracking=True
     )
+    
+    # APM fields for XML compatibility
+    apm_summary = fields.Html(
+        string='APM Summary',
+        help='Audit Planning Memorandum summary'
+    )
+    key_decisions = fields.Html(
+        string='Key Decisions',
+        help='Key planning decisions made'
+    )
+    partner_attention_matters = fields.Html(
+        string='Matters for Partner Attention',
+        help='Matters requiring partner attention'
+    )
+    
+    # Change log One2many
+    change_log_ids = fields.One2many(
+        'qaco.planning.change.log',
+        'p13_approval_id',
+        string='Change Log'
+    )
 
     # ===== Attachments =====
     apm_attachment_ids = fields.Many2many(
@@ -238,6 +332,21 @@ class PlanningP13Approval(models.Model):
         'p13_id',
         'attachment_id',
         string='EQCR Documentation'
+    )
+    
+    # Approval attachments for XML compatibility
+    approval_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p13_approval_rel',
+        'p13_id',
+        'attachment_id',
+        string='Approval Attachments'
+    )
+    
+    # Planning completion notes for XML compatibility
+    planning_completion_notes = fields.Html(
+        string='Planning Completion Notes',
+        help='Notes on planning phase completion'
     )
 
     # ===== Summary =====
@@ -441,3 +550,92 @@ class PlanningP13Approval(models.Model):
             record.partner_approved_on = False
             record.state = 'reviewed'
             record.action_unlock_planning()
+
+
+class PlanningChecklistLine(models.Model):
+    """Planning Checklist Line Item for P-13 Approval."""
+    _name = 'qaco.planning.checklist.line'
+    _description = 'Planning Checklist Line'
+    _order = 'tab_code'
+
+    p13_approval_id = fields.Many2one(
+        'qaco.planning.p13.approval',
+        string='P-13 Approval',
+        required=True,
+        ondelete='cascade'
+    )
+    tab_code = fields.Char(
+        string='Tab Code',
+        required=True,
+        help='e.g., P-1, P-2, etc.'
+    )
+    tab_name = fields.Char(
+        string='Tab Name',
+        required=True
+    )
+    isa_reference = fields.Char(
+        string='ISA Reference',
+        help='e.g., ISA 300, ISA 315, etc.'
+    )
+    status = fields.Selection([
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('reviewed', 'Reviewed'),
+        ('approved', 'Approved'),
+    ], string='Status', default='not_started')
+    completed_by = fields.Many2one(
+        'res.users',
+        string='Completed By'
+    )
+    completed_on = fields.Datetime(
+        string='Completed On'
+    )
+    reviewed_by = fields.Many2one(
+        'res.users',
+        string='Reviewed By'
+    )
+    reviewed_on = fields.Datetime(
+        string='Reviewed On'
+    )
+
+
+class PlanningChangeLog(models.Model):
+    """Change Log for Planning Phase changes after lock."""
+    _name = 'qaco.planning.change.log'
+    _description = 'Planning Change Log'
+    _order = 'change_date desc'
+
+    p13_approval_id = fields.Many2one(
+        'qaco.planning.p13.approval',
+        string='P-13 Approval',
+        required=True,
+        ondelete='cascade'
+    )
+    change_date = fields.Datetime(
+        string='Change Date',
+        default=fields.Datetime.now,
+        required=True
+    )
+    changed_by_id = fields.Many2one(
+        'res.users',
+        string='Changed By',
+        default=lambda self: self.env.user,
+        required=True
+    )
+    tab_affected = fields.Char(
+        string='Tab Affected',
+        required=True,
+        help='e.g., P-1, P-5, etc.'
+    )
+    change_description = fields.Text(
+        string='Change Description',
+        required=True
+    )
+    approved_by_id = fields.Many2one(
+        'res.users',
+        string='Approved By'
+    )
+    approval_date = fields.Datetime(
+        string='Approval Date'
+    )

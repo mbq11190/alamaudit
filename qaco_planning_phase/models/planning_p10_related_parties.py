@@ -69,6 +69,30 @@ class PlanningP10RelatedParties(models.Model):
         'p10_related_parties_id',
         string='Related Parties'
     )
+    # XML view compatible alias
+    related_party_ids = fields.One2many(
+        'qaco.related.party.line',
+        'p10_related_parties_id',
+        string='Related Parties Register'
+    )
+
+    # ===== Related Party Transactions =====
+    rpt_line_ids = fields.One2many(
+        'qaco.rpt.transaction.line',
+        'p10_related_parties_id',
+        string='Related Party Transactions'
+    )
+
+    # ===== Overall Assessment (XML compatible) =====
+    rpt_risk_level = fields.Selection([
+        ('low', '🟢 Low'),
+        ('medium', '🟡 Medium'),
+        ('high', '🔴 High'),
+    ], string='RPT Risk Level', tracking=True)
+    significant_rpt_identified = fields.Boolean(
+        string='Significant RPT Identified',
+        tracking=True
+    )
 
     # ===== Understanding Requirements =====
     understanding_obtained = fields.Boolean(
@@ -78,6 +102,12 @@ class PlanningP10RelatedParties(models.Model):
     understanding_source = fields.Html(
         string='Sources of Information',
         help='Sources used to identify related parties'
+    )
+    # XML view compatible alias
+    understanding_related_parties = fields.Html(
+        string='Understanding Entity\'s Related Parties',
+        related='understanding_source',
+        readonly=False
     )
     management_representations = fields.Html(
         string='Management Representations',
@@ -122,9 +152,25 @@ class PlanningP10RelatedParties(models.Model):
         string='Related Party Risk Assessment',
         help='Assessment of risks arising from related party relationships'
     )
+    # XML view compatible alias
+    rpt_risk_assessment = fields.Html(
+        string='RPT Risk Assessment',
+        related='rp_risk_assessment',
+        readonly=False
+    )
+    rpt_fraud_indicators = fields.Html(
+        string='Fraud Risk Indicators',
+        help='Indicators of fraud risk related to related parties'
+    )
     significant_rp_transactions = fields.Html(
         string='Significant RP Transactions',
         help='Transactions requiring specific audit attention'
+    )
+    # XML view compatible alias
+    significant_rpt_risks = fields.Html(
+        string='Significant RPT Risks',
+        related='significant_rp_transactions',
+        readonly=False
     )
     arms_length_concerns = fields.Html(
         string="Arm's Length Concerns",
@@ -137,6 +183,74 @@ class PlanningP10RelatedParties(models.Model):
     undisclosed_rp_procedures = fields.Html(
         string='Procedures for Undisclosed RPs',
         help='Procedures to identify undisclosed related parties'
+    )
+    # XML view compatible alias
+    unidentified_rpt_procedures = fields.Html(
+        string='Procedures for Previously Unidentified RPT',
+        related='undisclosed_rp_procedures',
+        readonly=False
+    )
+
+    # ===== Audit Procedures (XML compatible) =====
+    risk_assessment_procedures = fields.Html(
+        string='Risk Assessment Procedures',
+        help='Procedures for assessing RPT risks'
+    )
+    identification_procedures = fields.Html(
+        string='Identification Procedures',
+        help='Procedures for identifying related parties'
+    )
+    substantive_procedures = fields.Html(
+        string='Substantive Procedures',
+        help='Substantive audit procedures for RPT'
+    )
+
+    # ===== Authorization (XML compatible) =====
+    authorization_assessment = fields.Html(
+        string='Authorization Assessment',
+        help='Assessment of authorization processes for RPT'
+    )
+    board_approval = fields.Html(
+        string='Board/Shareholder Approval',
+        help='Documentation of board/shareholder approvals'
+    )
+    arms_length_assessment = fields.Html(
+        string='Arm\'s Length Basis Assessment',
+        help='Assessment of whether transactions are at arm\'s length'
+    )
+
+    # ===== Disclosure (XML compatible) =====
+    disclosure_requirements = fields.Html(
+        string='Disclosure Requirements',
+        help='Applicable disclosure requirements'
+    )
+    disclosure_adequacy = fields.Html(
+        string='Disclosure Adequacy Assessment',
+        help='Assessment of adequacy of disclosures'
+    )
+    ias24_compliance = fields.Html(
+        string='IAS 24 Compliance',
+        help='Assessment of IAS 24 compliance'
+    )
+
+    # ===== Representations (XML compatible) =====
+    written_representations = fields.Html(
+        string='Written Representations Required',
+        help='Written representations required from management'
+    )
+    representations_obtained = fields.Html(
+        string='Representations Obtained',
+        help='Details of representations obtained'
+    )
+
+    # ===== Communication (XML compatible) =====
+    management_communication = fields.Html(
+        string='Communication to Management',
+        help='Matters to communicate to management'
+    )
+    tcwg_communication = fields.Html(
+        string='Communication to TCWG',
+        help='Matters to communicate to those charged with governance'
     )
 
     # ===== Disclosure Risks =====
@@ -189,11 +303,32 @@ class PlanningP10RelatedParties(models.Model):
         'attachment_id',
         string='Supporting Documents'
     )
+    # XML view compatible aliases
+    rpt_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p10_rpt_attachment_rel',
+        'p10_id',
+        'attachment_id',
+        string='Related Party Documentation'
+    )
+    approval_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p10_approval_rel',
+        'p10_id',
+        'attachment_id',
+        string='Board Minutes/Approvals'
+    )
 
     # ===== Summary =====
     rp_risk_summary = fields.Html(
         string='Related Party Risk Memo',
         help='Consolidated related party assessment per ISA 550'
+    )
+    # XML view compatible alias
+    rpt_conclusion = fields.Html(
+        string='Related Parties Conclusion',
+        related='rp_risk_summary',
+        readonly=False
     )
     isa_reference = fields.Char(
         string='ISA Reference',
@@ -336,3 +471,105 @@ class PlanningP10RelatedPartyLine(models.Model):
         help='Are transactions at arm\'s length?'
     )
     notes = fields.Text(string='Notes')
+
+
+class RelatedPartyLine(models.Model):
+    """Related Party Line for XML view compatibility."""
+    _name = 'qaco.related.party.line'
+    _description = 'Related Party'
+    _order = 'relationship_type, party_name'
+
+    p10_related_parties_id = fields.Many2one(
+        'qaco.planning.p10.related.parties',
+        string='P-10 Related Parties',
+        required=True,
+        ondelete='cascade'
+    )
+    party_name = fields.Char(
+        string='Party Name',
+        required=True
+    )
+    relationship_type = fields.Selection([
+        ('parent', 'Parent Company'),
+        ('subsidiary', 'Subsidiary'),
+        ('associate', 'Associate'),
+        ('joint_venture', 'Joint Venture'),
+        ('director', 'Director/Officer'),
+        ('key_management', 'Key Management Personnel'),
+        ('family_member', 'Close Family Member'),
+        ('entity_controlled', 'Entity Controlled by KMP'),
+        ('pension_fund', 'Post-Employment Benefit Plan'),
+        ('other', 'Other Related Party'),
+    ], string='Relationship Type', required=True)
+    relationship_nature = fields.Char(
+        string='Nature of Relationship'
+    )
+    ownership_percentage = fields.Float(
+        string='Ownership %'
+    )
+    identification_source = fields.Selection([
+        ('management', 'Management Inquiry'),
+        ('register', 'Company Register'),
+        ('minutes', 'Board Minutes'),
+        ('prior_audit', 'Prior Year Audit'),
+        ('public', 'Public Information'),
+        ('other', 'Other'),
+    ], string='Identification Source')
+    notes = fields.Text(string='Notes')
+
+
+class RptTransactionLine(models.Model):
+    """RPT Transaction Line for XML view compatibility."""
+    _name = 'qaco.rpt.transaction.line'
+    _description = 'RPT Transaction'
+    _order = 'transaction_amount desc'
+
+    p10_related_parties_id = fields.Many2one(
+        'qaco.planning.p10.related.parties',
+        string='P-10 Related Parties',
+        required=True,
+        ondelete='cascade'
+    )
+    related_party_id = fields.Many2one(
+        'qaco.related.party.line',
+        string='Related Party',
+        domain="[('p10_related_parties_id', '=', p10_related_parties_id)]"
+    )
+    transaction_type = fields.Selection([
+        ('sales', 'Sales'),
+        ('purchases', 'Purchases'),
+        ('services_provided', 'Services Provided'),
+        ('services_received', 'Services Received'),
+        ('loan_given', 'Loan Given'),
+        ('loan_received', 'Loan Received'),
+        ('guarantee', 'Guarantee'),
+        ('lease', 'Lease'),
+        ('royalty', 'Royalty/License'),
+        ('management_fee', 'Management Fee'),
+        ('other', 'Other'),
+    ], string='Transaction Type')
+    transaction_description = fields.Char(
+        string='Description'
+    )
+    transaction_amount = fields.Monetary(
+        string='Amount',
+        currency_field='currency_id'
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='p10_related_parties_id.currency_id'
+    )
+    terms_conditions = fields.Text(
+        string='Terms & Conditions'
+    )
+    business_rationale = fields.Text(
+        string='Business Rationale'
+    )
+    arms_length = fields.Boolean(
+        string='At Arm\'s Length'
+    )
+    disclosure_risk = fields.Selection([
+        ('low', '🟢 Low'),
+        ('medium', '🟡 Medium'),
+        ('high', '🔴 High'),
+    ], string='Disclosure Risk')

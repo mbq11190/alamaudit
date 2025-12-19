@@ -64,11 +64,31 @@ class PlanningP9Laws(models.Model):
         'p9_laws_id',
         string='Applicable Laws & Regulations'
     )
+    # XML view compatible alias
+    law_line_ids = fields.One2many(
+        'qaco.law.line',
+        'p9_laws_id',
+        string='Laws Register'
+    )
+
+    # ===== Overall Assessment (XML compatible) =====
+    compliance_assessment = fields.Selection([
+        ('compliant', '🟢 Compliant'),
+        ('partial', '🟡 Partially Compliant'),
+        ('non_compliant', '🔴 Non-Compliant'),
+        ('not_assessed', '⚪ Not Yet Assessed'),
+    ], string='Overall Compliance Assessment', tracking=True)
 
     # ===== Category A Laws (Direct Effect on FS) =====
     category_a_laws = fields.Html(
         string='Category A Laws',
         help='Laws with direct effect on determination of amounts and disclosures (ISA 250.6(a))'
+    )
+    # XML view compatible alias
+    direct_effect_laws = fields.Html(
+        string='Direct Effect Laws',
+        related='category_a_laws',
+        readonly=False
     )
     category_a_compliance = fields.Selection([
         ('compliant', '🟢 Compliant'),
@@ -81,6 +101,12 @@ class PlanningP9Laws(models.Model):
     category_b_laws = fields.Html(
         string='Category B Laws',
         help='Other laws where non-compliance may have a material effect (ISA 250.6(b))'
+    )
+    # XML view compatible alias
+    indirect_effect_laws = fields.Html(
+        string='Indirect Effect Laws',
+        related='category_b_laws',
+        readonly=False
     )
     category_b_compliance = fields.Selection([
         ('compliant', '🟢 Compliant'),
@@ -105,13 +131,50 @@ class PlanningP9Laws(models.Model):
     pra_regulations_applicable = fields.Boolean(string='PRA/Provincial Tax Applicable')
     pra_compliance = fields.Html(string='PRA Compliance Assessment')
 
+    # XML view compatible - AOB Requirements
+    aob_compliance = fields.Html(string='AOB Requirements Compliance')
+
     labor_laws_applicable = fields.Boolean(string='Labor Laws Applicable')
     labor_compliance = fields.Html(string='Labor Laws Compliance Assessment')
 
     environmental_laws_applicable = fields.Boolean(string='Environmental Laws Applicable')
     environmental_compliance = fields.Html(string='Environmental Compliance Assessment')
+    # XML view compatible alias
+    environmental_regulations = fields.Html(
+        string='Environmental Regulations',
+        related='environmental_compliance',
+        readonly=False
+    )
 
     industry_specific_regulations = fields.Html(string='Industry-Specific Regulations')
+    # XML view compatible aliases
+    industry_regulations = fields.Html(
+        string='Industry Regulations',
+        related='industry_specific_regulations',
+        readonly=False
+    )
+    licensing_requirements = fields.Html(
+        string='Licensing Requirements',
+        help='Licensing requirements applicable to the entity'
+    )
+
+    # ===== Compliance Procedures =====
+    entity_compliance_framework = fields.Html(
+        string='Entity Compliance Framework',
+        help='Understanding of entity\'s compliance framework'
+    )
+    audit_procedures_planned = fields.Html(
+        string='Audit Procedures Planned',
+        help='Audit procedures planned for compliance assessment'
+    )
+    inquiries_made = fields.Html(
+        string='Inquiries Made',
+        help='Inquiries made regarding compliance'
+    )
+    correspondence_inspection = fields.Html(
+        string='Correspondence Inspection',
+        help='Inspection of regulatory correspondence'
+    )
 
     # ===== Identified Non-Compliance =====
     non_compliance_identified = fields.Boolean(
@@ -130,6 +193,16 @@ class PlanningP9Laws(models.Model):
         string='Audit Response',
         help='Planned audit procedures to address non-compliance'
     )
+    # XML view compatible fields
+    non_compliance_line_ids = fields.One2many(
+        'qaco.non.compliance.line',
+        'p9_laws_id',
+        string='Non-Compliance Items'
+    )
+    non_compliance_assessment = fields.Html(
+        string='Non-Compliance Assessment',
+        help='Overall assessment of non-compliance items'
+    )
 
     # ===== Communication & Reporting =====
     management_communication = fields.Html(
@@ -147,6 +220,16 @@ class PlanningP9Laws(models.Model):
     regulatory_reporting_details = fields.Html(
         string='Regulatory Reporting Details'
     )
+    # XML view compatible aliases
+    regulator_reporting = fields.Html(
+        string='Reporting to Regulators',
+        related='regulatory_reporting_details',
+        readonly=False
+    )
+    audit_report_impact = fields.Html(
+        string='Impact on Audit Report',
+        help='Assessment of impact on audit report'
+    )
 
     # ===== Attachments =====
     compliance_attachment_ids = fields.Many2many(
@@ -163,11 +246,25 @@ class PlanningP9Laws(models.Model):
         'attachment_id',
         string='Legal Opinions'
     )
+    # XML view compatible alias
+    regulatory_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p9_regulatory_rel',
+        'p9_id',
+        'attachment_id',
+        string='Regulatory Correspondence'
+    )
 
     # ===== Summary =====
     compliance_summary = fields.Html(
         string='Legal & Regulatory Compliance Summary',
         help='Consolidated compliance assessment per ISA 250'
+    )
+    # XML view compatible alias
+    laws_conclusion = fields.Html(
+        string='Laws & Regulations Conclusion',
+        related='compliance_summary',
+        readonly=False
     )
     isa_reference = fields.Char(
         string='ISA Reference',
@@ -296,3 +393,81 @@ class PlanningP9LawLine(models.Model):
     audit_procedures = fields.Text(
         string='Planned Audit Procedures'
     )
+
+
+class LawLine(models.Model):
+    """Law Line Item for XML view compatibility."""
+    _name = 'qaco.law.line'
+    _description = 'Law Line'
+    _order = 'law_type, sequence'
+
+    p9_laws_id = fields.Many2one(
+        'qaco.planning.p9.laws',
+        string='P-9 Laws',
+        required=True,
+        ondelete='cascade'
+    )
+    sequence = fields.Integer(string='Sequence', default=10)
+    law_name = fields.Char(
+        string='Law/Regulation Name',
+        required=True
+    )
+    law_type = fields.Selection([
+        ('direct', 'Direct Effect'),
+        ('indirect', 'Indirect Effect'),
+    ], string='Law Type', required=True, default='direct')
+    regulator = fields.Char(
+        string='Regulatory Body'
+    )
+    compliance_status = fields.Selection([
+        ('compliant', '🟢 Compliant'),
+        ('partial', '🟡 Partially Compliant'),
+        ('non_compliant', '🔴 Non-Compliant'),
+        ('not_assessed', '⚪ Not Yet Assessed'),
+    ], string='Compliance Status', default='not_assessed')
+    audit_procedures = fields.Text(
+        string='Audit Procedures'
+    )
+    findings = fields.Text(
+        string='Findings'
+    )
+
+
+class NonComplianceLine(models.Model):
+    """Non-Compliance Item Line for XML view compatibility."""
+    _name = 'qaco.non.compliance.line'
+    _description = 'Non-Compliance Item'
+    _order = 'sequence'
+
+    p9_laws_id = fields.Many2one(
+        'qaco.planning.p9.laws',
+        string='P-9 Laws',
+        required=True,
+        ondelete='cascade'
+    )
+    sequence = fields.Integer(string='Sequence', default=10)
+    law_reference = fields.Char(
+        string='Law/Regulation Reference',
+        required=True
+    )
+    description = fields.Text(
+        string='Description of Non-Compliance'
+    )
+    nature = fields.Selection([
+        ('actual', 'Actual Non-Compliance'),
+        ('suspected', 'Suspected Non-Compliance'),
+    ], string='Nature', default='actual')
+    materiality = fields.Selection([
+        ('material', 'Material'),
+        ('immaterial', 'Immaterial'),
+        ('to_assess', 'To Be Assessed'),
+    ], string='Materiality', default='to_assess')
+    action_taken = fields.Text(
+        string='Action Taken'
+    )
+    reporting_impact = fields.Selection([
+        ('none', 'No Impact'),
+        ('disclosure', 'Disclosure Required'),
+        ('qualification', 'Report Qualification'),
+        ('adverse', 'Adverse Opinion'),
+    ], string='Reporting Impact', default='none')

@@ -284,8 +284,8 @@
 
     <!-- Key Area Line Tree View -->
     <record id="view_key_area_line_tree" model="ir.ui.view">
-        <field name="name">qaco.key.area.line.tree</field>
-        <field name="model">qaco.key.area.line</field>
+        <field name="name">qaco.planning.p12.key.area.line.tree</field>
+        <field name="model">qaco.planning.p12.key.area.line</field>
         <field name="arch" type="xml">
             <tree string="Key Audit Areas" editable="bottom">
                 <field name="area_name"/>
@@ -301,8 +301,8 @@
 
     <!-- Expert Line Tree View -->
     <record id="view_expert_line_tree" model="ir.ui.view">
-        <field name="name">qaco.expert.line.tree</field>
-        <field name="model">qaco.expert.line</field>
+        <field name="name">qaco.planning.p12.expert.line.tree</field>
+        <field name="model">qaco.planning.p12.expert.line</field>
         <field name="arch" type="xml">
             <tree string="Experts" editable="bottom">
                 <field name="expert_name"/>

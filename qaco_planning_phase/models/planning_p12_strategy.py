@@ -63,9 +63,30 @@ class PlanningP12Strategy(models.Model):
         string='Overall Audit Strategy',
         help='The scope, timing and direction of the audit per ISA 300.7'
     )
+    # XML view compatible aliases
+    audit_strategy = fields.Html(
+        string='Audit Strategy',
+        related='overall_strategy',
+        readonly=False
+    )
+    overall_audit_approach = fields.Selection([
+        ('substantive', 'Predominantly Substantive'),
+        ('combined', 'Combined Approach'),
+        ('controls', 'Controls Reliance'),
+    ], string='Overall Audit Approach', tracking=True)
     scope_of_audit = fields.Html(
         string='Scope of Audit',
         help='Define the scope of the audit engagement'
+    )
+    # XML view compatible alias
+    audit_scope = fields.Html(
+        string='Audit Scope',
+        related='scope_of_audit',
+        readonly=False
+    )
+    expected_kam = fields.Html(
+        string='Expected Key Audit Matters',
+        help='Expected key audit matters to be reported'
     )
     timing_of_audit = fields.Html(
         string='Timing of Audit',
@@ -75,6 +96,17 @@ class PlanningP12Strategy(models.Model):
         string='Direction of Audit',
         help='Key areas of audit focus and approach'
     )
+    nature_timing_extent = fields.Html(
+        string='Nature, Timing, and Extent',
+        help='Overall direction for nature, timing, and extent of procedures'
+    )
+
+    # ===== Key Audit Areas (XML compatible) =====
+    key_area_ids = fields.One2many(
+        'qaco.key.area.line',
+        'p12_strategy_id',
+        string='Key Audit Areas'
+    )
 
     # ===== Planned Reliance on Controls =====
     controls_reliance = fields.Selection([
@@ -82,12 +114,45 @@ class PlanningP12Strategy(models.Model):
         ('limited_reliance', 'Limited Reliance on Controls'),
         ('significant_reliance', 'Significant Reliance on Controls'),
     ], string='Planned Controls Reliance', tracking=True)
+    # XML view compatible alias
+    control_reliance_approach = fields.Selection([
+        ('substantive_only', 'Substantive Only'),
+        ('limited_reliance', 'Limited Reliance'),
+        ('significant_reliance', 'Significant Reliance'),
+    ], string='Control Reliance Approach',
+       related='controls_reliance',
+       readonly=False)
     controls_reliance_rationale = fields.Html(
         string='Controls Reliance Rationale'
+    )
+    # XML view compatible alias
+    control_reliance_rationale = fields.Html(
+        string='Control Reliance Rationale',
+        related='controls_reliance_rationale',
+        readonly=False
     )
     controls_to_test = fields.Html(
         string='Controls Identified for Testing',
         help='Key controls where reliance is planned'
+    )
+    # XML view compatible
+    control_testing_approach = fields.Html(
+        string='Control Testing Approach',
+        help='Approach to testing controls'
+    )
+
+    # ===== Substantive Approach (XML compatible) =====
+    substantive_overview = fields.Html(
+        string='Substantive Procedures Overview',
+        help='Overview of substantive procedures'
+    )
+    tests_of_details = fields.Html(
+        string='Tests of Details',
+        help='Planned tests of details'
+    )
+    substantive_analytics = fields.Html(
+        string='Substantive Analytics',
+        help='Planned substantive analytical procedures'
     )
 
     # ===== Nature, Timing & Extent of Procedures (ISA 330) =====
@@ -118,20 +183,52 @@ class PlanningP12Strategy(models.Model):
     sample_size_factors = fields.Html(
         string='Sample Size Factors'
     )
+    # XML view compatible alias
+    sample_size_determination = fields.Html(
+        string='Sample Size Determination',
+        related='sample_size_factors',
+        readonly=False
+    )
+    sampling_risk = fields.Html(
+        string='Sampling Risk',
+        help='Consideration of sampling risk'
+    )
 
     # ===== Use of Experts (ISA 620) =====
     experts_required = fields.Boolean(
         string='Experts Required',
         tracking=True
     )
+    # XML view compatible alias
+    expert_required = fields.Boolean(
+        string='Expert Required',
+        related='experts_required',
+        readonly=False
+    )
     expert_line_ids = fields.One2many(
         'qaco.planning.p12.expert.line',
         'p12_strategy_id',
         string='Experts to Use'
     )
+    # XML view compatible alias
+    expert_ids = fields.One2many(
+        'qaco.expert.line',
+        'p12_strategy_id',
+        string='Expert Register'
+    )
     experts_scope = fields.Html(
         string='Scope of Expert Work',
         help='Scope of work for auditor\'s experts per ISA 620'
+    )
+    # XML view compatible alias
+    expert_work_evaluation = fields.Html(
+        string='Expert Work Evaluation',
+        related='experts_scope',
+        readonly=False
+    )
+    internal_expert = fields.Html(
+        string='Internal Expert',
+        help='Internal expert involvement details'
     )
 
     # ===== Internal Audit Reliance (ISA 610) =====
@@ -182,6 +279,16 @@ class PlanningP12Strategy(models.Model):
     specialist_resources = fields.Html(
         string='Specialist Resources Required'
     )
+    
+    # Direction/Supervision aliases for XML compatibility
+    team_direction = fields.Html(
+        string='Team Direction',
+        help='Direction to audit team members'
+    )
+    review_approach = fields.Html(
+        string='Review Approach',
+        help='Work review procedures'
+    )
 
     # ===== Audit Timeline =====
     planning_completion_date = fields.Date(
@@ -205,6 +312,37 @@ class PlanningP12Strategy(models.Model):
     detailed_timeline = fields.Html(
         string='Detailed Audit Timeline'
     )
+    
+    # Timing Aliases for XML compatibility
+    interim_start_date = fields.Date(
+        related='interim_fieldwork_start',
+        string='Interim Start Date',
+        readonly=False
+    )
+    interim_end_date = fields.Date(
+        related='interim_fieldwork_end',
+        string='Interim End Date',
+        readonly=False
+    )
+    final_start_date = fields.Date(
+        related='final_fieldwork_start',
+        string='Final Start Date',
+        readonly=False
+    )
+    final_end_date = fields.Date(
+        related='final_fieldwork_end',
+        string='Final End Date',
+        readonly=False
+    )
+    report_due_date = fields.Date(
+        related='reporting_deadline',
+        string='Report Due Date',
+        readonly=False
+    )
+    agm_date = fields.Date(
+        string='AGM Date',
+        help='Annual General Meeting date'
+    )
 
     # ===== Budget =====
     budget_hours = fields.Float(
@@ -223,6 +361,33 @@ class PlanningP12Strategy(models.Model):
         string='Budget Breakdown',
         help='Hours/costs by area or team member'
     )
+    
+    # Resource allocation aliases for XML compatibility
+    resource_allocation = fields.Html(
+        string='Resource Allocation',
+        help='Detailed resource allocation plan'
+    )
+    total_budgeted_hours = fields.Float(
+        related='budget_hours',
+        string='Total Budgeted Hours',
+        readonly=False
+    )
+    partner_hours = fields.Float(
+        string='Partner Hours',
+        help='Budgeted partner hours'
+    )
+    manager_hours = fields.Float(
+        string='Manager Hours',
+        help='Budgeted manager hours'
+    )
+    senior_hours = fields.Float(
+        string='Senior Hours',
+        help='Budgeted senior hours'
+    )
+    staff_hours = fields.Float(
+        string='Staff Hours',
+        help='Budgeted staff hours'
+    )
 
     # ===== Communication =====
     management_communication = fields.Html(
@@ -231,6 +396,22 @@ class PlanningP12Strategy(models.Model):
     tcwg_communication = fields.Html(
         string='Planned TCWG Communication',
         help='Matters to be communicated per ISA 260'
+    )
+    
+    # Communication aliases for XML compatibility
+    tcwg_communication_plan = fields.Html(
+        related='tcwg_communication',
+        string='TCWG Communication Plan',
+        readonly=False
+    )
+    management_communication_plan = fields.Html(
+        related='management_communication',
+        string='Management Communication Plan',
+        readonly=False
+    )
+    team_communication = fields.Html(
+        string='Team Communication',
+        help='Internal team communication plan'
     )
 
     # ===== Attachments =====
@@ -255,6 +436,18 @@ class PlanningP12Strategy(models.Model):
         'attachment_id',
         string='Timeline/Gantt Chart'
     )
+    
+    # Attachment aliases for XML compatibility
+    strategy_attachment_ids = fields.Many2many(
+        related='audit_strategy_attachment_ids',
+        string='Strategy Attachments',
+        readonly=False
+    )
+    program_attachment_ids = fields.Many2many(
+        related='audit_plan_attachment_ids',
+        string='Audit Program Attachments',
+        readonly=False
+    )
 
     # ===== Summary =====
     strategy_summary = fields.Html(
@@ -265,6 +458,13 @@ class PlanningP12Strategy(models.Model):
         string='ISA Reference',
         default='ISA 300/330',
         readonly=True
+    )
+    
+    # Summary alias for XML compatibility
+    audit_plan_summary = fields.Html(
+        related='strategy_summary',
+        string='Audit Plan Summary',
+        readonly=False
     )
 
     # ===== Sign-off Fields =====
@@ -367,6 +567,12 @@ class PlanningP12ExpertLine(models.Model):
         string='Expert Name/Firm',
         required=True
     )
+    # Alias for XML compatibility
+    expert_name = fields.Char(
+        related='name',
+        string='Expert Name',
+        readonly=False
+    )
     expertise_area = fields.Selection([
         ('valuation', 'Valuation'),
         ('actuarial', 'Actuarial'),
@@ -380,9 +586,19 @@ class PlanningP12ExpertLine(models.Model):
     scope_of_work = fields.Text(
         string='Scope of Work'
     )
+    # Alias for XML compatibility
+    engagement_scope = fields.Text(
+        related='scope_of_work',
+        string='Engagement Scope',
+        readonly=False
+    )
     competence_assessment = fields.Text(
         string='Competence Assessment',
         help='Assessment of expert\'s competence, capabilities, and objectivity per ISA 620'
+    )
+    objectivity_assessment = fields.Text(
+        string='Objectivity Assessment',
+        help='Assessment of expert\'s objectivity per ISA 620'
     )
     auditor_or_management = fields.Selection([
         ('auditor', "Auditor's Expert"),
@@ -390,5 +606,61 @@ class PlanningP12ExpertLine(models.Model):
     ], string='Expert Type', required=True)
     related_audit_area = fields.Char(
         string='Related Audit Area'
+    )
+    notes = fields.Text(string='Notes')
+
+
+class PlanningP12KeyAreaLine(models.Model):
+    """Key Audit Area Line Item for Audit Strategy."""
+    _name = 'qaco.planning.p12.key.area.line'
+    _description = 'Key Audit Area'
+    _order = 'sequence, area_name'
+
+    p12_strategy_id = fields.Many2one(
+        'qaco.planning.p12.strategy',
+        string='P-12 Strategy',
+        required=True,
+        ondelete='cascade'
+    )
+    sequence = fields.Integer(string='Sequence', default=10)
+    area_name = fields.Char(
+        string='Area Name',
+        required=True,
+        help='Name of the key audit area'
+    )
+    risk_level = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('significant', 'Significant Risk'),
+    ], string='Risk Level', default='medium')
+    assertion_focus = fields.Selection([
+        ('existence', 'Existence'),
+        ('completeness', 'Completeness'),
+        ('accuracy', 'Accuracy'),
+        ('valuation', 'Valuation'),
+        ('rights', 'Rights & Obligations'),
+        ('presentation', 'Presentation & Disclosure'),
+        ('cutoff', 'Cut-off'),
+        ('multiple', 'Multiple Assertions'),
+    ], string='Assertion Focus')
+    audit_approach = fields.Selection([
+        ('substantive', 'Substantive Only'),
+        ('controls', 'Controls Reliance'),
+        ('combined', 'Combined Approach'),
+    ], string='Audit Approach', default='substantive')
+    timing = fields.Selection([
+        ('interim', 'Interim'),
+        ('final', 'Final'),
+        ('both', 'Both'),
+    ], string='Timing', default='final')
+    assigned_to = fields.Many2one(
+        'res.users',
+        string='Assigned To',
+        help='Team member responsible for this area'
+    )
+    budgeted_hours = fields.Float(
+        string='Budgeted Hours',
+        help='Hours budgeted for this area'
     )
     notes = fields.Text(string='Notes')

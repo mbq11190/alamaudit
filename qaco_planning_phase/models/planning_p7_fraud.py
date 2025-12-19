@@ -78,6 +78,14 @@ class PlanningP7Fraud(models.Model):
         'user_id',
         string='Brainstorming Participants'
     )
+    # XML view compatible alias
+    brainstorming_attendees = fields.Many2many(
+        'res.users',
+        'qaco_p7_brainstorming_attendees_rel',
+        'p7_id',
+        'user_id',
+        string='Brainstorming Attendees'
+    )
     brainstorming_documentation = fields.Html(
         string='Brainstorming Documentation',
         help='Document the fraud brainstorming discussion per ISA 240.15'
@@ -86,9 +94,32 @@ class PlanningP7Fraud(models.Model):
         string='Key Fraud Concerns Identified',
         help='Summary of key fraud concerns raised during brainstorming'
     )
+    discussion_points = fields.Html(
+        string='Discussion Points',
+        help='Key points discussed during fraud brainstorming'
+    )
+    fraud_scenarios = fields.Html(
+        string='Fraud Scenarios Considered',
+        help='Fraud scenarios discussed during brainstorming'
+    )
+    discussion_conclusions = fields.Html(
+        string='Discussion Conclusions',
+        help='Key conclusions from the brainstorming discussion'
+    )
 
     # ===== Fraud Triangle Assessment =====
+    RISK_RATING = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ]
+
     # Incentives/Pressures
+    pressure_rating = fields.Selection(
+        RISK_RATING,
+        string='Pressure Rating',
+        help='Assessment of pressure/incentive factors'
+    )
     fraud_incentives = fields.Html(
         string='Incentives/Pressures',
         help='Management or employee incentives or pressures to commit fraud'
@@ -97,8 +128,19 @@ class PlanningP7Fraud(models.Model):
         string='Incentive Factors Identified',
         help='Specific factors: profit targets, bonuses, debt covenants, etc.'
     )
+    # XML view compatible alias
+    pressure_factors = fields.Html(
+        string='Pressure Factors',
+        related='incentive_factors',
+        readonly=False
+    )
 
     # Opportunities
+    opportunity_rating = fields.Selection(
+        RISK_RATING,
+        string='Opportunity Rating',
+        help='Assessment of opportunity factors'
+    )
     fraud_opportunities = fields.Html(
         string='Opportunities',
         help='Circumstances that provide opportunity to commit fraud'
@@ -109,6 +151,11 @@ class PlanningP7Fraud(models.Model):
     )
 
     # Attitudes/Rationalizations
+    rationalization_rating = fields.Selection(
+        RISK_RATING,
+        string='Rationalization Rating',
+        help='Assessment of rationalization/attitude factors'
+    )
     fraud_attitudes = fields.Html(
         string='Attitudes/Rationalizations',
         help='Culture or attitudes that enable fraud'
@@ -117,12 +164,31 @@ class PlanningP7Fraud(models.Model):
         string='Attitude Factors Identified',
         help='Specific factors: aggressive management, poor tone at top, etc.'
     )
+    # XML view compatible alias
+    rationalization_factors = fields.Html(
+        string='Rationalization Factors',
+        related='attitude_factors',
+        readonly=False
+    )
 
     # ===== Fraud Risk Factors =====
     fraud_risk_line_ids = fields.One2many(
         'qaco.planning.p7.fraud.line',
         'p7_fraud_id',
         string='Fraud Risk Factors'
+    )
+    # XML view compatible fields for narrative
+    fraud_risk_factors = fields.Html(
+        string='Fraud Risk Factors',
+        help='Documented fraud risk factors identified'
+    )
+    industry_fraud_risks = fields.Html(
+        string='Industry-Specific Fraud Risks',
+        help='Fraud risks specific to the client\'s industry'
+    )
+    historical_fraud = fields.Html(
+        string='Historical Fraud Information',
+        help='Information about prior fraud occurrences or allegations'
     )
 
     # ===== Presumed Fraud Risks (ISA 240) =====
@@ -142,14 +208,51 @@ class PlanningP7Fraud(models.Model):
         string='Rebuttal Justification',
         help='Justification for rebutting revenue recognition fraud risk'
     )
+    # XML view compatible aliases for revenue recognition
+    revenue_fraud_presumption = fields.Boolean(
+        string='Revenue Fraud Presumption',
+        related='revenue_recognition_fraud',
+        readonly=False
+    )
+    revenue_presumption_rebutted = fields.Boolean(
+        string='Revenue Presumption Rebutted',
+        related='revenue_recognition_rebutted',
+        readonly=False
+    )
+    revenue_fraud_assessment = fields.Html(
+        string='Revenue Fraud Assessment',
+        related='revenue_recognition_assessment',
+        readonly=False
+    )
+    rebuttal_documentation = fields.Html(
+        string='Rebuttal Documentation',
+        related='revenue_rebuttal_justification',
+        readonly=False
+    )
+    specific_revenue_risks = fields.Html(
+        string='Specific Revenue Risks',
+        help='Specific revenue recognition fraud risks identified'
+    )
 
     management_override_fraud = fields.Boolean(
         string='Management Override - Presumed Fraud Risk',
         default=True,
         help='ISA 240.31 - Risk of management override of controls (cannot be rebutted)'
     )
+    management_override_level = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Management Override Risk Level',
+       help='Assessment level for management override risk')
     management_override_assessment = fields.Html(
         string='Management Override Assessment'
+    )
+    # XML view compatible alias
+    override_risk_assessment = fields.Html(
+        string='Override Risk Assessment',
+        related='management_override_assessment',
+        readonly=False
     )
 
     # ===== Fraud Response =====
@@ -173,6 +276,20 @@ class PlanningP7Fraud(models.Model):
         string='Elements of Unpredictability',
         help='Planned unpredictable audit procedures'
     )
+    # XML view compatible aliases for fraud response
+    overall_fraud_response = fields.Html(
+        string='Overall Fraud Response',
+        related='fraud_responses',
+        readonly=False
+    )
+    specific_fraud_responses = fields.Html(
+        string='Specific Fraud Responses',
+        help='Specific responses to individual fraud risks'
+    )
+    professional_skepticism = fields.Html(
+        string='Professional Skepticism',
+        help='Documentation of professional skepticism considerations'
+    )
 
     # ===== Communication =====
     management_inquiry = fields.Html(
@@ -186,6 +303,26 @@ class PlanningP7Fraud(models.Model):
     internal_audit_inquiry = fields.Html(
         string='Internal Audit Inquiry',
         help='Inquiries of internal audit regarding fraud'
+    )
+    other_inquiries = fields.Html(
+        string='Other Inquiries',
+        help='Other fraud-related inquiries documented'
+    )
+    # XML view compatible aliases for inquiries
+    management_inquiries = fields.Html(
+        string='Management Inquiries',
+        related='management_inquiry',
+        readonly=False
+    )
+    tcwg_inquiries = fields.Html(
+        string='TCWG Inquiries',
+        related='tcwg_inquiry',
+        readonly=False
+    )
+    internal_audit_inquiries = fields.Html(
+        string='Internal Audit Inquiries',
+        related='internal_audit_inquiry',
+        readonly=False
     )
 
     # ===== Attachments =====
@@ -203,11 +340,25 @@ class PlanningP7Fraud(models.Model):
         'attachment_id',
         string='Brainstorming Notes'
     )
+    # XML view compatible alias
+    fraud_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p7_fraud_attachment_rel',
+        'p7_id',
+        'attachment_id',
+        string='Fraud Attachments'
+    )
 
     # ===== Summary =====
     fraud_risk_summary = fields.Html(
         string='Fraud Risk Memo',
         help='Consolidated fraud risk assessment summary per ISA 240'
+    )
+    # XML view compatible alias
+    fraud_conclusion = fields.Html(
+        string='Fraud Conclusion',
+        related='fraud_risk_summary',
+        readonly=False
     )
     overall_fraud_risk = fields.Selection([
         ('low', '🟢 Low'),
@@ -241,6 +392,12 @@ class PlanningP7Fraud(models.Model):
                 record.name = f"P7-{record.client_id.name[:15]}"
             else:
                 record.name = 'P-7: Fraud Risk'
+
+    @api.depends('fraud_risk_line_ids')
+    def _compute_fraud_risks_identified(self):
+        """Compute the number of fraud risks identified."""
+        for record in self:
+            record.fraud_risks_identified = len(record.fraud_risk_line_ids)
 
     def _validate_mandatory_fields(self):
         """Validate mandatory fields before completing P-7."""

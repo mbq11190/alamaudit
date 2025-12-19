@@ -69,6 +69,11 @@ class PlanningP8GoingConcern(models.Model):
         default='ISA 570.A3 - Financial Indicators',
         readonly=True
     )
+    # XML view compatible narrative field
+    financial_indicators = fields.Html(
+        string='Financial Indicators',
+        help='Narrative assessment of financial indicators'
+    )
     net_liability_position = fields.Boolean(
         string='Net Liability/Negative Working Capital',
         help='Net liability or net current liability position'
@@ -76,6 +81,12 @@ class PlanningP8GoingConcern(models.Model):
     negative_operating_cash = fields.Boolean(
         string='Negative Operating Cash Flows',
         help='Negative operating cash flows indicated by historical or forecast statements'
+    )
+    # XML view compatible alias
+    negative_operating_cash_flow = fields.Boolean(
+        string='Negative Operating Cash Flow',
+        related='negative_operating_cash',
+        readonly=False
     )
     loan_defaults = fields.Boolean(
         string='Loan Defaults/Breaches',
@@ -89,14 +100,43 @@ class PlanningP8GoingConcern(models.Model):
         string='Adverse Financial Ratios',
         help='Adverse key financial ratios'
     )
+    # XML view compatible alias
+    adverse_key_ratios = fields.Boolean(
+        string='Adverse Key Ratios',
+        related='adverse_financial_ratios',
+        readonly=False
+    )
     substantial_losses = fields.Boolean(
         string='Substantial Operating Losses'
+    )
+    # XML view compatible alias
+    substantial_operating_losses = fields.Boolean(
+        string='Substantial Operating Losses',
+        related='substantial_losses',
+        readonly=False
     )
     financing_difficulty = fields.Boolean(
         string='Difficulty Obtaining Financing'
     )
+    # XML view compatible aliases
+    inability_to_pay_creditors = fields.Boolean(
+        string='Inability to Pay Creditors',
+        related='loan_defaults',
+        readonly=False
+    )
+    inability_to_obtain_financing = fields.Boolean(
+        string='Inability to Obtain Financing',
+        related='financing_difficulty',
+        readonly=False
+    )
     financial_indicators_notes = fields.Html(
         string='Financial Indicators Analysis'
+    )
+    # XML view compatible alias
+    financial_indicator_assessment = fields.Html(
+        string='Financial Indicator Assessment',
+        related='financial_indicators_notes',
+        readonly=False
     )
 
     # ===== Operating Indicators =====
@@ -105,17 +145,40 @@ class PlanningP8GoingConcern(models.Model):
         default='ISA 570.A3 - Operating Indicators',
         readonly=True
     )
+    # XML view compatible narrative field
+    operating_indicators = fields.Html(
+        string='Operating Indicators',
+        help='Narrative assessment of operating indicators'
+    )
     management_intent_liquidate = fields.Boolean(
         string='Management Intent to Liquidate/Cease',
         help='Management intentions to liquidate or cease operations'
+    )
+    # XML view compatible alias
+    management_intentions = fields.Boolean(
+        string='Management Intentions',
+        related='management_intent_liquidate',
+        readonly=False
     )
     loss_key_management = fields.Boolean(
         string='Loss of Key Management',
         help='Loss of key management without replacement'
     )
+    # XML view compatible alias
+    loss_of_key_management = fields.Boolean(
+        string='Loss of Key Management',
+        related='loss_key_management',
+        readonly=False
+    )
     loss_major_market = fields.Boolean(
         string='Loss of Major Market/Customer/Supplier',
         help='Loss of major market, customer, franchise, license, or principal supplier'
+    )
+    # XML view compatible alias
+    loss_of_major_market = fields.Boolean(
+        string='Loss of Major Market',
+        related='loss_major_market',
+        readonly=False
     )
     labor_difficulties = fields.Boolean(
         string='Labor Difficulties',
@@ -125,18 +188,45 @@ class PlanningP8GoingConcern(models.Model):
         string='Shortage of Important Supplies',
         help='Shortages of important supplies'
     )
+    # XML view compatible alias
+    shortage_of_supplies = fields.Boolean(
+        string='Shortage of Supplies',
+        related='shortage_supplies',
+        readonly=False
+    )
     powerful_competitor = fields.Boolean(
         string='Emergence of Powerful Competitor'
+    )
+    # XML view compatible alias
+    emergence_of_competitor = fields.Boolean(
+        string='Emergence of Competitor',
+        related='powerful_competitor',
+        readonly=False
     )
     operating_indicators_notes = fields.Html(
         string='Operating Indicators Analysis'
     )
+    # XML view compatible alias
+    operating_indicator_assessment = fields.Html(
+        string='Operating Indicator Assessment',
+        related='operating_indicators_notes',
+        readonly=False
+    )
 
-    # ===== Other Indicators =====
+    # ===== Other Indicators (includes Legal/Regulatory) =====
     other_indicators_header = fields.Char(
         string='Other Indicators',
         default='ISA 570.A3 - Other Indicators',
         readonly=True
+    )
+    # XML view compatible narrative fields
+    legal_indicators = fields.Html(
+        string='Legal/Regulatory Indicators',
+        help='Assessment of legal and regulatory indicators'
+    )
+    other_indicators = fields.Html(
+        string='Other Indicators',
+        help='Assessment of other going concern indicators'
     )
     non_compliance_capital = fields.Boolean(
         string='Non-compliance with Capital Requirements',
@@ -146,15 +236,45 @@ class PlanningP8GoingConcern(models.Model):
         string='Pending Litigation/Claims',
         help='Pending legal or regulatory proceedings that may result in claims'
     )
+    # XML view compatible alias
+    pending_legal_proceedings = fields.Boolean(
+        string='Pending Legal Proceedings',
+        related='pending_litigation',
+        readonly=False
+    )
     changes_legislation = fields.Boolean(
         string='Changes in Legislation/Policy',
         help='Changes in law/regulation or government policy expected to adversely affect entity'
+    )
+    # XML view compatible alias
+    changes_in_law = fields.Boolean(
+        string='Changes in Law',
+        related='changes_legislation',
+        readonly=False
+    )
+    license_revocation = fields.Boolean(
+        string='License Revocation Risk',
+        help='Risk of license or permit revocation'
     )
     uninsured_catastrophes = fields.Boolean(
         string='Uninsured/Underinsured Catastrophes'
     )
     other_indicators_notes = fields.Html(
         string='Other Indicators Analysis'
+    )
+    # XML view compatible alias
+    legal_indicator_assessment = fields.Html(
+        string='Legal Indicator Assessment',
+        related='other_indicators_notes',
+        readonly=False
+    )
+    industry_economic_factors = fields.Html(
+        string='Industry/Economic Factors',
+        help='Industry and economic factors affecting going concern'
+    )
+    pandemic_impact = fields.Html(
+        string='Pandemic Impact',
+        help='Assessment of pandemic (COVID-19) impact on operations'
     )
 
     # ===== Management's Plans =====
@@ -166,22 +286,77 @@ class PlanningP8GoingConcern(models.Model):
         string='Feasibility of Plans',
         help='Assessment of the feasibility of management\'s plans'
     )
+    plans_supporting_docs = fields.Html(
+        string='Supporting Documentation',
+        help='Documentation supporting management\'s plans'
+    )
+    plans_audit_procedures = fields.Html(
+        string='Audit Procedures on Management Plans',
+        help='Audit procedures performed on management\'s plans'
+    )
     plans_likelihood = fields.Selection([
         ('unlikely', '🔴 Unlikely to be Successful'),
         ('uncertain', '🟡 Uncertain'),
         ('likely', '🟢 Likely to be Successful'),
     ], string='Likelihood of Success')
 
+    # ===== Period of Assessment =====
+    assessment_period_months = fields.Integer(
+        string='Assessment Period (Months)',
+        default=12,
+        help='Period covered by management\'s assessment'
+    )
+    assessment_date = fields.Date(
+        string='Assessment Date',
+        help='Date of going concern assessment'
+    )
+    assessment_period_adequacy = fields.Html(
+        string='Assessment Period Adequacy',
+        help='Assessment of whether management\'s period is adequate'
+    )
+    events_beyond_period = fields.Html(
+        string='Events Beyond Assessment Period',
+        help='Consideration of events beyond the assessment period'
+    )
+
+    # ===== Inquiries & Procedures =====
+    management_inquiries = fields.Html(
+        string='Management Inquiries',
+        help='Inquiries of management regarding going concern'
+    )
+    audit_procedures_performed = fields.Html(
+        string='Audit Procedures Performed',
+        help='Audit procedures performed for going concern assessment'
+    )
+    written_representations = fields.Html(
+        string='Written Representations',
+        help='Written representations obtained from management'
+    )
+
     # ===== Preliminary Conclusion =====
     gc_risk_identified = fields.Boolean(
         string='Going Concern Risk Identified',
         tracking=True
+    )
+    # XML view compatible alias
+    material_uncertainty_exists = fields.Boolean(
+        string='Material Uncertainty Exists',
+        related='gc_risk_identified',
+        readonly=False
     )
     preliminary_conclusion = fields.Selection([
         ('no_concern', '🟢 No Significant Going Concern Issues'),
         ('uncertainty_exists', '🟡 Material Uncertainty May Exist'),
         ('inappropriate_basis', '🔴 Going Concern Basis May Be Inappropriate'),
     ], string='Preliminary Conclusion', tracking=True)
+    # XML view compatible alias
+    going_concern_conclusion = fields.Selection([
+        ('no_concern', '🟢 No Significant Going Concern Issues'),
+        ('uncertainty_exists', '🟡 Material Uncertainty May Exist'),
+        ('inappropriate_basis', '🔴 Going Concern Basis May Be Inappropriate'),
+    ], string='Going Concern Conclusion',
+       related='preliminary_conclusion',
+       readonly=False)
     conclusion_rationale = fields.Html(
         string='Conclusion Rationale',
         help='Rationale for the preliminary going concern conclusion'
@@ -195,6 +370,22 @@ class PlanningP8GoingConcern(models.Model):
     disclosure_assessment = fields.Html(
         string='Disclosure Assessment',
         help='Assessment of adequacy of disclosures'
+    )
+    material_uncertainty_disclosure = fields.Html(
+        string='Material Uncertainty Disclosure',
+        help='Assessment of material uncertainty disclosure'
+    )
+    reporting_implications = fields.Html(
+        string='Reporting Implications',
+        help='Implications for auditor\'s report'
+    )
+    report_modification = fields.Boolean(
+        string='Report Modification Required',
+        help='Is modification of audit report required?'
+    )
+    emphasis_of_matter = fields.Boolean(
+        string='Emphasis of Matter Required',
+        help='Is emphasis of matter paragraph required?'
     )
 
     # ===== Further Procedures =====
@@ -215,12 +406,27 @@ class PlanningP8GoingConcern(models.Model):
         'attachment_id',
         string='Going Concern Analysis'
     )
+    # XML view compatible alias
+    going_concern_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p8_gc_attachment_rel',
+        'p8_id',
+        'attachment_id',
+        string='Going Concern Documentation'
+    )
     cash_flow_forecast_attachment_ids = fields.Many2many(
         'ir.attachment',
         'qaco_p8_cash_flow_rel',
         'p8_id',
         'attachment_id',
         string='Cash Flow Forecasts'
+    )
+    representation_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p8_representation_rel',
+        'p8_id',
+        'attachment_id',
+        string='Management Representations'
     )
 
     # ===== Summary =====

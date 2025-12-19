@@ -73,11 +73,27 @@ class PlanningP11GroupAudit(models.Model):
         string='Reason Not Applicable',
         help='Document why group audit is not applicable'
     )
+    # XML view compatible alias
+    not_applicable_rationale = fields.Html(
+        string='Not Applicable Rationale',
+        related='not_applicable_reason',
+        readonly=False
+    )
 
     # ===== Group Structure =====
     group_structure = fields.Html(
         string='Group Structure',
         help='Document the group structure and components'
+    )
+    # XML view compatible aliases
+    group_structure_overview = fields.Html(
+        string='Group Structure Overview',
+        related='group_structure',
+        readonly=False
+    )
+    group_chart = fields.Html(
+        string='Group Chart',
+        help='Visual representation of group structure'
     )
     parent_company = fields.Char(
         string='Parent Company Name'
@@ -86,12 +102,24 @@ class PlanningP11GroupAudit(models.Model):
         string='Consolidation Method',
         help='Method used to consolidate group financial statements'
     )
+    # XML view compatible alias
+    consolidation_process = fields.Html(
+        string='Consolidation Process',
+        related='consolidation_method',
+        readonly=False
+    )
 
     # ===== Components =====
     component_line_ids = fields.One2many(
         'qaco.planning.p11.component.line',
         'p11_group_audit_id',
         string='Components'
+    )
+    # XML view compatible alias
+    component_ids = fields.One2many(
+        'qaco.component.line',
+        'p11_group_audit_id',
+        string='Component Register'
     )
     significant_component_count = fields.Integer(
         string='Significant Components',
@@ -103,6 +131,30 @@ class PlanningP11GroupAudit(models.Model):
         compute='_compute_component_counts',
         store=True
     )
+    # XML view compatible alias
+    component_count = fields.Integer(
+        string='Component Count',
+        related='total_component_count',
+        store=True
+    )
+
+    # ===== Significance Assessment (XML compatible) =====
+    significance_criteria = fields.Html(
+        string='Significance Criteria',
+        help='Criteria for determining component significance'
+    )
+    significant_components = fields.Html(
+        string='Significant Components Assessment',
+        help='Assessment of significant components'
+    )
+    non_significant_components = fields.Html(
+        string='Non-Significant Components Assessment',
+        help='Assessment of non-significant components'
+    )
+    coverage_assessment = fields.Html(
+        string='Coverage Assessment',
+        help='Assessment of audit coverage'
+    )
 
     # ===== Component Auditors =====
     component_auditors_involved = fields.Boolean(
@@ -112,6 +164,18 @@ class PlanningP11GroupAudit(models.Model):
     component_auditor_assessment = fields.Html(
         string='Component Auditor Assessment',
         help='Assessment of component auditor competence and independence per ISA 600.19'
+    )
+    # XML view compatible alias
+    auditor_assessment = fields.Html(
+        string='Auditor Assessment',
+        related='component_auditor_assessment',
+        readonly=False
+    )
+    # XML view compatible - component auditor register
+    component_auditor_ids = fields.One2many(
+        'qaco.component.auditor.line',
+        'p11_group_audit_id',
+        string='Component Auditors'
     )
     component_auditor_access = fields.Boolean(
         string='Access to Component Auditor Work',
@@ -135,10 +199,21 @@ class PlanningP11GroupAudit(models.Model):
         string='Component Performance Materiality',
         currency_field='currency_id'
     )
+    # XML view compatible alias
+    component_pm_threshold = fields.Monetary(
+        string='Component PM Threshold',
+        related='component_pm',
+        readonly=False
+    )
     threshold_for_aggregation = fields.Monetary(
         string='Threshold for Aggregation',
         currency_field='currency_id',
         help='Threshold for misstatements communicated to group team'
+    )
+    # XML view compatible
+    aggregation_risk = fields.Html(
+        string='Aggregation Risk',
+        help='Assessment of aggregation risk'
     )
 
     # ===== Instructions to Component Auditors =====
@@ -153,19 +228,50 @@ class PlanningP11GroupAudit(models.Model):
         string='Instructions Content',
         help='Key contents of instructions per ISA 600.40'
     )
+    # XML view compatible alias
+    group_audit_instructions = fields.Html(
+        string='Group Audit Instructions',
+        related='instructions_content',
+        readonly=False
+    )
     reporting_deadlines = fields.Html(
         string='Reporting Deadlines',
         help='Deadlines for component auditor reporting'
     )
+    # XML view compatible alias
+    reporting_requirements = fields.Html(
+        string='Reporting Requirements',
+        related='reporting_deadlines',
+        readonly=False
+    )
     specific_requirements = fields.Html(
         string='Specific Requirements',
         help='Specific work required from component auditors'
+    )
+    # XML view compatible
+    communication_requirements = fields.Html(
+        string='Communication Requirements',
+        help='Communication requirements for component auditors'
     )
 
     # ===== Review Strategy =====
     review_strategy = fields.Html(
         string='Review Strategy',
         help='Strategy for reviewing component auditor work'
+    )
+    # XML view compatible alias
+    component_work_review = fields.Html(
+        string='Component Work Review',
+        related='review_strategy',
+        readonly=False
+    )
+    component_findings = fields.Html(
+        string='Component Findings',
+        help='Findings from component auditor work'
+    )
+    evidence_sufficiency = fields.Html(
+        string='Evidence Sufficiency',
+        help='Assessment of sufficiency of audit evidence'
     )
     site_visits_planned = fields.Boolean(
         string='Site Visits Planned'
@@ -185,6 +291,20 @@ class PlanningP11GroupAudit(models.Model):
         string='Communication Plan',
         help='Plan for communication with component auditors'
     )
+    # XML view compatible alias
+    component_communication = fields.Html(
+        string='Component Communication',
+        related='communication_plan',
+        readonly=False
+    )
+    group_management_communication = fields.Html(
+        string='Group Management Communication',
+        help='Communication with group management'
+    )
+    tcwg_communication = fields.Html(
+        string='Communication to TCWG',
+        help='Communication to those charged with governance'
+    )
     significant_matters = fields.Html(
         string='Significant Matters to Communicate'
     )
@@ -196,6 +316,16 @@ class PlanningP11GroupAudit(models.Model):
     )
     intercompany_elimination = fields.Html(
         string='Intercompany Elimination Review'
+    )
+    # XML view compatible alias
+    intercompany_eliminations = fields.Html(
+        string='Intercompany Eliminations',
+        related='intercompany_elimination',
+        readonly=False
+    )
+    subsequent_events = fields.Html(
+        string='Subsequent Events',
+        help='Subsequent events at component level'
     )
     uniform_policies = fields.Html(
         string='Uniform Accounting Policies',
@@ -217,11 +347,32 @@ class PlanningP11GroupAudit(models.Model):
         'attachment_id',
         string='Component Auditor Instructions'
     )
+    # XML view compatible aliases
+    group_audit_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p11_group_audit_rel',
+        'p11_id',
+        'attachment_id',
+        string='Group Audit Documentation'
+    )
+    component_report_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p11_component_report_rel',
+        'p11_id',
+        'attachment_id',
+        string='Component Reports'
+    )
 
     # ===== Summary =====
     group_audit_summary = fields.Html(
         string='Group Audit Summary',
         help='Consolidated group audit planning summary per ISA 600'
+    )
+    # XML view compatible alias
+    group_audit_conclusion = fields.Html(
+        string='Group Audit Conclusion',
+        related='group_audit_summary',
+        readonly=False
     )
     isa_reference = fields.Char(
         string='ISA Reference',
@@ -374,5 +525,91 @@ class PlanningP11ComponentLine(models.Model):
     )
     component_auditor_independence = fields.Boolean(
         string='Independence Confirmed'
+    )
+    notes = fields.Text(string='Notes')
+
+
+class ComponentLine(models.Model):
+    """Component Line for XML view compatibility."""
+    _name = 'qaco.component.line'
+    _description = 'Component'
+    _order = 'significance desc, component_name'
+
+    p11_group_audit_id = fields.Many2one(
+        'qaco.planning.p11.group.audit',
+        string='P-11 Group Audit',
+        required=True,
+        ondelete='cascade'
+    )
+    component_name = fields.Char(
+        string='Component Name',
+        required=True
+    )
+    location = fields.Char(
+        string='Location/Country'
+    )
+    significance = fields.Selection([
+        ('significant', 'Significant'),
+        ('non_significant', 'Non-Significant'),
+    ], string='Significance', default='non_significant')
+    type_of_work = fields.Selection([
+        ('full_audit', 'Full Audit'),
+        ('specified_procedures', 'Specified Procedures'),
+        ('analytical_procedures', 'Analytical Procedures'),
+        ('no_work', 'No Work Required'),
+    ], string='Type of Work')
+    component_auditor = fields.Char(
+        string='Component Auditor'
+    )
+    component_materiality = fields.Monetary(
+        string='Component Materiality',
+        currency_field='currency_id'
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='p11_group_audit_id.currency_id'
+    )
+    reporting_deadline = fields.Date(
+        string='Reporting Deadline'
+    )
+    status = fields.Selection([
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ], string='Status', default='pending')
+
+
+class ComponentAuditorLine(models.Model):
+    """Component Auditor Line for XML view compatibility."""
+    _name = 'qaco.component.auditor.line'
+    _description = 'Component Auditor'
+    _order = 'auditor_name'
+
+    p11_group_audit_id = fields.Many2one(
+        'qaco.planning.p11.group.audit',
+        string='P-11 Group Audit',
+        required=True,
+        ondelete='cascade'
+    )
+    auditor_name = fields.Char(
+        string='Auditor Name',
+        required=True
+    )
+    firm_name = fields.Char(
+        string='Firm Name'
+    )
+    network_member = fields.Boolean(
+        string='Network Member'
+    )
+    competence_assessment = fields.Selection([
+        ('acceptable', 'Acceptable'),
+        ('concerns', 'Concerns Identified'),
+        ('not_assessed', 'Not Yet Assessed'),
+    ], string='Competence Assessment')
+    independence_confirmed = fields.Boolean(
+        string='Independence Confirmed'
+    )
+    access_to_work = fields.Boolean(
+        string='Access to Work Granted'
     )
     notes = fields.Text(string='Notes')
