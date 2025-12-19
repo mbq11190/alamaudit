@@ -1,185 +1,752 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ============================================== -->
-    <!-- P-2: Understanding the Entity & Environment   -->
-    <!-- ISA 315                                        -->
-    <!-- ============================================== -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         P-2: UNDERSTANDING THE ENTITY & ITS ENVIRONMENT
+         ISA 315 (Revised), ISA 250, ISA 570 Compliant Views
+         Pakistan Statutory Audit Requirements
+         ═══════════════════════════════════════════════════════════════════════════ -->
 
-    <!-- P-2 Form View -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         FORM VIEW: P-2 ENTITY UNDERSTANDING
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="view_planning_p2_entity_form" model="ir.ui.view">
         <field name="name">qaco.planning.p2.entity.form</field>
         <field name="model">qaco.planning.p2.entity</field>
         <field name="arch" type="xml">
-            <form string="P-2: Understanding the Entity &amp; Environment">
+            <form string="P-2: Understanding the Entity &amp; Its Environment">
+                <!-- Header with State Machine & Action Buttons -->
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
-                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
-                            invisible="state != 'not_started'"/>
-                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
-                            invisible="state != 'in_progress'"/>
-                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
-                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
-                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
-                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
-                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
-                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_start_work"
+                            string="Start Work"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="qaco_audit.group_audit_trainee"/>
+                    <button name="action_complete"
+                            string="Mark Complete"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'in_progress'"
+                            groups="qaco_audit.group_audit_trainee"/>
+                    <button name="action_manager_review"
+                            string="Manager Review"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'completed'"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_partner_approve"
+                            string="Partner Approve"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'reviewed'"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back"
+                            string="Send Back"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_lock"
+                            string="Lock"
+                            type="object"
+                            class="btn-warning"
+                            invisible="state != 'approved'"
+                            confirm="This will permanently lock P-2 per ISA 230. Continue?"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_unlock"
+                            string="Unlock"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['approved', 'locked']"
+                            confirm="This will unlock P-2 for revision. Continue?"
+                            groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_transfer_risks_to_p6"
+                            string="Transfer Risks to P-6"
+                            type="object"
+                            class="btn-info"
+                            invisible="state not in ['completed', 'reviewed', 'approved']"
+                            groups="qaco_audit.group_audit_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_progress,completed,reviewed,approved"/>
                 </header>
+
                 <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 315 | Understanding the Entity &amp; Its Environment</h3>
+                    <!-- Locked Alert Banner -->
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not is_locked">
+                        <strong>🔒 This section is locked.</strong>
+                        Partner approval has been granted. Contact Partner to unlock for changes.
                     </div>
-                    <group>
-                        <group string="Audit Information">
-                            <field name="audit_id" readonly="state != 'not_started'"/>
-                            <field name="client_id"/>
-                        </group>
-                        <group string="Industry">
-                            <field name="industry_id"/>
-                            <field name="industry_type"/>
-                            <field name="it_complexity"/>
-                        </group>
-                    </group>
 
+                    <!-- Smart Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h3 class="text-muted">
+                            <field name="client_id" readonly="1" options="{'no_open': True}"/> |
+                            <field name="industry_classification" readonly="1"/> |
+                            <field name="audit_year" readonly="1"/>
+                        </h3>
+                    </div>
+
+                    <!-- Status Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Entity Type</small>
+                                    <h6><field name="entity_type"/></h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Risks Identified</small>
+                                    <h5><field name="total_risks_identified"/></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">High Risks</small>
+                                    <h5 class="text-danger"><field name="high_risk_count"/></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <small class="text-muted">Framework</small>
+                                    <h6><field name="reporting_framework"/></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Notebook with Sections A-M -->
                     <notebook>
-                        <!-- Tab 1: Nature of Business -->
-                        <page string="Nature of Business" name="nature">
-                            <group string="Principal Business Activities">
-                                <field name="nature_of_business" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Principal Activities">
-                                <field name="principal_activities" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Products and Services">
-                                <field name="products_services" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Market Position &amp; Competition">
-                                <field name="market_position" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 2: Ownership & Governance -->
-                        <page string="Ownership &amp; Governance" name="governance">
-                            <group string="Ownership Structure">
-                                <field name="ownership_structure" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Governance Structure">
-                                <field name="governance_structure" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Key Management Personnel">
-                                <field name="key_management" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Management Philosophy &amp; Operating Style">
-                                <field name="management_philosophy" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Board Oversight of Financial Reporting">
-                                <field name="board_oversight" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 3: Industry & Economic Factors -->
-                        <page string="Industry &amp; Economic Factors" name="industry">
-                            <group string="Industry Conditions">
-                                <field name="industry_conditions" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Economic Conditions">
-                                <field name="economic_conditions" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Regulatory Environment">
-                                <field name="regulatory_environment" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Technology Environment">
-                                <field name="technology_environment" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Applicable Regulators">
-                                <field name="applicable_regulators" widget="many2many_tags"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 4: Business Model & Revenue -->
-                        <page string="Business Model &amp; Revenue" name="business_model">
-                            <group string="Business Model">
-                                <field name="business_model" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Revenue Streams">
-                                <field name="revenue_streams" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Cost Structure">
-                                <field name="cost_structure" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Key Contractual Arrangements">
-                                <field name="key_contracts" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Supply Chain &amp; Key Suppliers">
-                                <field name="supply_chain" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 5: Organizational Structure -->
-                        <page string="Organizational Structure" name="organization">
-                            <group string="Organizational Structure">
-                                <field name="organizational_structure" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Operational Locations">
-                                <field name="operational_locations" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Key Business Processes">
-                                <field name="key_processes" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Outsourced Functions">
-                                <field name="outsourced_functions" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 6: IT Environment -->
-                        <page string="IT Environment" name="it">
-                            <group string="IT Environment Overview">
-                                <field name="it_environment_overview" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Key Applications">
-                                <field name="key_applications" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 7: Attachments -->
-                        <page string="Attachments" name="attachments">
-                            <group string="Organogram Files">
-                                <field name="organogram_attachment_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                            <group string="Process Flowcharts">
-                                <field name="process_flow_attachment_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                            <group string="Other Supporting Documents">
-                                <field name="other_attachment_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 8: Summary & Sign-off -->
-                        <page string="Summary &amp; Sign-off" name="summary">
-                            <group string="Entity Understanding Summary (ISA 315)">
-                                <field name="entity_understanding_summary" widget="html" nolabel="1"/>
-                            </group>
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION A: ENTITY PROFILE & LEGAL STRUCTURE
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="A. Entity Profile" name="section_a_entity">
                             <group>
-                                <group string="Sign-off">
-                                    <field name="senior_signed_user_id"/>
-                                    <field name="senior_signed_on"/>
-                                    <field name="manager_reviewed_user_id"/>
-                                    <field name="manager_reviewed_on"/>
-                                    <field name="partner_approved_user_id"/>
-                                    <field name="partner_approved_on"/>
+                                <group string="Legal Details">
+                                    <field name="audit_id" readonly="1"/>
+                                    <field name="planning_phase_id" invisible="1"/>
+                                    <field name="legal_name" readonly="1"/>
+                                    <field name="entity_type" readonly="is_locked"/>
+                                    <field name="date_of_incorporation" readonly="is_locked"/>
+                                    <field name="registration_ntn" readonly="is_locked"/>
                                 </group>
-                                <group string="ISA Reference">
-                                    <field name="isa_reference"/>
+                                <group string="Location">
+                                    <field name="principal_place_of_business" readonly="is_locked"/>
+                                    <field name="has_branches" readonly="is_locked"/>
+                                    <field name="branches_details" readonly="is_locked"
+                                           invisible="not has_branches"
+                                           placeholder="List all branches and operational locations..."/>
                                 </group>
                             </group>
-                            <group string="Reviewer Notes">
-                                <field name="reviewer_notes" widget="html" nolabel="1"/>
+
+                            <group string="Section A Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <field name="check_a_legal_existence" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_a_entity_type" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_a_scope_operations" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION B: OWNERSHIP, CONTROL & GOVERNANCE
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="B. Ownership &amp; Governance" name="section_b_ownership">
+                            <group string="Ownership Structure">
+                                <field name="ownership_structure_summary" readonly="is_locked" nolabel="1"
+                                       placeholder="Describe the ownership structure, major shareholders, beneficial ownership..."/>
+                            </group>
+
+                            <group>
+                                <group string="Beneficial Ownership">
+                                    <field name="ubo_reference" readonly="is_locked"
+                                           placeholder="Reference to UBO details from client onboarding..."/>
+                                </group>
+                                <group string="Changes">
+                                    <field name="ownership_changed" readonly="is_locked"/>
+                                    <field name="ownership_change_details" readonly="is_locked"
+                                           invisible="not ownership_changed"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Control Structure">
+                                    <field name="control_structure" readonly="is_locked"/>
+                                </group>
+                                <group string="Dominant Shareholder">
+                                    <field name="dominant_shareholder" readonly="is_locked"/>
+                                    <field name="dominant_shareholder_explanation" readonly="is_locked"
+                                           invisible="not dominant_shareholder"/>
+                                </group>
+                            </group>
+
+                            <group string="Section B Checklist (ISA 315 High-Risk Area)" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <field name="check_b_control_environment" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_b_governance" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_b_management_override" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION C: BUSINESS MODEL & STRATEGY
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="C. Business Model" name="section_c_business">
+                            <group string="Core Business Activities (ISA 315 Mandatory)">
+                                <field name="core_business_activities" readonly="is_locked" nolabel="1"
+                                       placeholder="Primary business activities of the entity..."/>
+                            </group>
+
+                            <group>
+                                <group string="Products &amp; Services">
+                                    <field name="key_products_services" readonly="is_locked" nolabel="1"/>
+                                </group>
+                                <group string="Revenue Model">
+                                    <field name="revenue_generation_model" readonly="is_locked" nolabel="1"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Markets">
+                                    <field name="key_markets" readonly="is_locked"/>
+                                    <field name="key_markets_details" readonly="is_locked"/>
+                                </group>
+                                <group string="Strategy">
+                                    <field name="strategic_objectives" readonly="is_locked" nolabel="1"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Expansion Plans">
+                                    <field name="expansion_restructuring_plans" readonly="is_locked"
+                                           placeholder="Any expansion or restructuring plans..."/>
+                                </group>
+                                <group string="New Products/Services">
+                                    <field name="new_products_services" readonly="is_locked"/>
+                                    <field name="new_products_services_details" readonly="is_locked"
+                                           invisible="not new_products_services"/>
+                                </group>
+                            </group>
+
+                            <group string="Section C Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <field name="check_c_business_model" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <field name="check_c_strategy_risks" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION D: INDUSTRY, ECONOMIC & EXTERNAL ENVIRONMENT
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="D. Industry &amp; Environment" name="section_d_industry">
+                            <group>
+                                <group string="Industry">
+                                    <field name="industry_id" readonly="is_locked"/>
+                                    <field name="industry_classification" readonly="is_locked"/>
+                                    <field name="industry_cyclicality" readonly="is_locked"/>
+                                </group>
+                                <group string="Competition">
+                                    <field name="key_competitors" readonly="is_locked"
+                                           placeholder="Key competitors in the market..."/>
+                                </group>
+                            </group>
+
+                            <group string="Competitive Landscape">
+                                <field name="competitive_landscape" readonly="is_locked" nolabel="1"
+                                       placeholder="Market conditions, competition, demand..."/>
+                            </group>
+
+                            <group string="Economic Conditions">
+                                <field name="economic_conditions" readonly="is_locked" nolabel="1"
+                                       placeholder="Interest rates, inflation, currency, economic policy impacts..."/>
+                            </group>
+
+                            <group string="Technological Changes">
+                                <field name="technological_changes" readonly="is_locked" nolabel="1"
+                                       placeholder="Technology changes affecting the industry..."/>
+                            </group>
+
+                            <group string="Regulatory Pressure">
+                                <field name="regulatory_pressure" readonly="is_locked" nolabel="1"
+                                       placeholder="Regulatory pressures on the industry..."/>
+                            </group>
+
+                            <group string="Section D Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <field name="check_d_industry_risks" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_d_external_factors" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_d_going_concern" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION E: REGULATORY & LEGAL ENVIRONMENT
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="E. Regulatory &amp; Legal" name="section_e_regulatory">
+                            <group>
+                                <group string="Primary Regulators">
+                                    <field name="primary_regulators" readonly="is_locked"
+                                           widget="many2many_tags"/>
+                                </group>
+                                <group string="Licensing">
+                                    <field name="licensing_requirements" readonly="is_locked"
+                                           placeholder="Any licensing requirements..."/>
+                                </group>
+                            </group>
+
+                            <group string="Applicable Laws &amp; Regulations">
+                                <field name="applicable_laws" readonly="is_locked" nolabel="1"
+                                       placeholder="List applicable laws and regulations (Companies Act, SBP regulations, SECP requirements, etc.)..."/>
+                            </group>
+
+                            <group string="Regulatory Inspection History">
+                                <field name="regulatory_inspection_history" readonly="is_locked" nolabel="1"
+                                       placeholder="History of regulatory inspections and findings..."/>
+                            </group>
+
+                            <group string="Legal Disputes &amp; Litigation">
+                                <field name="known_legal_disputes" readonly="is_locked" nolabel="1"
+                                       placeholder="Known legal disputes or litigation matters..."/>
+                            </group>
+
+                            <group string="Penalties &amp; Non-Compliance History">
+                                <field name="penalties_noncompliance" readonly="is_locked" nolabel="1"
+                                       placeholder="Any penalties or history of non-compliance..."/>
+                            </group>
+
+                            <group string="Section E Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <field name="check_e_laws_identified" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_e_noncompliance_risk" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_e_fs_impact" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION F: ACCOUNTING FRAMEWORK & FINANCIAL REPORTING
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="F. Accounting Framework" name="section_f_framework">
+                            <group>
+                                <group string="Reporting Framework">
+                                    <field name="reporting_framework" readonly="is_locked"/>
+                                    <field name="framework_other" readonly="is_locked"
+                                           invisible="reporting_framework != 'other'"/>
+                                </group>
+                                <group string="Policy Changes">
+                                    <field name="accounting_policy_changes" readonly="is_locked"/>
+                                    <field name="accounting_policy_change_details" readonly="is_locked"
+                                           invisible="not accounting_policy_changes"/>
+                                </group>
+                            </group>
+
+                            <group string="Significant Accounting Estimates">
+                                <field name="significant_estimates" readonly="is_locked" nolabel="1"
+                                       placeholder="Document significant accounting estimates used by the entity..."/>
+                            </group>
+
+                            <group string="Areas Requiring Significant Judgment">
+                                <field name="areas_requiring_judgment" readonly="is_locked" nolabel="1"
+                                       placeholder="Identify areas requiring significant judgment in financial reporting..."/>
+                            </group>
+
+                            <group string="Prior Year Audit Issues">
+                                <field name="prior_year_audit_issues" readonly="is_locked" nolabel="1"
+                                       placeholder="Prior year audit issues impacting current year..."/>
+                            </group>
+
+                            <group string="Section F Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <field name="check_f_framework_appropriate" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_f_judgmental_areas" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_f_misstatement_risk" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION G: IT ENVIRONMENT
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="G. IT Environment" name="section_g_it">
+                            <group>
+                                <group string="Accounting System">
+                                    <field name="accounting_system" readonly="is_locked"/>
+                                    <field name="accounting_system_other" readonly="is_locked"
+                                           invisible="accounting_system not in ['erp_other', 'other']"/>
+                                    <field name="degree_of_automation" readonly="is_locked"/>
+                                </group>
+                                <group string="Data Hosting">
+                                    <field name="data_hosting" readonly="is_locked"/>
+                                    <field name="spreadsheet_use" readonly="is_locked"/>
+                                    <field name="spreadsheet_details" readonly="is_locked"
+                                           invisible="not spreadsheet_use"/>
+                                </group>
+                            </group>
+
+                            <group string="Key IT Applications Impacting Financial Reporting">
+                                <field name="key_it_applications" readonly="is_locked" nolabel="1"
+                                       placeholder="ERP modules, accounting software, critical applications..."/>
+                            </group>
+
+                            <group string="Section G Checklist (ISA 315 Mandatory)" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <field name="check_g_it_understood" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_g_it_risks" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <field name="check_g_it_auditor" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION H: HUMAN RESOURCES & OPERATIONS
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="H. HR &amp; Operations" name="section_h_hr">
+                            <group string="Key Management Personnel">
+                                <field name="key_management_personnel" readonly="is_locked" nolabel="1"
+                                       placeholder="List key management personnel and their roles..."/>
+                            </group>
+
+                            <group>
+                                <group string="Key Person Reliance">
+                                    <field name="reliance_key_individuals" readonly="is_locked"/>
+                                    <field name="reliance_key_individuals_details" readonly="is_locked"
+                                           invisible="not reliance_key_individuals"/>
+                                </group>
+                                <group string="Staff Turnover">
+                                    <field name="staff_turnover" readonly="is_locked"/>
+                                    <field name="staff_turnover_details" readonly="is_locked"
+                                           invisible="staff_turnover != 'high'"/>
+                                </group>
+                            </group>
+
+                            <group string="Outsourced Functions">
+                                <field name="outsourced_functions" readonly="is_locked" nolabel="1"
+                                       placeholder="Functions outsourced to service organizations..."/>
+                            </group>
+
+                            <group>
+                                <group string="Segregation of Duties">
+                                    <field name="segregation_of_duties_concerns" readonly="is_locked"/>
+                                    <field name="segregation_concerns_details" readonly="is_locked"
+                                           invisible="not segregation_of_duties_concerns"/>
+                                </group>
+                            </group>
+
+                            <group string="Section H Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <field name="check_h_operational_risks" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <field name="check_h_hr_risks" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION I: CHANGES DURING THE YEAR
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="I. Changes" name="section_i_changes">
+                            <group string="Significant Changes During the Year (CRITICAL)">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>ISA 315:</strong> Document all significant changes during the year
+                                    and assess their impact on the audit approach.
+                                </div>
+                            </group>
+
+                            <field name="change_ids" readonly="is_locked"
+                                   context="{'default_p2_id': active_id}">
+                                <tree string="Changes" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="change_type"/>
+                                    <field name="description"/>
+                                    <field name="audit_impact"/>
+                                    <field name="impact_assessed"/>
+                                </tree>
+                            </field>
+
+                            <group string="Section I Checklist" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <field name="check_i_changes_identified" readonly="is_locked"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <field name="check_i_audit_impact" readonly="is_locked"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION J: RISK IDENTIFICATION & RMM LINKAGE
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="J. Risk Identification" name="section_j_risks">
+                            <group string="Business Risk Identification &amp; FS Linkage">
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>ISA 315:</strong> Identify key business risks and link to potential
+                                    financial statement misstatement areas. These risks will flow to P-6 Risk Assessment.
+                                </div>
+                            </group>
+
+                            <field name="business_risk_ids" readonly="is_locked"
+                                   context="{'default_p2_id': active_id}">
+                                <tree string="Business Risks" editable="bottom"
+                                      decoration-danger="severity == 'high'"
+                                      decoration-warning="severity == 'medium'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="risk_description"/>
+                                    <field name="fs_area"/>
+                                    <field name="potential_misstatement"/>
+                                    <field name="severity" widget="badge"
+                                           decoration-danger="severity == 'high'"
+                                           decoration-warning="severity == 'medium'"
+                                           decoration-success="severity == 'low'"/>
+                                    <field name="linked_to_p6" readonly="1"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+
+                            <group class="mt-3">
+                                <group string="Risk Summary">
+                                    <field name="total_risks_identified" readonly="1"/>
+                                    <field name="high_risk_count" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION K: DOCUMENT UPLOADS
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="K. Documents" name="section_k_documents">
+                            <group string="Mandatory Documentation">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Required Attachments:</strong>
+                                    Upload all mandatory documents to support entity understanding.
+                                </div>
+                            </group>
+
+                            <group>
+                                <group string="Organizational Chart (Required)">
+                                    <field name="organogram_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                    <field name="doc_organogram_uploaded" readonly="1" invisible="1"/>
+                                </group>
+                                <group string="Process Overview Documents">
+                                    <field name="process_docs_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                    <field name="doc_process_uploaded" readonly="1" invisible="1"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Industry Reports">
+                                    <field name="industry_reports_attachment_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                                <group string="Regulatory Correspondence">
+                                    <field name="regulatory_correspondence_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Prior Year Planning Memo">
+                                    <field name="prior_year_planning_memo_ids" readonly="is_locked"
+                                           widget="many2many_binary"/>
+                                </group>
+                            </group>
+
+                            <group string="Document Status" class="mt-3">
+                                <div class="alert alert-warning" role="alert"
+                                     invisible="doc_organogram_uploaded">
+                                    ⚠️ Organizational chart is mandatory and must be uploaded
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION L: CONCLUSION
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="L. Conclusion" name="section_l_conclusion">
+                            <group string="P-2 Conclusion &amp; Professional Judgment (ISA 315)">
+                                <field name="conclusion_narrative" readonly="is_locked" nolabel="1"
+                                       placeholder="Based on the understanding obtained of the entity, its environment, industry, regulatory framework, and internal structure, sufficient knowledge has been obtained to identify and assess the risks of material misstatement in accordance with ISA 315..."/>
+                            </group>
+
+                            <group string="Final Confirmations" class="mt-3">
+                                <group>
+                                    <field name="confirm_entity_understanding" readonly="is_locked"/>
+                                    <field name="confirm_risks_identified" readonly="is_locked"/>
+                                </group>
+                                <group>
+                                    <field name="confirm_proceed_p3" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="ISA 315 Compliance Summary" class="mt-3">
+                                <div class="alert alert-info" role="alert">
+                                    <ul class="mb-0">
+                                        <li>✓ Entity's nature, ownership, and governance understood</li>
+                                        <li>✓ Business model and strategy documented</li>
+                                        <li>✓ Industry and external environment assessed</li>
+                                        <li>✓ Regulatory and legal environment identified</li>
+                                        <li>✓ Accounting framework and financial reporting understood</li>
+                                        <li>✓ IT environment and controls documented</li>
+                                        <li>✓ Significant changes during year identified</li>
+                                        <li>✓ Business risks linked to potential FS misstatements</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             SECTION M: REVIEW & APPROVAL
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <page string="M. Approval" name="section_m_approval">
+                            <group string="Preparation">
+                                <group>
+                                    <field name="prepared_by_id" readonly="1"/>
+                                    <field name="prepared_on" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="Manager Review" class="mt-3">
+                                <group>
+                                    <field name="reviewed_by_id" readonly="1"/>
+                                    <field name="reviewed_on" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="review_comments" readonly="is_locked or state not in ['completed', 'reviewed']"/>
+                                </group>
+                            </group>
+
+                            <group string="Partner Approval" class="mt-3">
+                                <group>
+                                    <field name="partner_approved" readonly="1"/>
+                                    <field name="partner_approved_by_id" readonly="1"/>
+                                    <field name="partner_approved_on" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="partner_comments" readonly="is_locked or state not in ['reviewed', 'approved']"
+                                           placeholder="Partner comments are mandatory for approval..."/>
+                                </group>
+                            </group>
+
+                            <group string="Record Status" class="mt-3">
+                                <group>
+                                    <field name="is_locked" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group string="Approval Summary" class="mt-3">
+                                <div class="row text-center">
+                                    <div class="col-md-4">
+                                        <div class="card"
+                                             invisible="not prepared_by_id">
+                                            <div class="card-body py-2 bg-success text-white">
+                                                <strong>✓ Prepared</strong><br/>
+                                                <small><field name="prepared_by_id" readonly="1" nolabel="1"/></small>
+                                            </div>
+                                        </div>
+                                        <div class="card"
+                                             invisible="prepared_by_id">
+                                            <div class="card-body py-2 bg-secondary text-white">
+                                                <strong>○ Pending Preparation</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card"
+                                             invisible="not reviewed_by_id">
+                                            <div class="card-body py-2 bg-success text-white">
+                                                <strong>✓ Reviewed</strong><br/>
+                                                <small><field name="reviewed_by_id" readonly="1" nolabel="1"/></small>
+                                            </div>
+                                        </div>
+                                        <div class="card"
+                                             invisible="reviewed_by_id">
+                                            <div class="card-body py-2 bg-secondary text-white">
+                                                <strong>○ Pending Review</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card"
+                                             invisible="not partner_approved">
+                                            <div class="card-body py-2 bg-success text-white">
+                                                <strong>✓ Approved</strong><br/>
+                                                <small><field name="partner_approved_by_id" readonly="1" nolabel="1"/></small>
+                                            </div>
+                                        </div>
+                                        <div class="card"
+                                             invisible="partner_approved">
+                                            <div class="card-body py-2 bg-secondary text-white">
+                                                <strong>○ Pending Approval</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
+
+                <!-- Chatter -->
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
@@ -189,33 +756,134 @@
         </field>
     </record>
 
-    <!-- P-2 Tree View -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         TREE VIEW: P-2 ENTITY LIST
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="view_planning_p2_entity_tree" model="ir.ui.view">
         <field name="name">qaco.planning.p2.entity.tree</field>
         <field name="model">qaco.planning.p2.entity</field>
         <field name="arch" type="xml">
-            <tree string="P-2: Entity Understanding">
+            <tree string="P-2: Entity Understanding"
+                  decoration-danger="high_risk_count > 0"
+                  decoration-success="state == 'approved'">
                 <field name="name"/>
                 <field name="client_id"/>
-                <field name="industry_type"/>
-                <field name="it_complexity"/>
-                <field name="state" widget="badge" decoration-info="state == 'not_started'"
-                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
+                <field name="entity_type"/>
+                <field name="industry_classification"/>
+                <field name="total_risks_identified"/>
+                <field name="high_risk_count" decoration-danger="high_risk_count > 0"/>
+                <field name="reporting_framework"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'in_progress'"
+                       decoration-warning="state == 'completed'"
+                       decoration-success="state in ['reviewed', 'approved']"
+                       decoration-muted="state == 'locked'"/>
             </tree>
         </field>
     </record>
 
-    <!-- P-2 Action -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         SEARCH VIEW
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <record id="view_planning_p2_entity_search" model="ir.ui.view">
+        <field name="name">qaco.planning.p2.entity.search</field>
+        <field name="model">qaco.planning.p2.entity</field>
+        <field name="arch" type="xml">
+            <search string="Search P-2 Entity Understanding">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="industry_classification"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Reviewed" name="reviewed" domain="[('state', '=', 'reviewed')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Locked" name="locked" domain="[('state', '=', 'locked')]"/>
+                <separator/>
+                <filter string="Has High Risks" name="high_risks" domain="[('high_risk_count', '>', 0)]"/>
+                <filter string="Listed Companies" name="listed" domain="[('entity_type', '=', 'listed')]"/>
+                <filter string="PIE" name="pie" domain="[('entity_type', '=', 'pie')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Entity Type" name="group_entity" context="{'group_by': 'entity_type'}"/>
+                    <filter string="Industry" name="group_industry" context="{'group_by': 'industry_classification'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         BUSINESS RISK FORM VIEW
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <record id="view_planning_p2_business_risk_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p2.business.risk.form</field>
+        <field name="model">qaco.planning.p2.business.risk</field>
+        <field name="arch" type="xml">
+            <form string="Business Risk">
+                <sheet>
+                    <group>
+                        <group string="Risk Details">
+                            <field name="sequence"/>
+                            <field name="risk_description"/>
+                            <field name="fs_area"/>
+                            <field name="severity"/>
+                        </group>
+                        <group string="FS Impact">
+                            <field name="potential_misstatement"/>
+                            <field name="linked_to_p6" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         CHANGE LINE FORM VIEW
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <record id="view_planning_p2_change_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p2.change.form</field>
+        <field name="model">qaco.planning.p2.change</field>
+        <field name="arch" type="xml">
+            <form string="Change During Year">
+                <sheet>
+                    <group>
+                        <group string="Change Details">
+                            <field name="sequence"/>
+                            <field name="change_type"/>
+                            <field name="description"/>
+                        </group>
+                        <group string="Impact">
+                            <field name="audit_impact"/>
+                            <field name="impact_assessed"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         ACTION: P-2 Entity Understanding (Standalone)
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <record id="action_planning_p2_entity" model="ir.actions.act_window">
-        <field name="name">P-2: Understanding the Entity &amp; Its Environment</field>
+        <field name="name">P-2: Entity Understanding</field>
         <field name="res_model">qaco.planning.p2.entity</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-2 Understanding the Entity &amp; Its Environment
+                Create your first P-2 Entity Understanding record
             </p>
             <p>
-                Document understanding of the entity and its environment per ISA 315.
+                P-2 documents understanding of the entity, its environment, industry,
+                and business model per ISA 315 (Revised).
             </p>
         </field>
     </record>

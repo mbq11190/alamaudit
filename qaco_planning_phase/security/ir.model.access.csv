@@ -100,3 +100,10 @@ access_qaco_planning_p1_team_member_partner,qaco.planning.p1.team.member.partner
 access_qaco_planning_p1_time_budget_trainee,qaco.planning.p1.time.budget.trainee,model_qaco_planning_p1_time_budget,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p1_time_budget_manager,qaco.planning.p1.time.budget.manager,model_qaco_planning_p1_time_budget,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_p1_time_budget_partner,qaco.planning.p1.time.budget.partner,model_qaco_planning_p1_time_budget,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_planning_p2_business_risk_trainee,qaco.planning.p2.business.risk.trainee,model_qaco_planning_p2_business_risk,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p2_business_risk_manager,qaco.planning.p2.business.risk.manager,model_qaco_planning_p2_business_risk,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_p2_business_risk_partner,qaco.planning.p2.business.risk.partner,model_qaco_planning_p2_business_risk,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_planning_p2_change_trainee,qaco.planning.p2.change.trainee,model_qaco_planning_p2_change,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p2_change_manager,qaco.planning.p2.change.manager,model_qaco_planning_p2_change,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_p2_change_partner,qaco.planning.p2.change.partner,model_qaco_planning_p2_change,qaco_audit.group_audit_partner,1,1,1,1
+
