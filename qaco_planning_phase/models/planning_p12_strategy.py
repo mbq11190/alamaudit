@@ -560,7 +560,8 @@ class PlanningP12ExpertLine(models.Model):
         'qaco.planning.p12.strategy',
         string='P-12 Strategy',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        index=True
     )
     sequence = fields.Integer(string='Sequence', default=10)
     name = fields.Char(
@@ -620,7 +621,8 @@ class PlanningP12KeyAreaLine(models.Model):
         'qaco.planning.p12.strategy',
         string='P-12 Strategy',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        index=True
     )
     sequence = fields.Integer(string='Sequence', default=10)
     area_name = fields.Char(
