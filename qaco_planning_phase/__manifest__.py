@@ -41,6 +41,9 @@
         # Data
         "data/industry_data.xml",
         "data/regulator_data.xml",
+        "data/assertion_tags.xml",
+        "data/materiality_defaults.xml",
+        "data/checklist_data.xml",
     ],
     "demo": [
         "demo/planning_phase_demo.xml",
