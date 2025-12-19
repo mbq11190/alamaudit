@@ -248,8 +248,8 @@
 
     <!-- Specific Materiality Line Model Views (for embedded use) -->
     <record id="view_specific_materiality_line_tree" model="ir.ui.view">
-        <field name="name">qaco.specific.materiality.line.tree</field>
-        <field name="model">qaco.specific.materiality.line</field>
+        <field name="name">qaco.planning.p5.specific.materiality.tree</field>
+        <field name="model">qaco.planning.p5.specific.materiality</field>
         <field name="arch" type="xml">
             <tree string="Specific Materiality Lines" editable="bottom">
                 <field name="account_area"/>
@@ -261,8 +261,8 @@
 
     <!-- Materiality Revision Line Model Views (for embedded use) -->
     <record id="view_materiality_revision_line_tree" model="ir.ui.view">
-        <field name="name">qaco.materiality.revision.line.tree</field>
-        <field name="model">qaco.materiality.revision.line</field>
+        <field name="name">qaco.planning.p5.revision.tree</field>
+        <field name="model">qaco.planning.p5.revision</field>
         <field name="arch" type="xml">
             <tree string="Materiality Revisions" editable="bottom">
                 <field name="revision_date"/>

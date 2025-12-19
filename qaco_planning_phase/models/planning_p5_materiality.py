@@ -72,6 +72,18 @@ class PlanningP5Materiality(models.Model):
         default=lambda self: self.env.company.currency_id
     )
 
+    # ===== Materiality Status & Workflow (ISA 320) =====
+    materiality_finalized = fields.Boolean(
+        string='Materiality Finalized',
+        tracking=True,
+        help='Indicates whether materiality has been finalized and approved'
+    )
+    revision_required = fields.Boolean(
+        string='Revision Required',
+        tracking=True,
+        help='Flag raised by reviewer/partner requiring revision of materiality'
+    )
+
     # ===== Benchmark Selection =====
     materiality_benchmark = fields.Selection(
         MATERIALITY_BENCHMARKS,
@@ -79,6 +91,13 @@ class PlanningP5Materiality(models.Model):
         required=True,
         tracking=True,
         help='Select the appropriate benchmark per ISA 320'
+    )
+    # XML view compatible alias
+    benchmark_type = fields.Selection(
+        MATERIALITY_BENCHMARKS,
+        string='Benchmark Type',
+        related='materiality_benchmark',
+        store=True
     )
     benchmark_amount = fields.Monetary(
         string='Benchmark Amount',
@@ -101,9 +120,25 @@ class PlanningP5Materiality(models.Model):
         required=True,
         help='Document why this benchmark is appropriate for the entity per ISA 320'
     )
+    # XML view compatible alias
+    benchmark_rationale = fields.Html(
+        string='Benchmark Rationale',
+        related='benchmark_selection_justification',
+        readonly=False
+    )
+    alternative_benchmarks = fields.Html(
+        string='Alternative Benchmarks Considered',
+        help='Document alternative benchmarks that were considered'
+    )
     user_focus_factors = fields.Html(
         string='User Focus Factors',
         help='Factors indicating what users focus on (key metrics, regulatory requirements)'
+    )
+    # XML view compatible alias
+    user_base_analysis = fields.Html(
+        string='User Base Analysis',
+        related='user_focus_factors',
+        readonly=False
     )
 
     # ===== Materiality Percentage & Calculation =====
@@ -117,6 +152,12 @@ class PlanningP5Materiality(models.Model):
     percentage_justification = fields.Html(
         string='Percentage Justification',
         help='Justify the selected percentage within the acceptable range'
+    )
+    # XML view compatible alias
+    percentage_rationale = fields.Html(
+        string='Percentage Rationale',
+        related='percentage_justification',
+        readonly=False
     )
 
     # ===== Calculated Materiality Values =====
@@ -146,6 +187,16 @@ class PlanningP5Materiality(models.Model):
         string='Performance Materiality Justification',
         help='Factors considered in determining PM %'
     )
+    # XML view compatible aliases for performance materiality
+    pm_factors_considered = fields.Html(
+        string='PM Factors Considered',
+        help='Factors considered in determining performance materiality'
+    )
+    pm_justification = fields.Html(
+        string='PM Justification',
+        related='performance_materiality_justification',
+        readonly=False
+    )
 
     trivial_threshold_pct = fields.Float(
         string='Clearly Trivial Threshold %',
@@ -160,6 +211,21 @@ class PlanningP5Materiality(models.Model):
         tracking=True,
         help='Threshold below which misstatements are clearly trivial'
     )
+    # XML view compatible alias
+    trivial_threshold = fields.Monetary(
+        string='Trivial Threshold',
+        related='clearly_trivial_threshold',
+        store=True
+    )
+    sad_threshold = fields.Monetary(
+        string='Summary of Audit Differences Threshold',
+        currency_field='currency_id',
+        help='Threshold for accumulating misstatements'
+    )
+    threshold_justification = fields.Html(
+        string='Threshold Justification',
+        help='Justification for trivial and SAD thresholds'
+    )
 
     # ===== Specific Materiality (if applicable) =====
     specific_materiality_required = fields.Boolean(
@@ -171,19 +237,43 @@ class PlanningP5Materiality(models.Model):
         'p5_materiality_id',
         string='Specific Materiality Items'
     )
+    specific_materiality_narrative = fields.Html(
+        string='Specific Materiality Narrative',
+        help='Narrative explanation for specific materiality items'
+    )
 
-    # ===== Materiality Considerations =====
+    # ===== Qualitative Factors =====
+    qualitative_factors = fields.Html(
+        string='Qualitative Factors Considered',
+        help='Qualitative factors that may affect materiality judgments'
+    )
+    regulatory_considerations = fields.Html(
+        string='Regulatory Considerations',
+        help='Regulatory factors affecting materiality'
+    )
+    sensitive_items = fields.Html(
+        string='Sensitive Items',
+        help='Items that are sensitive to users regardless of amount'
+    )
+
+    # ===== Materiality Considerations / Prior Year Comparison =====
     prior_year_materiality = fields.Monetary(
         string='Prior Year Materiality',
         currency_field='currency_id'
     )
+    materiality_change_pct = fields.Float(
+        string='Materiality Change %',
+        compute='_compute_materiality_change',
+        store=True,
+        help='Percentage change from prior year materiality'
+    )
+    prior_year_comparison = fields.Html(
+        string='Prior Year Comparison',
+        help='Narrative comparison with prior year materiality'
+    )
     materiality_change_explanation = fields.Html(
         string='Materiality Change Explanation',
         help='Explain any significant change from prior year'
-    )
-    qualitative_factors = fields.Html(
-        string='Qualitative Factors Considered',
-        help='Qualitative factors that may affect materiality judgments'
     )
 
     # ===== Revision Log =====
@@ -191,6 +281,16 @@ class PlanningP5Materiality(models.Model):
         'qaco.planning.p5.revision',
         'p5_materiality_id',
         string='Materiality Revisions'
+    )
+    # XML view compatible alias
+    revision_line_ids = fields.One2many(
+        'qaco.planning.p5.revision',
+        'p5_materiality_id',
+        string='Revision Lines'
+    )
+    revision_notes = fields.Html(
+        string='Revision Notes',
+        help='Latest revision notes'
     )
     is_revised = fields.Boolean(
         string='Has Been Revised',
@@ -234,6 +334,14 @@ class PlanningP5Materiality(models.Model):
         'p5_id',
         'attachment_id',
         string='Supporting Documents'
+    )
+    # XML view compatible alias
+    materiality_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p5_materiality_attach_rel',
+        'p5_id',
+        'attachment_id',
+        string='Materiality Calculation Workpapers'
     )
 
     # ===== Summary =====
@@ -298,6 +406,18 @@ class PlanningP5Materiality(models.Model):
                 record.clearly_trivial_threshold = record.overall_materiality * (record.trivial_threshold_pct / 100.0)
             else:
                 record.clearly_trivial_threshold = 0
+
+    @api.depends('overall_materiality', 'prior_year_materiality')
+    def _compute_materiality_change(self):
+        """Compute the percentage change from prior year materiality."""
+        for record in self:
+            if record.prior_year_materiality and record.prior_year_materiality != 0:
+                record.materiality_change_pct = (
+                    (record.overall_materiality - record.prior_year_materiality) 
+                    / record.prior_year_materiality
+                ) * 100
+            else:
+                record.materiality_change_pct = 0
 
     def _validate_mandatory_fields(self):
         """Validate mandatory fields before completing P-5."""
@@ -418,9 +538,21 @@ class PlanningP5SpecificMateriality(models.Model):
         string='Class/Balance/Disclosure',
         required=True
     )
+    # XML view compatible alias
+    account_area = fields.Char(
+        string='Account Area',
+        related='class_or_balance',
+        readonly=False
+    )
     specific_materiality_amount = fields.Monetary(
         string='Specific Materiality',
         currency_field='currency_id'
+    )
+    # XML view compatible alias
+    specific_amount = fields.Monetary(
+        string='Specific Amount',
+        related='specific_materiality_amount',
+        readonly=False
     )
     currency_id = fields.Many2one(
         'res.currency',
@@ -430,6 +562,12 @@ class PlanningP5SpecificMateriality(models.Model):
         string='Justification',
         required=True,
         help='Why lower materiality is appropriate for this item'
+    )
+    # XML view compatible alias
+    rationale = fields.Text(
+        string='Rationale',
+        related='justification',
+        readonly=False
     )
 
 
@@ -453,9 +591,25 @@ class PlanningP5Revision(models.Model):
         string='Previous Overall Materiality',
         currency_field='currency_id'
     )
+    # XML view compatible alias
+    previous_materiality = fields.Monetary(
+        string='Previous Materiality',
+        related='previous_overall_materiality',
+        readonly=False
+    )
     previous_performance_materiality = fields.Monetary(
         string='Previous Performance Materiality',
         currency_field='currency_id'
+    )
+    new_overall_materiality = fields.Monetary(
+        string='Revised Overall Materiality',
+        currency_field='currency_id'
+    )
+    # XML view compatible alias
+    revised_materiality = fields.Monetary(
+        string='Revised Materiality',
+        related='new_overall_materiality',
+        readonly=False
     )
     currency_id = fields.Many2one(
         'res.currency',
