@@ -240,17 +240,17 @@ class PlanningP2Entity(models.Model):
         tracking=True,
     )
     engagement_partner_id = fields.Many2one(
-        'res.users',
+        'hr.employee',
         string='Engagement Partner',
-        related='audit_id.engagement_partner_id',
+        related='audit_id.qaco_audit_partner',
         readonly=True,
         store=True,
     )
-    audit_year = fields.Char(
+    audit_year = fields.Many2many(
+        'audit.year',
         string='Audit Year',
-        related='audit_id.year_id.name',
+        related='audit_id.audit_year',
         readonly=True,
-        store=True,
     )
 
     # =========================================================================
