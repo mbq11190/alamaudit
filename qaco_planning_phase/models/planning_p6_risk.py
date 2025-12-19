@@ -75,10 +75,33 @@ class PlanningP6Risk(models.Model):
         store=True
     )
 
+    # ===== Overall Risk Assessment (ISA 315 Summary) =====
+    overall_risk_level = fields.Selection([
+        ('low', 'Low'),
+        ('moderate', 'Moderate'),
+        ('high', 'High'),
+    ], string='Overall Risk Level', tracking=True,
+       help='Overall assessed risk of material misstatement')
+    
+    significant_risks_count = fields.Integer(
+        string='Significant Risks Count',
+        compute='_compute_significant_risks_count',
+        store=True,
+        help='Number of significant risks identified'
+    )
+
     # ===== Financial Statement Level Risks =====
     fs_level_risks = fields.Html(
         string='Financial Statement Level Risks',
         help='Pervasive risks affecting multiple assertions across the FS'
+    )
+    pervasive_control_weaknesses = fields.Html(
+        string='Pervasive Control Weaknesses',
+        help='Control weaknesses affecting multiple areas'
+    )
+    entity_wide_risks = fields.Html(
+        string='Entity-Wide Risks',
+        help='Risks affecting the entity as a whole'
     )
     fs_level_risk_factors = fields.Html(
         string='FS-Level Risk Factors',
@@ -88,12 +111,24 @@ class PlanningP6Risk(models.Model):
         string='Overall Response to FS-Level Risks',
         help='Planned overall response per ISA 330'
     )
+    # XML view compatible alias
+    fs_risk_responses = fields.Html(
+        string='FS Risk Responses',
+        related='fs_level_risk_response',
+        readonly=False
+    )
 
     # ===== Risk Register (Assertion-Level) =====
     risk_register_line_ids = fields.One2many(
         'qaco.planning.p6.risk.line',
         'p6_risk_id',
         string='Risk Register - Assertion Level'
+    )
+    # XML view compatible alias
+    risk_register_ids = fields.One2many(
+        'qaco.planning.p6.risk.line',
+        'p6_risk_id',
+        string='Risk Register'
     )
 
     # ===== Inherent Risk Assessment =====
@@ -123,6 +158,10 @@ class PlanningP6Risk(models.Model):
         string='Control Risk Summary',
         help='Summary of control risk assessment from P-3'
     )
+    control_risk_factors = fields.Html(
+        string='Control Risk Factors',
+        help='Factors contributing to control risk'
+    )
     controls_reliance_planned = fields.Boolean(
         string='Controls Reliance Planned',
         help='Do we plan to rely on controls for any assertion?'
@@ -131,10 +170,26 @@ class PlanningP6Risk(models.Model):
         string='Controls Identified for Testing'
     )
 
+    # ===== Industry & Economic Factors =====
+    industry_risks = fields.Html(
+        string='Industry-Specific Risks',
+        help='Risks specific to the client industry'
+    )
+    economic_factors = fields.Html(
+        string='Economic/Environmental Factors',
+        help='Economic and environmental factors affecting risk'
+    )
+
     # ===== Risk Heat Map =====
     high_risk_count = fields.Integer(
         string='High Risk Items',
         compute='_compute_risk_counts',
+        store=True
+    )
+    # XML view compatible alias
+    high_risk_areas = fields.Integer(
+        string='High Risk Areas',
+        related='high_risk_count',
         store=True
     )
     medium_risk_count = fields.Integer(
@@ -142,9 +197,21 @@ class PlanningP6Risk(models.Model):
         compute='_compute_risk_counts',
         store=True
     )
+    # XML view compatible alias
+    medium_risk_areas = fields.Integer(
+        string='Medium Risk Areas',
+        related='medium_risk_count',
+        store=True
+    )
     low_risk_count = fields.Integer(
         string='Low Risk Items',
         compute='_compute_risk_counts',
+        store=True
+    )
+    # XML view compatible alias
+    low_risk_areas = fields.Integer(
+        string='Low Risk Areas',
+        related='low_risk_count',
         store=True
     )
     significant_risk_count = fields.Integer(
@@ -152,21 +219,73 @@ class PlanningP6Risk(models.Model):
         compute='_compute_risk_counts',
         store=True
     )
+    heat_map_narrative = fields.Html(
+        string='Heat Map Narrative',
+        help='Visualization and narrative for risk heat map'
+    )
 
     # ===== Significant Risks =====
     significant_risks_summary = fields.Html(
         string='Significant Risks Summary',
         help='Summary of all identified significant risks per ISA 315'
     )
+    # XML view compatible alias
+    significant_risks = fields.Html(
+        string='Significant Risks',
+        related='significant_risks_summary',
+        readonly=False
+    )
     revenue_recognition_significant = fields.Boolean(
         string='Revenue Recognition - Significant Risk',
         default=True,
         help='ISA 240 presumption that revenue recognition is a significant risk'
     )
+    # XML view compatible alias
+    revenue_recognition_risk = fields.Boolean(
+        string='Revenue Recognition Risk',
+        related='revenue_recognition_significant',
+        readonly=False
+    )
+    revenue_risk_description = fields.Html(
+        string='Revenue Risk Description',
+        help='Description of revenue recognition risk factors'
+    )
     management_override_significant = fields.Boolean(
         string='Management Override - Significant Risk',
         default=True,
         help='ISA 240 presumption of risk of management override of controls'
+    )
+    # XML view compatible alias
+    management_override_risk = fields.Boolean(
+        string='Management Override Risk',
+        related='management_override_significant',
+        readonly=False
+    )
+    override_risk_description = fields.Html(
+        string='Override Risk Description',
+        help='Description of management override risk'
+    )
+    other_significant_risks = fields.Html(
+        string='Other Significant Risks',
+        help='Other significant risks identified'
+    )
+
+    # ===== Audit Response =====
+    overall_audit_response = fields.Html(
+        string='Overall Audit Response',
+        help='Overall audit response to identified risks'
+    )
+    significant_risk_responses = fields.Html(
+        string='Significant Risk Responses',
+        help='Specific responses to significant risks'
+    )
+    substantive_procedures = fields.Html(
+        string='Substantive Procedures Planned',
+        help='Planned substantive procedures'
+    )
+    control_testing_planned = fields.Html(
+        string='Control Testing Planned',
+        help='Planned tests of controls'
     )
 
     # ===== Link to Audit Procedures =====
@@ -178,6 +297,26 @@ class PlanningP6Risk(models.Model):
         string='Link to Audit Programs',
         help='Reference to specific audit programs addressing each risk'
     )
+    # XML view compatible alias
+    link_to_programs = fields.Html(
+        string='Link to Programs',
+        related='link_to_audit_programs',
+        readonly=False
+    )
+
+    # ===== Linkage Section =====
+    link_to_materiality = fields.Html(
+        string='Link to Materiality',
+        help='How risks link to materiality (P-5)'
+    )
+    link_to_controls = fields.Html(
+        string='Link to Internal Controls',
+        help='How risks link to internal controls (P-3)'
+    )
+    link_to_fraud = fields.Html(
+        string='Link to Fraud Risk',
+        help='How risks link to fraud risk (P-7)'
+    )
 
     # ===== Attachments =====
     risk_register_attachment_ids = fields.Many2many(
@@ -186,6 +325,14 @@ class PlanningP6Risk(models.Model):
         'p6_id',
         'attachment_id',
         string='Risk Register Files'
+    )
+    # XML view compatible alias
+    risk_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p6_risk_attach_rel',
+        'p6_id',
+        'attachment_id',
+        string='Risk Assessment Documentation'
     )
     risk_matrix_attachment_ids = fields.Many2many(
         'ir.attachment',
@@ -199,6 +346,12 @@ class PlanningP6Risk(models.Model):
     risk_assessment_summary = fields.Html(
         string='Risk Assessment Summary',
         help='Consolidated risk assessment per ISA 315'
+    )
+    # XML view compatible alias
+    risk_assessment_conclusion = fields.Html(
+        string='Risk Assessment Conclusion',
+        related='risk_assessment_summary',
+        readonly=False
     )
     isa_reference = fields.Char(
         string='ISA Reference',
@@ -235,6 +388,14 @@ class PlanningP6Risk(models.Model):
             record.medium_risk_count = len(record.risk_register_line_ids.filtered(lambda r: r.risk_rating == 'medium'))
             record.low_risk_count = len(record.risk_register_line_ids.filtered(lambda r: r.risk_rating == 'low'))
             record.significant_risk_count = len(record.risk_register_line_ids.filtered(lambda r: r.is_significant_risk))
+
+    @api.depends('risk_register_line_ids', 'risk_register_line_ids.is_significant_risk')
+    def _compute_significant_risks_count(self):
+        """Compute the count of significant risks for XML view field."""
+        for record in self:
+            record.significant_risks_count = len(
+                record.risk_register_line_ids.filtered(lambda r: r.is_significant_risk)
+            )
 
     def _validate_mandatory_fields(self):
         """Validate mandatory fields before completing P-6."""
@@ -348,6 +509,13 @@ class PlanningP6RiskLine(models.Model):
         string='Account/Cycle',
         required=True
     )
+    # XML view compatible alias
+    account_area = fields.Selection(
+        ACCOUNT_CYCLES,
+        string='Account Area',
+        related='account_cycle',
+        readonly=False
+    )
     risk_description = fields.Text(
         string='Risk Description',
         required=True
@@ -356,6 +524,13 @@ class PlanningP6RiskLine(models.Model):
         ASSERTION_TYPES,
         string='Assertion',
         required=True
+    )
+    # XML view compatible alias
+    assertion = fields.Selection(
+        ASSERTION_TYPES,
+        string='Assertion',
+        related='assertion_type',
+        readonly=False
     )
     fs_level_risk = fields.Boolean(
         string='FS-Level Risk',
@@ -379,9 +554,22 @@ class PlanningP6RiskLine(models.Model):
         compute='_compute_risk_rating',
         store=True
     )
+    # XML view compatible alias
+    combined_rmm = fields.Selection(
+        RISK_RATING,
+        string='Combined RMM',
+        related='risk_rating',
+        store=True
+    )
     is_significant_risk = fields.Boolean(
         string='Significant Risk',
         tracking=True
+    )
+    # XML view compatible alias
+    significant_risk = fields.Boolean(
+        string='Significant Risk',
+        related='is_significant_risk',
+        readonly=False
     )
 
     # ===== Risk Factors =====
@@ -416,6 +604,12 @@ class PlanningP6RiskLine(models.Model):
     planned_procedures = fields.Text(
         string='Planned Audit Procedures',
         help='Procedures to address this risk'
+    )
+    # XML view compatible alias
+    planned_response = fields.Text(
+        string='Planned Response',
+        related='planned_procedures',
+        readonly=False
     )
     nature_of_procedures = fields.Selection([
         ('test_of_controls', 'Test of Controls'),

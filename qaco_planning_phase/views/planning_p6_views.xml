@@ -237,8 +237,8 @@
 
     <!-- Risk Register Line Model Views -->
     <record id="view_risk_register_line_tree" model="ir.ui.view">
-        <field name="name">qaco.risk.register.line.tree</field>
-        <field name="model">qaco.risk.register.line</field>
+        <field name="name">qaco.planning.p6.risk.line.tree</field>
+        <field name="model">qaco.planning.p6.risk.line</field>
         <field name="arch" type="xml">
             <tree string="Risk Register" editable="bottom">
                 <field name="account_area"/>
