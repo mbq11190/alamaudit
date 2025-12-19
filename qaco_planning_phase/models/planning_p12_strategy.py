@@ -103,7 +103,7 @@ class PlanningP12Strategy(models.Model):
 
     # ===== Key Audit Areas (XML compatible) =====
     key_area_ids = fields.One2many(
-        'qaco.key.area.line',
+        'qaco.planning.p12.key.area.line',
         'p12_strategy_id',
         string='Key Audit Areas'
     )
@@ -212,7 +212,7 @@ class PlanningP12Strategy(models.Model):
     )
     # XML view compatible alias
     expert_ids = fields.One2many(
-        'qaco.expert.line',
+        'qaco.planning.p12.expert.line',
         'p12_strategy_id',
         string='Expert Register'
     )
