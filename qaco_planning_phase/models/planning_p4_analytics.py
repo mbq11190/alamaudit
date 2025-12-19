@@ -63,6 +63,16 @@ class PlanningP4Analytics(models.Model):
         default=lambda self: self.env.company.currency_id
     )
 
+    # ===== Financial Year Dates =====
+    current_year_end = fields.Date(
+        string='Current Year End',
+        help='End date of the current financial year under audit'
+    )
+    prior_year_end = fields.Date(
+        string='Prior Year End',
+        help='End date of the prior financial year for comparison'
+    )
+
     # ===== Financial Data Input =====
     # Current Year
     current_year_revenue = fields.Monetary(string='Current Year Revenue', currency_field='currency_id')
