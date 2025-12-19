@@ -226,9 +226,9 @@ class PlanningP1Engagement(models.Model):
         store=True,
     )
     firm_id = fields.Many2one(
-        'qaco.firm.name',
+        'audit.firm.name',
         string='Audit Firm',
-        related='audit_id.firm_id',
+        related='audit_id.firm_name',
         readonly=True,
         store=True,
     )

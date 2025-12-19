@@ -352,13 +352,10 @@ class PlanningP8GoingConcern(models.Model):
         ('inappropriate_basis', '🔴 Going Concern Basis May Be Inappropriate'),
     ], string='Preliminary Conclusion', tracking=True)
     # XML view compatible alias
-    going_concern_conclusion = fields.Selection([
-        ('no_concern', '🟢 No Significant Going Concern Issues'),
-        ('uncertainty_exists', '🟡 Material Uncertainty May Exist'),
-        ('inappropriate_basis', '🔴 Going Concern Basis May Be Inappropriate'),
-    ], string='Going Concern Conclusion',
-       related='preliminary_conclusion',
-       readonly=False)
+    going_concern_conclusion = fields.Selection(
+        string='Going Concern Conclusion',
+        related='preliminary_conclusion',
+        readonly=False)
     conclusion_rationale = fields.Html(
         string='Conclusion Rationale',
         help='Rationale for the preliminary going concern conclusion'

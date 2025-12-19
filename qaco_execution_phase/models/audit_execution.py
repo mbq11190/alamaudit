@@ -164,12 +164,8 @@ class AuditProcedureDetail(models.Model):
     procedure_template_id = fields.Many2one('audit.procedure.template', string='Procedure Template', required=True)
     procedure_name = fields.Char(string='Procedure Name', related='procedure_template_id.name', store=True)
     procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=True)
-    procedure_type = fields.Selection([
-        ('risk_assessment', 'Risk Assessment'),
-        ('test_of_controls', 'Test of Controls'),
-        ('substantive', 'Substantive Procedure'),
-        ('analytical', 'Analytical Procedure'),
-    ], string='Procedure Type', related='procedure_template_id.procedure_type', store=True)
+    procedure_type = fields.Selection(
+        string='Procedure Type', related='procedure_template_id.procedure_type', store=True)
     custom_description = fields.Html(string='Custom Description')
     risk_level = fields.Selection([
         ('low', 'Low'),
