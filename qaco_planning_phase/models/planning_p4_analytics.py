@@ -279,10 +279,41 @@ class PlanningP4Analytics(models.Model):
         string='Analytical Summary Sheets'
     )
 
+    # ===== Attachments (XML View Compatible) =====
+    financial_statement_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p4_financial_stmt_rel',
+        'p4_id',
+        'attachment_id',
+        string='Financial Statements'
+    )
+    trial_balance_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p4_trial_balance_rel',
+        'p4_id',
+        'attachment_id',
+        string='Trial Balance'
+    )
+    analysis_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'qaco_p4_analysis_attach_rel',
+        'p4_id',
+        'attachment_id',
+        string='Supporting Analysis'
+    )
+
     # ===== Summary Output =====
     analytical_review_summary = fields.Html(
         string='Analytical Review Report',
         help='Summary of analytical procedures per ISA 520'
+    )
+    analytics_conclusion = fields.Html(
+        string='Analytical Review Conclusion',
+        help='Final conclusion from analytical review'
+    )
+    impact_on_audit_plan = fields.Html(
+        string='Impact on Audit Plan',
+        help='How analytical review findings impact the audit plan'
     )
     isa_reference = fields.Char(
         string='ISA Reference',
