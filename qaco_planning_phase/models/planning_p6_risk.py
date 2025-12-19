@@ -529,7 +529,6 @@ class PlanningP6RiskLine(models.Model):
     )
     # XML view compatible alias
     assertion = fields.Selection(
-        ASSERTION_TYPES,
         string='Assertion',
         related='assertion_type',
         readonly=False
@@ -558,7 +557,6 @@ class PlanningP6RiskLine(models.Model):
     )
     # XML view compatible alias
     combined_rmm = fields.Selection(
-        RISK_RATING,
         string='Combined RMM',
         related='risk_rating',
         store=True

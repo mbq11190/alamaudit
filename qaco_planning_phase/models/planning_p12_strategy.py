@@ -117,13 +117,10 @@ class PlanningP12Strategy(models.Model):
         ('significant_reliance', 'Significant Reliance on Controls'),
     ], string='Planned Controls Reliance', tracking=True)
     # XML view compatible alias
-    control_reliance_approach = fields.Selection([
-        ('substantive_only', 'Substantive Only'),
-        ('limited_reliance', 'Limited Reliance'),
-        ('significant_reliance', 'Significant Reliance'),
-    ], string='Control Reliance Approach',
-       related='controls_reliance',
-       readonly=False)
+    control_reliance_approach = fields.Selection(
+        string='Control Reliance Approach',
+        related='controls_reliance',
+        readonly=False)
     controls_reliance_rationale = fields.Html(
         string='Controls Reliance Rationale'
     )
