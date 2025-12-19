@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Window action for Planning Phase list/tree view -->
     <record id="action_qaco_planning_phase" model="ir.actions.act_window">
         <field name="name">Planning Phases</field>
         <field name="res_model">qaco.planning.phase</field>
@@ -16,6 +17,7 @@
         </field>
     </record>
 
+    <!-- Window action for opening Planning Phase from Audit form smart button -->
     <record id="action_open_planning_phase_from_audit" model="ir.actions.act_window">
         <field name="name">Open Planning Phase</field>
         <field name="res_model">qaco.planning.phase</field>
@@ -26,7 +28,8 @@
         <field name="domain">[('audit_id', '=', active_id)]</field>
     </record>
 
-    <menuitem id="menu_qaco_planning_phase" name="Planning Phases"
-              parent="qaco_audit.menu_1"
-              action="action_qaco_planning_phase" sequence="20"/>
+    <!-- 
+    NOTE: Sidebar menu removed - Planning Phase is accessed via smart button only.
+    The smart button appears after Client Onboarding on the Audit form.
+    -->
 </odoo>

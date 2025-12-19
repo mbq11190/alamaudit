@@ -2,119 +2,24 @@
 <odoo>
     <!-- ============================================== -->
     <!-- Planning Phase Menu Structure                  -->
-    <!-- P-1 to P-13 Navigation                        -->
-    <!-- Nested under Audit Work (not a separate app)  -->
+    <!-- REMOVED: Sidebar menus - access via smart     -->
+    <!-- button only (after Client Onboarding)         -->
     <!-- ============================================== -->
 
-    <!-- Planning Phase Submenu under Audit Work -->
-    <menuitem id="menu_planning_phase_root"
-              name="Planning Phase"
-              parent="qaco_audit.menu_root"
-              sequence="10"
-              groups="qaco_audit.group_audit_trainee"/>
+    <!-- 
+    NOTE: All P-1 to P-13 navigation menus have been removed.
+    Planning Phase is accessed via the smart button on the Audit form,
+    which appears after the Client Onboarding button.
+    
+    The P-1 to P-13 tabs are now displayed as notebook pages within
+    the Planning Phase form view, not as separate menu items.
+    -->
 
-    <!-- Planning Tabs Submenu (P-1 to P-13) -->
-    <menuitem id="menu_planning_tabs"
-              name="Planning Tabs (P-1 to P-13)"
-              parent="menu_planning_phase_root"
-              sequence="10"/>
-
-    <!-- P-1: Engagement Setup -->
-    <menuitem id="menu_planning_p1_engagement"
-              name="P-1: Engagement Setup"
-              parent="menu_planning_tabs"
-              action="action_planning_p1_engagement"
-              sequence="10"/>
-
-    <!-- P-2: Entity Understanding -->
-    <menuitem id="menu_planning_p2_entity"
-              name="P-2: Entity Understanding"
-              parent="menu_planning_tabs"
-              action="action_planning_p2_entity"
-              sequence="20"/>
-
-    <!-- P-3: Internal Controls -->
-    <menuitem id="menu_planning_p3_controls"
-              name="P-3: Internal Controls"
-              parent="menu_planning_tabs"
-              action="action_planning_p3_controls"
-              sequence="30"/>
-
-    <!-- P-4: Analytical Review -->
-    <menuitem id="menu_planning_p4_analytics"
-              name="P-4: Analytical Review"
-              parent="menu_planning_tabs"
-              action="action_planning_p4_analytics"
-              sequence="40"/>
-
-    <!-- P-5: Materiality -->
-    <menuitem id="menu_planning_p5_materiality"
-              name="P-5: Materiality"
-              parent="menu_planning_tabs"
-              action="action_planning_p5_materiality"
-              sequence="50"/>
-
-    <!-- P-6: Risk Assessment -->
-    <menuitem id="menu_planning_p6_risk"
-              name="P-6: Risk Assessment"
-              parent="menu_planning_tabs"
-              action="action_planning_p6_risk"
-              sequence="60"/>
-
-    <!-- P-7: Fraud Risk -->
-    <menuitem id="menu_planning_p7_fraud"
-              name="P-7: Fraud Risk"
-              parent="menu_planning_tabs"
-              action="action_planning_p7_fraud"
-              sequence="70"/>
-
-    <!-- P-8: Going Concern -->
-    <menuitem id="menu_planning_p8_going_concern"
-              name="P-8: Going Concern"
-              parent="menu_planning_tabs"
-              action="action_planning_p8_going_concern"
-              sequence="80"/>
-
-    <!-- P-9: Laws & Regulations -->
-    <menuitem id="menu_planning_p9_laws"
-              name="P-9: Laws &amp; Regulations"
-              parent="menu_planning_tabs"
-              action="action_planning_p9_laws"
-              sequence="90"/>
-
-    <!-- P-10: Related Parties -->
-    <menuitem id="menu_planning_p10_related_parties"
-              name="P-10: Related Parties"
-              parent="menu_planning_tabs"
-              action="action_planning_p10_related_parties"
-              sequence="100"/>
-
-    <!-- P-11: Group Audit -->
-    <menuitem id="menu_planning_p11_group_audit"
-              name="P-11: Group Audit"
-              parent="menu_planning_tabs"
-              action="action_planning_p11_group_audit"
-              sequence="110"/>
-
-    <!-- P-12: Audit Strategy -->
-    <menuitem id="menu_planning_p12_strategy"
-              name="P-12: Audit Strategy"
-              parent="menu_planning_tabs"
-              action="action_planning_p12_strategy"
-              sequence="120"/>
-
-    <!-- P-13: Approval & Lock -->
-    <menuitem id="menu_planning_p13_approval"
-              name="P-13: Approval &amp; Lock"
-              parent="menu_planning_tabs"
-              action="action_planning_p13_approval"
-              sequence="130"/>
-
-    <!-- Configuration Submenu -->
+    <!-- Configuration menus moved under main Audit Configuration -->
     <menuitem id="menu_planning_configuration"
-              name="Configuration"
-              parent="menu_planning_phase_root"
-              sequence="90"
+              name="Planning Configuration"
+              parent="qaco_audit.menu_2"
+              sequence="20"
               groups="qaco_audit.group_audit_manager"/>
 
     <!-- Configuration: Industries -->

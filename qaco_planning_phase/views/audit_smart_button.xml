@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Smart button on qaco.audit form to open Planning Phase -->
+    <!-- Inherits from Client Onboarding button to appear AFTER it -->
     <record id="view_qaco_audit_form_planning_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.planning.button</field>
         <field name="model">qaco.audit</field>
         <field name="inherit_id" ref="qaco_client_onboarding.view_qaco_audit_form_onboarding_button"/>
+        <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="object"
