@@ -382,6 +382,46 @@ class PlanningP4Analytics(models.Model):
                 record.budget_revenue_variance_pct = 0
 
     @api.depends(
+        'current_revenue', 'prior_revenue',
+        'current_total_assets', 'prior_total_assets',
+        'current_equity', 'prior_equity',
+        'current_gross_profit', 'prior_gross_profit',
+        'current_total_liabilities', 'prior_total_liabilities'
+    )
+    def _compute_change_pct(self):
+        """Compute year-over-year change percentages for XML view fields."""
+        for record in self:
+            # Revenue change %
+            if record.prior_revenue and record.prior_revenue != 0:
+                record.revenue_change_pct = ((record.current_revenue - record.prior_revenue) / record.prior_revenue) * 100
+            else:
+                record.revenue_change_pct = 0
+
+            # Asset change %
+            if record.prior_total_assets and record.prior_total_assets != 0:
+                record.asset_change_pct = ((record.current_total_assets - record.prior_total_assets) / record.prior_total_assets) * 100
+            else:
+                record.asset_change_pct = 0
+
+            # Equity change %
+            if record.prior_equity and record.prior_equity != 0:
+                record.equity_change_pct = ((record.current_equity - record.prior_equity) / record.prior_equity) * 100
+            else:
+                record.equity_change_pct = 0
+
+            # Profit change %
+            if record.prior_gross_profit and record.prior_gross_profit != 0:
+                record.profit_change_pct = ((record.current_gross_profit - record.prior_gross_profit) / record.prior_gross_profit) * 100
+            else:
+                record.profit_change_pct = 0
+
+            # Liability change %
+            if record.prior_total_liabilities and record.prior_total_liabilities != 0:
+                record.liability_change_pct = ((record.current_total_liabilities - record.prior_total_liabilities) / record.prior_total_liabilities) * 100
+            else:
+                record.liability_change_pct = 0
+
+    @api.depends(
         'current_year_revenue', 'current_year_gross_profit', 'current_year_net_profit',
         'current_year_total_assets', 'current_year_equity', 'current_year_total_liabilities',
         'prior_year_revenue', 'prior_year_gross_profit', 'prior_year_net_profit'
