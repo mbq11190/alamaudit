@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p9.laws.form</field>
         <field name="model">qaco.planning.p9.laws</field>
         <field name="arch" type="xml">
-            <form string="P-9: Laws &amp; Regulations">
+            <form string="P-9: Going Concern – Preliminary Assessment">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 250 | Laws &amp; Regulations Compliance</h3>
+                        <h3 class="text-muted">ISA 570 | Going Concern – Preliminary Assessment</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -231,15 +231,15 @@
 
     <!-- P-9 Action -->
     <record id="action_planning_p9_laws" model="ir.actions.act_window">
-        <field name="name">P-9: Laws &amp; Regulations</field>
+        <field name="name">P-9: Going Concern – Preliminary Assessment</field>
         <field name="res_model">qaco.planning.p9.laws</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-9 Laws &amp; Regulations Assessment
+                Create P-9 Going Concern – Preliminary Assessment
             </p>
             <p>
-                Document compliance assessment per ISA 250.
+                Document going concern assessment per ISA 570.
             </p>
         </field>
     </record>

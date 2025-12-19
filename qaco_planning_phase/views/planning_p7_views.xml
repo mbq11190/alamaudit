@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 240 | Fraud Risk Considerations</h3>
+                        <h3 class="text-muted">ISA 240 | Fraud Risk Assessment</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -231,12 +231,12 @@
 
     <!-- P-7 Action -->
     <record id="action_planning_p7_fraud" model="ir.actions.act_window">
-        <field name="name">P-7: Fraud Risk</field>
+        <field name="name">P-7: Fraud Risk Assessment</field>
         <field name="res_model">qaco.planning.p7.fraud</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-7 Fraud Risk Consideration
+                Create P-7 Fraud Risk Assessment
             </p>
             <p>
                 Document fraud risk assessment per ISA 240.

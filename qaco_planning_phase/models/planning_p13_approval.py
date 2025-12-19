@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP13Approval(models.Model):
     """P-13: Planning Review & Approval (ISA 220, ISQM-1)"""
     _name = 'qaco.planning.p13.approval'
-    _description = 'P-13: Planning Review & Approval'
+    _description = 'P-13: Audit Planning Memorandum (APM) & Approval'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p12.strategy.form</field>
         <field name="model">qaco.planning.p12.strategy</field>
         <field name="arch" type="xml">
-            <form string="P-12: Audit Strategy &amp; Plan">
+            <form string="P-12: Audit Team, Budget &amp; Timeline">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 300 | Audit Strategy &amp; Plan</h3>
+                        <h3 class="text-muted">ISA 300 | Audit Team, Budget &amp; Timeline</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -269,15 +269,15 @@
 
     <!-- P-12 Action -->
     <record id="action_planning_p12_strategy" model="ir.actions.act_window">
-        <field name="name">P-12: Audit Strategy</field>
+        <field name="name">P-12: Audit Team, Budget &amp; Timeline</field>
         <field name="res_model">qaco.planning.p12.strategy</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-12 Audit Strategy &amp; Plan
+                Create P-12 Audit Team, Budget &amp; Timeline
             </p>
             <p>
-                Document audit strategy and plan per ISA 300.
+                Document audit team allocation, budget and timeline per ISA 300.
             </p>
         </field>
     </record>

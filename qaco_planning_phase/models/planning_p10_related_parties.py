@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP10RelatedParties(models.Model):
     """P-10: Related Parties Planning (ISA 550)"""
     _name = 'qaco.planning.p10.related.parties'
-    _description = 'P-10: Related Parties Planning'
+    _description = 'P-10: Related Parties & Group Considerations'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

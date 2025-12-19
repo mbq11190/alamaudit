@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP12Strategy(models.Model):
     """P-12: Audit Strategy & Audit Plan (ISA 300)"""
     _name = 'qaco.planning.p12.strategy'
-    _description = 'P-12: Audit Strategy & Audit Plan'
+    _description = 'P-12: Audit Team, Budget & Timeline'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

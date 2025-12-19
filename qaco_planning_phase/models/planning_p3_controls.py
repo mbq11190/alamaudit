@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP3Controls(models.Model):
     """P-3: Internal Control Understanding (ISA 315)"""
     _name = 'qaco.planning.p3.controls'
-    _description = 'P-3: Internal Control Understanding'
+    _description = 'P-3: Understanding Internal Control & IT Environment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

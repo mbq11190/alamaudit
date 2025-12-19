@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP9Laws(models.Model):
     """P-9: Laws & Regulations (ISA 250)"""
     _name = 'qaco.planning.p9.laws'
-    _description = 'P-9: Laws & Regulations'
+    _description = 'P-9: Going Concern – Preliminary Assessment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

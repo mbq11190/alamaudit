@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p5.materiality.form</field>
         <field name="model">qaco.planning.p5.materiality</field>
         <field name="arch" type="xml">
-            <form string="P-5: Materiality">
+            <form string="P-5: Risk Assessment (Assertion Level)">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 320 | Materiality Determination</h3>
+                        <h3 class="text-muted">ISA 315 | Risk Assessment (Assertion Level)</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -233,15 +233,15 @@
 
     <!-- P-5 Action -->
     <record id="action_planning_p5_materiality" model="ir.actions.act_window">
-        <field name="name">P-5: Materiality</field>
+        <field name="name">P-5: Risk Assessment (Assertion Level)</field>
         <field name="res_model">qaco.planning.p5.materiality</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-5 Materiality Determination
+                Create P-5 Risk Assessment (Assertion Level)
             </p>
             <p>
-                Document materiality calculations per ISA 320.
+                Document risk assessment at assertion level per ISA 315.
             </p>
         </field>
     </record>

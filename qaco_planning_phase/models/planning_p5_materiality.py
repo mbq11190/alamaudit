@@ -12,7 +12,7 @@ from odoo.exceptions import UserError, ValidationError
 class PlanningP5Materiality(models.Model):
     """P-5: Materiality & Performance Materiality (ISA 320)"""
     _name = 'qaco.planning.p5.materiality'
-    _description = 'P-5: Materiality & Performance Materiality'
+    _description = 'P-5: Risk Assessment (Assertion Level)'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

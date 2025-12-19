@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP6Risk(models.Model):
     """P-6: Risk Assessment - RMM (ISA 315)"""
     _name = 'qaco.planning.p6.risk'
-    _description = 'P-6: Risk Assessment (RMM)'
+    _description = 'P-6: Materiality & Performance Materiality'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

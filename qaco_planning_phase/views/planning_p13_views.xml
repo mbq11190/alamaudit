@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p13.approval.form</field>
         <field name="model">qaco.planning.p13.approval</field>
         <field name="arch" type="xml">
-            <form string="P-13: Approval &amp; Planning Lock">
+            <form string="P-13: APM &amp; Approval">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -229,15 +229,15 @@
 
     <!-- P-13 Action -->
     <record id="action_planning_p13_approval" model="ir.actions.act_window">
-        <field name="name">P-13: Planning Approval</field>
+        <field name="name">P-13: Audit Planning Memorandum (APM) &amp; Approval</field>
         <field name="res_model">qaco.planning.p13.approval</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-13 Planning Approval &amp; Lock
+                Create P-13 APM &amp; Approval
             </p>
             <p>
-                Finalize and lock planning phase per ISA 220 / ISQM-1.
+                Finalize Audit Planning Memorandum and lock planning phase per ISA 220 / ISQM-1.
             </p>
         </field>
     </record>

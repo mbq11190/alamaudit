@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p1.engagement.form</field>
         <field name="model">qaco.planning.p1.engagement</field>
         <field name="arch" type="xml">
-            <form string="P-1: Engagement Setup &amp; Team Assignment">
+            <form string="P-1: Engagement Overview &amp; Planning Control">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -229,12 +229,12 @@
 
     <!-- P-1 Action -->
     <record id="action_planning_p1_engagement" model="ir.actions.act_window">
-        <field name="name">P-1: Engagement Setup</field>
+        <field name="name">P-1: Engagement Overview &amp; Planning Control</field>
         <field name="res_model">qaco.planning.p1.engagement</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create your first P-1 Engagement Setup record
+                Create P-1 Engagement Overview &amp; Planning Control
             </p>
             <p>
                 Document engagement acceptance, team assignment, and independence per ISA 210, 220, and ISQM-1.

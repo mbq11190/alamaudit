@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP4Analytics(models.Model):
     """P-4: Preliminary Analytical Procedures (ISA 520)"""
     _name = 'qaco.planning.p4.analytics'
-    _description = 'P-4: Preliminary Analytical Procedures'
+    _description = 'P-4: Risk Identification & Assessment (FS Level)'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

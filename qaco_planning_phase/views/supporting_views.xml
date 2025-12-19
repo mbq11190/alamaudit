@@ -63,4 +63,33 @@
             </form>
         </field>
     </record>
+
+    <!-- Actions for Industry and Regulator -->
+    <record id="action_qaco_industry" model="ir.actions.act_window">
+        <field name="name">Industries</field>
+        <field name="res_model">qaco.industry</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define Industries
+            </p>
+            <p>
+                Configure industry categories for audit planning.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_qaco_regulator" model="ir.actions.act_window">
+        <field name="name">Regulators</field>
+        <field name="res_model">qaco.regulator</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define Regulators
+            </p>
+            <p>
+                Configure regulatory bodies for audit planning.
+            </p>
+        </field>
+    </record>
 </odoo>

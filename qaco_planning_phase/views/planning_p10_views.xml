@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p10.related.parties.form</field>
         <field name="model">qaco.planning.p10.related.parties</field>
         <field name="arch" type="xml">
-            <form string="P-10: Related Party Transactions">
+            <form string="P-10: Related Parties &amp; Group Considerations">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 550 | Related Party Transactions</h3>
+                        <h3 class="text-muted">ISA 550, ISA 600 | Related Parties &amp; Group Considerations</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -220,15 +220,15 @@
 
     <!-- P-10 Action -->
     <record id="action_planning_p10_related_parties" model="ir.actions.act_window">
-        <field name="name">P-10: Related Parties</field>
+        <field name="name">P-10: Related Parties &amp; Group Considerations</field>
         <field name="res_model">qaco.planning.p10.related.parties</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-10 Related Parties Assessment
+                Create P-10 Related Parties &amp; Group Considerations
             </p>
             <p>
-                Document related party transactions per ISA 550.
+                Document related party transactions and group considerations per ISA 550 &amp; ISA 600.
             </p>
         </field>
     </record>

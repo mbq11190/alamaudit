@@ -172,79 +172,79 @@ class PlanningPhaseMain(models.Model):
     # Links to P-tabs (One2One relationship via unique constraint on audit_id)
     p1_engagement_id = fields.Many2one(
         'qaco.planning.p1.engagement',
-        string='P-1: Engagement Setup',
+        string='P-1: Engagement Overview & Planning Control',
         readonly=True,
         copy=False
     )
     p2_entity_id = fields.Many2one(
         'qaco.planning.p2.entity',
-        string='P-2: Entity Understanding',
+        string='P-2: Understanding the Entity & Environment',
         readonly=True,
         copy=False
     )
     p3_controls_id = fields.Many2one(
         'qaco.planning.p3.controls',
-        string='P-3: Internal Controls',
+        string='P-3: Internal Control & IT Environment',
         readonly=True,
         copy=False
     )
     p4_analytics_id = fields.Many2one(
         'qaco.planning.p4.analytics',
-        string='P-4: Analytical Procedures',
+        string='P-4: Risk Assessment (FS Level)',
         readonly=True,
         copy=False
     )
     p5_materiality_id = fields.Many2one(
         'qaco.planning.p5.materiality',
-        string='P-5: Materiality',
+        string='P-5: Risk Assessment (Assertion Level)',
         readonly=True,
         copy=False
     )
     p6_risk_id = fields.Many2one(
         'qaco.planning.p6.risk',
-        string='P-6: Risk Assessment',
+        string='P-6: Materiality & Performance Materiality',
         readonly=True,
         copy=False
     )
     p7_fraud_id = fields.Many2one(
         'qaco.planning.p7.fraud',
-        string='P-7: Fraud Risk',
+        string='P-7: Fraud Risk Assessment',
         readonly=True,
         copy=False
     )
     p8_going_concern_id = fields.Many2one(
         'qaco.planning.p8.going.concern',
-        string='P-8: Going Concern',
+        string='P-8: Preliminary Analytical Procedures',
         readonly=True,
         copy=False
     )
     p9_laws_id = fields.Many2one(
         'qaco.planning.p9.laws',
-        string='P-9: Laws & Regulations',
+        string='P-9: Going Concern Assessment',
         readonly=True,
         copy=False
     )
     p10_related_parties_id = fields.Many2one(
         'qaco.planning.p10.related.parties',
-        string='P-10: Related Parties',
+        string='P-10: Related Parties & Group Considerations',
         readonly=True,
         copy=False
     )
     p11_group_audit_id = fields.Many2one(
         'qaco.planning.p11.group.audit',
-        string='P-11: Group Audit',
+        string='P-11: Audit Strategy & Audit Plan',
         readonly=True,
         copy=False
     )
     p12_strategy_id = fields.Many2one(
         'qaco.planning.p12.strategy',
-        string='P-12: Audit Strategy',
+        string='P-12: Audit Team, Budget & Timeline',
         readonly=True,
         copy=False
     )
     p13_approval_id = fields.Many2one(
         'qaco.planning.p13.approval',
-        string='P-13: Planning Review',
+        string='P-13: APM & Approval',
         readonly=True,
         copy=False
     )

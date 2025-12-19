@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class PlanningP8GoingConcern(models.Model):
     """P-8: Going Concern - Preliminary Assessment (ISA 570)"""
     _name = 'qaco.planning.p8.going.concern'
-    _description = 'P-8: Going Concern Assessment'
+    _description = 'P-8: Preliminary Analytical Procedures'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 

@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p4.analytics.form</field>
         <field name="model">qaco.planning.p4.analytics</field>
         <field name="arch" type="xml">
-            <form string="P-4: Preliminary Analytical Review">
+            <form string="P-4: Risk Identification &amp; Assessment (FS Level)">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 520 | Preliminary Analytical Review</h3>
+                        <h3 class="text-muted">ISA 315 | Risk Identification &amp; Assessment (Financial Statement Level)</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -239,15 +239,15 @@
 
     <!-- P-4 Action -->
     <record id="action_planning_p4_analytics" model="ir.actions.act_window">
-        <field name="name">P-4: Analytical Review</field>
+        <field name="name">P-4: Risk Identification &amp; Assessment (FS Level)</field>
         <field name="res_model">qaco.planning.p4.analytics</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-4 Preliminary Analytical Review
+                Create P-4 Risk Identification &amp; Assessment (Financial Statement Level)
             </p>
             <p>
-                Document analytical procedures performed per ISA 520.
+                Document risk identification and assessment at financial statement level per ISA 315.
             </p>
         </field>
     </record>

@@ -207,12 +207,12 @@
 
     <!-- P-2 Action -->
     <record id="action_planning_p2_entity" model="ir.actions.act_window">
-        <field name="name">P-2: Entity Understanding</field>
+        <field name="name">P-2: Understanding the Entity &amp; Its Environment</field>
         <field name="res_model">qaco.planning.p2.entity</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-2 Entity Understanding record
+                Create P-2 Understanding the Entity &amp; Its Environment
             </p>
             <p>
                 Document understanding of the entity and its environment per ISA 315.

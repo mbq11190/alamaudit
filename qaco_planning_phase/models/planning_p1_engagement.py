@@ -12,7 +12,7 @@ from odoo.exceptions import UserError, ValidationError
 class PlanningP1Engagement(models.Model):
     """P-1: Engagement Setup & Team Assignment (ISA 210, 220, ISQM-1)"""
     _name = 'qaco.planning.p1.engagement'
-    _description = 'P-1: Engagement Setup & Team Assignment'
+    _description = 'P-1: Engagement Overview & Planning Control'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'qaco.planning.tab.mixin']
     _order = 'create_date desc'
 

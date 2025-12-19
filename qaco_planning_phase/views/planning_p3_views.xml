@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p3.controls.form</field>
         <field name="model">qaco.planning.p3.controls</field>
         <field name="arch" type="xml">
-            <form string="P-3: Internal Control Understanding">
+            <form string="P-3: Internal Control &amp; IT Environment">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -261,12 +261,12 @@
 
     <!-- P-3 Action -->
     <record id="action_planning_p3_controls" model="ir.actions.act_window">
-        <field name="name">P-3: Internal Controls</field>
+        <field name="name">P-3: Understanding Internal Control &amp; IT Environment</field>
         <field name="res_model">qaco.planning.p3.controls</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-3 Internal Control Understanding record
+                Create P-3 Understanding Internal Control &amp; IT Environment
             </p>
             <p>
                 Document internal control design and implementation per ISA 315.

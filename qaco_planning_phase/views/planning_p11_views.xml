@@ -10,7 +10,7 @@
         <field name="name">qaco.planning.p11.group.audit.form</field>
         <field name="model">qaco.planning.p11.group.audit</field>
         <field name="arch" type="xml">
-            <form string="P-11: Group Audit Considerations">
+            <form string="P-11: Audit Strategy &amp; Audit Plan">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 600 | Group Audit Considerations</h3>
+                        <h3 class="text-muted">ISA 300 | Audit Strategy &amp; Audit Plan</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
@@ -270,15 +270,15 @@
 
     <!-- P-11 Action -->
     <record id="action_planning_p11_group_audit" model="ir.actions.act_window">
-        <field name="name">P-11: Group Audit</field>
+        <field name="name">P-11: Audit Strategy &amp; Audit Plan</field>
         <field name="res_model">qaco.planning.p11.group.audit</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-11 Group Audit Consideration
+                Create P-11 Audit Strategy &amp; Audit Plan
             </p>
             <p>
-                Document group audit considerations per ISA 600.
+                Document overall audit strategy and audit plan per ISA 300.
             </p>
         </field>
     </record>
