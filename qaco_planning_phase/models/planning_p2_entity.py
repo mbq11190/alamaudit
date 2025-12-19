@@ -55,12 +55,14 @@ class PlanningP2Entity(models.Model):
         string='Audit Engagement',
         required=True,
         ondelete='cascade',
+        index=True,
         tracking=True
     )
     planning_main_id = fields.Many2one(
         'qaco.planning.main',
         string='Planning Phase',
-        ondelete='cascade'
+        ondelete='cascade',
+        index=True
     )
     client_id = fields.Many2one(
         'res.partner',

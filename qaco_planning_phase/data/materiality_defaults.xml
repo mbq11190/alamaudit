@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ═══════════════════════════════════════════════════════════════════════
+             Materiality Default Settings for Pakistan Statutory Audits
+             Per ISA 320 - Materiality in Planning and Performing an Audit
+             ═══════════════════════════════════════════════════════════════════════ -->
+        
+        <!-- Materiality Benchmark Configurations -->
+        <record id="materiality_benchmark_revenue" model="qaco.materiality.benchmark">
+            <field name="name">Revenue / Turnover</field>
+            <field name="code">revenue</field>
+            <field name="default_percentage">0.5</field>
+            <field name="min_percentage">0.25</field>
+            <field name="max_percentage">2.0</field>
+            <field name="description">Applicable for profit-oriented entities where revenue is a key performance indicator.</field>
+            <field name="entity_types">manufacturing,trading,services</field>
+            <field name="isa_guidance">ISA 320.A8 - Revenue is commonly used as benchmark for manufacturing and trading entities.</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="materiality_benchmark_total_assets" model="qaco.materiality.benchmark">
+            <field name="name">Total Assets</field>
+            <field name="code">total_assets</field>
+            <field name="default_percentage">1.0</field>
+            <field name="min_percentage">0.5</field>
+            <field name="max_percentage">2.0</field>
+            <field name="description">Applicable for asset-intensive entities or financial institutions.</field>
+            <field name="entity_types">financial,public</field>
+            <field name="isa_guidance">ISA 320.A8 - Total assets appropriate for entities where assets drive business value.</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="materiality_benchmark_profit" model="qaco.materiality.benchmark">
+            <field name="name">Profit Before Tax</field>
+            <field name="code">profit_before_tax</field>
+            <field name="default_percentage">5.0</field>
+            <field name="min_percentage">3.0</field>
+            <field name="max_percentage">10.0</field>
+            <field name="description">Applicable for stable profit-generating entities.</field>
+            <field name="entity_types">manufacturing,trading,services,financial</field>
+            <field name="isa_guidance">ISA 320.A8 - Profit before tax is frequently used for profit-oriented entities in general industry.</field>
+            <field name="sequence">30</field>
+        </record>
+        
+        <record id="materiality_benchmark_equity" model="qaco.materiality.benchmark">
+            <field name="name">Total Equity</field>
+            <field name="code">equity</field>
+            <field name="default_percentage">1.0</field>
+            <field name="min_percentage">0.5</field>
+            <field name="max_percentage">3.0</field>
+            <field name="description">Applicable for entities where equity or net asset position is significant.</field>
+            <field name="entity_types">nonprofit,public</field>
+            <field name="isa_guidance">ISA 320.A8 - Equity may be used for entities where debt-to-equity ratios are critical.</field>
+            <field name="sequence">40</field>
+        </record>
+        
+        <record id="materiality_benchmark_expenses" model="qaco.materiality.benchmark">
+            <field name="name">Total Expenses</field>
+            <field name="code">total_expenses</field>
+            <field name="default_percentage">1.0</field>
+            <field name="min_percentage">0.5</field>
+            <field name="max_percentage">2.0</field>
+            <field name="description">Applicable for not-for-profit entities or governmental entities.</field>
+            <field name="entity_types">nonprofit,government</field>
+            <field name="isa_guidance">ISA 320.A8 - Total expenses often used for not-for-profit entities.</field>
+            <field name="sequence">50</field>
+        </record>
+        
+        <record id="materiality_benchmark_gross_profit" model="qaco.materiality.benchmark">
+            <field name="name">Gross Profit</field>
+            <field name="code">gross_profit</field>
+            <field name="default_percentage">1.0</field>
+            <field name="min_percentage">0.5</field>
+            <field name="max_percentage">3.0</field>
+            <field name="description">Applicable for trading entities where margins are key.</field>
+            <field name="entity_types">trading,retail</field>
+            <field name="isa_guidance">ISA 320.A8 - Gross profit may be appropriate for entities where trading margins are significant.</field>
+            <field name="sequence">60</field>
+        </record>
+        
+        <!-- Materiality Settings -->
+        <record id="materiality_setting_pm" model="qaco.materiality.setting">
+            <field name="name">Performance Materiality (Standard)</field>
+            <field name="setting_type">performance_materiality</field>
+            <field name="default_percentage">75.0</field>
+            <field name="min_percentage">50.0</field>
+            <field name="max_percentage">75.0</field>
+            <field name="description">Standard performance materiality as percentage of overall materiality.</field>
+            <field name="isa_guidance">ISA 320.11 - Performance materiality set to reduce probability that aggregate of uncorrected and undetected misstatements exceeds materiality.</field>
+        </record>
+        
+        <record id="materiality_setting_trivial" model="qaco.materiality.setting">
+            <field name="name">Clearly Trivial Threshold</field>
+            <field name="setting_type">trivial_threshold</field>
+            <field name="default_percentage">5.0</field>
+            <field name="min_percentage">3.0</field>
+            <field name="max_percentage">5.0</field>
+            <field name="description">Threshold below which misstatements are clearly trivial.</field>
+            <field name="isa_guidance">ISA 450.A2 - Clearly trivial is not another expression for "not material". Amounts below this threshold need not be accumulated.</field>
+        </record>
+    </data>
+</odoo>

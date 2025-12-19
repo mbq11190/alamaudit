@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import supporting_models
 from . import planning_base
 from . import planning_p1_engagement
 from . import planning_p2_entity
