@@ -106,8 +106,8 @@ class ClientOnboarding(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Onboarding Title', compute='_compute_name', store=True)
-    audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
-    client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=True)
+    audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade', index=True)
+    client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=True, index=True)
 
     # Section 0: Gateway fields
     entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', required=True, tracking=True)
@@ -1753,7 +1753,7 @@ class OnboardingBranchLocation(models.Model):
         ('other', 'Other'),
     ]
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     address = fields.Char(string='Address', required=True)
     country_id = fields.Many2one(
         'res.country',
@@ -1803,7 +1803,7 @@ class OnboardingUBO(models.Model):
     _name = 'qaco.onboarding.ubo'
     _description = 'Ultimate Beneficial Owner'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='UBO Name', required=True)
     cnic_passport = fields.Char(string='CNIC / Passport Number', required=True)
     nationality = fields.Char(string='Nationality')
@@ -1821,7 +1821,7 @@ class OnboardingShareholder(models.Model):
     _name = 'qaco.onboarding.shareholder'
     _description = 'Shareholder Pattern'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='Shareholder Name', required=True)
     share_class = fields.Char(string='Class of Shares')
     percentage = fields.Float(string='Percentage', digits=(5, 2))
@@ -1832,7 +1832,7 @@ class OnboardingBoardMember(models.Model):
     _name = 'qaco.onboarding.board.member'
     _description = 'Board Member or Key Personnel'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='Name', required=True)
     cnic = fields.Char(string='CNIC')
     din = fields.Char(string='DIN')
@@ -1860,7 +1860,7 @@ class OnboardingIndependenceThreat(models.Model):
     _description = 'Independence Threat Assessment'
     _rec_name = 'threat_type'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     threat_type = fields.Selection(THREAT_TYPES, string='Threat Type', required=True)
     answer = fields.Selection([('no', 'No'), ('yes', 'Yes')], string='Threat Identified', required=True, default='no')
     threat_description = fields.Text(
@@ -1891,7 +1891,7 @@ class OnboardingDocument(models.Model):
     _name = 'qaco.onboarding.document'
     _description = 'Document Vault Entry'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='Document Name', required=True)
     doc_type = fields.Selection(
         DOCUMENT_TYPE_SELECTION,
@@ -1933,7 +1933,7 @@ class OnboardingChecklistLine(models.Model):
     _name = 'qaco.onboarding.checklist.line'
     _description = 'Checklist Answer'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     template_id = fields.Many2one('qaco.onboarding.checklist.template', string='Template Reference')
     question = fields.Char(string='Question', required=True)
     category = fields.Char(string='Category')
@@ -1952,7 +1952,7 @@ class OnboardingIndependenceDeclaration(models.Model):
     _name = 'qaco.onboarding.independence.declaration'
     _description = 'Individual Independence Declaration'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     user_id = fields.Many2one('res.users', string='Team Member', required=True)
     state = fields.Selection([('pending', 'Pending'), ('confirmed', 'Confirmed')], string='Declaration Status', default='pending')
     confirmation_date = fields.Datetime(string='Confirmed On')
@@ -1970,7 +1970,7 @@ class OnboardingPreconditionLine(models.Model):
     _name = 'qaco.onboarding.precondition.line'
     _description = 'ISA 210 Precondition Confirmation'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade')
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     template_id = fields.Many2one('qaco.onboarding.precondition.template', string='Template Reference')
     description = fields.Char(string='Precondition', required=True)
     confirmed = fields.Boolean(string='Confirmed', default=False)
@@ -1989,7 +1989,7 @@ class OnboardingAuditTrail(models.Model):
     _description = 'Client Onboarding Audit Trail (Immutable)'
     _order = 'create_date desc'
 
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', readonly=True)
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', readonly=True, index=True)
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user.id, readonly=True)
     action = fields.Char(string='Action', required=True, readonly=True)
     notes = fields.Text(string='Notes', readonly=True)

@@ -36,6 +36,7 @@ class OnboardingNotebook(models.Model):
         string='Client Onboarding',
         ondelete='cascade',
         tracking=True,
+        index=True,
     )
     audit_id = fields.Many2one(
         'qaco.audit',
@@ -43,6 +44,7 @@ class OnboardingNotebook(models.Model):
         related='onboarding_id.audit_id',
         store=True,
         readonly=True,
+        index=True,
     )
     note_ids = fields.One2many(
         'qaco.onboarding.note',
