@@ -67,6 +67,7 @@
                             <group string="Related Party Transactions">
                                 <field name="rpt_line_ids" nolabel="1">
                                     <tree editable="bottom">
+                                        <field name="p10_related_parties_id" column_invisible="1"/>
                                         <field name="related_party_id"/>
                                         <field name="transaction_type"/>
                                         <field name="transaction_description"/>
@@ -254,6 +255,7 @@
         <field name="model">qaco.rpt.transaction.line</field>
         <field name="arch" type="xml">
             <tree string="RPT Transactions" editable="bottom">
+                <field name="p10_related_parties_id" column_invisible="1"/>
                 <field name="related_party_id"/>
                 <field name="transaction_type"/>
                 <field name="transaction_description"/>
