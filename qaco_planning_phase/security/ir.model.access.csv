@@ -1,9 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-# Legacy Planning Phase Model (to be deprecated)
 access_qaco_planning_phase_audit_staff,qaco.planning.phase.audit.staff,model_qaco_planning_phase,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_phase_audit_manager,qaco.planning.phase.audit.manager,model_qaco_planning_phase,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_phase_audit_partner,qaco.planning.phase.audit.partner,model_qaco_planning_phase,qaco_audit.group_audit_partner,1,1,1,1
-# P-1: Engagement Setup (ISA 210/220/ISQM-1)
 access_qaco_planning_p1_engagement_trainee,qaco.planning.p1.engagement.trainee,model_qaco_planning_p1_engagement,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p1_engagement_manager,qaco.planning.p1.engagement.manager,model_qaco_planning_p1_engagement,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p1_engagement_partner,qaco.planning.p1.engagement.partner,model_qaco_planning_p1_engagement,qaco_audit.group_audit_partner,1,1,1,1
@@ -11,19 +9,15 @@ access_qaco_team_assignment_line_trainee,qaco.team.assignment.line.trainee,model
 access_qaco_team_assignment_line_manager,qaco.team.assignment.line.manager,model_qaco_team_assignment_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_independence_confirmation_line_trainee,qaco.independence.confirmation.line.trainee,model_qaco_independence_confirmation_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_independence_confirmation_line_manager,qaco.independence.confirmation.line.manager,model_qaco_independence_confirmation_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-2: Entity Understanding (ISA 315)
 access_qaco_planning_p2_entity_trainee,qaco.planning.p2.entity.trainee,model_qaco_planning_p2_entity,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p2_entity_manager,qaco.planning.p2.entity.manager,model_qaco_planning_p2_entity,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p2_entity_partner,qaco.planning.p2.entity.partner,model_qaco_planning_p2_entity,qaco_audit.group_audit_partner,1,1,1,1
-# P-3: Internal Control Understanding (ISA 315)
 access_qaco_planning_p3_controls_trainee,qaco.planning.p3.controls.trainee,model_qaco_planning_p3_controls,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p3_controls_manager,qaco.planning.p3.controls.manager,model_qaco_planning_p3_controls,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p3_controls_partner,qaco.planning.p3.controls.partner,model_qaco_planning_p3_controls,qaco_audit.group_audit_partner,1,1,1,1
-# P-4: Preliminary Analytical Review (ISA 520)
 access_qaco_planning_p4_analytics_trainee,qaco.planning.p4.analytics.trainee,model_qaco_planning_p4_analytics,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p4_analytics_manager,qaco.planning.p4.analytics.manager,model_qaco_planning_p4_analytics,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p4_analytics_partner,qaco.planning.p4.analytics.partner,model_qaco_planning_p4_analytics,qaco_audit.group_audit_partner,1,1,1,1
-# P-5: Materiality (ISA 320)
 access_qaco_planning_p5_materiality_trainee,qaco.planning.p5.materiality.trainee,model_qaco_planning_p5_materiality,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p5_materiality_manager,qaco.planning.p5.materiality.manager,model_qaco_planning_p5_materiality,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p5_materiality_partner,qaco.planning.p5.materiality.partner,model_qaco_planning_p5_materiality,qaco_audit.group_audit_partner,1,1,1,1
@@ -31,21 +25,17 @@ access_qaco_specific_materiality_line_trainee,qaco.specific.materiality.line.tra
 access_qaco_specific_materiality_line_manager,qaco.specific.materiality.line.manager,model_qaco_specific_materiality_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_materiality_revision_line_trainee,qaco.materiality.revision.line.trainee,model_qaco_materiality_revision_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_materiality_revision_line_manager,qaco.materiality.revision.line.manager,model_qaco_materiality_revision_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-6: Risk of Material Misstatement (ISA 315)
 access_qaco_planning_p6_risk_trainee,qaco.planning.p6.risk.trainee,model_qaco_planning_p6_risk,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p6_risk_manager,qaco.planning.p6.risk.manager,model_qaco_planning_p6_risk,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p6_risk_partner,qaco.planning.p6.risk.partner,model_qaco_planning_p6_risk,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_risk_register_line_audit_staff,qaco.risk.register.line.audit.staff,model_qaco_risk_register_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_risk_register_line_audit_manager,qaco.risk.register.line.audit.manager,model_qaco_risk_register_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-7: Fraud Considerations (ISA 240)
 access_qaco_planning_p7_fraud_trainee,qaco.planning.p7.fraud.trainee,model_qaco_planning_p7_fraud,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p7_fraud_manager,qaco.planning.p7.fraud.manager,model_qaco_planning_p7_fraud,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p7_fraud_partner,qaco.planning.p7.fraud.partner,model_qaco_planning_p7_fraud,qaco_audit.group_audit_partner,1,1,1,1
-# P-8: Going Concern (ISA 570)
 access_qaco_planning_p8_going_concern_trainee,qaco.planning.p8.going.concern.trainee,model_qaco_planning_p8_going_concern,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p8_going_concern_manager,qaco.planning.p8.going.concern.manager,model_qaco_planning_p8_going_concern,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p8_going_concern_partner,qaco.planning.p8.going.concern.partner,model_qaco_planning_p8_going_concern,qaco_audit.group_audit_partner,1,1,1,1
-# P-9: Laws & Regulations (ISA 250)
 access_qaco_planning_p9_laws_trainee,qaco.planning.p9.laws.trainee,model_qaco_planning_p9_laws,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p9_laws_manager,qaco.planning.p9.laws.manager,model_qaco_planning_p9_laws,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p9_laws_partner,qaco.planning.p9.laws.partner,model_qaco_planning_p9_laws,qaco_audit.group_audit_partner,1,1,1,1
@@ -53,7 +43,6 @@ access_qaco_law_line_trainee,qaco.law.line.trainee,model_qaco_law_line,qaco_audi
 access_qaco_law_line_manager,qaco.law.line.manager,model_qaco_law_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_non_compliance_line_trainee,qaco.non.compliance.line.trainee,model_qaco_non_compliance_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_non_compliance_line_manager,qaco.non.compliance.line.manager,model_qaco_non_compliance_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-10: Related Parties (ISA 550)
 access_qaco_planning_p10_related_parties_trainee,qaco.planning.p10.related.parties.trainee,model_qaco_planning_p10_related_parties,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p10_related_parties_manager,qaco.planning.p10.related.parties.manager,model_qaco_planning_p10_related_parties,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p10_related_parties_partner,qaco.planning.p10.related.parties.partner,model_qaco_planning_p10_related_parties,qaco_audit.group_audit_partner,1,1,1,1
@@ -61,7 +50,6 @@ access_qaco_related_party_line_trainee,qaco.related.party.line.trainee,model_qac
 access_qaco_related_party_line_manager,qaco.related.party.line.manager,model_qaco_related_party_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_rpt_transaction_line_trainee,qaco.rpt.transaction.line.trainee,model_qaco_rpt_transaction_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_rpt_transaction_line_manager,qaco.rpt.transaction.line.manager,model_qaco_rpt_transaction_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-11: Group Audit (ISA 600)
 access_qaco_planning_p11_group_audit_trainee,qaco.planning.p11.group.audit.trainee,model_qaco_planning_p11_group_audit,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p11_group_audit_manager,qaco.planning.p11.group.audit.manager,model_qaco_planning_p11_group_audit,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p11_group_audit_partner,qaco.planning.p11.group.audit.partner,model_qaco_planning_p11_group_audit,qaco_audit.group_audit_partner,1,1,1,1
@@ -69,7 +57,6 @@ access_qaco_component_line_trainee,qaco.component.line.trainee,model_qaco_compon
 access_qaco_component_line_manager,qaco.component.line.manager,model_qaco_component_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_component_auditor_line_trainee,qaco.component.auditor.line.trainee,model_qaco_component_auditor_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_component_auditor_line_manager,qaco.component.auditor.line.manager,model_qaco_component_auditor_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-12: Audit Strategy & Plan (ISA 300)
 access_qaco_planning_p12_strategy_trainee,qaco.planning.p12.strategy.trainee,model_qaco_planning_p12_strategy,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p12_strategy_manager,qaco.planning.p12.strategy.manager,model_qaco_planning_p12_strategy,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p12_strategy_partner,qaco.planning.p12.strategy.partner,model_qaco_planning_p12_strategy,qaco_audit.group_audit_partner,1,1,1,1
@@ -77,7 +64,6 @@ access_qaco_key_area_line_trainee,qaco.key.area.line.trainee,model_qaco_key_area
 access_qaco_key_area_line_manager,qaco.key.area.line.manager,model_qaco_key_area_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_expert_line_trainee,qaco.expert.line.trainee,model_qaco_expert_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_expert_line_manager,qaco.expert.line.manager,model_qaco_expert_line,qaco_audit.group_audit_manager,1,1,1,1
-# P-13: Approval & Planning Lock (ISA 220/ISQM-1)
 access_qaco_planning_p13_approval_trainee,qaco.planning.p13.approval.trainee,model_qaco_planning_p13_approval,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p13_approval_manager,qaco.planning.p13.approval.manager,model_qaco_planning_p13_approval,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_p13_approval_partner,qaco.planning.p13.approval.partner,model_qaco_planning_p13_approval,qaco_audit.group_audit_partner,1,1,1,1
@@ -86,7 +72,6 @@ access_qaco_planning_checklist_line_manager,qaco.planning.checklist.line.manager
 access_qaco_planning_change_log_trainee,qaco.planning.change.log.trainee,model_qaco_planning_change_log,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_planning_change_log_manager,qaco.planning.change.log.manager,model_qaco_planning_change_log,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_change_log_partner,qaco.planning.change.log.partner,model_qaco_planning_change_log,qaco_audit.group_audit_partner,1,1,1,1
-# Support Models
 access_qaco_industry_readonly,qaco.industry.readonly,model_qaco_industry,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_industry_manager,qaco.industry.manager,model_qaco_industry,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_regulator_readonly,qaco.regulator.readonly,model_qaco_regulator,qaco_audit.group_audit_trainee,1,0,0,0
