@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ═══════════════════════════════════════════════════════════════════════
+             Assertion Tags for ISA-Compliant Audit Planning
+             Per ISA 315 - Financial Statement Assertions
+             ═══════════════════════════════════════════════════════════════════════ -->
+        
+        <!-- Classes of Transactions & Events Assertions -->
+        <record id="assertion_occurrence" model="audit.assertion.tag">
+            <field name="name">Occurrence</field>
+            <field name="code">O</field>
+            <field name="category">transactions</field>
+            <field name="description">Transactions and events that have been recorded have occurred and pertain to the entity.</field>
+            <field name="isa_reference">ISA 315.A129(a)</field>
+        </record>
+        
+        <record id="assertion_completeness_trans" model="audit.assertion.tag">
+            <field name="name">Completeness (Transactions)</field>
+            <field name="code">C</field>
+            <field name="category">transactions</field>
+            <field name="description">All transactions and events that should have been recorded have been recorded.</field>
+            <field name="isa_reference">ISA 315.A129(a)</field>
+        </record>
+        
+        <record id="assertion_accuracy" model="audit.assertion.tag">
+            <field name="name">Accuracy</field>
+            <field name="code">A</field>
+            <field name="category">transactions</field>
+            <field name="description">Amounts and other data relating to recorded transactions and events have been recorded appropriately.</field>
+            <field name="isa_reference">ISA 315.A129(a)</field>
+        </record>
+        
+        <record id="assertion_cutoff" model="audit.assertion.tag">
+            <field name="name">Cut-off</field>
+            <field name="code">CO</field>
+            <field name="category">transactions</field>
+            <field name="description">Transactions and events have been recorded in the correct accounting period.</field>
+            <field name="isa_reference">ISA 315.A129(a)</field>
+        </record>
+        
+        <record id="assertion_classification_trans" model="audit.assertion.tag">
+            <field name="name">Classification (Transactions)</field>
+            <field name="code">CL</field>
+            <field name="category">transactions</field>
+            <field name="description">Transactions and events have been recorded in the proper accounts.</field>
+            <field name="isa_reference">ISA 315.A129(a)</field>
+        </record>
+        
+        <!-- Account Balances Assertions -->
+        <record id="assertion_existence" model="audit.assertion.tag">
+            <field name="name">Existence</field>
+            <field name="code">E</field>
+            <field name="category">balances</field>
+            <field name="description">Assets, liabilities, and equity interests exist.</field>
+            <field name="isa_reference">ISA 315.A129(b)</field>
+        </record>
+        
+        <record id="assertion_rights_obligations" model="audit.assertion.tag">
+            <field name="name">Rights and Obligations</field>
+            <field name="code">RO</field>
+            <field name="category">balances</field>
+            <field name="description">The entity holds or controls the rights to assets, and liabilities are the obligations of the entity.</field>
+            <field name="isa_reference">ISA 315.A129(b)</field>
+        </record>
+        
+        <record id="assertion_completeness_bal" model="audit.assertion.tag">
+            <field name="name">Completeness (Balances)</field>
+            <field name="code">CB</field>
+            <field name="category">balances</field>
+            <field name="description">All assets, liabilities, and equity interests that should have been recorded have been recorded.</field>
+            <field name="isa_reference">ISA 315.A129(b)</field>
+        </record>
+        
+        <record id="assertion_valuation_allocation" model="audit.assertion.tag">
+            <field name="name">Valuation and Allocation</field>
+            <field name="code">VA</field>
+            <field name="category">balances</field>
+            <field name="description">Assets, liabilities, and equity interests are included at appropriate amounts and any resulting valuation or allocation adjustments are appropriately recorded.</field>
+            <field name="isa_reference">ISA 315.A129(b)</field>
+        </record>
+        
+        <!-- Presentation and Disclosure Assertions -->
+        <record id="assertion_occurrence_rights" model="audit.assertion.tag">
+            <field name="name">Occurrence and Rights/Obligations</field>
+            <field name="code">OR</field>
+            <field name="category">disclosure</field>
+            <field name="description">Disclosed events, transactions, and other matters have occurred and pertain to the entity.</field>
+            <field name="isa_reference">ISA 315.A129(c)</field>
+        </record>
+        
+        <record id="assertion_completeness_disc" model="audit.assertion.tag">
+            <field name="name">Completeness (Disclosures)</field>
+            <field name="code">CD</field>
+            <field name="category">disclosure</field>
+            <field name="description">All disclosures that should have been included in the financial statements have been included.</field>
+            <field name="isa_reference">ISA 315.A129(c)</field>
+        </record>
+        
+        <record id="assertion_classification_understandability" model="audit.assertion.tag">
+            <field name="name">Classification and Understandability</field>
+            <field name="code">CU</field>
+            <field name="category">disclosure</field>
+            <field name="description">Financial information is appropriately presented and described, and disclosures are clearly expressed.</field>
+            <field name="isa_reference">ISA 315.A129(c)</field>
+        </record>
+        
+        <record id="assertion_accuracy_valuation" model="audit.assertion.tag">
+            <field name="name">Accuracy and Valuation</field>
+            <field name="code">AV</field>
+            <field name="category">disclosure</field>
+            <field name="description">Financial and other information are disclosed fairly and at appropriate amounts.</field>
+            <field name="isa_reference">ISA 315.A129(c)</field>
+        </record>
+    </data>
+</odoo>
