@@ -589,7 +589,8 @@ class ComponentAuditorLine(models.Model):
         'qaco.planning.p11.group.audit',
         string='P-11 Group Audit',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        index=True
     )
     auditor_name = fields.Char(
         string='Auditor Name',
@@ -597,6 +598,10 @@ class ComponentAuditorLine(models.Model):
     )
     firm_name = fields.Char(
         string='Firm Name'
+    )
+    jurisdiction = fields.Char(
+        string='Jurisdiction',
+        help='Country/jurisdiction of the component auditor'
     )
     network_member = fields.Boolean(
         string='Network Member'
@@ -608,6 +613,16 @@ class ComponentAuditorLine(models.Model):
     ], string='Competence Assessment')
     independence_confirmed = fields.Boolean(
         string='Independence Confirmed'
+    )
+    ethical_requirements = fields.Selection([
+        ('compliant', 'Compliant'),
+        ('non_compliant', 'Non-Compliant'),
+        ('not_assessed', 'Not Yet Assessed'),
+    ], string='Ethical Requirements', default='not_assessed',
+       help='Compliance with ethical requirements per ISA 600')
+    regulatory_environment = fields.Char(
+        string='Regulatory Environment',
+        help='Regulatory framework under which the component auditor operates'
     )
     access_to_work = fields.Boolean(
         string='Access to Work Granted'
