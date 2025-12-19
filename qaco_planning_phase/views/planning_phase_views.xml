@@ -40,13 +40,13 @@
 					</div>
 					
 					<notebook class="o_planning_tabs">
-						<!-- 1.0 - Basic Info & Status -->
-						<page name="section_10" string="1.0 - Basic Info" class="o_planning_tab_page">
-							<div id="section-1-0" class="o_planning_card">
+						<!-- P-1: Engagement Overview & Planning Control -->
+						<page name="section_p1" string="P-1: Engagement Overview" class="o_planning_tab_page">
+							<div id="section-p-1" class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">1.0</span>
-									<span class="o_planning_card_title">Basic Audit Information</span>
-									<span class="o_planning_card_ref">ISA 300</span>
+									<span class="o_planning_card_number">P-1</span>
+									<span class="o_planning_card_title">Engagement Overview &amp; Planning Control</span>
+									<span class="o_planning_card_ref">ISA 210/220/ISQM-1</span>
 								</div>
 								<group class="o_planning_grid">
 									<group string="Engagement Details">
@@ -66,10 +66,10 @@
 								</group>
 							</div>
 							
-							<!-- 1.1 Planning Phase Status Dashboard -->
+							<!-- P-1.1 Planning Phase Status Dashboard -->
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">1.1</span>
+									<span class="o_planning_card_number">P-1.1</span>
 									<span class="o_planning_card_title">Planning Phase Status Dashboard</span>
 									<span class="o_planning_card_ref">ISA 300 / ISQM-1</span>
 								</div>
@@ -91,12 +91,12 @@
 							</div>
 						</page>
 						
-						<!-- 2.0 - Entity Understanding -->
-						<page name="section_20" string="2.0 - Entity &amp; Environment" class="o_planning_tab_page">
+						<!-- P-2: Understanding the Entity & Its Environment -->
+						<page name="section_p2" string="P-2: Entity &amp; Environment" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.0</span>
-									<span class="o_planning_card_title">Entity &amp; Environment</span>
+									<span class="o_planning_card_number">P-2</span>
+									<span class="o_planning_card_title">Understanding the Entity &amp; Its Environment</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
 								<group class="o_planning_grid">
@@ -142,11 +142,11 @@
 							</div>
 						</page>
 						
-						<!-- 2.4 - Regulatory & Compliance -->
-						<page name="section_24" string="2.4 - Regulatory" class="o_planning_tab_page">
+						<!-- P-2.4 - Regulatory & Compliance -->
+						<page name="section_p2_4" string="P-2.4 - Regulatory" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">2.4</span>
+									<span class="o_planning_card_number">P-2.4</span>
 									<span class="o_planning_card_title">Regulatory Framework - Pakistan</span>
 									<span class="o_planning_card_ref">ISA 315 / Pakistan Laws</span>
 								</div>
@@ -186,12 +186,12 @@
 							</div>
 						</page>
 						
-						<!-- 3.0 - Analytics -->
-						<page name="section_30" string="3.0 - Analytics" class="o_planning_tab_page">
+						<!-- P-8: Preliminary Analytical Procedures -->
+						<page name="section_p8" string="P-8: Analytics" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">3.0</span>
-									<span class="o_planning_card_title">Analytical Procedures</span>
+									<span class="o_planning_card_number">P-8</span>
+									<span class="o_planning_card_title">Preliminary Analytical Procedures</span>
 									<span class="o_planning_card_ref">ISA 520</span>
 								</div>
 								<group class="o_planning_grid">
@@ -249,12 +249,12 @@
 							</div>
 						</page>
 						
-						<!-- 4.0 - Materiality -->
-						<page name="section_40" string="4.0 - Materiality" class="o_planning_tab_page">
+						<!-- P-6: Materiality & Performance Materiality -->
+						<page name="section_p6" string="P-6: Materiality" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">4.0</span>
-									<span class="o_planning_card_title">Materiality</span>
+									<span class="o_planning_card_number">P-6</span>
+									<span class="o_planning_card_title">Materiality &amp; Performance Materiality</span>
 									<span class="o_planning_card_ref">ISA 320</span>
 								</div>
 								<group class="o_planning_grid">
@@ -292,12 +292,12 @@
 							</div>
 						</page>
 						
-						<!-- 5.0 - Internal Controls -->
-						<page name="section_50" string="5.0 - Controls" class="o_planning_tab_page">
+						<!-- P-3: Understanding Internal Control & IT Environment -->
+						<page name="section_p3" string="P-3: Internal Controls" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">5.0</span>
-									<span class="o_planning_card_title">Internal Controls</span>
+									<span class="o_planning_card_number">P-3</span>
+									<span class="o_planning_card_title">Understanding Internal Control &amp; IT Environment</span>
 									<span class="o_planning_card_ref">ISA 315</span>
 								</div>
 								<group class="o_planning_grid">
@@ -340,11 +340,11 @@
 							</div>
 						</page>
 						
-						<!-- 6.0 - Risk & Strategy -->
-						<page name="section_60" string="6.0 - Risk &amp; Strategy" class="o_planning_tab_page">
+						<!-- P-4/P-5 - Risk Assessment & Response -->
+						<page name="section_p4_p5" string="P-4/P-5 - Risk Assessment" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">6.0</span>
+									<span class="o_planning_card_number">P-4</span>
 									<span class="o_planning_card_title">Risk Register</span>
 									<span class="o_planning_card_ref">ISA 315 / ISA 330</span>
 								</div>
@@ -398,7 +398,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">6.1</span>
+									<span class="o_planning_card_number">P-5.1</span>
 									<span class="o_planning_card_title">Overall Audit Strategy</span>
 									<span class="o_planning_card_ref">ISA 300 / ISA 330</span>
 								</div>
@@ -409,7 +409,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">6.2</span>
+									<span class="o_planning_card_number">P-5.2</span>
 									<span class="o_planning_card_title">Specialized Resources</span>
 									<span class="o_planning_card_ref">ISA 620 / ISA 600</span>
 								</div>
@@ -425,7 +425,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">6.3</span>
+									<span class="o_planning_card_number">P-5.3</span>
 									<span class="o_planning_card_title">Staffing &amp; Timeline</span>
 									<span class="o_planning_card_ref">ISA 300</span>
 								</div>
@@ -438,7 +438,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">6.4</span>
+									<span class="o_planning_card_number">P-5.4</span>
 									<span class="o_planning_card_title">Risk &amp; Strategy Documentation</span>
 									<span class="o_planning_card_ref">ISA 300</span>
 								</div>
@@ -449,11 +449,11 @@
 							</div>
 						</page>
 						
-						<!-- 7.0 - Completion & Sign-off -->
-						<page name="section_70" string="7.0 - Completion" class="o_planning_tab_page">
+						<!-- P-13 - APM & Approval -->
+						<page name="section_p13" string="P-13 - APM &amp; Approval" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">7.0</span>
+									<span class="o_planning_card_number">P-13.0</span>
 									<span class="o_planning_card_title">Planning Memorandum</span>
 									<span class="o_planning_card_ref">ISA 300</span>
 								</div>
@@ -464,7 +464,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">7.1</span>
+									<span class="o_planning_card_number">P-13.1</span>
 									<span class="o_planning_card_title">Regulatory Compliance - Pakistan</span>
 									<span class="o_planning_card_ref">ICAP / SECP / AOB</span>
 								</div>
@@ -477,7 +477,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">7.2</span>
+									<span class="o_planning_card_number">P-13.2</span>
 									<span class="o_planning_card_title">Mandatory Attachments - Zero Deficiency</span>
 									<span class="o_planning_card_ref">ISA 230 / Pakistan Laws</span>
 								</div>
@@ -495,7 +495,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">7.3</span>
+									<span class="o_planning_card_number">P-13.3</span>
 									<span class="o_planning_card_title">Master Checklist - Zero Deficiency Target</span>
 									<span class="o_planning_card_ref">ISQM-1 / Pakistan Standards</span>
 								</div>
@@ -530,7 +530,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">7.4</span>
+									<span class="o_planning_card_number">P-13.4</span>
 									<span class="o_planning_card_title">Sign-offs &amp; Approvals</span>
 									<span class="o_planning_card_ref">ISQM-1</span>
 								</div>

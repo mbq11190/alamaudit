@@ -55,7 +55,7 @@
         ],
     },
     "installable": True,
-    "application": True,
+    "application": False,  # Not a standalone app - accessed via Audit Work smart button
     "auto_install": True,
     "price": 0,
     "currency": "PKR",

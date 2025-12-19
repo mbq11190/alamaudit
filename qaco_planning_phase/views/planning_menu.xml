@@ -3,15 +3,17 @@
     <!-- ============================================== -->
     <!-- Planning Phase Menu Structure                  -->
     <!-- P-1 to P-13 Navigation                        -->
+    <!-- Nested under Audit Work (not a separate app)  -->
     <!-- ============================================== -->
 
-    <!-- Root Menu for Planning Phase -->
+    <!-- Planning Phase Submenu under Audit Work -->
     <menuitem id="menu_planning_phase_root"
-              name="Audit Planning"
-              sequence="30"
+              name="Planning Phase"
+              parent="qaco_audit.menu_root"
+              sequence="10"
               groups="qaco_audit.group_audit_trainee"/>
 
-    <!-- Planning Tabs Submenu -->
+    <!-- Planning Tabs Submenu (P-1 to P-13) -->
     <menuitem id="menu_planning_tabs"
               name="Planning Tabs (P-1 to P-13)"
               parent="menu_planning_phase_root"
