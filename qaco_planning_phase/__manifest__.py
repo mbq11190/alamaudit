@@ -42,6 +42,8 @@
         "views/supporting_views.xml",
         "views/planning_phase_actions.xml",
         "views/audit_smart_button.xml",
+        # Dashboard
+        "views/planning_dashboard_views.xml",
         # Menu Structure
         "views/planning_menu.xml",
         # Data
