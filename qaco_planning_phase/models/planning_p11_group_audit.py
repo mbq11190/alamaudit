@@ -102,15 +102,13 @@ class PlanningP11GroupAudit(models.Model):
     @api.depends('audit_id')
     def _compute_can_open(self):
         """P-11 requires P-10 to be approved."""
+        if not self:
+            return
+        audit_ids = self.mapped('audit_id.id')
+        p10s = self.env['qaco.planning.p10.related.parties'].search([('audit_id', 'in', audit_ids)])
+        p10_dict = {p.audit_id.id: p.state == 'approved' for p in p10s}
         for rec in self:
-            if not rec.audit_id:
-                rec.can_open = False
-                continue
-            # Find P-10 for this audit
-            p10 = self.env['qaco.planning.p10.related.parties'].search([
-                ('audit_id', '=', rec.audit_id.id)
-            ], limit=1)
-            rec.can_open = p10.state == 'approved' if p10 else False
+            rec.can_open = p10_dict.get(rec.audit_id.id, False) if rec.audit_id else False
 
     @api.constrains('state')
     def _check_sequential_gating(self):
@@ -375,6 +373,68 @@ class PlanningP11GroupAudit(models.Model):
     group_audit_instructions = fields.Html(
         string='Group Audit Instructions',
         help='Instructions issued to component auditors (ISA 600.40-41)'
+    )
+    specific_requirements = fields.Html(
+        string='Specific Requirements',
+        help='Specific requirements for the group audit'
+    )
+    reporting_requirements = fields.Html(
+        string='Reporting Requirements',
+        help='Reporting requirements for component auditors'
+    )
+    communication_requirements = fields.Html(
+        string='Communication Requirements',
+        help='Communication requirements with component auditors'
+    )
+    tcwg_communication = fields.Html(
+        string='Communication with TCWG',
+        help='Communication with Those Charged With Governance'
+    )
+    component_communication = fields.Html(
+        string='Communication with Component Auditors',
+        help='Communication with component auditors'
+    )
+    group_management_communication = fields.Html(
+        string='Communication with Group Management',
+        help='Communication with group management'
+    )
+    component_work_review = fields.Html(
+        string='Review of Component Auditor Work',
+        help='Review of component auditor work'
+    )
+    component_findings = fields.Html(
+        string='Significant Findings from Components',
+        help='Significant findings from components'
+    )
+    evidence_sufficiency = fields.Html(
+        string='Sufficiency of Audit Evidence',
+        help='Sufficiency of audit evidence'
+    )
+    consolidation_procedures = fields.Html(
+        string='Consolidation Audit Procedures',
+        help='Consolidation audit procedures'
+    )
+    intercompany_eliminations = fields.Html(
+        string='Intercompany Eliminations',
+        help='Intercompany eliminations'
+    )
+    subsequent_events = fields.Html(
+        string='Subsequent Events',
+        help='Subsequent events'
+    )
+    group_audit_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        string='Group Audit Documentation',
+        help='Attachments for group audit documentation'
+    )
+    component_report_ids = fields.Many2many(
+        'ir.attachment',
+        string='Component Reports',
+        help='Component auditor reports'
+    )
+    group_audit_conclusion = fields.Html(
+        string='Group Audit Conclusion',
+        help='Conclusion of the group audit'
     )
     
     timelines_agreed = fields.Boolean(
@@ -814,7 +874,11 @@ class PlanningP11GroupAudit(models.Model):
         for vals in vals_list:
             if 'conclusion_narrative' not in vals:
                 vals['conclusion_narrative'] = self._default_conclusion_narrative()
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        for rec in records:
+            rec._check_preconditions()
+            rec._log_version('Created')
+        return records
 
     # ============================================================================
     # VALIDATION & CONSTRAINTS
@@ -886,13 +950,6 @@ class PlanningP11GroupAudit(models.Model):
             raise UserError(
                 _('P-11 Pre-Conditions Not Met:\n\n') + '\n'.join(['• ' + e for e in errors])
             )
-
-    @api.model
-    def create(self, vals):
-        rec = super(AuditPlanningP11GroupAudit, self).create(vals)
-        rec._check_preconditions()
-        rec._log_version('Created')
-        return rec
 
     def write(self, vals):
         result = super(AuditPlanningP11GroupAudit, self).write(vals)
