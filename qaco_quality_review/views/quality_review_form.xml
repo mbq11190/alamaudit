@@ -382,7 +382,7 @@
                                             type="object" 
                                             class="btn-primary"
                                             help="View detailed planning phase progress and P-tab status"/>
-                                    <button name="%(qaco_planning_phase.action_planning_dashboard)d" 
+                                    <button name="%(qaco_planning_phase.action_qaco_planning_phase)d" 
                                             string="View All Planning Records" 
                                             type="action" 
                                             class="btn-secondary"
