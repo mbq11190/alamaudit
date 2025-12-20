@@ -937,12 +937,14 @@ class PlanningP1Engagement(models.Model):
         TimeBudget = self.env['qaco.planning.p1.time.budget']
         for rec in self:
             if not rec.time_budget_line_ids:
+                lines = []
                 for phase, seq in phases:
-                    TimeBudget.create({
+                    lines.append({
                         'p1_id': rec.id,
                         'phase': phase,
                         'sequence': seq,
                     })
+                TimeBudget.create(lines)
 
     @api.model_create_multi
     def create(self, vals_list):
