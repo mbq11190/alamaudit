@@ -107,6 +107,7 @@
         <field name="model">qaco.planning.p3.key.control</field>
         <field name="arch" type="xml">
             <form string="Key Control">
+                <field name="p3_id" invisible="1"/>
                 <sheet>
                     <group>
                         <group string="Control Identification">
@@ -214,6 +215,7 @@
         <field name="arch" type="xml">
             <form string="Control Deficiency">
                 <sheet>
+                    <field name="p3_id" invisible="1"/>
                     <group>
                         <group string="Deficiency Details">
                             <field name="cycle_id"/>
