@@ -262,6 +262,12 @@ class PlanningP11GroupAudit(models.Model):
         store=True,
         help='Set if any component auditor lacks independence or competence'
     )
+    
+    # Auditor Assessment Summary
+    auditor_assessment = fields.Html(
+        string='Competence & Independence Assessment',
+        help='Overall assessment of component auditors competence and independence (ISA 600.19-26)'
+    )
 
     # ============================================================================
     # SECTION E: SCOPE OF WORK AT COMPONENT LEVEL
@@ -347,6 +353,10 @@ class PlanningP11GroupAudit(models.Model):
     component_materiality_threshold = fields.Monetary(
         string='Component Materiality Threshold',
         currency_field='currency_id'
+    )
+    component_materiality_approach = fields.Html(
+        string='Component Materiality Determination Approach',
+        help='Document the approach used to determine materiality for components (ISA 600.32)'
     )
     reporting_threshold_amount = fields.Monetary(
         string='Reporting Threshold',
