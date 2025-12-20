@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+# P-11 Main Model - audit.planning.p11.group_audit
+access_audit_planning_p11_group_audit_trainee,audit.planning.p11.group_audit.trainee,model_audit_planning_p11_group_audit,qaco_audit.group_audit_trainee,1,1,1,0
+access_audit_planning_p11_group_audit_manager,audit.planning.p11.group_audit.manager,model_audit_planning_p11_group_audit,qaco_audit.group_audit_manager,1,1,1,0
+access_audit_planning_p11_group_audit_partner,audit.planning.p11.group_audit.partner,model_audit_planning_p11_group_audit,qaco_audit.group_audit_partner,1,1,1,1
+
+# P-11 Component Model - audit.planning.p11.component
+access_audit_planning_p11_component_trainee,audit.planning.p11.component.trainee,model_audit_planning_p11_component,qaco_audit.group_audit_trainee,1,1,1,0
+access_audit_planning_p11_component_manager,audit.planning.p11.component.manager,model_audit_planning_p11_component,qaco_audit.group_audit_manager,1,1,1,1
+access_audit_planning_p11_component_partner,audit.planning.p11.component.partner,model_audit_planning_p11_component,qaco_audit.group_audit_partner,1,1,1,1
+
+# P-11 Component Risk Model - audit.planning.p11.component_risk
+access_audit_planning_p11_component_risk_trainee,audit.planning.p11.component_risk.trainee,model_audit_planning_p11_component_risk,qaco_audit.group_audit_trainee,1,1,1,0
+access_audit_planning_p11_component_risk_manager,audit.planning.p11.component_risk.manager,model_audit_planning_p11_component_risk,qaco_audit.group_audit_manager,1,1,1,1
+access_audit_planning_p11_component_risk_partner,audit.planning.p11.component_risk.partner,model_audit_planning_p11_component_risk,qaco_audit.group_audit_partner,1,1,1,1
+
+# P-11 Component Auditor Model - audit.planning.p11.component_auditor
+access_audit_planning_p11_component_auditor_trainee,audit.planning.p11.component_auditor.trainee,model_audit_planning_p11_component_auditor,qaco_audit.group_audit_trainee,1,1,1,0
+access_audit_planning_p11_component_auditor_manager,audit.planning.p11.component_auditor.manager,model_audit_planning_p11_component_auditor,qaco_audit.group_audit_manager,1,1,1,1
+access_audit_planning_p11_component_auditor_partner,audit.planning.p11.component_auditor.partner,model_audit_planning_p11_component_auditor,qaco_audit.group_audit_partner,1,1,1,1

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================================ -->
+    <!-- P-11: GROUP AUDIT PLANNING - REPORT ACTIONS & TEMPLATES                    -->
+    <!-- ============================================================================ -->
+
+    <!-- Report Action: Group Audit Planning Memorandum -->
+    <record id="action_report_p11_group_audit_memorandum" model="ir.actions.report">
+        <field name="name">Group Audit Planning Memorandum</field>
+        <field name="model">audit.planning.p11.group_audit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qaco_planning_phase.report_p11_group_audit_memorandum</field>
+        <field name="report_file">qaco_planning_phase.report_p11_group_audit_memorandum</field>
+        <field name="binding_model_id" ref="model_audit_planning_p11_group_audit"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'P11_Group_Audit_Memorandum_%s' % (object.engagement_id.name)</field>
+    </record>
+
+    <!-- Report Template: Group Audit Planning Memorandum -->
+    <template id="report_p11_group_audit_memorandum">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <div class="text-center">
+                            <h2><strong>GROUP AUDIT PLANNING MEMORANDUM</strong></h2>
+                            <h4>ISA 600 (Revised) - Special Considerations—Audits of Group Financial Statements</h4>
+                        </div>
+                        
+                        <hr/>
+                        
+                        <!-- Engagement Details -->
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Client:</strong> <span t-field="o.client_id.name"/><br/>
+                                <strong>Engagement:</strong> <span t-field="o.engagement_id.name"/><br/>
+                                <strong>Audit Year:</strong> <span t-field="o.audit_year_id.name"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Partner:</strong> <span t-field="o.partner_id.name"/><br/>
+                                <strong>Status:</strong> <span t-field="o.state" class="badge"/><br/>
+                                <strong>Date:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+                            </div>
+                        </div>
+                        
+                        <hr class="mt-4"/>
+                        
+                        <!-- SECTION A: Applicability -->
+                        <h4 class="mt-4"><strong>A. GROUP AUDIT DETERMINATION</strong></h4>
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td><strong>Is Group Audit?</strong></td>
+                                <td><span t-if="o.is_group_audit">Yes ✓</span><span t-else="">No</span></td>
+                            </tr>
+                            <tr t-if="o.is_group_audit">
+                                <td><strong>Basis of Consolidation:</strong></td>
+                                <td><span t-field="o.basis_of_consolidation"/></td>
+                            </tr>
+                            <tr t-if="o.is_group_audit">
+                                <td><strong>Reporting Framework:</strong></td>
+                                <td><span t-field="o.reporting_framework"/></td>
+                            </tr>
+                        </table>
+                        <div class="mt-2">
+                            <strong>Basis for Conclusion:</strong>
+                            <div t-field="o.basis_for_conclusion"/>
+                        </div>
+                        
+                        <t t-if="o.is_group_audit">
+                            <!-- SECTION B: Components -->
+                            <h4 class="mt-4"><strong>B. COMPONENT IDENTIFICATION</strong></h4>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr class="table-active">
+                                        <th>Component Name</th>
+                                        <th>Type</th>
+                                        <th>Jurisdiction</th>
+                                        <th>% Assets</th>
+                                        <th>% Revenue</th>
+                                        <th>Significant?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.component_ids" t-as="comp">
+                                        <td><span t-field="comp.component_name"/></td>
+                                        <td><span t-field="comp.component_type"/></td>
+                                        <td><span t-field="comp.jurisdiction"/></td>
+                                        <td><span t-field="comp.percentage_group_assets"/>%</td>
+                                        <td><span t-field="comp.percentage_group_revenue"/>%</td>
+                                        <td>
+                                            <span t-if="comp.is_significant" class="text-danger"><strong>YES</strong></span>
+                                            <span t-else="">No</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p><strong>Total Components:</strong> <span t-field="o.total_component_count"/></p>
+                            <p><strong>Significant Components:</strong> <span t-field="o.significant_component_count"/></p>
+                            
+                            <!-- SECTION C: Risk Assessment -->
+                            <h4 class="mt-4"><strong>C. COMPONENT RISK ASSESSMENT</strong></h4>
+                            <div t-field="o.component_risk_narrative"/>
+                            
+                            <t t-if="o.component_risk_ids">
+                                <h5 class="mt-3">Component Risk Register</h5>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th>Component</th>
+                                            <th>Risk Level</th>
+                                            <th>Risk Description</th>
+                                            <th>Planned Response</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.component_risk_ids" t-as="risk">
+                                            <td><span t-field="risk.component_id.component_name"/></td>
+                                            <td><span t-field="risk.risk_level" class="badge"/></td>
+                                            <td><span t-field="risk.risk_description"/></td>
+                                            <td><span t-field="risk.planned_response"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                            
+                            <!-- SECTION D: Component Auditors -->
+                            <h4 class="mt-4"><strong>D. COMPONENT AUDITOR EVALUATION</strong></h4>
+                            <t t-if="o.component_auditor_ids">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th>Auditor Name</th>
+                                            <th>Jurisdiction</th>
+                                            <th>Independence</th>
+                                            <th>Competence</th>
+                                            <th>Regulatory Env.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.component_auditor_ids" t-as="auditor">
+                                            <td><span t-field="auditor.auditor_name"/></td>
+                                            <td><span t-field="auditor.jurisdiction"/></td>
+                                            <td>
+                                                <span t-if="auditor.independence_confirmed" class="text-success">✓ Confirmed</span>
+                                                <span t-else="" class="text-danger">✗ Not Confirmed</span>
+                                            </td>
+                                            <td>
+                                                <span t-if="auditor.competence_adequate" class="text-success">✓ Adequate</span>
+                                                <span t-else="" class="text-danger">✗ Not Adequate</span>
+                                            </td>
+                                            <td>
+                                                <span t-if="auditor.regulatory_environment_assessed" class="text-success">✓ Assessed</span>
+                                                <span t-else="" class="text-muted">Not Assessed</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <p><em>No component auditors involved (group audit team only).</em></p>
+                            </t>
+                            
+                            <!-- SECTION E: Scope of Work -->
+                            <h4 class="mt-4"><strong>E. SCOPE OF WORK AT COMPONENT LEVEL</strong></h4>
+                            <div t-field="o.scope_determination_basis"/>
+                            
+                            <h5 class="mt-3">Component Scope Matrix</h5>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr class="table-active">
+                                        <th>Component</th>
+                                        <th>Significant?</th>
+                                        <th>Type of Work</th>
+                                        <th>Group Team Involvement</th>
+                                        <th>Component Auditor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.component_ids" t-as="comp">
+                                        <td><span t-field="comp.component_name"/></td>
+                                        <td><span t-if="comp.is_significant" class="text-danger"><strong>YES</strong></span><span t-else="">No</span></td>
+                                        <td><span t-field="comp.type_of_work"/></td>
+                                        <td><span t-if="comp.group_team_involvement">Yes</span><span t-else="">No</span></td>
+                                        <td><span t-field="comp.component_auditor_name"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <!-- SECTION F: Group-Wide Risks -->
+                            <h4 class="mt-4"><strong>F. GROUP-WIDE RISKS &amp; RESPONSES</strong></h4>
+                            <div t-field="o.group_wide_risks"/>
+                            <h5 class="mt-3">Planned Group-Wide Responses</h5>
+                            <div t-field="o.planned_group_responses"/>
+                            
+                            <!-- SECTION K: Conclusion -->
+                            <h4 class="mt-4"><strong>K. CONCLUSION &amp; PROFESSIONAL JUDGMENT</strong></h4>
+                            <div t-field="o.conclusion_narrative"/>
+                            
+                        </t>
+                        
+                        <!-- Sign-Off -->
+                        <div class="mt-5">
+                            <hr/>
+                            <h4><strong>SIGN-OFF</strong></h4>
+                            <table class="table table-sm">
+                                <tr t-if="o.prepared_by">
+                                    <td><strong>Prepared By:</strong></td>
+                                    <td><span t-field="o.prepared_by.name"/> (<span t-field="o.prepared_by_role"/>)</td>
+                                    <td><strong>Date:</strong></td>
+                                    <td><span t-field="o.prepared_on"/></td>
+                                </tr>
+                                <tr t-if="o.reviewed_by">
+                                    <td><strong>Reviewed By:</strong></td>
+                                    <td><span t-field="o.reviewed_by.name"/> (Manager)</td>
+                                    <td><strong>Date:</strong></td>
+                                    <td><span t-field="o.reviewed_on"/></td>
+                                </tr>
+                                <tr t-if="o.partner_approved_by">
+                                    <td><strong>Approved By:</strong></td>
+                                    <td><span t-field="o.partner_approved_by.name"/> (Partner)</td>
+                                    <td><strong>Date:</strong></td>
+                                    <td><span t-field="o.partner_approved_on"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="mt-4 text-center text-muted">
+                            <small>
+                                <strong>ISA 600 (Revised) Compliance</strong><br/>
+                                This document constitutes the Group Audit Planning Memorandum per ISA 600.<br/>
+                                Confidential and privileged audit working paper.
+                            </small>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================================ -->
+    <!-- COMPONENT RISK SUMMARY REPORT                                               -->
+    <!-- ============================================================================ -->
+    
+    <record id="action_report_p11_component_risk_summary" model="ir.actions.report">
+        <field name="name">Component Risk Summary</field>
+        <field name="model">audit.planning.p11.group_audit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qaco_planning_phase.report_p11_component_risk_summary</field>
+        <field name="report_file">qaco_planning_phase.report_p11_component_risk_summary</field>
+        <field name="binding_model_id" ref="model_audit_planning_p11_group_audit"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'P11_Component_Risk_Summary_%s' % (object.engagement_id.name)</field>
+    </record>
+
+    <template id="report_p11_component_risk_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center"><strong>COMPONENT RISK SUMMARY</strong></h2>
+                        <h4 class="text-center">ISA 600 - Group Audit Risk Assessment</h4>
+                        
+                        <hr/>
+                        
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>Client:</strong> <span t-field="o.client_id.name"/><br/>
+                                <strong>Engagement:</strong> <span t-field="o.engagement_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Total Components:</strong> <span t-field="o.total_component_count"/><br/>
+                                <strong>Significant Components:</strong> <span t-field="o.significant_component_count"/>
+                            </div>
+                        </div>
+                        
+                        <hr class="mt-3"/>
+                        
+                        <h4 class="mt-4"><strong>COMPONENT RISK MATRIX</strong></h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr class="table-active">
+                                    <th>Component</th>
+                                    <th>Financial Significance</th>
+                                    <th>Risk Profile</th>
+                                    <th>Significant Risks?</th>
+                                    <th>Type of Work</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.component_ids" t-as="comp">
+                                    <td><strong><span t-field="comp.component_name"/></strong></td>
+                                    <td>
+                                        <span t-if="comp.is_significant" class="text-danger"><strong>SIGNIFICANT</strong></span>
+                                        <span t-else="">Non-Significant</span>
+                                        <br/>
+                                        <small>Assets: <span t-field="comp.percentage_group_assets"/>% | Revenue: <span t-field="comp.percentage_group_revenue"/>%</small>
+                                    </td>
+                                    <td>
+                                        <span t-if="comp.risk_profile == 'high'" class="badge badge-danger">High Risk</span>
+                                        <span t-elif="comp.risk_profile == 'moderate'" class="badge badge-warning">Moderate Risk</span>
+                                        <span t-else="" class="badge badge-success">Low Risk</span>
+                                    </td>
+                                    <td><span t-if="comp.has_significant_risks" class="text-danger">YES</span><span t-else="">No</span></td>
+                                    <td><span t-field="comp.type_of_work"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4 class="mt-4"><strong>DETAILED COMPONENT RISK ASSESSMENT</strong></h4>
+                        <t t-foreach="o.component_risk_ids" t-as="risk">
+                            <div class="mt-3 p-2 border">
+                                <h5>
+                                    <span t-field="risk.component_id.component_name"/>
+                                    <span t-field="risk.risk_level" class="badge float-right"/>
+                                </h5>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <strong>Risk Description:</strong>
+                                        <div t-field="risk.risk_description"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Planned Response:</strong>
+                                        <div t-field="risk.planned_response"/>
+                                        <p class="mt-2"><strong>Responsibility:</strong> <span t-field="risk.response_responsibility"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================================ -->
+    <!-- COMPONENT SCOPE MATRIX                                                      -->
+    <!-- ============================================================================ -->
+    
+    <record id="action_report_p11_component_scope_matrix" model="ir.actions.report">
+        <field name="name">Component Scope Matrix</field>
+        <field name="model">audit.planning.p11.group_audit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qaco_planning_phase.report_p11_component_scope_matrix</field>
+        <field name="report_file">qaco_planning_phase.report_p11_component_scope_matrix</field>
+        <field name="binding_model_id" ref="model_audit_planning_p11_group_audit"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'P11_Component_Scope_Matrix_%s' % (object.engagement_id.name)</field>
+    </record>
+
+    <template id="report_p11_component_scope_matrix">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center"><strong>COMPONENT SCOPE MATRIX</strong></h2>
+                        <h4 class="text-center">ISA 600 - Planned Work at Component Level</h4>
+                        
+                        <hr/>
+                        
+                        <table class="table table-sm table-bordered mt-4">
+                            <thead>
+                                <tr class="table-active">
+                                    <th>Component</th>
+                                    <th>Jurisdiction</th>
+                                    <th>Significant?</th>
+                                    <th>Type of Work</th>
+                                    <th>Component Auditor</th>
+                                    <th>Group Team Involvement</th>
+                                    <th>Materiality</th>
+                                    <th>Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.component_ids" t-as="comp">
+                                    <td><strong><span t-field="comp.component_name"/></strong></td>
+                                    <td><span t-field="comp.jurisdiction"/></td>
+                                    <td>
+                                        <span t-if="comp.is_significant" class="text-danger"><strong>YES</strong></span>
+                                        <span t-else="">No</span>
+                                    </td>
+                                    <td><span t-field="comp.type_of_work"/></td>
+                                    <td><span t-field="comp.component_auditor_name"/></td>
+                                    <td><span t-if="comp.group_team_involvement">Yes</span><span t-else="">No</span></td>
+                                    <td><span t-field="comp.component_materiality" t-options="{'widget': 'monetary'}"/></td>
+                                    <td><span t-field="comp.reporting_deadline"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="mt-4">
+                            <h5><strong>Scope Determination Basis:</strong></h5>
+                            <div t-field="o.scope_determination_basis"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

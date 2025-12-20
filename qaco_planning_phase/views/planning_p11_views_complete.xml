@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================================ -->
+    <!-- P-11: GROUP AUDIT PLANNING - COMPLETE ISA 600 VIEWS                        -->
+    <!-- Compliance: ISA 600 (Revised), ISA 315, ISA 330, ISA 220, ISQM-1          -->
+    <!-- ============================================================================ -->
+
+    <!-- P-11 Form View - MASTER -->
+    <record id="view_planning_p11_group_audit_form_complete" model="ir.ui.view">
+        <field name="name">audit.planning.p11.group_audit.form.complete</field>
+        <field name="model">audit.planning.p11.group_audit</field>
+        <field name="arch" type="xml">
+            <form string="P-11: Group Audit Planning (ISA 600)">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,partner,locked"/>
+                    
+                    <!-- Action Buttons -->
+                    <button name="action_mark_complete" string="Mark Complete" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"
+                            confirm="Confirm P-11 is complete and ready for manager review?"/>
+                    
+                    <button name="action_manager_review" string="Manager Review Complete" type="object" 
+                            class="btn-warning" invisible="state != 'review'"
+                            groups="qaco_audit.group_audit_manager"
+                            confirm="Confirm manager review is complete?"/>
+                    
+                    <button name="action_partner_approve" string="Partner Approve &amp; Lock" type="object" 
+                            class="btn-success" invisible="state != 'partner'"
+                            groups="qaco_audit.group_audit_partner"
+                            confirm="Confirm partner approval? This will LOCK P-11 and unlock P-12."/>
+                    
+                    <button name="action_send_back" string="Send Back" type="object" 
+                            class="btn-secondary" invisible="state not in ['review', 'partner']"
+                            confirm="Send back to draft for corrections?"/>
+                    
+                    <button name="action_partner_unlock" string="Partner Unlock" type="object" 
+                            class="btn-danger" invisible="state != 'locked'"
+                            groups="qaco_audit.group_audit_partner"
+                            confirm="Unlock P-11 for amendments? (Exceptional action)"/>
+                </header>
+                
+                <sheet>
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="engagement_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                        </h1>
+                        <h2 class="text-muted">P-11: Group Audit Planning</h2>
+                        <h3 class="text-muted">ISA 600 (Revised) | Special Considerations—Audits of Group Financial Statements</h3>
+                    </div>
+
+                    <!-- Alert: Escalation Required -->
+                    <div class="alert alert-danger" role="alert" invisible="not escalation_required">
+                        <strong>⚠ PARTNER ESCALATION REQUIRED</strong><br/>
+                        Component auditor independence or competence issues identified. 
+                        Review Component Auditors tab and resolve before approval.
+                    </div>
+
+                    <!-- Alert: Locked -->
+                    <div class="alert alert-success" role="alert" invisible="not locked">
+                        <strong>✓ P-11 LOCKED</strong><br/>
+                        Partner-approved and locked. P-12 (Audit Strategy &amp; Plan) is now accessible.
+                    </div>
+
+                    <!-- Core Fields -->
+                    <group>
+                        <group string="Engagement Details">
+                            <field name="audit_year_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="client_id" readonly="1"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Status">
+                            <field name="locked" readonly="1"/>
+                            <field name="isa_reference" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <!-- NOTEBOOK: SECTIONS A through L -->
+                    <notebook>
+                        
+                        <!-- ========================================== -->
+                        <!-- SECTION A: Determination of Applicability -->
+                        <!-- ========================================== -->
+                        <page string="A - Applicability" name="section_a">
+                            <group>
+                                <group string="Group Audit Determination">
+                                    <field name="is_group_audit" widget="boolean_toggle"/>
+                                    <field name="basis_of_consolidation" invisible="not is_group_audit"/>
+                                    <field name="reporting_framework" invisible="not is_group_audit"/>
+                                </group>
+                                <group string="Summary" invisible="not is_group_audit">
+                                    <field name="total_component_count" readonly="1"/>
+                                    <field name="significant_component_count" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Basis for Conclusion (MANDATORY)" invisible="not is_group_audit"/>
+                            <field name="basis_for_conclusion" widget="html" 
+                                   placeholder="Document the determination that this is a group audit per ISA 600.16-18. Include: (1) Nature of group structure, (2) Consolidation method, (3) Applicable reporting framework, (4) Why group audit considerations apply."
+                                   invisible="not is_group_audit"/>
+                            
+                            <separator string="Rationale if NOT Group Audit" invisible="is_group_audit"/>
+                            <field name="not_applicable_rationale" widget="html"
+                                   placeholder="Document why group audit considerations do NOT apply to this engagement."
+                                   invisible="is_group_audit"/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION B: Identification of Components   -->
+                        <!-- ========================================== -->
+                        <page string="B - Components" name="section_b" invisible="not is_group_audit">
+                            <field name="component_ids" nolabel="1">
+                                <tree editable="bottom" decoration-danger="is_significant">
+                                    <field name="component_name"/>
+                                    <field name="component_type"/>
+                                    <field name="jurisdiction"/>
+                                    <field name="percentage_group_assets" widget="percentage"/>
+                                    <field name="percentage_group_revenue" widget="percentage"/>
+                                    <field name="is_significant" readonly="1" widget="boolean_toggle"/>
+                                    <field name="financial_significance_threshold" optional="hide"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group string="Component Identification">
+                                            <field name="component_name"/>
+                                            <field name="component_type"/>
+                                            <field name="jurisdiction"/>
+                                        </group>
+                                        <group string="Financial Significance">
+                                            <field name="percentage_group_assets"/>
+                                            <field name="percentage_group_revenue"/>
+                                            <field name="financial_significance_threshold"/>
+                                            <field name="is_significant" readonly="1"/>
+                                        </group>
+                                    </group>
+                                    <group string="Notes">
+                                        <field name="notes"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <div class="alert alert-info mt-2">
+                                <strong>ISA 600 Guidance:</strong> Identify all components. Financial significance is auto-computed 
+                                based on percentage thresholds (default 10% of group assets/revenue).
+                            </div>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION C: Component Risk Assessment       -->
+                        <!-- ========================================== -->
+                        <page string="C - Risk Assessment" name="section_c" invisible="not is_group_audit">
+                            <group>
+                                <group string="Checklist">
+                                    <field name="significant_components_identified" widget="boolean_toggle"/>
+                                    <field name="significant_risk_components_identified" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Component Risk Register"/>
+                            <field name="component_risk_ids" nolabel="1">
+                                <tree editable="bottom" decoration-danger="risk_level == 'significant'">
+                                    <field name="component_id" options="{'no_create': True}"/>
+                                    <field name="risk_description" widget="html"/>
+                                    <field name="risk_level"/>
+                                    <field name="p6_risk_id" optional="show"/>
+                                    <field name="response_responsibility"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="component_id"/>
+                                            <field name="risk_level"/>
+                                            <field name="p6_risk_id" options="{'no_create': True}"/>
+                                        </group>
+                                        <group>
+                                            <field name="response_responsibility"/>
+                                        </group>
+                                    </group>
+                                    <separator string="Risk Description"/>
+                                    <field name="risk_description" widget="html"/>
+                                    <separator string="Planned Audit Response"/>
+                                    <field name="planned_response" widget="html"/>
+                                    <separator string="Notes"/>
+                                    <field name="notes"/>
+                                </form>
+                            </field>
+                            
+                            <separator string="Overall Component Risk Narrative (MANDATORY)"/>
+                            <field name="component_risk_narrative" widget="html"
+                                   placeholder="Provide an overall assessment of risk across components. Address: (1) Which components are significant? (2) Why? (3) Which have significant risks? (4) Overall risk profile."/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION D: Component Auditor Evaluation   -->
+                        <!-- ========================================== -->
+                        <page string="D - Component Auditors" name="section_d" invisible="not is_group_audit">
+                            <group>
+                                <group string="Involvement">
+                                    <field name="component_auditors_involved" readonly="1"/>
+                                    <field name="escalation_required" readonly="1" 
+                                           widget="boolean" 
+                                           decoration-danger="escalation_required"/>
+                                </group>
+                                <group string="Confirmations (All Auditors)">
+                                    <field name="independence_confirmed_all" readonly="1" widget="boolean"/>
+                                    <field name="competence_confirmed_all" readonly="1" widget="boolean"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Component Auditor Register (ISA 600.19-26)"/>
+                            <field name="component_auditor_ids" nolabel="1">
+                                <tree decoration-danger="escalation_flag">
+                                    <field name="auditor_name"/>
+                                    <field name="firm_affiliation"/>
+                                    <field name="jurisdiction"/>
+                                    <field name="independence_confirmed" widget="boolean_toggle"/>
+                                    <field name="competence_adequate" widget="boolean_toggle"/>
+                                    <field name="regulatory_environment_assessed" widget="boolean_toggle"/>
+                                    <field name="escalation_flag" readonly="1" widget="boolean" 
+                                           decoration-danger="escalation_flag"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <div class="oe_title">
+                                            <h1><field name="auditor_name"/></h1>
+                                        </div>
+                                        <group>
+                                            <group string="Auditor Details">
+                                                <field name="firm_affiliation"/>
+                                                <field name="jurisdiction"/>
+                                            </group>
+                                            <group string="Status">
+                                                <field name="escalation_flag" readonly="1" 
+                                                       widget="boolean" decoration-danger="escalation_flag"/>
+                                            </group>
+                                        </group>
+                                        
+                                        <notebook>
+                                            <page string="Independence (ISA 600.20)">
+                                                <group>
+                                                    <field name="independence_confirmed" widget="boolean_toggle"/>
+                                                    <field name="independence_confirmation_date"/>
+                                                </group>
+                                                <separator string="Independence Evaluation Notes"/>
+                                                <field name="independence_notes" widget="html"/>
+                                            </page>
+                                            
+                                            <page string="Competence (ISA 600.21-23)">
+                                                <group>
+                                                    <field name="competence_adequate" widget="boolean_toggle"/>
+                                                </group>
+                                                <separator string="Basis for Competence Assessment"/>
+                                                <field name="competence_basis" widget="html"
+                                                       placeholder="Document: (1) Professional qualifications, (2) Experience with similar engagements, (3) Availability of resources, (4) Understanding of reporting framework"/>
+                                            </page>
+                                            
+                                            <page string="Regulatory Environment (ISA 600.24-26)">
+                                                <group>
+                                                    <field name="regulatory_environment_assessed" widget="boolean_toggle"/>
+                                                </group>
+                                                <separator string="Regulatory Environment Details"/>
+                                                <field name="regulatory_environment_notes" widget="html"
+                                                       placeholder="Document: (1) Regulatory framework, (2) Quality control environment, (3) Any concerns about oversight or ethical requirements"/>
+                                            </page>
+                                            
+                                            <page string="Communication &amp; Access">
+                                                <group>
+                                                    <field name="access_to_work_granted" widget="boolean_toggle"/>
+                                                </group>
+                                                <separator string="Communication Protocol"/>
+                                                <field name="communication_protocol" widget="html"/>
+                                                <separator string="Additional Notes"/>
+                                                <field name="notes"/>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION E: Scope of Work                   -->
+                        <!-- ========================================== -->
+                        <page string="E - Scope of Work" name="section_e" invisible="not is_group_audit">
+                            <separator string="Component Work Scope"/>
+                            <field name="component_ids" nolabel="1" mode="tree">
+                                <tree editable="bottom" decoration-info="is_significant">
+                                    <field name="component_name"/>
+                                    <field name="is_significant" readonly="1" optional="show"/>
+                                    <field name="type_of_work"/>
+                                    <field name="group_team_involvement" widget="boolean_toggle"/>
+                                    <field name="component_auditor_name"/>
+                                    <field name="component_materiality" widget="monetary"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </tree>
+                            </field>
+                            
+                            <separator string="Basis for Scope Determination (MANDATORY)"/>
+                            <field name="scope_determination_basis" widget="html"
+                                   placeholder="Document how scope was determined for each component. Address: (1) Why full audit vs. specified procedures? (2) Alignment with component risk and significance (3) Involvement of group team"/>
+                            
+                            <group>
+                                <group string="Group Team Involvement">
+                                    <field name="group_team_involvement_planned" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            <field name="involvement_details" widget="html"
+                                   placeholder="Detail the nature and extent of group audit team involvement in component work."
+                                   invisible="not group_team_involvement_planned"/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION F: Group-Wide Risks & Responses   -->
+                        <!-- ========================================== -->
+                        <page string="F - Group Risks" name="section_f" invisible="not is_group_audit">
+                            <separator string="Group-Wide Risks Identified"/>
+                            <field name="group_wide_risks" widget="html"
+                                   placeholder="Identify risks that affect the group as a whole (ISA 600.35-37). Consider: (1) Consolidation risks, (2) Management structure, (3) Group-wide fraud schemes"/>
+                            
+                            <group>
+                                <group string="Fraud Risks (Link to P-7)">
+                                    <field name="fraud_risks_group_level" widget="boolean_toggle"/>
+                                    <field name="p7_fraud_ids" widget="many2many_tags" invisible="not fraud_risks_group_level"/>
+                                </group>
+                                <group string="Going Concern (Link to P-8)">
+                                    <field name="going_concern_risks_group" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            
+                            <field name="fraud_risk_details" widget="html"
+                                   placeholder="Detail group-level fraud risks identified."
+                                   invisible="not fraud_risks_group_level"/>
+                            
+                            <field name="going_concern_details" widget="html"
+                                   placeholder="Detail going concern risks arising from group structure."
+                                   invisible="not going_concern_risks_group"/>
+                            
+                            <separator string="Planned Group-Wide Responses (MANDATORY)"/>
+                            <field name="planned_group_responses" widget="html"
+                                   placeholder="Document planned audit responses at the group level (ISA 600.35). Include: (1) Overall group procedures, (2) Consolidation procedures, (3) Group-wide testing"/>
+                            
+                            <separator string="Link to P-6 Risks"/>
+                            <field name="p6_risk_ids" widget="many2many_tags"/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION G: Communication                   -->
+                        <!-- ========================================== -->
+                        <page string="G - Communication" name="section_g" invisible="not is_group_audit">
+                            <group>
+                                <group string="Instructions to Component Auditors (ISA 600.40)">
+                                    <field name="instructions_issued" widget="boolean_toggle"/>
+                                    <field name="instructions_date" invisible="not instructions_issued"/>
+                                    <field name="instructions_documented" widget="boolean_toggle"/>
+                                    <field name="two_way_communication_planned" widget="boolean_toggle"/>
+                                </group>
+                                <group string="Materiality &amp; Thresholds">
+                                    <field name="materiality_thresholds_communicated" widget="boolean_toggle"/>
+                                    <field name="component_materiality_threshold" widget="monetary"/>
+                                    <field name="reporting_threshold_amount" widget="monetary"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Areas of Special Focus Communicated"/>
+                            <field name="areas_of_special_focus" widget="html"
+                                   placeholder="Document specific areas requiring component auditor attention: (1) Significant risks, (2) Related parties, (3) Fraud indicators, (4) Critical accounting estimates"/>
+                            
+                            <group>
+                                <field name="timelines_agreed" widget="boolean_toggle"/>
+                            </group>
+                            <field name="timeline_details" widget="html"
+                                   placeholder="Document agreed timelines and reporting deadlines with component auditors."
+                                   invisible="not timelines_agreed"/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION H: Supervision & Quality          -->
+                        <!-- ========================================== -->
+                        <page string="H - Supervision" name="section_h" invisible="not is_group_audit">
+                            <group>
+                                <group string="Nature of Involvement">
+                                    <field name="nature_of_involvement"/>
+                                    <field name="site_visits_planned" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            
+                            <field name="site_visit_schedule" widget="html"
+                                   placeholder="Detail planned site visit schedule: Which components? When? Who from group team?"
+                                   invisible="not site_visits_planned"/>
+                            
+                            <separator string="Review Procedures Planned"/>
+                            <field name="review_procedures_planned" widget="html"
+                                   placeholder="Document specific procedures to review component auditor work (ISA 600.42-44): (1) File review approach, (2) Key areas of focus, (3) Timing of review"/>
+                            
+                            <separator string="Quality Management Considerations (MANDATORY - ISQM-1 / ISA 220)"/>
+                            <field name="quality_management_considerations" widget="html"
+                                   placeholder="Address: (1) How ISQM-1 applies to group audit, (2) Engagement quality review requirements, (3) Direction, supervision, and review of group team, (4) Consultation requirements"/>
+                            
+                            <separator string="Enhanced Supervision for High-Risk Components"/>
+                            <field name="high_risk_supervision" widget="html"
+                                   placeholder="Document additional supervision procedures for high-risk components."/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION I: Consolidation Process          -->
+                        <!-- ========================================== -->
+                        <page string="I - Consolidation" name="section_i" invisible="not is_group_audit">
+                            <group>
+                                <group string="Consolidation Process Understanding">
+                                    <field name="consolidation_adjustments_reviewed" widget="boolean_toggle"/>
+                                    <field name="intercompany_eliminations_understood" widget="boolean_toggle"/>
+                                    <field name="uniform_policies_confirmed" widget="boolean_toggle"/>
+                                    <field name="foreign_currency_issues" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Consolidation Review Notes"/>
+                            <field name="consolidation_review_notes" widget="html"
+                                   placeholder="Document understanding of consolidation process and planned procedures."/>
+                            
+                            <separator string="Inter-Company Elimination Details"/>
+                            <field name="elimination_details" widget="html"
+                                   placeholder="Document inter-company transactions and elimination procedures."/>
+                            
+                            <separator string="Accounting Policy Differences"/>
+                            <field name="policy_differences" widget="html"
+                                   placeholder="Identify any differences in accounting policies between components and how they are addressed."/>
+                            
+                            <separator string="Foreign Currency Translation" invisible="not foreign_currency_issues"/>
+                            <field name="currency_translation_details" widget="html"
+                                   placeholder="Document foreign currency translation methodology and any issues identified."
+                                   invisible="not foreign_currency_issues"/>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION J: Mandatory Attachments          -->
+                        <!-- ========================================== -->
+                        <page string="J - Attachments" name="section_j" invisible="not is_group_audit">
+                            <group>
+                                <group string="Group Structure / Organogram (MANDATORY)">
+                                    <field name="group_structure_attachments" widget="many2many_binary" nolabel="1"/>
+                                </group>
+                            </group>
+                            
+                            <group>
+                                <group string="Component Auditor Instructions (Required if applicable)">
+                                    <field name="component_instructions_attachments" widget="many2many_binary" nolabel="1"/>
+                                </group>
+                                <group string="Component Auditor Confirmations">
+                                    <field name="component_confirmations_attachments" widget="many2many_binary" nolabel="1"/>
+                                </group>
+                            </group>
+                            
+                            <group>
+                                <group string="Consolidation Workings">
+                                    <field name="consolidation_workings_attachments" widget="many2many_binary" nolabel="1"/>
+                                </group>
+                                <group string="Prior-Year Group Audit Documentation">
+                                    <field name="prior_year_documentation_attachments" widget="many2many_binary" nolabel="1"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-warning mt-2">
+                                <strong>MANDATORY UPLOADS:</strong> System will block progression without group structure attachment. 
+                                Component auditor instructions are required if component auditors are involved.
+                            </div>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION K: Conclusion                     -->
+                        <!-- ========================================== -->
+                        <page string="K - Conclusion" name="section_k" invisible="not is_group_audit">
+                            <separator string="P-11 Professional Judgment Conclusion (MANDATORY)"/>
+                            <field name="conclusion_narrative" widget="html"/>
+                            
+                            <group>
+                                <group string="Final Confirmations (All Required)">
+                                    <field name="group_planning_completed" widget="boolean_toggle"/>
+                                    <field name="component_risks_addressed" widget="boolean_toggle"/>
+                                    <field name="basis_established_strategy" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-success mt-2" invisible="not (group_planning_completed and component_risks_addressed and basis_established_strategy)">
+                                <strong>✓ All confirmations complete.</strong> Ready for review and approval.
+                            </div>
+                        </page>
+
+                        <!-- ========================================== -->
+                        <!-- SECTION L: Review &amp; Approval          -->
+                        <!-- ========================================== -->
+                        <page string="L - Approval" name="section_l">
+                            <group>
+                                <group string="Prepared By">
+                                    <field name="prepared_by" readonly="1"/>
+                                    <field name="prepared_by_role" readonly="1"/>
+                                    <field name="prepared_on" readonly="1"/>
+                                </group>
+                                <group string="Manager Review">
+                                    <field name="reviewed_by" readonly="1"/>
+                                    <field name="reviewed_on" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Manager Review Notes"/>
+                            <field name="review_notes" widget="html"
+                                   placeholder="Manager: Document your review findings and any issues identified."/>
+                            
+                            <group>
+                                <group string="Partner Approval">
+                                    <field name="partner_approved" readonly="1" widget="boolean"/>
+                                    <field name="partner_approved_by" readonly="1"/>
+                                    <field name="partner_approved_on" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Partner Comments (MANDATORY per ISA 220)"/>
+                            <field name="partner_comments" widget="html"
+                                   placeholder="Partner: Provide substantive comments on: (1) Key judgments reviewed, (2) Appropriateness of group audit strategy, (3) Component auditor evaluations, (4) Any concerns or additional procedures required"/>
+                            
+                            <separator string="Audit Trail (ISA 230)"/>
+                            <group>
+                                <field name="version_history" readonly="1" widget="text"/>
+                                <field name="reviewer_timestamps" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-11 Tree View -->
+    <record id="view_planning_p11_group_audit_tree_complete" model="ir.ui.view">
+        <field name="name">audit.planning.p11.group_audit.tree.complete</field>
+        <field name="model">audit.planning.p11.group_audit</field>
+        <field name="arch" type="xml">
+            <tree string="P-11: Group Audit Planning" 
+                  decoration-danger="escalation_required"
+                  decoration-success="locked">
+                <field name="engagement_id"/>
+                <field name="client_id"/>
+                <field name="audit_year_id"/>
+                <field name="is_group_audit" widget="boolean_toggle"/>
+                <field name="total_component_count"/>
+                <field name="significant_component_count"/>
+                <field name="escalation_required" widget="boolean" optional="show"/>
+                <field name="state" widget="badge" 
+                       decoration-muted="state == 'draft'"
+                       decoration-info="state == 'review'"
+                       decoration-warning="state == 'partner'"
+                       decoration-success="state == 'locked'"/>
+                <field name="locked" widget="boolean" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-11 Action -->
+    <record id="action_planning_p11_group_audit_complete" model="ir.actions.act_window">
+        <field name="name">P-11: Group Audit Planning</field>
+        <field name="res_model">audit.planning.p11.group_audit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-11: Group Audit Planning
+            </p>
+            <p>
+                Plan group audit strategy in accordance with ISA 600 (Revised).
+                Identify components, assess risks, evaluate component auditors, and establish supervision framework.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================================ -->
+    <!-- COMPONENT VIEWS                                                             -->
+    <!-- ============================================================================ -->
+
+    <!-- Component Tree View -->
+    <record id="view_planning_p11_component_tree" model="ir.ui.view">
+        <field name="name">audit.planning.p11.component.tree</field>
+        <field name="model">audit.planning.p11.component</field>
+        <field name="arch" type="xml">
+            <tree string="Group Components" decoration-danger="is_significant">
+                <field name="component_name"/>
+                <field name="component_type"/>
+                <field name="jurisdiction"/>
+                <field name="percentage_group_assets" widget="percentage"/>
+                <field name="percentage_group_revenue" widget="percentage"/>
+                <field name="is_significant" widget="boolean"/>
+                <field name="risk_profile" 
+                       decoration-success="risk_profile == 'low'"
+                       decoration-warning="risk_profile == 'moderate'"
+                       decoration-danger="risk_profile == 'high'"/>
+                <field name="type_of_work"/>
+                <field name="status" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Component Risk Tree View -->
+    <record id="view_planning_p11_component_risk_tree" model="ir.ui.view">
+        <field name="name">audit.planning.p11.component_risk.tree</field>
+        <field name="model">audit.planning.p11.component_risk</field>
+        <field name="arch" type="xml">
+            <tree string="Component Risks" decoration-danger="risk_level == 'significant'">
+                <field name="component_id"/>
+                <field name="risk_description" widget="html"/>
+                <field name="risk_level" 
+                       decoration-success="risk_level == 'low'"
+                       decoration-warning="risk_level == 'moderate'"
+                       decoration-danger="risk_level in ['high', 'significant']"/>
+                <field name="p6_risk_id" optional="show"/>
+                <field name="response_responsibility"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Component Auditor Tree View -->
+    <record id="view_planning_p11_component_auditor_tree" model="ir.ui.view">
+        <field name="name">audit.planning.p11.component_auditor.tree</field>
+        <field name="model">audit.planning.p11.component_auditor</field>
+        <field name="arch" type="xml">
+            <tree string="Component Auditors" decoration-danger="escalation_flag">
+                <field name="auditor_name"/>
+                <field name="firm_affiliation"/>
+                <field name="jurisdiction"/>
+                <field name="independence_confirmed" widget="boolean_toggle"/>
+                <field name="competence_adequate" widget="boolean_toggle"/>
+                <field name="regulatory_environment_assessed" widget="boolean_toggle"/>
+                <field name="access_to_work_granted" widget="boolean" optional="show"/>
+                <field name="escalation_flag" widget="boolean" decoration-danger="escalation_flag"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
