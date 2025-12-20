@@ -88,7 +88,7 @@
                                         <field name="jurisdiction"/>
                                         <field name="is_significant"/>
                                         <field name="type_of_work"/>
-                                        <field name="component_auditor"/>
+                                        <field name="component_auditor_name"/>
                                         <field name="component_materiality"/>
                                         <field name="reporting_deadline"/>
                                         <field name="status"/>
