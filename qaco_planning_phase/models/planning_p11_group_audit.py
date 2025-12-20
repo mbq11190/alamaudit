@@ -425,11 +425,17 @@ class PlanningP11GroupAudit(models.Model):
     )
     group_audit_attachment_ids = fields.Many2many(
         'ir.attachment',
+        'p11_group_audit_attachment_rel',
+        'p11_id',
+        'attachment_id',
         string='Group Audit Documentation',
         help='Attachments for group audit documentation'
     )
     component_report_ids = fields.Many2many(
         'ir.attachment',
+        'p11_component_report_rel',
+        'p11_id',
+        'attachment_id',
         string='Component Reports',
         help='Component auditor reports'
     )
@@ -721,7 +727,6 @@ class PlanningP11GroupAudit(models.Model):
     # COMPUTED FIELDS
     # ============================================================================
     @api.depends('audit_id')
-    @api.depends('audit_id')
     def _compute_engagement_id(self):
         """Compute engagement_id from audit_id for backward compatibility."""
         for rec in self:
@@ -988,7 +993,7 @@ class PlanningP11GroupAudit(models.Model):
             )
 
     def write(self, vals):
-        result = super(AuditPlanningP11GroupAudit, self).write(vals)
+        result = super(PlanningP11GroupAudit, self).write(vals)
         if any(key in vals for key in ['state', 'partner_approved']):
             self._log_version(f"Updated: {vals.get('state', 'state change')}")
         return result
