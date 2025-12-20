@@ -205,6 +205,32 @@ class PlanningP11GroupAudit(models.Model):
         string='Component Risk Assessment Narrative',
         help='Overall assessment of risk profile across components'
     )
+    
+    # Significance Assessment HTML Fields (for view display)
+    significance_criteria = fields.Html(
+        string='Significance Criteria',
+        compute='_compute_significance_assessment',
+        store=True,
+        help='HTML summary of significance criteria used'
+    )
+    significant_components = fields.Html(
+        string='Significant Components',
+        compute='_compute_significance_assessment',
+        store=True,
+        help='HTML list of significant components'
+    )
+    non_significant_components = fields.Html(
+        string='Non-Significant Components',
+        compute='_compute_significance_assessment',
+        store=True,
+        help='HTML list of non-significant components'
+    )
+    coverage_assessment = fields.Html(
+        string='Coverage Assessment',
+        compute='_compute_significance_assessment',
+        store=True,
+        help='HTML assessment of audit coverage across components'
+    )
 
     # ============================================================================
     # SECTION D: COMPONENT AUDITOR EVALUATION
@@ -615,6 +641,74 @@ class PlanningP11GroupAudit(models.Model):
         """Alias for total_component_count for view compatibility."""
         for rec in self:
             rec.component_count = rec.total_component_count
+
+    @api.depends('component_ids', 'component_ids.is_significant', 'component_ids.component_name', 
+                 'component_ids.percentage_group_assets', 'component_ids.percentage_group_revenue')
+    def _compute_significance_assessment(self):
+        """Generate HTML summaries for significance assessment display."""
+        for rec in self:
+            try:
+                # Significance Criteria
+                rec.significance_criteria = f"""
+                <div class="significance-criteria">
+                    <h5>Financial Significance Thresholds (ISA 600.7)</h5>
+                    <ul>
+                        <li>Assets: Components ≥ 10% of group total assets</li>
+                        <li>Revenue: Components ≥ 10% of group total revenue</li>
+                        <li>Additional factors: Risk profile, complexity, regulatory requirements</li>
+                    </ul>
+                </div>
+                """
+                
+                if not rec.component_ids:
+                    rec.significant_components = "<p>No components defined yet.</p>"
+                    rec.non_significant_components = "<p>No components defined yet.</p>"
+                    rec.coverage_assessment = "<p>Cannot assess coverage without component definitions.</p>"
+                    continue
+                
+                # Significant Components
+                significant_comps = rec.component_ids.filtered(lambda c: c.is_significant)
+                if significant_comps:
+                    sig_html = "<div class='significant-components'><h5>Significant Components Requiring Full Audit Coverage:</h5><ul>"
+                    for comp in significant_comps:
+                        sig_html += f"<li><strong>{comp.component_name}</strong> - Assets: {comp.percentage_group_assets}%, Revenue: {comp.percentage_group_revenue}%</li>"
+                    sig_html += "</ul></div>"
+                    rec.significant_components = sig_html
+                else:
+                    rec.significant_components = "<p>No significant components identified.</p>"
+                
+                # Non-Significant Components
+                non_sig_comps = rec.component_ids.filtered(lambda c: not c.is_significant)
+                if non_sig_comps:
+                    non_sig_html = "<div class='non-significant-components'><h5>Non-Significant Components:</h5><ul>"
+                    for comp in non_sig_comps:
+                        non_sig_html += f"<li><strong>{comp.component_name}</strong> - Assets: {comp.percentage_group_assets}%, Revenue: {comp.percentage_group_revenue}%</li>"
+                    non_sig_html += "</ul></div>"
+                    rec.non_significant_components = non_sig_html
+                else:
+                    rec.non_significant_components = "<p>All components are significant.</p>"
+                
+                # Coverage Assessment
+                total_comps = len(rec.component_ids)
+                sig_count = len(significant_comps)
+                coverage_pct = (sig_count / total_comps * 100) if total_comps > 0 else 0
+                
+                rec.coverage_assessment = f"""
+                <div class="coverage-assessment">
+                    <h5>Audit Coverage Assessment</h5>
+                    <p><strong>Total Components:</strong> {total_comps}</p>
+                    <p><strong>Significant Components:</strong> {sig_count} ({coverage_pct:.1f}%)</p>
+                    <p><strong>Coverage Status:</strong> {'Full audit coverage required' if sig_count > 0 else 'No full audit coverage required'}</p>
+                    <p><em>ISA 600.32-34: Scope determination based on significance and risk assessment</em></p>
+                </div>
+                """
+                
+            except Exception as e:
+                _logger.warning(f'P-11 _compute_significance_assessment failed for record {rec.id}: {e}')
+                rec.significance_criteria = "<p>Error generating significance criteria.</p>"
+                rec.significant_components = "<p>Error generating significant components list.</p>"
+                rec.non_significant_components = "<p>Error generating non-significant components list.</p>"
+                rec.coverage_assessment = "<p>Error generating coverage assessment.</p>"
 
     @api.depends('component_auditor_ids')
     def _compute_component_auditor_involvement(self):
