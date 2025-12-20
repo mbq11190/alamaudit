@@ -177,6 +177,12 @@ class PlanningP11GroupAudit(models.Model):
         compute='_compute_component_metrics',
         store=True
     )
+    component_count = fields.Integer(
+        string='Component Count',
+        compute='_compute_component_count',
+        store=True,
+        help='Alias for total_component_count for view compatibility'
+    )
     
     # ============================================================================
     # SECTION C: COMPONENT RISK ASSESSMENT
@@ -591,6 +597,12 @@ class PlanningP11GroupAudit(models.Model):
                 _logger.warning(f'P-11 _compute_component_metrics failed for record {rec.id}: {e}')
                 rec.total_component_count = 0
                 rec.significant_component_count = 0
+
+    @api.depends('total_component_count')
+    def _compute_component_count(self):
+        """Alias for total_component_count for view compatibility."""
+        for rec in self:
+            rec.component_count = rec.total_component_count
 
     @api.depends('component_auditor_ids')
     def _compute_component_auditor_involvement(self):
