@@ -818,6 +818,23 @@ class PlanningP11GroupAudit(models.Model):
     # ============================================================================
     # STATE MANAGEMENT ACTIONS
     # ============================================================================
+    def action_start_work(self):
+        """Start work on P-11 tab."""
+        for rec in self:
+            if rec.state != 'not_started':
+                raise UserError("Can only start work on tabs that are 'Not Started'.")
+            # Check prerequisites if needed
+            rec.state = 'in_progress'
+            rec.message_post(body="P-11 Group Audit work started.")
+
+    def action_complete(self):
+        """Mark P-11 as complete."""
+        for rec in self:
+            if rec.state != 'in_progress':
+                raise UserError("Can only complete tabs that are 'In Progress'.")
+            rec.state = 'completed'
+            rec.message_post(body="P-11 Group Audit marked as complete.")
+
     def action_mark_complete(self):
         """Senior marks P-11 as complete"""
         for rec in self:
