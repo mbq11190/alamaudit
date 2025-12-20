@@ -86,7 +86,7 @@
                                     <tree editable="bottom">
                                         <field name="component_name"/>
                                         <field name="jurisdiction"/>
-                                        <field name="significance"/>
+                                        <field name="is_significant"/>
                                         <field name="type_of_work"/>
                                         <field name="component_auditor"/>
                                         <field name="component_materiality"/>
