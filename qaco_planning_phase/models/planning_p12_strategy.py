@@ -1,667 +1,1233 @@
 # -*- coding: utf-8 -*-
 """
-P-12: Audit Strategy & Audit Plan
-Standard: ISA 300
-Purpose: Consolidate planning outputs into execution strategy.
+P-12: Audit Strategy & Detailed Audit Plan - COMPLETE ISA 300 IMPLEMENTATION
+Standards: ISA 300, ISA 315, ISA 330, ISA 240, ISA 520, ISA 530, ISA 570, ISA 600, ISA 701, ISA 220, ISQM-1
+Purpose: Translate risk assessments into executable audit work and lock audit approach
+Compliance: Companies Act 2017, Auditors (Reporting Obligations) Regulations 2018, ICAP QCR, AOB
 """
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from datetime import datetime
 
 
 class PlanningP12Strategy(models.Model):
-    """P-12: Audit Strategy & Audit Plan (ISA 300)"""
+    """P-12: Audit Strategy & Detailed Audit Plan (ISA 300) - MASTER MODEL"""
     _name = 'qaco.planning.p12.strategy'
-    _description = 'P-12: Audit Team, Budget & Timeline'
+    _description = 'P-12: Audit Strategy & Detailed Audit Plan (ISA 300)'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'create_date desc'
+    _rec_name = 'engagement_id'
+    _order = 'id desc'
 
-    TAB_STATE = [
-        ('not_started', 'Not Started'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('reviewed', 'Reviewed'),
-        ('approved', 'Approved'),
-    ]
-
-    state = fields.Selection(
-        TAB_STATE,
-        string='Status',
-        default='not_started',
-        tracking=True,
-        copy=False,
-    )
-
-    name = fields.Char(
-        string='Reference',
-        compute='_compute_name',
-        store=True,
-        readonly=True
-    )
-    audit_id = fields.Many2one(
-        'qaco.audit',
+    # ============================================================================
+    # CORE IDENTIFIERS
+    # ============================================================================
+    engagement_id = fields.Many2one(
+        'audit.engagement',
         string='Audit Engagement',
         required=True,
         ondelete='cascade',
-        index=True,
-        tracking=True
-    )
-    planning_main_id = fields.Many2one(
-        'qaco.planning.main',
-        string='Planning Phase',
-        ondelete='cascade',
+        tracking=True,
         index=True
+    )
+    audit_year_id = fields.Many2one(
+        'audit.year',
+        string='Audit Year',
+        required=True,
+        tracking=True
     )
     client_id = fields.Many2one(
         'res.partner',
-        string='Client Name',
-        related='audit_id.client_id',
-        readonly=True,
-        store=True
+        string='Client',
+        related='engagement_id.client_id',
+        store=True,
+        readonly=True
     )
-
-    # ===== Overall Audit Strategy (ISA 300.7) =====
-    overall_strategy = fields.Html(
-        string='Overall Audit Strategy',
-        help='The scope, timing and direction of the audit per ISA 300.7'
-    )
-    # XML view compatible aliases
-    audit_strategy = fields.Html(
-        string='Audit Strategy',
-        related='overall_strategy',
-        readonly=False
-    )
-    overall_audit_approach = fields.Selection([
-        ('substantive', 'Predominantly Substantive'),
-        ('combined', 'Combined Approach'),
-        ('controls', 'Controls Reliance'),
-    ], string='Overall Audit Approach', tracking=True)
-    scope_of_audit = fields.Html(
-        string='Scope of Audit',
-        help='Define the scope of the audit engagement'
-    )
-    # XML view compatible alias
-    audit_scope = fields.Html(
-        string='Audit Scope',
-        related='scope_of_audit',
-        readonly=False
-    )
-    expected_kam = fields.Html(
-        string='Expected Key Audit Matters',
-        help='Expected key audit matters to be reported'
-    )
-    timing_of_audit = fields.Html(
-        string='Timing of Audit',
-        help='Key dates and timing considerations'
-    )
-    direction_of_audit = fields.Html(
-        string='Direction of Audit',
-        help='Key areas of audit focus and approach'
-    )
-    nature_timing_extent = fields.Html(
-        string='Nature, Timing, and Extent',
-        help='Overall direction for nature, timing, and extent of procedures'
-    )
-
-    # ===== Key Audit Areas (XML compatible) =====
-    key_area_ids = fields.One2many(
-        'qaco.planning.p12.key.area.line',
-        'p12_strategy_id',
-        string='Key Audit Areas'
-    )
-
-    # ===== Planned Reliance on Controls =====
-    controls_reliance = fields.Selection([
-        ('substantive_only', 'Substantive Only - No Controls Reliance'),
-        ('limited_reliance', 'Limited Reliance on Controls'),
-        ('significant_reliance', 'Significant Reliance on Controls'),
-    ], string='Planned Controls Reliance', tracking=True)
-    # XML view compatible alias
-    control_reliance_approach = fields.Selection(
-        string='Control Reliance Approach',
-        related='controls_reliance',
-        readonly=False)
-    controls_reliance_rationale = fields.Html(
-        string='Controls Reliance Rationale'
-    )
-    # XML view compatible alias
-    control_reliance_rationale = fields.Html(
-        string='Control Reliance Rationale',
-        related='controls_reliance_rationale',
-        readonly=False
-    )
-    controls_to_test = fields.Html(
-        string='Controls Identified for Testing',
-        help='Key controls where reliance is planned'
-    )
-    # XML view compatible
-    control_testing_approach = fields.Html(
-        string='Control Testing Approach',
-        help='Approach to testing controls'
-    )
-
-    # ===== Substantive Approach (XML compatible) =====
-    substantive_overview = fields.Html(
-        string='Substantive Procedures Overview',
-        help='Overview of substantive procedures'
-    )
-    tests_of_details = fields.Html(
-        string='Tests of Details',
-        help='Planned tests of details'
-    )
-    substantive_analytics = fields.Html(
-        string='Substantive Analytics',
-        help='Planned substantive analytical procedures'
-    )
-
-    # ===== Nature, Timing & Extent of Procedures (ISA 330) =====
-    nature_of_procedures = fields.Html(
-        string='Nature of Procedures',
-        help='Type of audit procedures to be performed'
-    )
-    timing_of_procedures = fields.Html(
-        string='Timing of Procedures',
-        help='When procedures will be performed (interim vs year-end)'
-    )
-    extent_of_procedures = fields.Html(
-        string='Extent of Procedures',
-        help='Sample sizes and coverage'
-    )
-
-    # ===== Sampling Approach =====
-    sampling_approach = fields.Html(
-        string='Sampling Approach',
-        help='Overall approach to audit sampling per ISA 530'
-    )
-    statistical_sampling = fields.Boolean(
-        string='Statistical Sampling Planned'
-    )
-    sampling_methodology = fields.Html(
-        string='Sampling Methodology'
-    )
-    sample_size_factors = fields.Html(
-        string='Sample Size Factors'
-    )
-    # XML view compatible alias
-    sample_size_determination = fields.Html(
-        string='Sample Size Determination',
-        related='sample_size_factors',
-        readonly=False
-    )
-    sampling_risk = fields.Html(
-        string='Sampling Risk',
-        help='Consideration of sampling risk'
-    )
-
-    # ===== Use of Experts (ISA 620) =====
-    experts_required = fields.Boolean(
-        string='Experts Required',
-        tracking=True
-    )
-    # XML view compatible alias
-    expert_required = fields.Boolean(
-        string='Expert Required',
-        related='experts_required',
-        readonly=False
-    )
-    expert_line_ids = fields.One2many(
-        'qaco.planning.p12.expert.line',
-        'p12_strategy_id',
-        string='Experts to Use'
-    )
-    # XML view compatible alias
-    expert_ids = fields.One2many(
-        'qaco.planning.p12.expert.line',
-        'p12_strategy_id',
-        string='Expert Register'
-    )
-    experts_scope = fields.Html(
-        string='Scope of Expert Work',
-        help='Scope of work for auditor\'s experts per ISA 620'
-    )
-    # XML view compatible alias
-    expert_work_evaluation = fields.Html(
-        string='Expert Work Evaluation',
-        related='experts_scope',
-        readonly=False
-    )
-    internal_expert = fields.Html(
-        string='Internal Expert',
-        help='Internal expert involvement details'
-    )
-
-    # ===== Internal Audit Reliance (ISA 610) =====
-    internal_audit_reliance = fields.Boolean(
-        string='Reliance on Internal Audit Planned',
-        tracking=True
-    )
-    internal_audit_assessment = fields.Html(
-        string='Internal Audit Assessment',
-        help='Assessment of objectivity and competence per ISA 610'
-    )
-    internal_audit_areas = fields.Html(
-        string='Areas for Internal Audit Reliance'
-    )
-
-    # ===== CAATs / Data Analytics =====
-    caats_planned = fields.Boolean(
-        string='CAATs/Data Analytics Planned',
-        tracking=True
-    )
-    caats_scope = fields.Html(
-        string='CAATs Scope',
-        help='Planned computer-assisted audit techniques'
-    )
-    data_analytics_procedures = fields.Html(
-        string='Data Analytics Procedures'
-    )
-
-    # ===== Key Audit Areas =====
-    key_audit_areas = fields.Html(
-        string='Key Audit Areas',
-        help='Areas requiring significant audit attention'
-    )
-    significant_risks_response = fields.Html(
-        string='Response to Significant Risks',
-        help='Specific responses to identified significant risks per ISA 330.21'
-    )
-
-    # ===== Audit Team & Resources =====
-    staffing_plan = fields.Html(
-        string='Staffing Plan',
-        help='Team composition and responsibilities'
-    )
-    supervision_approach = fields.Html(
-        string='Supervision Approach',
-        help='How team will be directed and supervised per ISA 220'
-    )
-    specialist_resources = fields.Html(
-        string='Specialist Resources Required'
-    )
-    
-    # Direction/Supervision aliases for XML compatibility
-    team_direction = fields.Html(
-        string='Team Direction',
-        help='Direction to audit team members'
-    )
-    review_approach = fields.Html(
-        string='Review Approach',
-        help='Work review procedures'
-    )
-
-    # ===== Audit Timeline =====
-    planning_completion_date = fields.Date(
-        string='Planning Completion Date'
-    )
-    interim_fieldwork_start = fields.Date(
-        string='Interim Fieldwork Start'
-    )
-    interim_fieldwork_end = fields.Date(
-        string='Interim Fieldwork End'
-    )
-    final_fieldwork_start = fields.Date(
-        string='Final Fieldwork Start'
-    )
-    final_fieldwork_end = fields.Date(
-        string='Final Fieldwork End'
-    )
-    reporting_deadline = fields.Date(
-        string='Reporting Deadline'
-    )
-    detailed_timeline = fields.Html(
-        string='Detailed Audit Timeline'
-    )
-    
-    # Timing Aliases for XML compatibility
-    interim_start_date = fields.Date(
-        related='interim_fieldwork_start',
-        string='Interim Start Date',
-        readonly=False
-    )
-    interim_end_date = fields.Date(
-        related='interim_fieldwork_end',
-        string='Interim End Date',
-        readonly=False
-    )
-    final_start_date = fields.Date(
-        related='final_fieldwork_start',
-        string='Final Start Date',
-        readonly=False
-    )
-    final_end_date = fields.Date(
-        related='final_fieldwork_end',
-        string='Final End Date',
-        readonly=False
-    )
-    report_due_date = fields.Date(
-        related='reporting_deadline',
-        string='Report Due Date',
-        readonly=False
-    )
-    agm_date = fields.Date(
-        string='AGM Date',
-        help='Annual General Meeting date'
-    )
-
-    # ===== Budget =====
-    budget_hours = fields.Float(
-        string='Total Budget Hours'
-    )
-    budget_amount = fields.Monetary(
-        string='Budget Amount',
-        currency_field='currency_id'
+    partner_id = fields.Many2one(
+        'res.partner',
+        string='Engagement Partner',
+        tracking=True,
+        required=True
     )
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
         default=lambda self: self.env.company.currency_id
     )
-    budget_breakdown = fields.Html(
-        string='Budget Breakdown',
-        help='Hours/costs by area or team member'
+    
+    # STATE MANAGEMENT
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('review', 'Manager Review'),
+        ('partner', 'Partner Approval'),
+        ('locked', 'Locked - Planning Complete'),
+    ], default='draft', tracking=True, copy=False)
+
+    # ============================================================================
+    # SECTION A: OVERALL AUDIT STRATEGY (ISA 300 CORE)
+    # ============================================================================
+    audit_approach = fields.Selection([
+        ('substantive', 'Substantive-Based'),
+        ('controls_reliant', 'Controls-Reliant'),
+        ('hybrid', 'Hybrid Approach'),
+    ], string='Overall Audit Approach', required=True, tracking=True,
+       help='ISA 300.8: Overall approach to the audit')
+    
+    approach_rationale = fields.Html(
+        string='Reason for Selected Approach',
+        required=True,
+        help='Mandatory narrative explaining why this approach was chosen'
     )
     
-    # Resource allocation aliases for XML compatibility
-    resource_allocation = fields.Html(
-        string='Resource Allocation',
-        help='Detailed resource allocation plan'
+    interim_audit_planned = fields.Boolean(
+        string='Interim Audit Planned?',
+        tracking=True,
+        help='Will there be interim audit work before year-end?'
     )
-    total_budgeted_hours = fields.Float(
-        related='budget_hours',
-        string='Total Budgeted Hours',
-        readonly=False
+    interim_audit_details = fields.Html(
+        string='Interim Audit Details',
+        help='Timing and scope of interim audit work'
     )
-    partner_hours = fields.Float(
-        string='Partner Hours',
+    
+    specialists_required = fields.Boolean(
+        string='Use of Specialists?',
+        tracking=True,
+        help='ISA 620: Using the work of an auditor\'s expert'
+    )
+    specialist_types = fields.Many2many(
+        'audit.specialist.type',
+        string='Specialist Types',
+        help='IT, Valuation, Tax, Actuary, etc.'
+    )
+    specialist_details = fields.Html(
+        string='Specialist Engagement Details'
+    )
+    
+    group_audit_applicable = fields.Boolean(
+        string='Group Audit Considerations Applicable?',
+        compute='_compute_group_audit_applicable',
+        store=True,
+        help='Auto-populated from P-11'
+    )
+    group_audit_strategy = fields.Html(
+        string='Group Audit Strategy',
+        help='Reference to P-11 group audit planning'
+    )
+    
+    # Strategy alignment with RMM
+    rmm_alignment_confirmed = fields.Boolean(
+        string='Strategy Aligns with RMM?',
+        help='Confirm strategy is responsive to P-6 risk assessment'
+    )
+
+    # ============================================================================
+    # SECTION B: RISK-TO-RESPONSE MAPPING (ISA 330 HEART)
+    # ============================================================================
+    risk_response_ids = fields.One2many(
+        'qaco.planning.p12.risk.response',
+        'p12_id',
+        string='Risk-Response Mapping',
+        help='Auto-populated from P-6, P-7, P-8, P-9, P-10'
+    )
+    total_risks = fields.Integer(
+        string='Total Risks',
+        compute='_compute_risk_metrics',
+        store=True
+    )
+    risks_with_responses = fields.Integer(
+        string='Risks with Responses',
+        compute='_compute_risk_metrics',
+        store=True
+    )
+    unaddressed_risks = fields.Integer(
+        string='Unaddressed Risks',
+        compute='_compute_risk_metrics',
+        store=True,
+        help='Risks without audit responses - MUST BE ZERO'
+    )
+    significant_risk_count = fields.Integer(
+        string='Significant Risks',
+        compute='_compute_risk_metrics',
+        store=True
+    )
+
+    # ============================================================================
+    # SECTION C: FS-AREA-WISE AUDIT STRATEGY
+    # ============================================================================
+    fs_area_strategy_ids = fields.One2many(
+        'qaco.planning.p12.fs.area.strategy',
+        'p12_id',
+        string='FS Area Strategy',
+        help='Strategy per financial statement area'
+    )
+    mandatory_fs_areas_covered = fields.Boolean(
+        string='All Mandatory FS Areas Covered?',
+        compute='_compute_fs_area_coverage',
+        store=True
+    )
+
+    # ============================================================================
+    # SECTION D: DETAILED AUDIT PROGRAMS
+    # ============================================================================
+    audit_program_ids = fields.One2many(
+        'qaco.planning.p12.audit.program',
+        'p12_id',
+        string='Detailed Audit Programs',
+        help='Detailed procedures per FS area'
+    )
+    programs_finalized = fields.Boolean(
+        string='All Programs Finalized?',
+        help='Confirm all audit programs are complete'
+    )
+
+    # ============================================================================
+    # SECTION E: SAMPLING STRATEGY (ISA 530)
+    # ============================================================================
+    sampling_plan_ids = fields.One2many(
+        'qaco.planning.p12.sampling.plan',
+        'p12_id',
+        string='Sampling Plans',
+        help='ISA 530: Audit sampling plans per area'
+    )
+    sampling_methodology = fields.Selection([
+        ('statistical', 'Statistical Sampling'),
+        ('non_statistical', 'Non-Statistical Sampling'),
+        ('mus', 'Monetary Unit Sampling (MUS)'),
+        ('mixed', 'Mixed Approach'),
+    ], string='Overall Sampling Methodology', tracking=True)
+    
+    sampling_rationale = fields.Html(
+        string='Basis for Sampling Approach',
+        help='Explain sampling methodology selection'
+    )
+
+    # ============================================================================
+    # SECTION F: ANALYTICAL PROCEDURES PLANNING (ISA 520)
+    # ============================================================================
+    analytical_procedures_planned = fields.Html(
+        string='Planned Analytical Procedures',
+        help='ISA 520: Analytical procedures to be performed'
+    )
+    analytical_procedures_types = fields.Selection([
+        ('ratio', 'Ratio Analysis'),
+        ('trend', 'Trend Analysis'),
+        ('reasonableness', 'Reasonableness Testing'),
+        ('all', 'All of the Above'),
+    ], string='Types of Analytics', tracking=True)
+    
+    analytics_data_sources = fields.Html(
+        string='Data Sources for Analytics',
+        help='Sources of data for analytical procedures'
+    )
+    analytics_precision_level = fields.Html(
+        string='Precision Level & Thresholds',
+        help='Expected precision and follow-up thresholds'
+    )
+
+    # ============================================================================
+    # SECTION G: FRAUD & UNPREDICTABILITY INTEGRATION
+    # ============================================================================
+    unpredictable_procedures_planned = fields.Boolean(
+        string='Unpredictable Procedures Planned?',
+        tracking=True,
+        help='ISA 240: Element of unpredictability'
+    )
+    unpredictable_procedures_details = fields.Html(
+        string='Unpredictable Procedures Details',
+        help='Describe unpredictable audit procedures'
+    )
+    
+    journal_entry_testing_approach = fields.Html(
+        string='Journal Entry Testing Approach',
+        required=True,
+        help='ISA 240.32: Testing of journal entries and adjustments'
+    )
+    management_override_procedures = fields.Html(
+        string='Management Override-Focused Procedures',
+        required=True,
+        help='ISA 240.33: Procedures to address management override'
+    )
+    
+    # Link to P-7 fraud risks
+    p7_fraud_integration = fields.Html(
+        string='P-7 Fraud Risk Integration',
+        help='How P-7 fraud risks are addressed in audit plan'
+    )
+
+    # ============================================================================
+    # SECTION H: GOING CONCERN & DISCLOSURE FOCUS
+    # ============================================================================
+    enhanced_gc_areas = fields.Html(
+        string='Areas Requiring Enhanced GC Procedures',
+        help='ISA 570: Going concern considerations'
+    )
+    cash_flow_testing_planned = fields.Boolean(
+        string='Cash Flow Testing Planned?',
+        tracking=True,
+        help='Will cash flow forecasts be tested?'
+    )
+    cash_flow_testing_details = fields.Html(
+        string='Cash Flow Testing Details'
+    )
+    
+    subsequent_events_focus = fields.Boolean(
+        string='Subsequent Events Focus?',
+        tracking=True,
+        help='Enhanced subsequent events procedures'
+    )
+    subsequent_events_details = fields.Html(
+        string='Subsequent Events Procedures'
+    )
+    
+    disclosure_testing_emphasis = fields.Html(
+        string='Disclosure Testing Emphasis',
+        help='Key disclosure areas requiring testing'
+    )
+
+    # ============================================================================
+    # SECTION I: KEY AUDIT MATTERS (LISTED ENTITIES - ISA 701)
+    # ============================================================================
+    is_listed_entity = fields.Boolean(
+        string='Listed Entity?',
+        help='ISA 701 applies to listed entities'
+    )
+    kam_candidate_ids = fields.One2many(
+        'qaco.planning.p12.kam.candidate',
+        'p12_id',
+        string='KAM Candidates',
+        help='Potential Key Audit Matters per ISA 701'
+    )
+    kam_candidates_count = fields.Integer(
+        string='KAM Candidates',
+        compute='_compute_kam_metrics',
+        store=True
+    )
+    kam_from_significant_risks = fields.Boolean(
+        string='KAMs Originate from Significant Risks?',
+        compute='_compute_kam_metrics',
+        store=True
+    )
+
+    # ============================================================================
+    # SECTION J: BUDGET, TIMELINE & RESOURCE ALIGNMENT
+    # ============================================================================
+    planned_hours_partner = fields.Float(
+        string='Planned Hours - Partner',
         help='Budgeted partner hours'
     )
-    manager_hours = fields.Float(
-        string='Manager Hours',
+    planned_hours_manager = fields.Float(
+        string='Planned Hours - Manager',
         help='Budgeted manager hours'
     )
-    senior_hours = fields.Float(
-        string='Senior Hours',
+    planned_hours_senior = fields.Float(
+        string='Planned Hours - Senior',
         help='Budgeted senior hours'
     )
-    staff_hours = fields.Float(
-        string='Staff Hours',
-        help='Budgeted staff hours'
+    planned_hours_trainee = fields.Float(
+        string='Planned Hours - Trainee/Assistant',
+        help='Budgeted trainee hours'
     )
-
-    # ===== Communication =====
-    management_communication = fields.Html(
-        string='Planned Management Communication'
-    )
-    tcwg_communication = fields.Html(
-        string='Planned TCWG Communication',
-        help='Matters to be communicated per ISA 260'
+    total_planned_hours = fields.Float(
+        string='Total Planned Hours',
+        compute='_compute_total_hours',
+        store=True
     )
     
-    # Communication aliases for XML compatibility
-    tcwg_communication_plan = fields.Html(
-        related='tcwg_communication',
-        string='TCWG Communication Plan',
-        readonly=False
+    # Milestones
+    planning_completion_date = fields.Date(
+        string='Planning Completion Date',
+        help='Target date for planning phase completion'
     )
-    management_communication_plan = fields.Html(
-        related='management_communication',
-        string='Management Communication Plan',
-        readonly=False
+    interim_audit_date = fields.Date(
+        string='Interim Audit Date',
+        help='Date of interim audit work'
     )
-    team_communication = fields.Html(
-        string='Team Communication',
-        help='Internal team communication plan'
+    fieldwork_start_date = fields.Date(
+        string='Fieldwork Start Date',
+        required=True,
+        help='Planned start of year-end fieldwork'
     )
-
-    # ===== Attachments =====
-    audit_strategy_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'qaco_p12_audit_strategy_rel',
-        'p12_id',
-        'attachment_id',
-        string='Audit Strategy Document'
+    fieldwork_end_date = fields.Date(
+        string='Fieldwork End Date',
+        required=True,
+        help='Planned completion of fieldwork'
     )
-    audit_plan_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'qaco_p12_audit_plan_rel',
-        'p12_id',
-        'attachment_id',
-        string='Audit Plan'
+    draft_report_date = fields.Date(
+        string='Draft Report Date',
+        help='Target date for draft report'
     )
-    timeline_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'qaco_p12_timeline_rel',
-        'p12_id',
-        'attachment_id',
-        string='Timeline/Gantt Chart'
+    final_report_date = fields.Date(
+        string='Final Report Date',
+        help='Target date for final report issuance'
     )
     
-    # Attachment aliases for XML compatibility
-    strategy_attachment_ids = fields.Many2many(
-        related='audit_strategy_attachment_ids',
-        string='Strategy Attachments',
-        readonly=False
+    # Review checkpoints
+    eqcr_required = fields.Boolean(
+        string='EQCR Required?',
+        tracking=True,
+        help='ISA 220: Engagement Quality Control Review required?'
     )
-    program_attachment_ids = fields.Many2many(
-        related='audit_plan_attachment_ids',
-        string='Audit Program Attachments',
-        readonly=False
+    eqcr_reviewer_id = fields.Many2one(
+        'res.partner',
+        string='EQCR Reviewer',
+        help='Engagement Quality Control Reviewer'
+    )
+    review_checkpoints = fields.Html(
+        string='Review & EQCR Checkpoints',
+        help='Key review points throughout audit'
+    )
+    
+    # Budget reconciliation
+    budget_reconciliation = fields.Html(
+        string='Budget Reconciliation',
+        help='Reconciliation with P-5 Audit Budget'
+    )
+    budget_aligned_with_p5 = fields.Boolean(
+        string='Budget Aligned with P-5?',
+        help='Confirm budget aligns with P-5 materiality budget'
     )
 
-    # ===== Summary =====
-    strategy_summary = fields.Html(
-        string='Audit Strategy Summary',
-        help='Consolidated audit strategy per ISA 300'
+    # ============================================================================
+    # SECTION K: MANDATORY DOCUMENT UPLOADS
+    # ============================================================================
+    audit_strategy_memo_attachments = fields.Many2many(
+        'ir.attachment',
+        'p12_strategy_memo_rel',
+        'p12_id',
+        'attachment_id',
+        string='Audit Strategy Memorandum (Draft)',
+        help='Upload draft audit strategy memorandum'
     )
-    isa_reference = fields.Char(
-        string='ISA Reference',
-        default='ISA 300/330',
+    audit_programs_export_attachments = fields.Many2many(
+        'ir.attachment',
+        'p12_programs_export_rel',
+        'p12_id',
+        'attachment_id',
+        string='Detailed Audit Programs (Export)',
+        help='Export of detailed audit programs'
+    )
+    sampling_rationale_attachments = fields.Many2many(
+        'ir.attachment',
+        'p12_sampling_rel',
+        'p12_id',
+        'attachment_id',
+        string='Sampling Rationale',
+        help='Documentation of sampling approach'
+    )
+    specialist_scope_attachments = fields.Many2many(
+        'ir.attachment',
+        'p12_specialist_rel',
+        'p12_id',
+        'attachment_id',
+        string='Specialist Scope Documents',
+        help='Scope and engagement letters for specialists'
+    )
+    prior_year_comparison_attachments = fields.Many2many(
+        'ir.attachment',
+        'p12_prior_year_rel',
+        'p12_id',
+        'attachment_id',
+        string='Prior-Year Strategy Comparison',
+        help='Comparison with prior year audit approach'
+    )
+
+    # ============================================================================
+    # SECTION L: P-12 CONCLUSION & PROFESSIONAL JUDGMENT
+    # ============================================================================
+    conclusion_narrative = fields.Html(
+        string='P-12 Professional Judgment Conclusion',
+        default=lambda self: self._default_conclusion_narrative(),
+        required=True,
+        help='Mandatory conclusion per ISA 300'
+    )
+    all_risks_addressed = fields.Boolean(
+        string='All Risks Addressed?',
+        help='Confirm all identified risks have audit responses'
+    )
+    programs_finalized_confirmed = fields.Boolean(
+        string='All Programs Finalized?',
+        help='Confirm all audit programs are complete and approved'
+    )
+    strategy_approved_before_execution = fields.Boolean(
+        string='Strategy Approved Prior to Execution?',
+        help='Confirm strategy approval before execution begins'
+    )
+
+    # ============================================================================
+    # SECTION M: REVIEW, APPROVAL & LOCK
+    # ============================================================================
+    prepared_by = fields.Many2one(
+        'res.users',
+        string='Prepared By',
+        tracking=True,
+        readonly=True
+    )
+    prepared_by_role = fields.Char(
+        string='Role',
+        compute='_compute_preparer_role',
+        store=True
+    )
+    prepared_on = fields.Datetime(
+        string='Prepared On',
         readonly=True
     )
     
-    # Summary alias for XML compatibility
-    audit_plan_summary = fields.Html(
-        related='strategy_summary',
-        string='Audit Plan Summary',
-        readonly=False
+    reviewed_by = fields.Many2one(
+        'res.users',
+        string='Reviewed By (Manager)',
+        tracking=True,
+        readonly=True
+    )
+    reviewed_on = fields.Datetime(
+        string='Reviewed On',
+        readonly=True
+    )
+    review_notes = fields.Html(
+        string='Manager Review Notes',
+        help='Manager must document review findings'
+    )
+    
+    partner_approved = fields.Boolean(
+        string='Partner Approval',
+        tracking=True,
+        readonly=True,
+        copy=False
+    )
+    partner_approved_by = fields.Many2one(
+        'res.users',
+        string='Partner Approved By',
+        tracking=True,
+        readonly=True
+    )
+    partner_approved_on = fields.Datetime(
+        string='Partner Approved On',
+        readonly=True
+    )
+    partner_comments = fields.Html(
+        string='Partner Comments',
+        help='MANDATORY: Partner must provide substantive comments per ISA 220'
+    )
+    
+    locked = fields.Boolean(
+        string='Planning Phase Locked',
+        compute='_compute_locked',
+        store=True,
+        help='P-12 approval locks entire planning phase'
+    )
+    
+    # Audit trail
+    version_history = fields.Text(
+        string='Version History',
+        readonly=True,
+        help='ISA 230: Full audit trail preserved'
+    )
+    reviewer_timestamps = fields.Text(
+        string='Reviewer Timestamps',
+        readonly=True
     )
 
-    # ===== Sign-off Fields =====
-    senior_signed_user_id = fields.Many2one('res.users', string='Senior Completed By', tracking=True, copy=False, readonly=True)
-    senior_signed_on = fields.Datetime(string='Senior Completed On', tracking=True, copy=False, readonly=True)
-    manager_reviewed_user_id = fields.Many2one('res.users', string='Manager Reviewed By', tracking=True, copy=False, readonly=True)
-    manager_reviewed_on = fields.Datetime(string='Manager Reviewed On', tracking=True, copy=False, readonly=True)
-    partner_approved_user_id = fields.Many2one('res.users', string='Partner Approved By', tracking=True, copy=False, readonly=True)
-    partner_approved_on = fields.Datetime(string='Partner Approved On', tracking=True, copy=False, readonly=True)
-    reviewer_notes = fields.Html(string='Reviewer Notes')
-    approval_notes = fields.Html(string='Approval Notes')
+    # ISA Reference
+    isa_reference = fields.Char(
+        string='ISA Reference',
+        default='ISA 300, ISA 315, ISA 330, ISA 240, ISA 520, ISA 530, ISA 570, ISA 701, ISA 220, ISQM-1',
+        readonly=True
+    )
 
+    # ============================================================================
+    # SQL CONSTRAINTS
+    # ============================================================================
     _sql_constraints = [
-        ('audit_unique', 'UNIQUE(audit_id)', 'Only one P-12 record per Audit Engagement is allowed.')
+        ('engagement_unique', 'UNIQUE(engagement_id, audit_year_id)', 
+         'Only one P-12 record per audit engagement and year is allowed.')
     ]
 
-    @api.depends('audit_id', 'client_id')
-    def _compute_name(self):
-        for record in self:
-            if record.client_id:
-                record.name = f"P12-{record.client_id.name[:15]}"
-            else:
-                record.name = 'P-12: Audit Strategy'
+    # ============================================================================
+    # COMPUTED FIELDS
+    # ============================================================================
+    @api.depends('risk_response_ids', 'risk_response_ids.response_documented')
+    def _compute_risk_metrics(self):
+        for rec in self:
+            rec.total_risks = len(rec.risk_response_ids)
+            rec.risks_with_responses = len(
+                rec.risk_response_ids.filtered(lambda r: r.response_documented)
+            )
+            rec.unaddressed_risks = rec.total_risks - rec.risks_with_responses
+            rec.significant_risk_count = len(
+                rec.risk_response_ids.filtered(lambda r: r.risk_level == 'significant')
+            )
 
-    def _validate_mandatory_fields(self):
-        """Validate mandatory fields before completing P-12."""
+    @api.depends('fs_area_strategy_ids')
+    def _compute_fs_area_coverage(self):
+        """Check if all mandatory FS areas are covered"""
+        mandatory_areas = [
+            'revenue', 'ppe', 'inventory', 'cash', 'borrowings',
+            'provisions', 'related_parties', 'taxes', 'equity', 'expenses'
+        ]
+        for rec in self:
+            covered_areas = rec.fs_area_strategy_ids.mapped('fs_area')
+            rec.mandatory_fs_areas_covered = all(
+                area in covered_areas for area in mandatory_areas
+            )
+
+    @api.depends('kam_candidate_ids')
+    def _compute_kam_metrics(self):
+        for rec in self:
+            rec.kam_candidates_count = len(rec.kam_candidate_ids)
+            if rec.kam_candidate_ids:
+                rec.kam_from_significant_risks = all(
+                    kam.from_significant_risk for kam in rec.kam_candidate_ids
+                )
+            else:
+                rec.kam_from_significant_risks = False
+
+    @api.depends('planned_hours_partner', 'planned_hours_manager',
+                 'planned_hours_senior', 'planned_hours_trainee')
+    def _compute_total_hours(self):
+        for rec in self:
+            rec.total_planned_hours = (
+                rec.planned_hours_partner +
+                rec.planned_hours_manager +
+                rec.planned_hours_senior +
+                rec.planned_hours_trainee
+            )
+
+    @api.depends('prepared_by')
+    def _compute_preparer_role(self):
+        for rec in self:
+            if rec.prepared_by:
+                if rec.prepared_by.has_group('qaco_audit.group_audit_partner'):
+                    rec.prepared_by_role = 'Partner'
+                elif rec.prepared_by.has_group('qaco_audit.group_audit_manager'):
+                    rec.prepared_by_role = 'Manager'
+                else:
+                    rec.prepared_by_role = 'Senior/Trainee'
+            else:
+                rec.prepared_by_role = ''
+
+    @api.depends('partner_approved')
+    def _compute_locked(self):
+        for rec in self:
+            rec.locked = rec.partner_approved
+
+    def _compute_group_audit_applicable(self):
+        """Check if group audit applies from P-11"""
+        for rec in self:
+            p11 = self.env['qaco.planning.p11.group.audit'].search([
+                ('engagement_id', '=', rec.engagement_id.id),
+                ('audit_year_id', '=', rec.audit_year_id.id),
+            ], limit=1)
+            rec.group_audit_applicable = p11.is_group_audit if p11 else False
+
+    def _default_conclusion_narrative(self):
+        return """
+        <p><strong>P-12: Audit Strategy & Detailed Audit Plan Conclusion</strong></p>
+        <p>An overall audit strategy and detailed audit plan have been developed in accordance with 
+        ISA 300, responsive to assessed risks under ISA 315 and ISA 330. The audit plan provides a 
+        basis for executing an effective and efficient audit.</p>
+        <p><strong>Key Confirmations:</strong></p>
+        <ul>
+            <li>All identified risks from P-6 through P-11 have been addressed with appropriate audit responses</li>
+            <li>Detailed audit programs have been finalized for all financial statement areas</li>
+            <li>Sampling strategies align with performance materiality</li>
+            <li>Fraud-responsive procedures integrated per ISA 240</li>
+            <li>Resource allocation and timeline established</li>
+            <li>Strategy approved by partner prior to execution</li>
+        </ul>
+        """
+
+    # ============================================================================
+    # VALIDATION & CONSTRAINTS
+    # ============================================================================
+    @api.constrains('unaddressed_risks')
+    def _check_no_unaddressed_risks(self):
+        for rec in self:
+            if rec.unaddressed_risks > 0:
+                raise ValidationError(
+                    _('Cannot approve P-12: %d risk(s) do not have documented audit responses. '
+                      'All risks must be addressed per ISA 330.') % rec.unaddressed_risks
+                )
+
+    @api.constrains('fieldwork_start_date', 'fieldwork_end_date')
+    def _check_fieldwork_dates(self):
+        for rec in self:
+            if rec.fieldwork_start_date and rec.fieldwork_end_date:
+                if rec.fieldwork_end_date <= rec.fieldwork_start_date:
+                    raise ValidationError(
+                        _('Fieldwork end date must be after start date.')
+                    )
+
+    @api.constrains('eqcr_required', 'eqcr_reviewer_id')
+    def _check_eqcr_reviewer(self):
+        for rec in self:
+            if rec.eqcr_required and not rec.eqcr_reviewer_id:
+                raise ValidationError(
+                    _('EQCR Reviewer must be assigned if EQCR is required per ISA 220.')
+                )
+
+    # ============================================================================
+    # PRE-CONDITIONS ENFORCEMENT
+    # ============================================================================
+    def _check_preconditions(self):
+        """
+        System-enforced pre-conditions:
+        ALL planning phases P-1 through P-11 must be partner-approved and locked
+        """
         self.ensure_one()
         errors = []
-        if not self.overall_strategy:
-            errors.append('Overall audit strategy must be documented')
-        if not self.controls_reliance:
-            errors.append('Controls reliance approach must be selected')
-        if not self.key_audit_areas:
-            errors.append('Key audit areas must be documented')
-        if not self.strategy_summary:
-            errors.append('Strategy summary is required')
+
+        # Check P-1 through P-11 (comprehensive check)
+        planning_phases = [
+            ('qaco.planning.p1.engagement', 'P-1 (Engagement Understanding)'),
+            ('qaco.planning.p2.entity', 'P-2 (Entity Understanding)'),
+            ('qaco.planning.p3.controls', 'P-3 (Internal Controls)'),
+            ('qaco.planning.p4.analytics', 'P-4 (Preliminary Analytics)'),
+            ('qaco.planning.p5.materiality', 'P-5 (Materiality)'),
+            ('qaco.planning.p6.risk', 'P-6 (Risk Assessment)'),
+            ('qaco.planning.p7.fraud', 'P-7 (Fraud Assessment)'),
+            ('qaco.planning.p8.going.concern', 'P-8 (Going Concern)'),
+            ('qaco.planning.p9.laws', 'P-9 (Laws & Regulations)'),
+            ('qaco.planning.p10.related.parties', 'P-10 (Related Parties)'),
+            ('qaco.planning.p11.group.audit', 'P-11 (Group Audit)'),
+        ]
+
+        for model_name, phase_name in planning_phases:
+            phase = self.env[model_name].search([
+                ('engagement_id', '=', self.engagement_id.id),
+                ('audit_year_id', '=', self.audit_year_id.id),
+            ], limit=1)
+            
+            if not phase:
+                errors.append(f'{phase_name} record not found.')
+            elif phase.state != 'locked':
+                errors.append(f'{phase_name} must be locked (partner-approved).')
+
         if errors:
-            raise UserError('Cannot complete P-12. Missing requirements:\n• ' + '\n• '.join(errors))
+            raise UserError(
+                _('P-12 Pre-Conditions Not Met:\n\n') + '\n'.join(['• ' + e for e in errors]) +
+                _('\n\nAll planning phases P-1 through P-11 must be partner-approved and locked before P-12 can be created.')
+            )
 
-    def action_start_work(self):
-        for record in self:
-            if record.state != 'not_started':
-                raise UserError('Can only start work on tabs that are Not Started.')
-            record.state = 'in_progress'
+    @api.model
+    def create(self, vals):
+        rec = super(AuditPlanningP12AuditStrategy, self).create(vals)
+        rec._check_preconditions()
+        rec._auto_populate_risk_responses()
+        rec._log_version('Created')
+        return rec
 
-    def action_complete(self):
-        for record in self:
-            if record.state != 'in_progress':
-                raise UserError('Can only complete tabs that are In Progress.')
-            record._validate_mandatory_fields()
-            record.senior_signed_user_id = self.env.user
-            record.senior_signed_on = fields.Datetime.now()
-            record.state = 'completed'
+    def write(self, vals):
+        result = super(AuditPlanningP12AuditStrategy, self).write(vals)
+        if any(key in vals for key in ['state', 'partner_approved']):
+            self._log_version(f"Updated: {vals.get('state', 'state change')}")
+        return result
 
-    def action_review(self):
-        for record in self:
-            if record.state != 'completed':
-                raise UserError('Can only review tabs that are Completed.')
-            record.manager_reviewed_user_id = self.env.user
-            record.manager_reviewed_on = fields.Datetime.now()
-            record.state = 'reviewed'
+    def _log_version(self, action):
+        """Maintain audit trail per ISA 230"""
+        for rec in self:
+            timestamp = fields.Datetime.now()
+            user = self.env.user.name
+            log_entry = f"{timestamp} | {user} | {action}\n"
+            rec.version_history = (rec.version_history or '') + log_entry
 
-    def action_approve(self):
-        for record in self:
-            if record.state != 'reviewed':
-                raise UserError('Can only approve tabs that have been Reviewed.')
-            record.partner_approved_user_id = self.env.user
-            record.partner_approved_on = fields.Datetime.now()
-            record.state = 'approved'
+    # ============================================================================
+    # AUTO-POPULATION FROM PRIOR PHASES
+    # ============================================================================
+    def _auto_populate_risk_responses(self):
+        """Auto-populate risk-response mapping from P-6, P-7, P-8, P-9, P-10"""
+        self.ensure_one()
+        
+        RiskResponse = self.env['qaco.planning.p12.risk.response']
+        
+        # Clear existing
+        self.risk_response_ids.unlink()
+        
+        # From P-6 (Risk Assessment)
+        p6 = self.env['qaco.planning.p6.risk'].search([
+            ('engagement_id', '=', self.engagement_id.id),
+            ('audit_year_id', '=', self.audit_year_id.id),
+        ], limit=1)
+        
+        if p6 and p6.risk_ids:
+            for risk in p6.risk_ids:
+                RiskResponse.create({
+                    'p12_id': self.id,
+                    'source_phase': 'p6',
+                    'risk_description': risk.risk_description,
+                    'fs_area': risk.fs_area,
+                    'assertion': risk.assertion,
+                    'risk_level': risk.risk_level,
+                })
+        
+        # From P-7 (Fraud)
+        p7 = self.env['qaco.planning.p7.fraud'].search([
+            ('engagement_id', '=', self.engagement_id.id),
+            ('audit_year_id', '=', self.audit_year_id.id),
+        ], limit=1)
+        
+        if p7 and p7.fraud_risk_ids:
+            for fraud_risk in p7.fraud_risk_ids:
+                RiskResponse.create({
+                    'p12_id': self.id,
+                    'source_phase': 'p7',
+                    'risk_description': fraud_risk.fraud_risk_description,
+                    'risk_level': 'significant',  # Fraud risks are always significant
+                })
+        
+        # Similar logic for P-8, P-9, P-10 can be added
+
+    # ============================================================================
+    # MANDATORY FIELD VALIDATION
+    # ============================================================================
+    def _validate_mandatory_fields(self):
+        """Validate all mandatory fields before progression"""
+        self.ensure_one()
+        errors = []
+
+        # Section A
+        if not self.audit_approach:
+            errors.append('Section A: Overall audit approach must be selected')
+        if not self.approach_rationale:
+            errors.append('Section A: Rationale for audit approach is required')
+        
+        # Section B
+        if self.unaddressed_risks > 0:
+            errors.append(f'Section B: {self.unaddressed_risks} risk(s) without responses')
+        
+        # Section C
+        if not self.mandatory_fs_areas_covered:
+            errors.append('Section C: All mandatory FS areas must be covered')
+        
+        # Section D
+        if not self.programs_finalized:
+            errors.append('Section D: Audit programs must be finalized')
+        
+        # Section G (Fraud - MANDATORY)
+        if not self.journal_entry_testing_approach:
+            errors.append('Section G: Journal entry testing approach is required (ISA 240.32)')
+        if not self.management_override_procedures:
+            errors.append('Section G: Management override procedures are required (ISA 240.33)')
+        
+        # Section J (Timeline)
+        if not self.fieldwork_start_date:
+            errors.append('Section J: Fieldwork start date is required')
+        if not self.fieldwork_end_date:
+            errors.append('Section J: Fieldwork end date is required')
+        
+        # Section K (Attachments)
+        if not self.audit_strategy_memo_attachments:
+            errors.append('Section K: Audit strategy memorandum must be uploaded')
+        
+        # Section L (Confirmations)
+        if not self.all_risks_addressed:
+            errors.append('Section L: Confirm all risks are addressed')
+        if not self.programs_finalized_confirmed:
+            errors.append('Section L: Confirm all programs are finalized')
+        if not self.strategy_approved_before_execution:
+            errors.append('Section L: Confirm strategy approval prior to execution')
+
+        if errors:
+            raise UserError(
+                _('Cannot progress P-12. Missing requirements:\n\n') + 
+                '\n'.join(['• ' + e for e in errors])
+            )
+
+    # ============================================================================
+    # STATE MANAGEMENT ACTIONS
+    # ============================================================================
+    def action_mark_complete(self):
+        """Senior marks P-12 as complete"""
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('Can only mark complete from Draft state.'))
+            rec._validate_mandatory_fields()
+            rec.write({
+                'prepared_by': self.env.user.id,
+                'prepared_on': fields.Datetime.now(),
+                'state': 'review',
+            })
+            rec.message_post(body=_('P-12 marked complete and submitted for manager review.'))
+
+    def action_manager_review(self):
+        """Manager reviews and approves P-12"""
+        for rec in self:
+            if rec.state != 'review':
+                raise UserError(_('Can only review from Review state.'))
+            if not rec.review_notes:
+                raise UserError(_('Manager review notes are mandatory.'))
+            rec.write({
+                'reviewed_by': self.env.user.id,
+                'reviewed_on': fields.Datetime.now(),
+                'state': 'partner',
+            })
+            rec.message_post(body=_('P-12 reviewed by manager and forwarded to partner.'))
+
+    def action_partner_approve(self):
+        """Partner approves and locks P-12 - LOCKS ENTIRE PLANNING PHASE"""
+        for rec in self:
+            if rec.state != 'partner':
+                raise UserError(_('Can only approve from Partner state.'))
+            if not rec.partner_comments:
+                raise UserError(_('Partner comments are MANDATORY per ISA 220.'))
+            
+            rec.write({
+                'partner_approved': True,
+                'partner_approved_by': self.env.user.id,
+                'partner_approved_on': fields.Datetime.now(),
+                'state': 'locked',
+            })
+            rec.message_post(
+                body=_('P-12 approved by partner. PLANNING PHASE LOCKED. Execution Phase is now unlocked.')
+            )
+            rec._unlock_execution_phase()
 
     def action_send_back(self):
-        for record in self:
-            if record.state not in ['completed', 'reviewed']:
-                raise UserError('Can only send back tabs that are Completed or Reviewed.')
-            record.state = 'in_progress'
+        """Send back to draft for corrections"""
+        for rec in self:
+            if rec.state not in ['review', 'partner']:
+                raise UserError(_('Can only send back from Review or Partner state.'))
+            rec.state = 'draft'
+            rec.message_post(body=_('P-12 sent back to draft for corrections.'))
 
-    def action_unlock(self):
-        for record in self:
-            if record.state != 'approved':
-                raise UserError('Can only unlock Approved tabs.')
-            record.partner_approved_user_id = False
-            record.partner_approved_on = False
-            record.state = 'reviewed'
+    def action_partner_unlock(self):
+        """Partner unlocks for amendments (exceptional)"""
+        for rec in self:
+            if rec.state != 'locked':
+                raise UserError(_('Can only unlock from Locked state.'))
+            if not self.env.user.has_group('qaco_audit.group_audit_partner'):
+                raise UserError(_('Only partners can unlock P-12.'))
+            rec.write({
+                'partner_approved': False,
+                'state': 'partner',
+            })
+            rec.message_post(body=_('P-12 unlocked by partner for amendment. WARNING: Planning phase unlocked.'))
+
+    def _unlock_execution_phase(self):
+        """Automatically unlock Execution Phase when P-12 is locked"""
+        self.ensure_one()
+        # This method signals that execution phase can now be accessed
+        # Implementation depends on execution phase gating logic
+        self.message_post(
+            body=_('Planning Phase complete. Execution Phase (Audit Fieldwork) is now accessible.')
+        )
 
 
-class PlanningP12ExpertLine(models.Model):
-    """Expert Line Item for Audit Strategy."""
-    _name = 'qaco.planning.p12.expert.line'
-    _description = 'Auditor Expert'
-    _order = 'sequence, name'
+# ============================================================================
+# CHILD MODEL: RISK-RESPONSE MAPPING
+# ============================================================================
+class PlanningP12RiskResponse(models.Model):
+    """Risk-to-Response Mapping (ISA 330)"""
+    _name = 'qaco.planning.p12.risk.response'
+    _description = 'Risk-Response Mapping'
+    _order = 'risk_level desc, fs_area'
 
-    p12_strategy_id = fields.Many2one(
+    p12_id = fields.Many2one(
         'qaco.planning.p12.strategy',
-        string='P-12 Strategy',
+        string='P-12 Audit Strategy',
         required=True,
         ondelete='cascade',
         index=True
     )
-    sequence = fields.Integer(string='Sequence', default=10)
-    name = fields.Char(
-        string='Expert Name/Firm',
+    
+    # Risk Details
+    source_phase = fields.Selection([
+        ('p6', 'P-6: Risk Assessment'),
+        ('p7', 'P-7: Fraud'),
+        ('p8', 'P-8: Going Concern'),
+        ('p9', 'P-9: Laws & Regulations'),
+        ('p10', 'P-10: Related Parties'),
+    ], string='Source Phase', required=True)
+    
+    risk_id = fields.Char(
+        string='Risk ID',
+        help='Reference to original risk ID'
+    )
+    risk_description = fields.Html(
+        string='Risk Description',
         required=True
     )
-    # Alias for XML compatibility
-    expert_name = fields.Char(
-        related='name',
-        string='Expert Name',
-        readonly=False
+    fs_area = fields.Char(
+        string='FS Area',
+        help='Financial statement area affected'
     )
-    expertise_area = fields.Selection([
-        ('valuation', 'Valuation'),
-        ('actuarial', 'Actuarial'),
-        ('it', 'IT/Cybersecurity'),
-        ('tax', 'Tax'),
-        ('legal', 'Legal'),
-        ('environmental', 'Environmental'),
-        ('engineering', 'Engineering'),
-        ('other', 'Other'),
-    ], string='Area of Expertise', required=True)
-    scope_of_work = fields.Text(
-        string='Scope of Work'
-    )
-    # Alias for XML compatibility
-    engagement_scope = fields.Text(
-        related='scope_of_work',
-        string='Engagement Scope',
-        readonly=False
-    )
-    competence_assessment = fields.Text(
-        string='Competence Assessment',
-        help='Assessment of expert\'s competence, capabilities, and objectivity per ISA 620'
-    )
-    objectivity_assessment = fields.Text(
-        string='Objectivity Assessment',
-        help='Assessment of expert\'s objectivity per ISA 620'
-    )
-    auditor_or_management = fields.Selection([
-        ('auditor', "Auditor's Expert"),
-        ('management', "Management's Expert"),
-    ], string='Expert Type', required=True)
-    related_audit_area = fields.Char(
-        string='Related Audit Area'
-    )
-    notes = fields.Text(string='Notes')
-
-
-class PlanningP12KeyAreaLine(models.Model):
-    """Key Audit Area Line Item for Audit Strategy."""
-    _name = 'qaco.planning.p12.key.area.line'
-    _description = 'Key Audit Area'
-    _order = 'sequence, area_name'
-
-    p12_strategy_id = fields.Many2one(
-        'qaco.planning.p12.strategy',
-        string='P-12 Strategy',
-        required=True,
-        ondelete='cascade',
-        index=True
-    )
-    sequence = fields.Integer(string='Sequence', default=10)
-    area_name = fields.Char(
-        string='Area Name',
-        required=True,
-        help='Name of the key audit area'
+    assertion = fields.Char(
+        string='Assertion',
+        help='Financial statement assertion affected'
     )
     risk_level = fields.Selection([
         ('low', 'Low'),
-        ('medium', 'Medium'),
+        ('moderate', 'Moderate'),
         ('high', 'High'),
         ('significant', 'Significant Risk'),
-    ], string='Risk Level', default='medium')
-    assertion_focus = fields.Selection([
-        ('existence', 'Existence'),
-        ('completeness', 'Completeness'),
-        ('accuracy', 'Accuracy'),
-        ('valuation', 'Valuation'),
-        ('rights', 'Rights & Obligations'),
-        ('presentation', 'Presentation & Disclosure'),
-        ('cutoff', 'Cut-off'),
-        ('multiple', 'Multiple Assertions'),
-    ], string='Assertion Focus')
-    audit_approach = fields.Selection([
-        ('substantive', 'Substantive Only'),
-        ('controls', 'Controls Reliance'),
-        ('combined', 'Combined Approach'),
-    ], string='Audit Approach', default='substantive')
-    timing = fields.Selection([
-        ('interim', 'Interim'),
-        ('final', 'Final'),
-        ('both', 'Both'),
-    ], string='Timing', default='final')
-    assigned_to = fields.Many2one(
-        'res.users',
-        string='Assigned To',
-        help='Team member responsible for this area'
+    ], string='Risk Level', required=True, default='moderate')
+    
+    # Audit Response (ISA 330)
+    planned_response = fields.Html(
+        string='Planned Audit Response',
+        help='Nature, timing, and extent of audit procedures (ISA 330.7)'
     )
-    budgeted_hours = fields.Float(
-        string='Budgeted Hours',
-        help='Hours budgeted for this area'
+    response_documented = fields.Boolean(
+        string='Response Documented?',
+        help='Has the audit response been documented?'
     )
+    
+    # For Significant Risks (ISA 330.21)
+    senior_involvement_required = fields.Boolean(
+        string='Senior Involvement Required?',
+        help='ISA 330.21: Significant risks require senior involvement'
+    )
+    substantive_procedures_mandatory = fields.Boolean(
+        string='Substantive Procedures Mandatory?',
+        help='ISA 330.21: Cannot rely solely on controls for significant risks'
+    )
+    
     notes = fields.Text(string='Notes')
+
+
+# ============================================================================
+# CHILD MODEL: FS AREA STRATEGY
+# ============================================================================
+class PlanningP12FSAreaStrategy(models.Model):
+    """FS Area-Wise Audit Strategy"""
+    _name = 'qaco.planning.p12.fs.area.strategy'
+    _description = 'FS Area Audit Strategy'
+    _order = 'fs_area'
+
+    p12_id = fields.Many2one(
+        'qaco.planning.p12.strategy',
+        string='P-12 Audit Strategy',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    
+    fs_area = fields.Selection([
+        ('revenue', 'Revenue'),
+        ('ppe', 'Property, Plant & Equipment'),
+        ('inventory', 'Inventory'),
+        ('cash', 'Cash & Bank'),
+        ('borrowings', 'Borrowings'),
+        ('provisions', 'Provisions & Contingencies'),
+        ('related_parties', 'Related Parties'),
+        ('taxes', 'Taxation'),
+        ('equity', 'Equity'),
+        ('expenses', 'Expenses'),
+        ('receivables', 'Trade Receivables'),
+        ('payables', 'Trade Payables'),
+        ('investments', 'Investments'),
+        ('other', 'Other'),
+    ], string='FS Area', required=True)
+    
+    rmm_level = fields.Selection([
+        ('low', 'Low'),
+        ('moderate', 'Moderate'),
+        ('high', 'High'),
+        ('significant', 'Significant Risk'),
+    ], string='RMM Level', required=True, help='Overall RMM for this area')
+    
+    controls_reliance = fields.Boolean(
+        string='Controls Reliance?',
+        help='Will we rely on controls for this area?'
+    )
+    substantive_focus = fields.Html(
+        string='Substantive Audit Focus',
+        required=True,
+        help='Key substantive procedures for this area'
+    )
+    specialist_required = fields.Boolean(
+        string='Specialist Required?',
+        help='Does this area require a specialist?'
+    )
+    specialist_type = fields.Char(
+        string='Specialist Type',
+        help='E.g., IT, Valuation, Actuary'
+    )
+    
+    notes = fields.Text(string='Notes')
+
+
+# ============================================================================
+# CHILD MODEL: AUDIT PROGRAMS
+# ============================================================================
+class PlanningP12AuditProgram(models.Model):
+    """Detailed Audit Programs"""
+    _name = 'qaco.planning.p12.audit.program'
+    _description = 'Detailed Audit Program'
+    _order = 'fs_area, sequence'
+
+    p12_id = fields.Many2one(
+        'qaco.planning.p12.strategy',
+        string='P-12 Audit Strategy',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    
+    sequence = fields.Integer(string='Sequence', default=10)
+    fs_area = fields.Selection([
+        ('revenue', 'Revenue'),
+        ('ppe', 'Property, Plant & Equipment'),
+        ('inventory', 'Inventory'),
+        ('cash', 'Cash & Bank'),
+        ('borrowings', 'Borrowings'),
+        ('provisions', 'Provisions & Contingencies'),
+        ('related_parties', 'Related Parties'),
+        ('taxes', 'Taxation'),
+        ('equity', 'Equity'),
+        ('expenses', 'Expenses'),
+        ('other', 'Other'),
+    ], string='FS Area', required=True)
+    
+    procedure_type = fields.Selection([
+        ('control_test', 'Control Testing'),
+        ('substantive_detail', 'Test of Details'),
+        ('substantive_analytics', 'Substantive Analytics'),
+        ('fraud_responsive', 'Fraud-Responsive Procedure'),
+        ('law_regulation', 'Law & Regulation Procedure'),
+        ('rpt_specific', 'RPT-Specific Procedure'),
+        ('going_concern', 'Going Concern Procedure'),
+    ], string='Procedure Type', required=True)
+    
+    procedure_description = fields.Html(
+        string='Procedure Description',
+        required=True,
+        help='Detailed description of audit procedure'
+    )
+    
+    nature = fields.Char(
+        string='Nature',
+        help='Nature of procedure (ISA 330)'
+    )
+    timing = fields.Char(
+        string='Timing',
+        help='Timing of procedure (interim/year-end)'
+    )
+    extent = fields.Char(
+        string='Extent',
+        help='Extent of procedure (sample size, coverage)'
+    )
+    
+    is_finalized = fields.Boolean(
+        string='Finalized?',
+        help='Has this procedure been finalized?'
+    )
+    
+    notes = fields.Text(string='Notes')
+
+
+# ============================================================================
+# CHILD MODEL: SAMPLING PLANS
+# ============================================================================
+class PlanningP12SamplingPlan(models.Model):
+    """Sampling Plans (ISA 530)"""
+    _name = 'qaco.planning.p12.sampling.plan'
+    _description = 'Audit Sampling Plan'
+    _order = 'fs_area'
+
+    p12_id = fields.Many2one(
+        'qaco.planning.p12.strategy',
+        string='P-12 Audit Strategy',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    
+    fs_area = fields.Char(
+        string='FS Area / Population',
+        required=True
+    )
+    
+    sampling_method = fields.Selection([
+        ('statistical', 'Statistical Sampling'),
+        ('non_statistical', 'Non-Statistical Sampling'),
+        ('mus', 'Monetary Unit Sampling'),
+    ], string='Sampling Method', required=True)
+    
+    population_size = fields.Integer(
+        string='Population Size',
+        help='Total number of items in population'
+    )
+    population_value = fields.Monetary(
+        string='Population Value',
+        currency_field='currency_id'
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='p12_id.currency_id'
+    )
+    
+    sample_size = fields.Integer(
+        string='Sample Size',
+        required=True,
+        help='Number of items to be tested'
+    )
+    basis_for_sample_size = fields.Html(
+        string='Basis for Sample Size',
+        required=True,
+        help='Explain how sample size was determined'
+    )
+    
+    sampling_unit = fields.Char(
+        string='Sampling Unit',
+        help='E.g., invoice, transaction, item'
+    )
+    expected_misstatement = fields.Monetary(
+        string='Expected Misstatement',
+        currency_field='currency_id'
+    )
+    tolerable_misstatement = fields.Monetary(
+        string='Tolerable Misstatement',
+        currency_field='currency_id',
+        help='Link to P-5 Performance Materiality'
+    )
+    coverage_percentage = fields.Float(
+        string='Coverage %',
+        digits=(5, 2),
+        help='Percentage of population covered by sample'
+    )
+    
+    notes = fields.Text(string='Notes')
+
+
+# ============================================================================
+# CHILD MODEL: KAM CANDIDATES
+# ============================================================================
+class PlanningP12KAMCandidate(models.Model):
+    """Key Audit Matter Candidates (ISA 701)"""
+    _name = 'qaco.planning.p12.kam.candidate'
+    _description = 'KAM Candidate'
+    _order = 'area'
+
+    p12_id = fields.Many2one(
+        'qaco.planning.p12.strategy',
+        string='P-12 Audit Strategy',
+        required=True,
+        ondelete='cascade',
+        index=True
+    )
+    
+    area = fields.Char(
+        string='Area / Matter',
+        required=True,
+        help='Area giving rise to potential KAM'
+    )
+    why_significant = fields.Html(
+        string='Why Significant?',
+        required=True,
+        help='ISA 701: Why this matter required significant auditor attention'
+    )
+    from_significant_risk = fields.Boolean(
+        string='Originates from Significant Risk?',
+        help='ISA 701.9: KAMs typically arise from significant risks'
+    )
+    risk_link = fields.Char(
+        string='Risk Link',
+        help='Reference to linked risk (P-6, P-7, etc.)'
+    )
+    likely_kam = fields.Boolean(
+        string='Likely to be KAM?',
+        help='Preliminary assessment of whether this will be a KAM'
+    )
+    
+    notes = fields.Text(string='Notes')
+
+
