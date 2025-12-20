@@ -355,3 +355,29 @@ class Qacoaudit(models.Model):
             'target': 'current',
         }
 
+    def action_open_planning_dashboard(self):
+        """Open planning progress dashboard for this audit (Session 6A)"""
+        self.ensure_one()
+        planning_main = self.env['qaco.planning.main'].search([('audit_id', '=', self.id)], limit=1)
+        if not planning_main:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Planning Phase'),
+                    'message': _('Planning phase has not been initialized for this audit yet.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Planning Progress Dashboard'),
+            'res_model': 'qaco.planning.main',
+            'res_id': planning_main.id,
+            'view_mode': 'form',
+            'views': [(self.env.ref('qaco_planning_phase.view_planning_main_dashboard_kanban').id, 'kanban')],
+            'target': 'current',
+            'context': {'create': False, 'edit': False},
+        }
+

@@ -19,6 +19,13 @@
                             invisible="state != 'prepared'" groups="qaco_audit.group_audit_manager"/>
                     <button name="action_partner_approve" string="Partner Approve" type="object" class="btn-success"
                             invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <!-- Session 6B: Auto-create risks from P-2/P-3/P-4 -->
+                    <button name="action_auto_create_risks_from_planning" 
+                            string="Auto-Create Risks from Planning" 
+                            type="object" 
+                            class="btn-info"
+                            invisible="state != 'draft'"
+                            help="Automatically create P-6 risks from P-2 (entity), P-3 (controls), P-4 (analytics) findings"/>
                 </header>
                 <sheet>
                     <!-- Sequential Gating Alert Banner (Session 5A) -->

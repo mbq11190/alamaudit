@@ -497,7 +497,10 @@ class PlanningP13Approval(models.Model):
         self.partner_signoff_user_id = self.env.user
 
     def action_lock_planning(self):
-        """Lock planning phase."""
+        """
+        Lock planning phase.
+        Session 6C: Auto-unlock execution phase when planning is locked.
+        """
         self.ensure_one()
         if not self.partner_signoff:
             raise UserError('Partner sign-off is required before locking planning.')
@@ -507,6 +510,56 @@ class PlanningP13Approval(models.Model):
         # Update main planning phase
         if self.planning_main_id:
             self.planning_main_id.is_planning_locked = True
+        
+        # Session 6C: Auto-unlock execution phase
+        self._auto_unlock_execution_phase()
+        
+    def _auto_unlock_execution_phase(self):
+        """
+        Session 6C: Automatically unlock/enable execution phase when planning is locked.
+        Ensures seamless audit lifecycle progression from planning → execution.
+        """
+        self.ensure_one()
+        if not self.audit_id:
+            return
+        
+        # Check if execution phase module is installed
+        if 'qaco.execution.phase' in self.env:
+            # Try to find or create execution phase record
+            execution = self.env['qaco.execution.phase'].search([
+                ('audit_id', '=', self.audit_id.id)
+            ], limit=1)
+            
+            if execution:
+                # Unlock execution if it was previously locked
+                if hasattr(execution, 'is_locked') and execution.is_locked:
+                    execution.is_locked = False
+                    _logger.info(f"Session 6C: Execution phase unlocked for audit {self.audit_id.id}")
+                    self.message_post(
+                        body="✅ Planning locked successfully. Execution phase has been automatically unlocked."
+                    )
+            else:
+                # Create execution phase if it doesn't exist
+                try:
+                    execution = self.env['qaco.execution.phase'].create({
+                        'audit_id': self.audit_id.id,
+                    })
+                    _logger.info(f"Session 6C: Execution phase created and unlocked for audit {self.audit_id.id}")
+                    self.message_post(
+                        body="✅ Planning locked successfully. Execution phase has been created and is now ready."
+                    )
+                except Exception as e:
+                    _logger.warning(f"Session 6C: Could not auto-create execution phase: {e}")
+                    # Don't fail planning lock if execution phase creation fails
+                    self.message_post(
+                        body="✅ Planning locked successfully. Note: Execution phase needs to be manually created."
+                    )
+        else:
+            # Execution phase module not installed - just log it
+            _logger.info(f"Session 6C: Execution phase module not installed. Planning locked for audit {self.audit_id.id}")
+            self.message_post(
+                body="✅ Planning locked successfully."
+            )
 
     def action_unlock_planning(self):
         """Unlock planning for corrections."""

@@ -208,6 +208,151 @@ class PlanningP6Risk(models.Model):
         self.message_post(body="P-6 partner approved and locked.")
         # Auto-unlock P-7 (Fraud Risk Assessment)
         self._auto_unlock_p7()
+
+    def action_auto_create_risks_from_planning(self):
+        """
+        Session 6B: Auto-create P-6 risks from P-2, P-3, P-4 findings.
+        Reduces manual data re-entry and ensures planning integration.
+        """
+        self.ensure_one()
+        created_count = 0
+        
+        # Get planning phase records
+        planning_main = self.planning_main_id
+        if not planning_main:
+            raise UserError('Planning phase not found for this audit.')
+        
+        # Create risks from P-2 (Entity Understanding - Industry/Business Risks)
+        if planning_main.p2_entity_id:
+            created_count += self._create_risks_from_p2(planning_main.p2_entity_id)
+        
+        # Create risks from P-3 (Control Deficiencies)
+        if planning_main.p3_controls_id:
+            created_count += self._create_risks_from_p3(planning_main.p3_controls_id)
+        
+        # Create risks from P-4 (Analytical Variances)
+        if planning_main.p4_analytics_id:
+            created_count += self._create_risks_from_p4(planning_main.p4_analytics_id)
+        
+        if created_count > 0:
+            self.message_post(
+                body=f"Session 6B: Auto-created {created_count} risks from P-2/P-3/P-4 findings."
+            )
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Risks Auto-Created'),
+                    'message': _(f'{created_count} risks have been created from planning phase findings.'),
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No New Risks'),
+                    'message': _('No new risks were identified from P-2/P-3/P-4 findings.'),
+                    'type': 'info',
+                    'sticky': False,
+                }
+            }
+    
+    def _create_risks_from_p2(self, p2_record):
+        """Create risks from P-2 entity understanding (industry/business risks)."""
+        created = 0
+        # Check if P-2 has identified entity-level risks in fields like:
+        # - industry_specific_risks, regulatory_compliance_risks, etc.
+        if hasattr(p2_record, 'entity_level_risk_factors') and p2_record.entity_level_risk_factors:
+            # Create FS-level risk from entity understanding
+            self.env['qaco.planning.p6.risk.line'].create({
+                'p6_risk_id': self.id,
+                'account_cycle': 'fs_level',
+                'risk_description': f'Entity-level risk from P-2: {p2_record.entity_level_risk_factors[:200]}',
+                'assertion_type': 'presentation',
+                'inherent_risk': 'high',
+                'control_risk': 'medium',
+                'fs_level_risk': True,
+                'risk_factors': 'Source: P-2 Entity Understanding',
+            })
+            created += 1
+        return created
+    
+    def _create_risks_from_p3(self, p3_record):
+        """Create risks from P-3 control deficiencies."""
+        created = 0
+        # Check for control deficiencies in P-3
+        if hasattr(p3_record, 'deficiency_line_ids'):
+            for deficiency in p3_record.deficiency_line_ids:
+                if deficiency.severity in ['significant', 'material_weakness']:
+                    # Map deficiency to account cycle
+                    cycle = 'other'
+                    if hasattr(deficiency, 'cycle_id') and deficiency.cycle_id:
+                        cycle_map = {
+                            'revenue': 'revenue',
+                            'purchases': 'purchases',
+                            'payroll': 'payroll',
+                            'inventory': 'inventory',
+                        }
+                        cycle = cycle_map.get(deficiency.cycle_id.cycle_type, 'other')
+                    
+                    # Create risk from control deficiency
+                    self.env['qaco.planning.p6.risk.line'].create({
+                        'p6_risk_id': self.id,
+                        'account_cycle': cycle,
+                        'risk_description': f'Control deficiency from P-3: {deficiency.deficiency_description[:200]}',
+                        'assertion_type': 'existence',  # Default; should be mapped from deficiency
+                        'inherent_risk': 'medium',
+                        'control_risk': 'high' if deficiency.severity == 'material_weakness' else 'medium',
+                        'is_significant_risk': deficiency.severity == 'material_weakness',
+                        'risk_factors': f'Source: P-3 Control Deficiency ({deficiency.severity})',
+                    })
+                    created += 1
+        return created
+    
+    def _create_risks_from_p4(self, p4_record):
+        """Create risks from P-4 analytical variances."""
+        created = 0
+        # Check for significant variances in P-4
+        if hasattr(p4_record, 'fs_line_ids'):
+            for fs_line in p4_record.fs_line_ids:
+                # Create risk for significant variances (>threshold or risk indicator = high)
+                if fs_line.exceeds_threshold or (hasattr(fs_line, 'risk_indicator') and fs_line.risk_indicator == 'high'):
+                    # Map FS line to account cycle
+                    cycle_map = {
+                        'revenue': 'revenue',
+                        'sales': 'revenue',
+                        'receivables': 'revenue',
+                        'purchases': 'purchases',
+                        'payables': 'purchases',
+                        'inventory': 'inventory',
+                        'cogs': 'inventory',
+                        'payroll': 'payroll',
+                        'wages': 'payroll',
+                    }
+                    cycle = 'other'
+                    if fs_line.fs_caption:
+                        caption_lower = fs_line.fs_caption.lower()
+                        for keyword, mapped_cycle in cycle_map.items():
+                            if keyword in caption_lower:
+                                cycle = mapped_cycle
+                                break
+                    
+                    # Create risk from analytical variance
+                    variance_pct = fs_line.variance_pct if hasattr(fs_line, 'variance_pct') else 0
+                    self.env['qaco.planning.p6.risk.line'].create({
+                        'p6_risk_id': self.id,
+                        'account_cycle': cycle,
+                        'risk_description': f'Significant variance from P-4: {fs_line.fs_caption} ({variance_pct:.1f}% variance)',
+                        'assertion_type': 'valuation',  # Variances typically affect valuation
+                        'inherent_risk': 'high' if abs(variance_pct) > 20 else 'medium',
+                        'control_risk': 'medium',
+                        'risk_factors': f'Source: P-4 Analytical Variance ({fs_line.auditor_explanation or "Unexplained"})',
+                    })
+                    created += 1
+        return created
     
     def _auto_unlock_p7(self):
         """Auto-unlock P-7 when P-6 is approved (similar to P-5 -> P-6 pattern)."""
