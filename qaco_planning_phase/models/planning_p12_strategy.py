@@ -45,7 +45,7 @@ class PlanningP12Strategy(models.Model):
     
     # Legacy fields (kept for backward compatibility)
     engagement_id = fields.Many2one(
-        'audit.engagement',
+        'qaco.audit',
         string='Legacy Engagement ID',
         compute='_compute_engagement_id',
         store=True,
@@ -61,7 +61,7 @@ class PlanningP12Strategy(models.Model):
     client_id = fields.Many2one(
         'res.partner',
         string='Client',
-        related='engagement_id.client_id',
+        related='audit_id.client_id',
         store=True,
         readonly=True
     )
