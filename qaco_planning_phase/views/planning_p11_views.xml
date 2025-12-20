@@ -119,12 +119,11 @@
                                 <field name="component_auditor_ids" nolabel="1">
                                     <tree editable="bottom">
                                         <field name="auditor_name"/>
-                                        <field name="firm_name"/>
+                                        <field name="firm_affiliation"/>
                                         <field name="jurisdiction"/>
-                                        <field name="competence_assessment"/>
+                                        <field name="competence_adequate"/>
                                         <field name="independence_confirmed"/>
-                                        <field name="ethical_requirements"/>
-                                        <field name="regulatory_environment"/>
+                                        <field name="regulatory_environment_assessed"/>
                                     </tree>
                                 </field>
                             </group>
@@ -297,23 +296,6 @@
             <p>
                 Document overall audit strategy and audit plan per ISA 300.
             </p>
-        </field>
-    </record>
-
-    <!-- Component Auditor Line Tree View -->
-    <record id="view_component_auditor_line_tree" model="ir.ui.view">
-        <field name="name">qaco.component.auditor.line.tree</field>
-        <field name="model">qaco.component.auditor.line</field>
-        <field name="arch" type="xml">
-            <tree string="Component Auditors" editable="bottom">
-                <field name="auditor_name"/>
-                <field name="firm_name"/>
-                <field name="jurisdiction"/>
-                <field name="competence_assessment"/>
-                <field name="independence_confirmed"/>
-                <field name="ethical_requirements"/>
-                <field name="regulatory_environment"/>
-            </tree>
         </field>
     </record>
 
