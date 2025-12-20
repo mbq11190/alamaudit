@@ -66,7 +66,7 @@
 
         <!-- Template: Financial Services -->
         <record id="planning_template_financial" model="qaco.planning.template">
-            <field name="name">Financial Services - Banking & DFI Planning</field>
+            <field name="name">Financial Services - Banking &amp; DFI Planning</field>
             <field name="industry_type">financial_services</field>
             <field name="description">Specialized planning template for banks, DFIs, microfinance institutions with SBP regulatory focus.</field>
             <field name="template_data" type="json">{

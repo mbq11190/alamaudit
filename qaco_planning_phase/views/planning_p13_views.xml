@@ -34,7 +34,7 @@
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'not_started'">
                         <h4><i class="fa fa-lock"/> Sequential Gating Active: P-13 is Locked</h4>
-                        <p><strong>ISA 300 Requirement:</strong> P-13 (APM & Approval) cannot be started until P-12 (Audit Strategy) has been Partner-approved.</p>
+                        <p><strong>ISA 300 Requirement:</strong> P-13 (APM &amp; Approval) cannot be started until P-12 (Audit Strategy) has been Partner-approved.</p>
                         <p><strong>Reason:</strong> Per ISA 300, the Audit Planning Memorandum represents the culmination of all planning work and requires completion of all prior phases to ensure comprehensive documentation.</p>
                         <p><strong>Action Required:</strong> Please complete and obtain Partner approval for P-12 (Audit Strategy) first.</p>
                     </div>
@@ -43,7 +43,7 @@
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
                          invisible="not can_open or state != 'not_started'">
                         <h4><i class="fa fa-unlock"/> P-13 is Unlocked</h4>
-                        <p>P-12 (Audit Strategy) has been approved. You may now proceed with P-13 (APM & Approval).</p>
+                        <p>P-12 (Audit Strategy) has been approved. You may now proceed with P-13 (APM &amp; Approval).</p>
                     </div>
 
                     <div class="oe_button_box" name="button_box">

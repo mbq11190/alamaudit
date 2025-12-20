@@ -375,3 +375,6 @@
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+</odoo>

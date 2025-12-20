@@ -31,7 +31,7 @@
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'not_started'">
                         <h4><i class="fa fa-lock"/> Sequential Gating Active: P-9 is Locked</h4>
-                        <p><strong>ISA 250 Requirement:</strong> P-9 (Laws & Regulations) cannot be started until P-6 (Risk Assessment) has been Partner-approved.</p>
+                        <p><strong>ISA 250 Requirement:</strong> P-9 (Laws &amp; Regulations) cannot be started until P-6 (Risk Assessment) has been Partner-approved.</p>
                         <p><strong>Reason:</strong> Per ISA 250, compliance assessment must align with identified RMM to ensure laws with direct effect on financial statements are properly evaluated.</p>
                         <p><strong>Action Required:</strong> Please complete and obtain Partner approval for P-6 (Risk Assessment) first.</p>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
                          invisible="not can_open or state != 'not_started'">
                         <h4><i class="fa fa-unlock"/> P-9 is Unlocked</h4>
-                        <p>P-6 (Risk Assessment) has been approved. You may now proceed with P-9 (Laws & Regulations).</p>
+                        <p>P-6 (Risk Assessment) has been approved. You may now proceed with P-9 (Laws &amp; Regulations).</p>
                     </div>
 
                     <div class="oe_title">

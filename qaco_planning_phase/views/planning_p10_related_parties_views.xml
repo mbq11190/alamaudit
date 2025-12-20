@@ -70,7 +70,7 @@
                             </field>
                         </page>
                         <!-- SECTION E: Fraud & Concealment -->
-                        <page string="E. Fraud & Concealment">
+                        <page string="E. Fraud &amp; Concealment">
                             <group>
                                 <field name="risk_undisclosed_rpt"/>
                                 <field name="mgmt_override_indicators"/>
@@ -96,7 +96,7 @@
                             </group>
                         </page>
                         <!-- SECTION H: Going Concern & Support -->
-                        <page string="H. Going Concern & Support">
+                        <page string="H. Going Concern &amp; Support">
                             <group>
                                 <field name="rpt_critical_liquidity"/>
                                 <field name="support_nature"/>
@@ -118,7 +118,7 @@
                             </group>
                         </page>
                         <!-- SECTION K: Review & Approval -->
-                        <page string="K. Review & Approval">
+                        <page string="K. Review &amp; Approval">
                             <group>
                                 <field name="prepared_by"/>
                                 <field name="prepared_by_role"/>
