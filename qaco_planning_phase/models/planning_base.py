@@ -123,10 +123,40 @@ class PlanningTabMixin(models.AbstractModel):
         for record in self:
             if record.state != 'approved':
                 raise UserError('Can only unlock Approved tabs.')
-            # Reset approval signature
-            record.partner_approved_user_id = False
-            record.partner_approved_on = False
-            record.state = 'reviewed'
+            if not self.env.user.has_group('qaco_audit.group_audit_partner'):
+                raise UserError('Only Partners can unlock approved planning tabs.')
+            # Reset approval signature with context flag
+            record.with_context(allow_partner_unlock=True).write({
+                'partner_approved_user_id': False,
+                'partner_approved_on': False,
+                'state': 'reviewed'
+            })
+            record.message_post(
+                body=f'Planning tab unlocked by {self.env.user.name} for amendment. ISA 230: Audit trail preserved.',
+                subject='Planning Tab Unlocked'
+            )
+
+    @api.constrains('state')
+    def _prevent_edit_after_approval(self):
+        """ISA 230: Prevent modification of approved planning sections."""
+        for rec in self:
+            if rec.state == 'approved' and not self.env.context.get('allow_partner_unlock'):
+                # Check if record was already approved and being modified
+                if rec._origin and rec._origin.state == 'approved':
+                    # Identify changed fields (exclude metadata)
+                    excluded_fields = {'state', 'write_date', 'write_uid', '__last_update', 'message_ids', 'activity_ids'}
+                    changed_fields = [
+                        fname for fname in rec._fields
+                        if fname not in excluded_fields
+                        and rec[fname] != rec._origin[fname]
+                    ]
+                    if changed_fields:
+                        raise ValidationError(
+                            f'ISA 230 Violation: Cannot modify approved planning tab.\n'
+                            f'Changed fields: {", ".join(changed_fields[:5])}'
+                            f'{"..." if len(changed_fields) > 5 else ""}\n\n'
+                            f'Partner must explicitly unlock this tab first via "Unlock" button.'
+                        )
 
     def _validate_mandatory_fields(self):
         """Override in each P-tab model to validate required fields."""

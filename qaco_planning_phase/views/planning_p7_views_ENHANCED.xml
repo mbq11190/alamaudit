@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================== -->
+    <!-- P-7: Fraud Risk Assessment (ISA 240)         -->
+    <!-- Enhanced with 12 Structured Sections A-L      -->
+    <!-- ============================================== -->
+
+    <!-- P-7 Child Model: Fraud Risk Line Form View -->
+    <record id="view_planning_p7_fraud_line_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.line.form</field>
+        <field name="model">qaco.planning.p7.fraud.line</field>
+        <field name="arch" type="xml">
+            <form string="Fraud Risk Factor">
+                <sheet>
+                    <group>
+                        <group string="Risk Identification">
+                            <field name="sequence"/>
+                            <field name="risk_category"/>
+                            <field name="fraud_type"/>
+                            <field name="source"/>
+                        </group>
+                        <group string="Risk Assessment">
+                            <field name="risk_level"/>
+                            <field name="likelihood"/>
+                            <field name="impact"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Financial Statement Linkage (P-6)">
+                            <field name="fs_area"/>
+                            <field name="assertion"/>
+                            <field name="affected_area"/>
+                        </group>
+                    </group>
+                    <group string="Fraud Risk Description">
+                        <field name="risk_description" nolabel="1" placeholder="Describe the fraud risk factor (incentive, opportunity, or attitude)..."/>
+                    </group>
+                    <group string="Fraud Scenario">
+                        <field name="fraud_scenario" nolabel="1" placeholder="How might this fraud occur? (Who, what, when, how)..."/>
+                    </group>
+                    <group string="Planned Audit Response">
+                        <field name="planned_response" nolabel="1" placeholder="Describe planned audit procedures to address this fraud risk..."/>
+                    </group>
+                    <group string="Additional Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-7 Child Model: Fraud Risk Line Tree View -->
+    <record id="view_planning_p7_fraud_line_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.line.tree</field>
+        <field name="model">qaco.planning.p7.fraud.line</field>
+        <field name="arch" type="xml">
+            <tree string="Fraud Risk Factors" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="risk_category"/>
+                <field name="risk_description"/>
+                <field name="fraud_type"/>
+                <field name="fs_area"/>
+                <field name="assertion"/>
+                <field name="risk_level" widget="badge" decoration-danger="risk_level == 'high'" decoration-warning="risk_level == 'medium'"/>
+                <field name="planned_response"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-7 Parent Model: Main Form View -->
+    <record id="view_planning_p7_fraud_form" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.form</field>
+        <field name="model">qaco.planning.p7.fraud</field>
+        <field name="arch" type="xml">
+            <form string="P-7: Fraud Risk Assessment (ISA 240)">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
+                            invisible="state != 'not_started'"/>
+                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
+                            invisible="state not in ['completed', 'reviewed']"/>
+                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">ISA 240 | Fraud Risk Assessment (Pakistan)</h3>
+                    </div>
+                    <group>
+                        <group string="Audit Information">
+                            <field name="audit_id" readonly="state != 'not_started'" options="{'no_create': True}"/>
+                            <field name="client_id" readonly="1"/>
+                        </group>
+                        <group string="Overall Assessment">
+                            <field name="overall_fraud_risk" widget="badge" 
+                                   decoration-success="overall_fraud_risk == 'low'"
+                                   decoration-warning="overall_fraud_risk == 'medium'"
+                                   decoration-danger="overall_fraud_risk in ['high', 'very_high']"/>
+                            <field name="fraud_risks_identified"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- ===== SECTION A: FRAUD BRAINSTORMING SESSION ===== -->
+                        <page string="A: Brainstorming" name="section_a_brainstorming">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240.15:</strong> The engagement team shall hold discussions among the team members about the susceptibility of the entity's financial statements to material misstatement due to fraud.
+                            </div>
+                            <group>
+                                <group string="Session Details">
+                                    <field name="brainstorming_conducted"/>
+                                    <field name="brainstorming_date"/>
+                                    <field name="brainstorming_mode"/>
+                                    <field name="brainstorming_participants" widget="many2many_tags"/>
+                                    <field name="brainstorming_attendees" widget="many2many_tags"/>
+                                </group>
+                                <group string="ISA 240.15 Mandatory Checklists">
+                                    <field name="brainstorm_fs_susceptibility"/>
+                                    <field name="brainstorm_management_override"/>
+                                    <field name="brainstorm_revenue_recognition"/>
+                                    <field name="brainstorm_unpredictability"/>
+                                </group>
+                            </group>
+                            <group string="Summary of Brainstorming Discussion (MANDATORY)">
+                                <field name="brainstorming_summary" widget="html" nolabel="1" 
+                                       placeholder="Document the fraud brainstorming discussion summary..."/>
+                            </group>
+                            <group string="Brainstorming Documentation">
+                                <field name="brainstorming_documentation" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Key Fraud Concerns Identified">
+                                <field name="key_fraud_concerns" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Discussion Points">
+                                <field name="discussion_points" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Fraud Scenarios Considered">
+                                <field name="fraud_scenarios" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Discussion Conclusions">
+                                <field name="discussion_conclusions" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION B: MANAGEMENT &amp; TCWG INQUIRIES ===== -->
+                        <page string="B: Inquiries" name="section_b_inquiries">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240.18:</strong> The auditor shall make inquiries of management and others within the entity to obtain an understanding of the fraud risk assessment process.
+                            </div>
+                            <group>
+                                <group string="Management Inquiries">
+                                    <field name="management_inquiries_performed"/>
+                                    <field name="actual_suspected_fraud_disclosed"/>
+                                </group>
+                                <group string="Inquiry Checklists">
+                                    <field name="inquiry_documented"/>
+                                    <field name="inquiry_responses_evaluated"/>
+                                </group>
+                            </group>
+                            <group string="Management's Assessment of Fraud Risk">
+                                <field name="management_fraud_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Management Inquiry Documentation">
+                                <field name="management_inquiry" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Fraud Disclosure Details" invisible="not actual_suspected_fraud_disclosed">
+                                <field name="fraud_disclosure_details" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="Those Charged with Governance (TCWG) Inquiries"/>
+                            <group>
+                                <group>
+                                    <field name="tcwg_inquiries_performed"/>
+                                </group>
+                            </group>
+                            <group string="TCWG Inquiry Documentation">
+                                <field name="tcwg_inquiry" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Results of TCWG Inquiries">
+                                <field name="tcwg_inquiry_results" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="Internal Audit &amp; Other Inquiries"/>
+                            <group string="Internal Audit Inquiries">
+                                <field name="internal_audit_inquiry" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Other Inquiries">
+                                <field name="other_inquiries" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION C: FRAUD TRIANGLE ASSESSMENT ===== -->
+                        <page string="C: Fraud Triangle" name="section_c_triangle">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240 Appendix 1:</strong> Assess fraud risk factors under the three conditions of the Fraud Triangle: Incentives/Pressures, Opportunities, and Attitudes/Rationalization.
+                            </div>
+                            <group>
+                                <group string="Fraud Risk Factor Assessment">
+                                    <field name="incentives_identified"/>
+                                    <field name="opportunities_identified"/>
+                                    <field name="attitudes_identified"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-warning" role="alert" invisible="not incentives_identified and not opportunities_identified and not attitudes_identified">
+                                <strong>Action Required:</strong> If any fraud risk factor is identified (Yes), you MUST document specific fraud risks in Section D: Fraud Risk Register.
+                            </div>
+                            <separator string="1. Incentives / Pressures"/>
+                            <group>
+                                <group>
+                                    <field name="pressure_rating"/>
+                                </group>
+                            </group>
+                            <group string="Incentive Factors Identified">
+                                <field name="fraud_incentives" widget="html" nolabel="1" 
+                                       placeholder="E.g., Financial pressures (liquidity, profitability targets), personal incentives (bonuses, stock options), external pressures (regulatory, lenders)..."/>
+                            </group>
+                            <group string="Pressure Factors">
+                                <field name="incentive_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="2. Opportunities"/>
+                            <group>
+                                <group>
+                                    <field name="opportunity_rating"/>
+                                </group>
+                            </group>
+                            <group string="Opportunity Factors Identified">
+                                <field name="fraud_opportunities" widget="html" nolabel="1"
+                                       placeholder="E.g., Weak internal controls, complex transactions, management override opportunities, inadequate segregation of duties..."/>
+                            </group>
+                            <group string="Opportunity Factors">
+                                <field name="opportunity_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="3. Attitudes / Rationalization"/>
+                            <group>
+                                <group>
+                                    <field name="rationalization_rating"/>
+                                </group>
+                            </group>
+                            <group string="Attitude/Rationalization Factors Identified">
+                                <field name="fraud_attitudes" widget="html" nolabel="1"
+                                       placeholder="E.g., Aggressive management attitudes, poor tone at top, history of legal violations, disrespect for regulatory framework..."/>
+                            </group>
+                            <group string="Rationalization Factors">
+                                <field name="attitude_factors" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="Additional Context"/>
+                            <group string="Industry-Specific Fraud Risks">
+                                <field name="industry_fraud_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Historical Fraud Information">
+                                <field name="historical_fraud" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Other Fraud Risk Factors">
+                                <field name="fraud_risk_factors" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION D: FRAUD RISK REGISTER ===== -->
+                        <page string="D: Fraud Risk Register" name="section_d_register">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240.24-25:</strong> Identify and assess the risks of material misstatement due to fraud at the financial statement and assertion levels.
+                            </div>
+                            <field name="fraud_risk_line_ids" nolabel="1" context="{'default_p7_fraud_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="risk_category"/>
+                                    <field name="risk_description"/>
+                                    <field name="fraud_type"/>
+                                    <field name="fs_area"/>
+                                    <field name="assertion"/>
+                                    <field name="risk_level" widget="badge"/>
+                                    <field name="source"/>
+                                    <button name="%(action_planning_p7_fraud_line_form)d" type="action" icon="fa-external-link" string="Details"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group string="Risk Identification">
+                                                <field name="sequence"/>
+                                                <field name="risk_category"/>
+                                                <field name="fraud_type"/>
+                                                <field name="source"/>
+                                            </group>
+                                            <group string="Risk Assessment">
+                                                <field name="risk_level"/>
+                                                <field name="likelihood"/>
+                                                <field name="impact"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Financial Statement Linkage (P-6)">
+                                                <field name="fs_area"/>
+                                                <field name="assertion"/>
+                                                <field name="affected_area"/>
+                                            </group>
+                                        </group>
+                                        <group string="Fraud Risk Description">
+                                            <field name="risk_description" nolabel="1"/>
+                                        </group>
+                                        <group string="Fraud Scenario">
+                                            <field name="fraud_scenario" nolabel="1"/>
+                                        </group>
+                                        <group string="Planned Audit Response">
+                                            <field name="planned_response" nolabel="1"/>
+                                        </group>
+                                        <group string="Additional Notes">
+                                            <field name="notes" nolabel="1"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                        <!-- ===== SECTION E: PRESUMED FRAUD RISKS ===== -->
+                        <page string="E: Presumed Risks" name="section_e_presumed">
+                            <div class="alert alert-danger" role="alert">
+                                <strong>ISA 240.26-27 &amp; 240.31:</strong> The auditor shall treat the following as fraud risks in the audit (MANDATORY - Cannot be removed unless rebutted with partner approval):
+                                <br/>• Revenue Recognition (rebuttable presumption)
+                                <br/>• Management Override of Controls (non-rebuttable)
+                            </div>
+                            <separator string="1. Revenue Recognition - Presumed Fraud Risk"/>
+                            <group>
+                                <group>
+                                    <field name="revenue_recognition_fraud" readonly="1"/>
+                                    <field name="revenue_fraud_presumption" readonly="1"/>
+                                    <field name="revenue_recognition_rebutted"/>
+                                    <field name="revenue_presumption_rebutted"/>
+                                    <field name="revenue_rebuttal_partner_approved" invisible="not revenue_recognition_rebutted"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-warning" role="alert" invisible="not revenue_recognition_rebutted">
+                                <strong>⚠ PARTNER APPROVAL REQUIRED:</strong> Any rebuttal of the revenue recognition fraud risk presumption MUST be approved by the engagement partner.
+                            </div>
+                            <group string="Revenue Recognition Assessment">
+                                <field name="revenue_recognition_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Revenue Fraud Assessment">
+                                <field name="revenue_fraud_assessment" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Rebuttal Justification (MANDATORY if rebutted)" invisible="not revenue_recognition_rebutted">
+                                <field name="revenue_rebuttal_justification" widget="html" nolabel="1"
+                                       placeholder="Provide detailed justification for rebutting the presumption of fraud risk in revenue recognition. Partner approval is MANDATORY."/>
+                            </group>
+                            <group string="Rebuttal Documentation" invisible="not revenue_recognition_rebutted">
+                                <field name="rebuttal_documentation" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Specific Revenue Risks">
+                                <field name="specific_revenue_risks" widget="html" nolabel="1"/>
+                            </group>
+                            <separator string="2. Management Override of Controls - Presumed Fraud Risk"/>
+                            <group>
+                                <group>
+                                    <field name="management_override_fraud" readonly="1"/>
+                                    <field name="management_override_level"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-danger" role="alert">
+                                <strong>ISA 240.31:</strong> Due to the unpredictable ways in which management override could occur, this risk CANNOT be rebutted. Management override is a fraud risk in every audit.
+                            </div>
+                            <group string="Management Override Assessment">
+                                <field name="management_override_assessment" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION F: MANAGEMENT OVERRIDE RESPONSES (MANDATORY) ===== -->
+                        <page string="F: Override Responses" name="section_f_override">
+                            <div class="alert alert-danger" role="alert">
+                                <strong>ISA 240.32:</strong> The following procedures are MANDATORY and CANNOT be deselected in response to management override risk:
+                            </div>
+                            <group>
+                                <group string="Mandatory Procedures (ISA 240.32)">
+                                    <field name="journal_entry_testing_planned" readonly="1"/>
+                                    <field name="estimates_review_planned" readonly="1"/>
+                                    <field name="unusual_transactions_planned" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="1. Journal Entry Testing (ISA 240.32(a))"/>
+                            <group string="Journal Entry Testing Plan">
+                                <field name="journal_entry_testing" widget="html" nolabel="1"
+                                       placeholder="Document the approach for testing journal entries, including: selection criteria, timing, nature of testing, focus on unusual entries..."/>
+                            </group>
+                            <separator string="2. Accounting Estimates Review (ISA 240.32(b))"/>
+                            <group string="Accounting Estimates Review Plan">
+                                <field name="estimates_review" widget="html" nolabel="1"
+                                       placeholder="Document the approach for reviewing accounting estimates for bias: key estimates identified, management's process, review for reasonableness, retrospective review..."/>
+                            </group>
+                            <separator string="3. Unusual or Significant Transactions (ISA 240.32(c))"/>
+                            <group string="Unusual Transactions Testing Plan">
+                                <field name="unusual_transactions" widget="html" nolabel="1"
+                                       placeholder="Document the approach for identifying and testing unusual or significant transactions outside normal course of business: business rationale, accounting treatment, management involvement..."/>
+                            </group>
+                            <separator string="4. Additional Unpredictability Procedures (ISA 240.30)"/>
+                            <group string="Unpredictability Procedures">
+                                <field name="unpredictability_procedures" widget="html" nolabel="1"
+                                       placeholder="Document additional unpredictable audit procedures: surprise visits, unannounced observations, altering audit approach..."/>
+                            </group>
+                            <group string="Elements of Unpredictability">
+                                <field name="unpredictability_elements" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION G: ENTITY'S ANTI-FRAUD CONTROLS ===== -->
+                        <page string="G: Anti-Fraud Controls" name="section_g_controls">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240.27:</strong> Evaluate whether the entity's programs and controls that address the identified fraud risks are suitably designed and have been placed in operation.
+                            </div>
+                            <group>
+                                <group string="Anti-Fraud Controls">
+                                    <field name="antifraud_controls_identified"/>
+                                    <field name="fraud_controls_effectiveness"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-warning" role="alert" invisible="fraud_controls_effectiveness != 'ineffective'">
+                                <strong>⚠ SYSTEM RULE:</strong> If anti-fraud controls are assessed as "Ineffective", overall fraud risk assessment should be increased (consider increasing from Medium → High or High → Very High).
+                            </div>
+                            <group string="Fraud Control Gaps Identified">
+                                <field name="fraud_control_gaps" widget="html" nolabel="1"
+                                       placeholder="Document identified weaknesses in entity-level anti-fraud controls: lack of whistleblower hotline, inadequate fraud risk assessment, poor tone at top, ineffective audit committee oversight..."/>
+                            </group>
+                            <group string="Impact on Fraud Risk Assessment">
+                                <field name="fraud_control_impact_assessment" widget="html" nolabel="1"
+                                       placeholder="Assess how control weaknesses impact the fraud risk assessment and planned audit procedures..."/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION H: OVERALL AUDIT RESPONSES (LINK TO P-12) ===== -->
+                        <page string="H: Audit Responses" name="section_h_responses">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240.29:</strong> Design and perform further audit procedures whose nature, timing, and extent are responsive to the assessed risks of material misstatement due to fraud at the assertion level.
+                            </div>
+                            <group>
+                                <group string="Overall Response Framework">
+                                    <field name="overall_fraud_response_nature"/>
+                                    <field name="overall_fraud_response_timing"/>
+                                    <field name="overall_fraud_response_extent"/>
+                                    <field name="senior_involvement_required"/>
+                                </group>
+                            </group>
+                            <group string="Overall Fraud Response Summary (Link to P-12: Audit Strategy)">
+                                <field name="fraud_response_summary" widget="html" nolabel="1"
+                                       placeholder="Document the overall audit response to fraud risks, including: assignment of personnel, evaluation of entity's selection of accounting policies, element of unpredictability, changes to audit approach..."/>
+                            </group>
+                            <group string="Overall Audit Response">
+                                <field name="fraud_responses" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Specific Fraud Responses">
+                                <field name="specific_fraud_responses" widget="html" nolabel="1"
+                                       placeholder="Document specific audit procedures responsive to identified fraud risks at the assertion level (these should link to Section D: Fraud Risk Register and P-12: Audit Strategy)..."/>
+                            </group>
+                            <group string="Professional Skepticism">
+                                <field name="professional_skepticism" widget="html" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION I: GOING CONCERN &amp; FRAUD INTERPLAY (LINK TO P-8) ===== -->
+                        <page string="I: GC-Fraud Linkage" name="section_i_gc">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 570.19:</strong> Events or conditions identified during the audit that may cast significant doubt on the entity's ability to continue as a going concern may include fraud indicators.
+                            </div>
+                            <group>
+                                <group string="Going Concern Fraud Linkage">
+                                    <field name="gc_fraud_linkage_exists"/>
+                                    <field name="gc_fraud_impact_cashflows"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-warning" role="alert" invisible="not gc_fraud_linkage_exists">
+                                <strong>⚠ CROSS-ISA LINKAGE:</strong> Fraud risks impacting going concern must be documented in P-8: Going Concern Assessment (ISA 570).
+                            </div>
+                            <group string="Going Concern Disclosure Fraud Risk">
+                                <field name="gc_fraud_disclosure_risk" widget="html" nolabel="1"
+                                       placeholder="Document the risk of fraudulent going concern disclosures (e.g., hiding liquidity issues, understating liabilities, overstating future cash flows to support going concern basis)..."/>
+                            </group>
+                            <group string="GC-Related Fraud Procedures (Link to P-8)">
+                                <field name="gc_fraud_procedures" widget="html" nolabel="1"
+                                       placeholder="Document specific audit procedures to address fraud risks that may impact going concern assessment: cash flow fraud, hidden liabilities, fraudulent forecasts..."/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION J: SUPPORTING DOCUMENTATION (MANDATORY) ===== -->
+                        <page string="J: Documents" name="section_j_documents">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>MANDATORY ATTACHMENTS:</strong> ISA 240.44 requires documentation of team discussions and significant decisions. At least one attachment is required in each category before approval.
+                            </div>
+                            <group string="Fraud Risk Assessment Documentation (MANDATORY)">
+                                <field name="fraud_risk_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Fraud Risk Documentation (Alternate Relation)">
+                                <field name="fraud_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Brainstorming Session Documentation (MANDATORY)">
+                                <field name="brainstorming_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION K: CONCLUSION &amp; SIGN-OFF ===== -->
+                        <page string="K: Conclusion" name="section_k_conclusion">
+                            <div class="alert alert-info" role="alert">
+                                <strong>ISA 240.44:</strong> The auditor shall include in the audit documentation: the significant decisions reached during the discussion among the engagement team and the identified and assessed risks of material misstatement due to fraud.
+                            </div>
+                            <group string="Fraud Risk Assessment Summary (MANDATORY)">
+                                <field name="fraud_risk_summary" widget="html" nolabel="1"/>
+                            </group>
+                            <group string="Fraud Risk Conclusion">
+                                <field name="fraud_conclusion" widget="html" nolabel="1"/>
+                            </group>
+                            <group>
+                                <group string="Overall Assessment">
+                                    <field name="overall_fraud_risk" widget="badge" readonly="1"/>
+                                    <field name="fraud_risks_identified" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="Mandatory Confirmations Before Approval"/>
+                            <div class="alert alert-danger" role="alert">
+                                <strong>⚠ SYSTEM RULE:</strong> All three confirmations below must be checked before partner approval can proceed.
+                            </div>
+                            <group>
+                                <group string="Section K Confirmations">
+                                    <field name="confirm_fraud_risks_linked"/>
+                                    <field name="confirm_responses_documented"/>
+                                    <field name="confirm_partner_reviewed"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ===== SECTION L: REVIEW &amp; APPROVAL ===== -->
+                        <page string="L: Review &amp; Approval" name="section_l_signoff">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Workflow:</strong> Senior → Manager Review → Partner Approval → Auto-unlock P-8: Going Concern
+                            </div>
+                            <group>
+                                <group string="Senior Completion">
+                                    <field name="senior_signed_user_id"/>
+                                    <field name="senior_signed_on"/>
+                                </group>
+                                <group string="Manager Review">
+                                    <field name="manager_reviewed_user_id"/>
+                                    <field name="manager_reviewed_on"/>
+                                    <field name="reviewer_notes" placeholder="Manager review comments..."/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Partner Approval">
+                                    <field name="partner_approved_user_id"/>
+                                    <field name="partner_approved_on"/>
+                                    <field name="approval_notes" placeholder="Partner approval comments..."/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference" readonly="1"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-success" role="alert" invisible="state != 'approved'">
+                                <strong>✅ P-7 Approved:</strong> P-8: Going Concern Assessment has been auto-unlocked. Audit trail preserved in chatter.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-7 Tree View -->
+    <record id="view_planning_p7_fraud_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.tree</field>
+        <field name="model">qaco.planning.p7.fraud</field>
+        <field name="arch" type="xml">
+            <tree string="P-7: Fraud Risk Assessment">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <field name="overall_fraud_risk" widget="badge" 
+                       decoration-success="overall_fraud_risk == 'low'"
+                       decoration-warning="overall_fraud_risk == 'medium'"
+                       decoration-danger="overall_fraud_risk in ['high', 'very_high']"/>
+                <field name="fraud_risks_identified"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" 
+                       decoration-primary="state == 'completed'"
+                       decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-7 Search View -->
+    <record id="view_planning_p7_fraud_search" model="ir.ui.view">
+        <field name="name">qaco.planning.p7.fraud.search</field>
+        <field name="model">qaco.planning.p7.fraud</field>
+        <field name="arch" type="xml">
+            <search string="P-7: Fraud Risk Assessment">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <field name="overall_fraud_risk"/>
+                <filter string="Not Started" name="not_started" domain="[('state','=','not_started')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state','=','in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
+                <filter string="Reviewed" name="reviewed" domain="[('state','=','reviewed')]"/>
+                <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+                <filter string="High/Very High Risk" name="high_risk" domain="[('overall_fraud_risk','in',['high','very_high'])]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_state" context="{'group_by':'state'}"/>
+                    <filter string="Client" name="group_client" context="{'group_by':'client_id'}"/>
+                    <filter string="Overall Fraud Risk" name="group_risk" context="{'group_by':'overall_fraud_risk'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- P-7 Action -->
+    <record id="action_planning_p7_fraud" model="ir.actions.act_window">
+        <field name="name">P-7: Fraud Risk Assessment</field>
+        <field name="res_model">qaco.planning.p7.fraud</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_not_started': 1, 'search_default_in_progress': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-7 Fraud Risk Assessment
+            </p>
+            <p>
+                Document fraud risk assessment per ISA 240:<br/>
+                • Mandatory fraud brainstorming session<br/>
+                • Fraud triangle assessment (incentives, opportunities, attitudes)<br/>
+                • Presumed fraud risks (revenue recognition, management override)<br/>
+                • Specific fraud risks and responses<br/>
+                • Going concern fraud interplay (link to P-8)
+            </p>
+        </field>
+    </record>
+
+    <!-- Child Model Action (for external link button) -->
+    <record id="action_planning_p7_fraud_line_form" model="ir.actions.act_window">
+        <field name="name">Fraud Risk Factor Details</field>
+        <field name="res_model">qaco.planning.p7.fraud.line</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -293,6 +293,42 @@ class PlanningP5Materiality(models.Model):
         tracking=True,
         copy=False
     )
+
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-5 can only be opened after P-4 is approved'
+    )
+
+    @api.depends('audit_id', 'audit_id.id')
+    def _compute_can_open(self):
+        """P-5 requires P-4 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-4 for this audit
+            p4 = self.env['qaco.planning.p4.analytics'].search([
+                ('audit_id', '=', rec.audit_id.id)
+            ], limit=1)
+            rec.can_open = p4.state == 'approved' if p4 else False
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'not_started' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-5 (Materiality) cannot be started until P-4 (Analytics) '
+                    'has been Partner-approved.\n\n'
+                    'Reason: Materiality determination requires analysis of financial '
+                    'data and understanding of users\' information needs.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-4 first.'
+                )
+
     audit_id = fields.Many2one(
         'qaco.audit',
         string='Audit Engagement',

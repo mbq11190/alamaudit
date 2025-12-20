@@ -23,6 +23,41 @@ class PlanningP10RelatedParties(models.Model):
         copy=False,
     )
 
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-10 can only be opened after P-9 is approved'
+    )
+
+    @api.depends('audit_id', 'audit_id.id')
+    def _compute_can_open(self):
+        """P-10 requires P-9 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-9 for this audit
+            p9 = self.env['qaco.planning.p9.laws'].search([
+                ('audit_id', '=', rec.audit_id.id)
+            ], limit=1)
+            rec.can_open = p9.state == 'approved' if p9 else False
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'not_started' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 & ISA 550 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-10 (Related Parties) cannot be started until P-9 (Laws & Regulations) '
+                    'has been Partner-approved.\n\n'
+                    'Reason: Related party identification per ISA 550 requires understanding of '
+                    'compliance context and regulatory requirements from P-9.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-9 first.'
+                )
+
     name = fields.Char(
         string='Reference',
         compute='_compute_name',
@@ -67,6 +102,51 @@ class PlanningP10RelatedParties(models.Model):
         'qaco.related.party.line',
         'p10_related_parties_id',
         string='Related Parties Register'
+    )
+
+    # Section A: Confirmations (ISA 550.13)
+    confirm_all_rp_identified = fields.Boolean(
+        string='☐ All known related parties identified',
+        help='Confirm all related parties have been identified per ISA 550.13',
+        tracking=True
+    )
+    confirm_changes_captured = fields.Boolean(
+        string='☐ Changes during the year captured',
+        help='Confirm changes in related parties during the year have been documented',
+        tracking=True
+    )
+
+    # ===== Section B: Completeness Procedures (ISA 550.13) =====
+    # Structured Completeness Procedure Checkboxes
+    completeness_inquiry_mgmt = fields.Boolean(
+        string='☐ Inquiry of management & TCWG',
+        help='ISA 550.13(a) - Inquire of management and TCWG regarding RP identification'
+    )
+    completeness_board_minutes = fields.Boolean(
+        string='☐ Review of board minutes',
+        help='ISA 550.13(b) - Review board and audit committee minutes'
+    )
+    completeness_declarations = fields.Boolean(
+        string='☐ Review of declarations of interest',
+        help='ISA 550.13(c) - Review declarations of interest from directors/KMP'
+    )
+    completeness_shareholder_records = fields.Boolean(
+        string='☐ Review of shareholder records',
+        help='ISA 550.13(d) - Review shareholder registers and ownership structure'
+    )
+    completeness_prior_year = fields.Boolean(
+        string='☐ Review of prior-year working papers',
+        help='ISA 550.13(e) - Review prior-year audit working papers for RP'
+    )
+    completeness_results = fields.Html(
+        string='Results of Completeness Procedures (MANDATORY)',
+        help='Document results of procedures performed per ISA 550.13 - REQUIRED',
+    )
+    completeness_procedures_count = fields.Integer(
+        string='Procedures Performed Count',
+        compute='_compute_completeness_count',
+        store=True,
+        help='System rule: Minimum 2 procedures required'
     )
 
     # ===== Related Party Transactions =====
@@ -143,7 +223,7 @@ class PlanningP10RelatedParties(models.Model):
     # ===== Risk Assessment =====
     rp_risk_assessment = fields.Html(
         string='Related Party Risk Assessment',
-        help='Assessment of risks arising from related party relationships'
+        help='Assessment of risks arising from related party relationships per ISA 550.16'
     )
     # XML view compatible alias
     rpt_risk_assessment = fields.Html(
@@ -151,13 +231,29 @@ class PlanningP10RelatedParties(models.Model):
         related='rp_risk_assessment',
         readonly=False
     )
+
+    # Section D: Business Purpose & Fraud Risk Assessment
+    rpt_business_purpose_assessed = fields.Boolean(
+        string='Business Purpose Assessed',
+        help='ISA 550.16 - Business rationale for significant RPTs assessed'
+    )
+    rpt_business_purpose_narrative = fields.Html(
+        string='Business Purpose Assessment',
+        help='Document business rationale for significant related party transactions'
+    )
+    rpt_fraud_risk_identified = fields.Boolean(
+        string='Fraud Risk Identified in RPTs',
+        tracking=True,
+        help='ISA 240 linkage - Have fraud risk indicators been identified in RPTs?'
+    )
+
     rpt_fraud_indicators = fields.Html(
         string='Fraud Risk Indicators',
-        help='Indicators of fraud risk related to related parties'
+        help='Indicators of fraud risk related to related parties (ISA 240/550 linkage)'
     )
     significant_rp_transactions = fields.Html(
         string='Significant RP Transactions',
-        help='Transactions requiring specific audit attention'
+        help='Transactions requiring specific audit attention per ISA 550.17'
     )
     # XML view compatible alias
     significant_rpt_risks = fields.Html(
@@ -165,17 +261,57 @@ class PlanningP10RelatedParties(models.Model):
         related='significant_rp_transactions',
         readonly=False
     )
+
+    # Section D: System Rule - Auto-Flag Significant RPTs
+    unusual_rpt_flagged = fields.Boolean(
+        string='Unusual RPTs Flagged as Significant Risk',
+        compute='_compute_significant_rpt_flags',
+        store=True,
+        help='Auto-flagged if non-routine or unusual RPTs identified (system rule per ISA 550.17)'
+    )
     arms_length_concerns = fields.Html(
         string="Arm's Length Concerns",
-        help='Transactions that may not be at arm\'s length'
+        help='Transactions that may not be at arm\'s length per ISA 550.18'
     )
+
+    # Section E: Fraud & Concealment Considerations (ISA 240 Linkage)
     undisclosed_rp_risk = fields.Boolean(
         string='Risk of Undisclosed RPs',
-        help='Is there a risk of undisclosed related parties?'
+        tracking=True,
+        help='ISA 550.14 - Is there a risk of undisclosed related parties?'
     )
+    management_dominance_indicators = fields.Boolean(
+        string='Management Dominance or Override Indicators?',
+        tracking=True,
+        help='ISA 240.24 - Indicators of management override in RP context'
+    )
+    circular_transactions_identified = fields.Boolean(
+        string='Circular Transactions Identified?',
+        tracking=True,
+        help='ISA 550.21 - Circular transactions or unusual patterns identified'
+    )
+    fraud_concealment_assessment = fields.Html(
+        string='Auditor Assessment - Fraud & Concealment Risk',
+        help='Assessment of fraud/concealment risks in RPT context per ISA 240/550'
+    )
+
+    # Section E: System Rule - Auto-Link to P-7 Fraud & P-6 RMM
+    fraud_linkage_p7_required = fields.Boolean(
+        string='P-7 Fraud Linkage Required',
+        compute='_compute_fraud_gc_linkages',
+        store=True,
+        help='Auto-flagged if fraud indicators require P-7 update'
+    )
+    rmm_escalation_p6_required = fields.Boolean(
+        string='P-6 RMM Escalation Required',
+        compute='_compute_fraud_gc_linkages',
+        store=True,
+        help='Auto-flagged if RPT fraud risks require P-6 RMM escalation'
+    )
+
     undisclosed_rp_procedures = fields.Html(
         string='Procedures for Undisclosed RPs',
-        help='Procedures to identify undisclosed related parties'
+        help='Procedures to identify undisclosed related parties per ISA 550.14'
     )
     # XML view compatible alias
     unidentified_rpt_procedures = fields.Html(
@@ -250,11 +386,11 @@ class PlanningP10RelatedParties(models.Model):
     disclosure_framework = fields.Char(
         string='Disclosure Framework',
         default='IAS 24',
-        help='Applicable accounting standard for RP disclosures'
+        help='Applicable accounting standard for RP disclosures (IAS 24 / IFRS for SMEs)'
     )
     disclosure_risks = fields.Html(
         string='Disclosure Risks',
-        help='Risks of inadequate or inaccurate RP disclosures'
+        help='Risks of inadequate or inaccurate RP disclosures per ISA 550.24'
     )
     disclosure_assessment = fields.Selection([
         ('adequate', '🟢 Likely Adequate'),
@@ -263,22 +399,92 @@ class PlanningP10RelatedParties(models.Model):
         ('not_assessed', '⚪ Not Yet Assessed'),
     ], string='Disclosure Assessment')
 
+    # Section F: Enhanced Disclosure Assessment
+    risk_incomplete_disclosure = fields.Boolean(
+        string='Risk of Incomplete Disclosure?',
+        tracking=True,
+        help='ISA 550.24 - Risk that RP disclosures may be incomplete'
+    )
+    enhanced_disclosure_areas = fields.Text(
+        string='Areas Requiring Enhanced Disclosure',
+        help='Specific areas where enhanced disclosure may be required'
+    )
+
     # ===== Planned Audit Procedures =====
     planned_procedures = fields.Html(
         string='Planned Audit Procedures',
-        help='Specific procedures for related party audit'
+        help='Specific procedures for related party audit per ISA 550.19-23'
     )
+
+    # Section G: Audit Responses to RPT Risks (ISA 330 / ISA 550.19)
     authorization_review = fields.Boolean(
-        string='Review Authorization of RP Transactions'
+        string='☐ Review Authorization of RP Transactions',
+        help='ISA 550.20 - Review authorization and approval of RPTs'
     )
     terms_review = fields.Boolean(
-        string='Review Terms & Conditions'
+        string='☐ Review Terms & Conditions',
+        help='ISA 550.21 - Review terms and conditions of RPTs'
     )
     pricing_review = fields.Boolean(
-        string='Review Pricing/Valuation'
+        string='☐ Review Pricing/Valuation',
+        help='ISA 550.18 - Review pricing/valuation for arm\'s length assessment'
+    )
+    procedure_confirmation = fields.Boolean(
+        string='☐ Confirmation with Related Parties',
+        help='ISA 505 - Obtain confirmations from related parties'
+    )
+    procedure_benchmarking = fields.Boolean(
+        string='☐ Benchmarking Terms',
+        help='ISA 550.18 - Benchmark RPT terms against market rates/third-party transactions'
     )
     disclosure_testing = fields.Boolean(
-        string='Test Disclosure Completeness'
+        string='☐ Test Disclosure Completeness',
+        help='ISA 550.24 - Test completeness and accuracy of RP disclosures'
+    )
+    senior_team_involvement_required = fields.Boolean(
+        string='Senior Team Involvement Required?',
+        tracking=True,
+        help='ISA 550.22 - Partner or senior team member involvement required for significant RPTs'
+    )
+
+    # Section G: System Rule - Auto-Flow to P-12
+    responses_linked_to_p12 = fields.Boolean(
+        string='Responses Linked to P-12 (Audit Strategy)',
+        help='Indicate if RPT audit responses have been incorporated into P-12 Audit Strategy',
+        tracking=True
+    )
+
+    # ===== Section H: Going Concern & Support Arrangements (ISA 570 Linkage) =====
+    rpt_critical_to_liquidity = fields.Boolean(
+        string='RPTs Critical to Liquidity/Going Concern?',
+        tracking=True,
+        help='ISA 570.16 - Are RPTs critical to entity\'s liquidity or support arrangements?'
+    )
+    gc_support_nature = fields.Text(
+        string='Nature of Support (Loans, Guarantees, Waivers)',
+        help='Describe nature of going concern support from related parties'
+    )
+    enforceability_assessed = fields.Boolean(
+        string='Enforceability Assessed?',
+        tracking=True,
+        help='ISA 570.16 - Has enforceability of related party support been assessed?'
+    )
+    gc_disclosure_impact = fields.Boolean(
+        string='Going Concern Disclosure Impact Assessed?',
+        tracking=True,
+        help='ISA 570.19 - Disclosure impact of RP support on going concern assessed'
+    )
+    gc_support_assessment = fields.Html(
+        string='Going Concern Support Assessment',
+        help='Detailed assessment of related party support arrangements per ISA 570'
+    )
+
+    # Section H: System Rule - Auto-Link to P-8 Going Concern
+    gc_linkage_p8_required = fields.Boolean(
+        string='P-8 Going Concern Linkage Required',
+        compute='_compute_fraud_gc_linkages',
+        store=True,
+        help='Auto-flagged if RPT support impacts P-8 going concern assessment'
     )
 
     # ===== Attachments =====
@@ -312,10 +518,25 @@ class PlanningP10RelatedParties(models.Model):
         string='Board Minutes/Approvals'
     )
 
-    # ===== Summary =====
+    # ===== Section J: P-10 Conclusion & Professional Judgment =====
     rp_risk_summary = fields.Html(
-        string='Related Party Risk Memo',
-        help='Consolidated related party assessment per ISA 550'
+        string='Related Party Risk Memo (MANDATORY)',
+        help='Consolidated related party assessment per ISA 550',
+        default=lambda self: '''
+<p><strong>P-10: Related Parties Planning (ISA 550)</strong></p>
+<p>Related parties and related party transactions have been identified, assessed for completeness, and evaluated for risk in accordance with ISA 550. Appropriate audit responses and disclosure considerations have been determined.</p>
+<ol>
+<li><strong>Related Parties Identified:</strong> [Summarize key related parties by category]</li>
+<li><strong>Completeness Assessment:</strong> [Summarize procedures performed per ISA 550.13]</li>
+<li><strong>Significant RPTs:</strong> [List significant related party transactions]</li>
+<li><strong>Risk Assessment:</strong> [Overall RPT risk level and key risks identified]</li>
+<li><strong>Fraud & Concealment Considerations:</strong> [ISA 240/550 linkage]</li>
+<li><strong>Disclosure Assessment:</strong> [IAS 24 compliance and disclosure risks]</li>
+<li><strong>Audit Responses:</strong> [Planned procedures per ISA 550.19-23]</li>
+<li><strong>Going Concern Implications:</strong> [If applicable - ISA 570 linkage]</li>
+</ol>
+<p><strong>Conclusion:</strong> [State overall conclusion on RPT risks and audit strategy implications]</p>
+'''
     )
     # XML view compatible alias
     rpt_conclusion = fields.Html(
@@ -323,6 +544,24 @@ class PlanningP10RelatedParties(models.Model):
         related='rp_risk_summary',
         readonly=False
     )
+
+    # Section J: Final Confirmations (Mandatory Before Approval)
+    confirm_rp_complete = fields.Boolean(
+        string='☐ Related parties complete',
+        help='Confirm all related parties have been identified and assessed per ISA 550',
+        tracking=True
+    )
+    confirm_rpt_risks_assessed = fields.Boolean(
+        string='☐ RPT risks assessed and linked',
+        help='Confirm RPT risks assessed and linked to P-6 (RMM), P-7 (Fraud), P-8 (GC)',
+        tracking=True
+    )
+    confirm_audit_responses_established = fields.Boolean(
+        string='☐ Basis established for audit responses',
+        help='Confirm basis established for audit responses per ISA 550.19',
+        tracking=True
+    )
+
     isa_reference = fields.Char(
         string='ISA Reference',
         default='ISA 550',
@@ -355,10 +594,37 @@ class PlanningP10RelatedParties(models.Model):
         """Validate mandatory fields before completing P-10."""
         self.ensure_one()
         errors = []
+        
+        # Section B: Completeness procedures (minimum 2 required per system rule)
+        if self.completeness_procedures_count < 2:
+            errors.append('Section B: At least 2 completeness procedures must be performed per ISA 550.13')
+        if not self.completeness_results:
+            errors.append('Section B: Results of completeness procedures must be documented (MANDATORY)')
+        
+        # Basic understanding
         if not self.understanding_obtained:
             errors.append('Understanding of related parties must be obtained')
+        
+        # Section J: Mandatory document uploads
+        if not self.declarations_attachment_ids:
+            errors.append('Section I: Management declarations of interest must be uploaded (MANDATORY)')
+        if not self.board_minutes_attachment_ids:
+            errors.append('Section I: Board/audit committee minutes must be uploaded (MANDATORY)')
+        if not self.rpt_contracts_attachment_ids:
+            errors.append('Section I: RPT agreements/contracts must be uploaded (MANDATORY)')
+        if not self.prior_year_rpt_attachment_ids:
+            errors.append('Section I: Prior-year RPT schedules must be uploaded (MANDATORY)')
+        
+        # Section J: Conclusion and confirmations
         if not self.rp_risk_summary:
-            errors.append('Related party risk memo is required')
+            errors.append('Section J: Related party risk memo is required')
+        if not self.confirm_rp_complete:
+            errors.append('Section J: Confirm related parties complete')
+        if not self.confirm_rpt_risks_assessed:
+            errors.append('Section J: Confirm RPT risks assessed and linked')
+        if not self.confirm_audit_responses_established:
+            errors.append('Section J: Confirm basis established for audit responses')
+        
         if errors:
             raise UserError('Cannot complete P-10. Missing requirements:\n• ' + '\n• '.join(errors))
 
@@ -392,6 +658,9 @@ class PlanningP10RelatedParties(models.Model):
             record.partner_approved_user_id = self.env.user
             record.partner_approved_on = fields.Datetime.now()
             record.state = 'approved'
+            record.message_post(body='P-10 Related Parties Planning approved by Partner.')
+            # Section K: Auto-unlock P-11 Group Audit Planning
+            record._auto_unlock_p11()
 
     def action_send_back(self):
         for record in self:
@@ -406,6 +675,76 @@ class PlanningP10RelatedParties(models.Model):
             record.partner_approved_user_id = False
             record.partner_approved_on = False
             record.state = 'reviewed'
+
+    def _auto_unlock_p11(self):
+        """Section K: Auto-unlock P-11 Group Audit Planning when P-10 is approved."""
+        self.ensure_one()
+        if not self.audit_id:
+            return
+        
+        # Find or create P-11 record
+        P11 = self.env['qaco.planning.p11.group.audit']
+        p11_record = P11.search([('audit_id', '=', self.audit_id.id)], limit=1)
+        
+        if p11_record and p11_record.state == 'locked':
+            p11_record.write({'state': 'not_started'})
+            p11_record.message_post(
+                body='P-11 Group Audit Planning auto-unlocked after P-10 Related Parties approval.'
+            )
+            _logger.info(f'P-11 auto-unlocked for audit {self.audit_id.name}')
+        elif not p11_record:
+            # Create new P-11 record if doesn't exist
+            p11_record = P11.create({
+                'audit_id': self.audit_id.id,
+                'state': 'not_started',
+            })
+            _logger.info(f'P-11 auto-created for audit {self.audit_id.name}')
+
+    # ===== COMPUTE METHODS: System Rules =====
+
+    @api.depends('completeness_inquiry_mgmt', 'completeness_board_minutes', 
+                 'completeness_declarations', 'completeness_shareholder_records', 
+                 'completeness_prior_year')
+    def _compute_completeness_count(self):
+        """Section B: Count completeness procedures performed (minimum 2 required per system rule)."""
+        for record in self:
+            record.completeness_procedures_count = sum([
+                record.completeness_inquiry_mgmt,
+                record.completeness_board_minutes,
+                record.completeness_declarations,
+                record.completeness_shareholder_records,
+                record.completeness_prior_year,
+            ])
+
+    @api.depends('significant_rpt_identified', 'rpt_fraud_risk_identified')
+    def _compute_significant_rpt_flags(self):
+        """Section D: Auto-flag if non-routine or unusual RPTs identified as significant risk."""
+        for record in self:
+            # Auto-flag if significant RPTs identified or fraud risk in RPTs
+            record.unusual_rpt_flagged = (
+                record.significant_rpt_identified or 
+                record.rpt_fraud_risk_identified
+            )
+
+    @api.depends('rpt_fraud_risk_identified', 'management_dominance_indicators', 
+                 'circular_transactions_identified', 'rpt_critical_to_liquidity')
+    def _compute_fraud_gc_linkages(self):
+        """Section E & H: Auto-flag if fraud/GC linkages required to P-6, P-7, P-8."""
+        for record in self:
+            # Section E: Fraud linkage to P-7 if fraud indicators in RPTs
+            record.fraud_linkage_p7_required = any([
+                record.rpt_fraud_risk_identified,
+                record.management_dominance_indicators,
+                record.circular_transactions_identified
+            ])
+            
+            # Section E: RMM escalation to P-6 if fraud risks material
+            record.rmm_escalation_p6_required = (
+                record.fraud_linkage_p7_required and record.significant_rpt_identified
+            )
+            
+            # Section H: GC linkage to P-8 if RPT support critical
+            record.gc_linkage_p8_required = record.rpt_critical_to_liquidity
 
 
 class PlanningP10RelatedPartyLine(models.Model):
@@ -497,6 +836,18 @@ class RelatedPartyLine(models.Model):
     relationship_nature = fields.Char(
         string='Nature of Relationship'
     )
+    country_jurisdiction = fields.Char(
+        string='Country / Jurisdiction',
+        help='Country or jurisdiction where related party is located'
+    )
+    changes_during_year = fields.Boolean(
+        string='Changes During Year?',
+        help='Has this relationship changed during the year?'
+    )
+    change_details = fields.Text(
+        string='Change Details',
+        help='Details of changes in relationship during the year'
+    )
     ownership_percentage = fields.Float(
         string='Ownership %'
     )
@@ -544,6 +895,13 @@ class RptTransactionLine(models.Model):
     transaction_description = fields.Char(
         string='Description'
     )
+    period = fields.Selection([
+        ('q1', 'Q1'),
+        ('q2', 'Q2'),
+        ('q3', 'Q3'),
+        ('q4', 'Q4'),
+        ('annual', 'Annual'),
+    ], string='Period', help='Period when transaction occurred')
     transaction_amount = fields.Monetary(
         string='Amount',
         currency_field='currency_id'
@@ -560,6 +918,10 @@ class RptTransactionLine(models.Model):
     )
     arms_length = fields.Boolean(
         string='At Arm\'s Length'
+    )
+    tcwg_approved = fields.Boolean(
+        string='Approved by TCWG?',
+        help='Has this transaction been approved by those charged with governance?'
     )
     disclosure_risk = fields.Selection([
         ('low', '🟢 Low'),

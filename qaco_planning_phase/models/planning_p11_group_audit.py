@@ -9,6 +9,9 @@ Compliance: Companies Act 2017, ICAP QCR, AOB inspection framework
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningP11GroupAudit(models.Model):
@@ -22,19 +25,38 @@ class PlanningP11GroupAudit(models.Model):
     # ============================================================================
     # CORE IDENTIFIERS
     # ============================================================================
-    engagement_id = fields.Many2one(
-        'audit.engagement',
+    # Standard parent linkage (for qaco.planning.main orchestration)
+    audit_id = fields.Many2one(
+        'qaco.audit',
         string='Audit Engagement',
         required=True,
         ondelete='cascade',
         tracking=True,
-        index=True
+        index=True,
+        help='Primary link to audit engagement (standard field)'
+    )
+    planning_main_id = fields.Many2one(
+        'qaco.planning.main',
+        string='Planning Phase',
+        ondelete='cascade',
+        index=True,
+        help='Link to planning orchestrator'
+    )
+    
+    # Legacy fields (kept for backward compatibility)
+    engagement_id = fields.Many2one(
+        'audit.engagement',
+        string='Legacy Engagement ID',
+        compute='_compute_engagement_id',
+        store=True,
+        readonly=True,
+        help='Computed from audit_id for backward compatibility'
     )
     audit_year_id = fields.Many2one(
         'audit.year',
         string='Audit Year',
-        required=True,
-        tracking=True
+        tracking=True,
+        help='Optional: Audit year reference'
     )
     client_id = fields.Many2one(
         'res.partner',
@@ -61,6 +83,41 @@ class PlanningP11GroupAudit(models.Model):
         ('partner', 'Partner Approval'),
         ('locked', 'Locked'),
     ], default='draft', tracking=True, copy=False)
+
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-11 can only be opened after P-10 is approved'
+    )
+
+    @api.depends('audit_id', 'audit_id.id')
+    def _compute_can_open(self):
+        """P-11 requires P-10 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-10 for this audit
+            p10 = self.env['qaco.planning.p10.related.parties'].search([
+                ('audit_id', '=', rec.audit_id.id)
+            ], limit=1)
+            rec.can_open = p10.state == 'approved' if p10 else False
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'draft' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 & ISA 600 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-11 (Group Audit Considerations) cannot be started until P-10 (Related Parties) '
+                    'has been Partner-approved.\n\n'
+                    'Reason: Group audit scoping per ISA 600 requires complete related party '
+                    'identification and understanding from P-10.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-10 first.'
+                )
 
     # ============================================================================
     # SECTION A: DETERMINATION OF GROUP AUDIT APPLICABILITY
@@ -486,13 +543,20 @@ class PlanningP11GroupAudit(models.Model):
     # SQL CONSTRAINTS
     # ============================================================================
     _sql_constraints = [
-        ('engagement_unique', 'UNIQUE(engagement_id, audit_year_id)', 
-         'Only one P-11 record per audit engagement and year is allowed.')
+        ('engagement_unique', 'UNIQUE(audit_id)', 
+         'Only one P-11 record per audit engagement is allowed.')
     ]
 
     # ============================================================================
     # COMPUTED FIELDS
     # ============================================================================
+    @api.depends('audit_id')
+    def _compute_engagement_id(self):
+        """Compute engagement_id from audit_id for backward compatibility."""
+        for rec in self:
+            # Map qaco.audit to audit.engagement if needed
+            rec.engagement_id = rec.audit_id.id if rec.audit_id else False
+    
     @api.depends('component_ids', 'component_ids.is_significant')
     def _compute_component_metrics(self):
         for rec in self:
@@ -770,6 +834,7 @@ class PlanningP11GroupAudit(models.Model):
             })
             rec.message_post(body=_('P-11 approved by partner and locked. P-12 is now unlocked.'))
             rec._unlock_p12()
+            rec._auto_unlock_p12()
 
     def action_send_back(self):
         """Send back to draft for corrections"""
@@ -800,6 +865,31 @@ class PlanningP11GroupAudit(models.Model):
         self.message_post(
             body=_('P-11 locked successfully. P-12 (Audit Strategy & Plan) is now accessible.')
         )
+    
+    def _auto_unlock_p12(self):
+        """Auto-unlock P-12 Audit Strategy when P-11 Group Audit is approved."""
+        self.ensure_one()
+        if not self.engagement_id:
+            return
+        
+        # Find or create P-12 record
+        P12 = self.env['qaco.planning.p12.strategy']
+        p12_record = P12.search([('engagement_id', '=', self.engagement_id.id)], limit=1)
+        
+        if p12_record and p12_record.state == 'locked':
+            p12_record.write({'state': 'draft'})
+            p12_record.message_post(
+                body='P-12 auto-unlocked after P-11 Group Audit approval.'
+            )
+            _logger.info(f'P-12 auto-unlocked for audit {self.engagement_id.id}')
+        elif not p12_record:
+            p12_record = P12.create({
+                'engagement_id': self.engagement_id.id,
+                'audit_year_id': self.audit_year_id.id,
+                'partner_id': self.partner_id.id,
+                'state': 'draft',
+            })
+            _logger.info(f'P-12 auto-created for audit {self.engagement_id.id}')
 
 
 # ============================================================================

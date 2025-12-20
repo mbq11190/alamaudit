@@ -23,6 +23,41 @@ class PlanningP7Fraud(models.Model):
         copy=False,
     )
 
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-7 can only be opened after P-6 is approved'
+    )
+
+    @api.depends('audit_id', 'audit_id.id')
+    def _compute_can_open(self):
+        """P-7 requires P-6 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-6 for this audit
+            p6 = self.env['qaco.planning.p6.risk'].search([
+                ('engagement_id', '=', rec.audit_id.id)
+            ], limit=1)
+            rec.can_open = p6.state == 'locked' if p6 else False  # P-6 uses 'locked' instead of 'approved'
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'not_started' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 & ISA 240 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-7 (Fraud Risk Assessment) cannot be started until P-6 (Risk Assessment) '
+                    'has been Partner-approved and locked.\n\n'
+                    'Reason: Fraud risk assessment per ISA 240 requires completed Risk of '
+                    'Material Misstatement assessment from P-6.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-6 first.'
+                )
+
     name = fields.Char(
         string='Reference',
         compute='_compute_name',
@@ -60,10 +95,22 @@ class PlanningP7Fraud(models.Model):
     )
 
     # ===== Fraud Brainstorming Documentation =====
+    # Section A: Mandatory Brainstorming Session
+    brainstorming_conducted = fields.Boolean(
+        string='Brainstorming Session Conducted',
+        default=False,
+        tracking=True,
+        help='ISA 240.15 - MANDATORY brainstorming session (No blocks progression)'
+    )
     brainstorming_date = fields.Date(
         string='Brainstorming Date',
         tracking=True
     )
+    brainstorming_mode = fields.Selection([
+        ('in_person', 'In-Person'),
+        ('virtual', 'Virtual'),
+        ('hybrid', 'Hybrid'),
+    ], string='Mode of Session')
     brainstorming_participants = fields.Many2many(
         'res.users',
         'qaco_p7_brainstorming_participants_rel',
@@ -79,9 +126,31 @@ class PlanningP7Fraud(models.Model):
         'user_id',
         string='Brainstorming Attendees'
     )
+    brainstorming_summary = fields.Html(
+        string='Summary of Discussion (MANDATORY)',
+        help='Document the fraud brainstorming discussion summary'
+    )
     brainstorming_documentation = fields.Html(
         string='Brainstorming Documentation',
         help='Document the fraud brainstorming discussion per ISA 240.15'
+    )
+    
+    # Section A: Brainstorming Checklists
+    brainstorm_fs_susceptibility = fields.Boolean(
+        string='☐ Susceptibility of FS to fraud discussed',
+        help='ISA 240.15(a)'
+    )
+    brainstorm_management_override = fields.Boolean(
+        string='☐ Management override risk discussed',
+        help='ISA 240.31'
+    )
+    brainstorm_revenue_recognition = fields.Boolean(
+        string='☐ Revenue recognition risks discussed',
+        help='ISA 240.26'
+    )
+    brainstorm_unpredictability = fields.Boolean(
+        string='☐ Unpredictability incorporated',
+        help='ISA 240.30'
     )
     key_fraud_concerns = fields.Html(
         string='Key Fraud Concerns Identified',
@@ -99,8 +168,67 @@ class PlanningP7Fraud(models.Model):
         string='Discussion Conclusions',
         help='Key conclusions from the brainstorming discussion'
     )
+    
+    # ===== Section B: Management & TCWG Inquiries =====
+    management_inquiries_performed = fields.Boolean(
+        string='Management Inquiries Performed?',
+        default=False,
+        tracking=True
+    )
+    management_fraud_assessment = fields.Html(
+        string="Management's Assessment of Fraud Risk",
+        help='Document management\'s own assessment of fraud risks'
+    )
+    actual_suspected_fraud_disclosed = fields.Boolean(
+        string='Knowledge of Actual/Suspected Fraud Disclosed?',
+        default=False,
+        tracking=True,
+        help='Did management disclose any actual or suspected fraud?'
+    )
+    fraud_disclosure_details = fields.Html(
+        string='Fraud Disclosure Details',
+        help='Details of any actual or suspected fraud disclosed'
+    )
+    tcwg_inquiries_performed = fields.Boolean(
+        string='TCWG Inquiries Performed?',
+        default=False,
+        tracking=True
+    )
+    tcwg_inquiry_results = fields.Html(
+        string='Results of TCWG Inquiries',
+        help='Document responses from those charged with governance'
+    )
+    
+    # Section B: Inquiry Checklists
+    inquiry_documented = fields.Boolean(
+        string='☐ Inquiries documented',
+        help='All fraud inquiries properly documented'
+    )
+    inquiry_responses_evaluated = fields.Boolean(
+        string='☐ Responses evaluated for consistency',
+        help='Management and TCWG responses evaluated for consistency'
+    )
 
     # ===== Fraud Triangle Assessment =====
+    # Section C: Fraud Risk Factors (ISA 240 Triangle) - MANDATORY checkboxes
+    incentives_identified = fields.Boolean(
+        string='Incentives/Pressures Identified?',
+        default=False,
+        tracking=True,
+        help='If Yes, specific fraud risks must be logged in Section D'
+    )
+    opportunities_identified = fields.Boolean(
+        string='Opportunities Identified?',
+        default=False,
+        tracking=True,
+        help='If Yes, specific fraud risks must be logged in Section D'
+    )
+    attitudes_identified = fields.Boolean(
+        string='Attitudes/Rationalization Identified?',
+        default=False,
+        tracking=True,
+        help='If Yes, specific fraud risks must be logged in Section D'
+    )
     RISK_RATING = [
         ('low', 'Low'),
         ('medium', 'Medium'),
@@ -164,11 +292,11 @@ class PlanningP7Fraud(models.Model):
         readonly=False
     )
 
-    # ===== Fraud Risk Factors =====
+    # ===== Section D: Fraud Risk Factors =====
     fraud_risk_line_ids = fields.One2many(
         'qaco.planning.p7.fraud.line',
         'p7_fraud_id',
-        string='Fraud Risk Factors'
+        string='Fraud Risk Factors (Section D)'
     )
     # XML view compatible fields for narrative
     fraud_risk_factors = fields.Html(
@@ -185,6 +313,7 @@ class PlanningP7Fraud(models.Model):
     )
 
     # ===== Presumed Fraud Risks (ISA 240) =====
+    # Section E: Presumed Risks (MANDATORY - Cannot be removed)
     revenue_recognition_fraud = fields.Boolean(
         string='Revenue Recognition - Presumed Fraud Risk',
         default=True,
@@ -195,11 +324,16 @@ class PlanningP7Fraud(models.Model):
     )
     revenue_recognition_rebutted = fields.Boolean(
         string='Revenue Recognition Presumption Rebutted',
-        help='Document if the presumption is rebutted'
+        help='Document if the presumption is rebutted (REQUIRES PARTNER APPROVAL)'
     )
     revenue_rebuttal_justification = fields.Html(
-        string='Rebuttal Justification',
-        help='Justification for rebutting revenue recognition fraud risk'
+        string='Rebuttal Justification (MANDATORY if rebutted)',
+        help='Detailed justification for rebutting revenue recognition fraud risk'
+    )
+    revenue_rebuttal_partner_approved = fields.Boolean(
+        string='Rebuttal Approved by Partner',
+        default=False,
+        help='Partner must approve any rebuttal of presumed fraud risk'
     )
     # XML view compatible aliases for revenue recognition
     revenue_fraud_presumption = fields.Boolean(
@@ -230,7 +364,7 @@ class PlanningP7Fraud(models.Model):
     management_override_fraud = fields.Boolean(
         string='Management Override - Presumed Fraud Risk',
         default=True,
-        help='ISA 240.31 - Risk of management override of controls (cannot be rebutted)'
+        help='ISA 240.31 - Risk of management override of controls (CANNOT be rebutted)'
     )
     management_override_level = fields.Selection([
         ('low', 'Low'),
@@ -246,6 +380,97 @@ class PlanningP7Fraud(models.Model):
         string='Override Risk Assessment',
         related='management_override_assessment',
         readonly=False
+    )
+    
+    # ===== Section F: Management Override of Controls (MANDATORY RESPONSES) =====
+    # These procedures CANNOT be deselected per ISA 240.32
+    journal_entry_testing_planned = fields.Boolean(
+        string='☑ Journal Entry Testing Planned (MANDATORY)',
+        default=True,
+        readonly=True,
+        help='ISA 240.32(a) - Testing of journal entries (cannot be deselected)'
+    )
+    estimates_review_planned = fields.Boolean(
+        string='☑ Accounting Estimates Review Planned (MANDATORY)',
+        default=True,
+        readonly=True,
+        help='ISA 240.32(b) - Review of estimates for bias (cannot be deselected)'
+    )
+    unusual_transactions_planned = fields.Boolean(
+        string='☑ Significant Unusual Transactions Planned (MANDATORY)',
+        default=True,
+        readonly=True,
+        help='ISA 240.32(c) - Evaluation of unusual transactions (cannot be deselected)'
+    )
+    unpredictability_procedures = fields.Html(
+        string='Additional Unpredictability Procedures',
+        help='ISA 240.30 - Planned unpredictable audit procedures'
+    )
+    
+    # ===== Section G: Entity's Anti-Fraud Controls =====
+    antifraud_controls_identified = fields.Boolean(
+        string='Anti-fraud Controls Identified?',
+        default=False,
+        tracking=True,
+        help='Entity-level controls to prevent/detect fraud'
+    )
+    fraud_controls_effectiveness = fields.Selection([
+        ('effective', 'Effective'),
+        ('partially_effective', 'Partially Effective'),
+        ('ineffective', 'Ineffective'),
+        ('not_assessed', 'Not Assessed'),
+    ], string='Control Effectiveness', default='not_assessed')
+    fraud_control_gaps = fields.Html(
+        string='Fraud Control Gaps Identified',
+        help='Identified weaknesses in anti-fraud controls'
+    )
+    fraud_control_impact_assessment = fields.Html(
+        string='Impact on Fraud Risk Assessment',
+        help='How control weaknesses impact the fraud risk assessment (If ineffective → auto-increase fraud risk)'
+    )
+    
+    # ===== Section H: Overall Audit Responses (Link to P-12) =====
+    overall_fraud_response_nature = fields.Selection([
+        ('general', 'General Responses'),
+        ('specific', 'Specific Risk-Based'),
+        ('both', 'Both General and Specific'),
+    ], string='Response Nature', help='ISA 240.29')
+    overall_fraud_response_timing = fields.Selection([
+        ('interim', 'Interim'),
+        ('year_end', 'Year-End'),
+        ('both', 'Both'),
+    ], string='Response Timing')
+    overall_fraud_response_extent = fields.Selection([
+        ('standard', 'Standard'),
+        ('extended', 'Extended'),
+        ('substantive', 'Substantive Only'),
+    ], string='Response Extent')
+    senior_involvement_required = fields.Boolean(
+        string='Senior Personnel Involvement Required',
+        help='ISA 240.29(a) - Assignment of more experienced personnel'
+    )
+    fraud_response_summary = fields.Html(
+        string='Overall Fraud Response Summary',
+        help='To be linked to P-12: Audit Strategy'
+    )
+    
+    # ===== Section I: Going Concern & Fraud Interplay (Link to P-8) =====
+    gc_fraud_linkage_exists = fields.Boolean(
+        string='Going Concern Fraud Linkage Exists?',
+        default=False,
+        help='ISA 570.19 - Fraud indicators impacting GC assessment'
+    )
+    gc_fraud_impact_cashflows = fields.Boolean(
+        string='Fraud Risk Impacts Cash Flows/Liquidity?',
+        help='Fraud that may impair going concern'
+    )
+    gc_fraud_disclosure_risk = fields.Html(
+        string='GC Disclosure Fraud Risk',
+        help='Risk of fraudulent GC disclosures (link to P-8)'
+    )
+    gc_fraud_procedures = fields.Html(
+        string='GC-Related Fraud Procedures',
+        help='Specific procedures for GC fraud scenarios'
     )
 
     # ===== Fraud Response =====
@@ -318,20 +543,20 @@ class PlanningP7Fraud(models.Model):
         readonly=False
     )
 
-    # ===== Attachments =====
+    # ===== Section J: Attachments (MANDATORY) =====
     fraud_risk_attachment_ids = fields.Many2many(
         'ir.attachment',
         'qaco_p7_fraud_risk_rel',
         'p7_id',
         'attachment_id',
-        string='Fraud Risk Documentation'
+        string='Fraud Risk Documentation (MANDATORY)'
     )
     brainstorming_attachment_ids = fields.Many2many(
         'ir.attachment',
         'qaco_p7_brainstorming_rel',
         'p7_id',
         'attachment_id',
-        string='Brainstorming Notes'
+        string='Brainstorming Notes (MANDATORY)'
     )
     # XML view compatible alias
     fraud_attachment_ids = fields.Many2many(
@@ -342,9 +567,19 @@ class PlanningP7Fraud(models.Model):
         string='Fraud Attachments'
     )
 
-    # ===== Summary =====
+    # ===== Section K: Summary & Conclusion =====
     fraud_risk_summary = fields.Html(
-        string='Fraud Risk Memo',
+        string='Fraud Risk Memo (MANDATORY)',
+        default=lambda self: '''
+<p><strong>Fraud Risk Assessment Summary (ISA 240)</strong></p>
+<ol>
+<li><strong>Brainstorming Session:</strong> [Summarize key findings from fraud brainstorming]</li>
+<li><strong>Fraud Triangle Analysis:</strong> [Summarize incentives, opportunities, attitudes identified]</li>
+<li><strong>Presumed Fraud Risks:</strong> [Revenue recognition and management override status]</li>
+<li><strong>Specific Fraud Risks:</strong> [List significant fraud risks identified]</li>
+<li><strong>Overall Fraud Response:</strong> [Summarize how the audit strategy addresses fraud risks]</li>
+</ol>
+''',
         help='Consolidated fraud risk assessment summary per ISA 240'
     )
     # XML view compatible alias
@@ -357,7 +592,23 @@ class PlanningP7Fraud(models.Model):
         ('low', '🟢 Low'),
         ('medium', '🟡 Medium'),
         ('high', '🔴 High'),
+        ('very_high', '🔴🔴 Very High'),
     ], string='Overall Fraud Risk Assessment', tracking=True)
+    
+    # Section K: Mandatory Confirmations
+    confirm_fraud_risks_linked = fields.Boolean(
+        string='☐ All fraud risks linked to P-6 as significant risks',
+        help='System auto-links fraud risks to RMM'
+    )
+    confirm_responses_documented = fields.Boolean(
+        string='☐ All fraud responses documented and linked to P-12',
+        help='Responses must flow to audit strategy'
+    )
+    confirm_partner_reviewed = fields.Boolean(
+        string='☐ Partner has reviewed all rebutted presumptions',
+        help='Partner approval mandatory for any rebuttal'
+    )
+    
     isa_reference = fields.Char(
         string='ISA Reference',
         default='ISA 240',
@@ -443,6 +694,35 @@ class PlanningP7Fraud(models.Model):
             record.partner_approved_user_id = self.env.user
             record.partner_approved_on = fields.Datetime.now()
             record.state = 'approved'
+            record.message_post(body='P-7 Fraud Risk Assessment approved by Partner.')
+            # Auto-unlock P-8: Going Concern
+            record._auto_unlock_p8()
+    
+    def _auto_unlock_p8(self):
+        """Auto-unlock P-8 Going Concern when P-7 is approved"""
+        self.ensure_one()
+        if not self.engagement_id:
+            return
+        
+        # Find or create P-8 record
+        P8 = self.env['qaco.planning.p8.going_concern']
+        p8_record = P8.search([
+            ('engagement_id', '=', self.engagement_id.id)
+        ], limit=1)
+        
+        if p8_record and p8_record.state == 'locked':
+            p8_record.write({'state': 'not_started'})
+            p8_record.message_post(
+                body='P-8 Going Concern auto-unlocked after P-7 Fraud Risk Assessment approval.'
+            )
+            _logger.info(f'P-8 auto-unlocked for engagement {self.engagement_id.name}')
+        elif not p8_record:
+            # Create new P-8 record if doesn't exist
+            p8_record = P8.create({
+                'engagement_id': self.engagement_id.id,
+                'state': 'not_started',
+            })
+            _logger.info(f'P-8 auto-created for engagement {self.engagement_id.name}')
 
     def action_send_back(self):
         for record in self:
@@ -481,11 +761,54 @@ class PlanningP7FraudLine(models.Model):
         string='Risk Description',
         required=True
     )
+    fraud_scenario = fields.Text(
+        string='Fraud Scenario',
+        help='Specific how/what/when fraud scenario'
+    )
     risk_level = fields.Selection([
         ('low', '🟢 Low'),
         ('medium', '🟡 Medium'),
         ('high', '🔴 High'),
     ], string='Risk Level', required=True)
+    # Linkage to P-6 RMM
+    fs_area = fields.Selection([
+        ('revenue', 'Revenue'),
+        ('purchases', 'Purchases'),
+        ('payroll', 'Payroll'),
+        ('inventory', 'Inventory'),
+        ('fixed_assets', 'Fixed Assets'),
+        ('cash', 'Cash & Bank'),
+        ('investments', 'Investments'),
+        ('borrowings', 'Borrowings'),
+        ('equity', 'Equity'),
+        ('other', 'Other'),
+    ], string='FS Area/Account Cycle', help='Link to P-6 RMM')
+    assertion = fields.Selection([
+        ('existence', 'Existence/Occurrence'),
+        ('completeness', 'Completeness'),
+        ('valuation', 'Valuation/Measurement'),
+        ('rights', 'Rights & Obligations'),
+        ('presentation', 'Presentation & Disclosure'),
+    ], string='Assertion at Risk')
+    source = fields.Selection([
+        ('p2_client_info', 'P-2: Client Info'),
+        ('p3_controls', 'P-3: Controls'),
+        ('p4_analytical', 'P-4: Analytical'),
+        ('p6_risk_assessment', 'P-6: RMM'),
+        ('brainstorming', 'Brainstorming'),
+        ('inquiry', 'Management/TCWG Inquiry'),
+        ('other', 'Other'),
+    ], string='Source of Risk', help='Traceability to prior planning')
+    likelihood = fields.Selection([
+        ('remote', 'Remote'),
+        ('possible', 'Possible'),
+        ('probable', 'Probable'),
+    ], string='Likelihood')
+    impact = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ], string='Impact if Occurs')
     affected_area = fields.Char(
         string='Affected Area/Account'
     )

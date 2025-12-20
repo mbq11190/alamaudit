@@ -7,6 +7,9 @@ Purpose: Final quality and engagement approval.
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningP13Approval(models.Model):
@@ -31,6 +34,42 @@ class PlanningP13Approval(models.Model):
         tracking=True,
         copy=False,
     )
+
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-13 can only be opened after P-12 is approved'
+    )
+
+    @api.depends('audit_id', 'audit_id.id')
+    def _compute_can_open(self):
+        """P-13 requires P-12 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-12 for this audit
+            p12 = self.env['qaco.planning.p12.strategy'].search([
+                ('audit_id', '=', rec.audit_id.id)
+            ], limit=1)
+            # P-12 uses 'locked' as its final approved state
+            rec.can_open = p12.state in ('partner', 'locked') if p12 else False
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'not_started' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 & ISQM-1 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-13 (Planning Approval) cannot be started until P-12 (Audit Strategy) '
+                    'has been Partner-approved and locked.\n\n'
+                    'Reason: Final planning approval and quality review per ISQM-1 requires '
+                    'completed and approved audit strategy from P-12.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-12 first.'
+                )
 
     name = fields.Char(
         string='Reference',
@@ -234,6 +273,14 @@ class PlanningP13Approval(models.Model):
     )
     partner_signoff_notes = fields.Html(
         string='Partner Sign-off Notes'
+    )
+    
+    # Execution phase unlock flag
+    execution_unlocked = fields.Boolean(
+        string='Execution Phase Unlocked',
+        readonly=True,
+        copy=False,
+        help='Set to True when execution phase is auto-unlocked after P-13 approval'
     )
     
     # Partner confirmation fields for XML compatibility
@@ -529,6 +576,7 @@ class PlanningP13Approval(models.Model):
             record.state = 'reviewed'
 
     def action_approve(self):
+        """Approve P-13 and lock entire planning phase, unlock execution."""
         for record in self:
             if record.state != 'reviewed':
                 raise UserError('Can only approve tabs that have been Reviewed.')
@@ -537,6 +585,8 @@ class PlanningP13Approval(models.Model):
             record.state = 'approved'
             # Lock planning when P-13 is approved
             record.action_lock_planning()
+            # Auto-unlock execution phase (ISA 300)
+            record._auto_unlock_execution_phase()
 
     def action_send_back(self):
         for record in self:

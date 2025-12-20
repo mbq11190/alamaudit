@@ -27,6 +27,42 @@ class PlanningP6Risk(models.Model):
         ('reviewed', 'Reviewed'),
         ('locked', 'Locked'),
     ], string='Status', default='draft', tracking=True, copy=False)
+
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-6 can only be opened after P-5 is approved'
+    )
+
+    @api.depends('engagement_id', 'engagement_id.id')
+    def _compute_can_open(self):
+        """P-6 requires P-5 to be approved."""
+        for rec in self:
+            if not rec.engagement_id:
+                rec.can_open = False
+                continue
+            # Find P-5 for this audit
+            p5 = self.env['qaco.planning.p5.materiality'].search([
+                ('audit_id', '=', rec.engagement_id.id)
+            ], limit=1)
+            rec.can_open = p5.state == 'approved' if p5 else False
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'draft' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-6 (Risk Assessment) cannot be started until P-5 (Materiality) '
+                    'has been Partner-approved.\n\n'
+                    'Reason: Risk of Material Misstatement assessment requires finalized '
+                    'materiality thresholds per ISA 315/320.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-5 first.'
+                )
+
     risk_line_ids = fields.One2many('qaco.planning.p6.risk.line', 'p6_risk_id', string='Risk Register', required=True)
     fs_level_risk_desc = fields.Text(string='FS-Level Risk Description')
     fs_level_risk_nature = fields.Selection([
@@ -75,11 +111,82 @@ class PlanningP6Risk(models.Model):
     # Audit trail
     version_history = fields.Text(string='Version History')
     reviewer_timestamps = fields.Text(string='Reviewer Timestamps')
+    
+    # ===== Section I: Heat Map & Dashboard Metrics =====
+    total_risks_count = fields.Integer(
+        string='Total Risks',
+        compute='_compute_risk_dashboard_metrics',
+        store=True
+    )
+    high_risk_count = fields.Integer(
+        string='High Risk Count',
+        compute='_compute_risk_dashboard_metrics',
+        store=True
+    )
+    medium_risk_count = fields.Integer(
+        string='Medium Risk Count',
+        compute='_compute_risk_dashboard_metrics',
+        store=True
+    )
+    low_risk_count = fields.Integer(
+        string='Low Risk Count',
+        compute='_compute_risk_dashboard_metrics',
+        store=True
+    )
+    significant_risks_count = fields.Integer(
+        string='Significant Risks Count',
+        compute='_compute_risk_dashboard_metrics',
+        store=True
+    )
+    fraud_risks_count = fields.Integer(
+        string='Fraud Risks Count',
+        compute='_compute_risk_dashboard_metrics',
+        store=True
+    )
+    risks_by_account_cycle = fields.Text(
+        string='Risks by Account Cycle',
+        compute='_compute_risk_dashboard_metrics',
+        store=True,
+        help='JSON or formatted text showing risk distribution'
+    )
+    risks_by_assertion = fields.Text(
+        string='Risks by Assertion',
+        compute='_compute_risk_dashboard_metrics',
+        store=True,
+        help='JSON or formatted text showing assertion-level risk distribution'
+    )
 
     @api.depends('partner_approved')
     def _compute_locked(self):
+        for rec in self:            rec.locked = bool(rec.partner_approved)
+    
+    @api.depends('risk_line_ids', 'risk_line_ids.risk_rating', 
+                 'risk_line_ids.is_significant_risk', 'risk_line_ids.isa_240_fraud_risk',
+                 'risk_line_ids.account_cycle', 'risk_line_ids.assertion_type')
+    def _compute_risk_dashboard_metrics(self):
+        """Compute heat map and dashboard metrics from risk register."""
         for rec in self:
-            rec.locked = bool(rec.partner_approved)
+            lines = rec.risk_line_ids
+            rec.total_risks_count = len(lines)
+            rec.high_risk_count = len(lines.filtered(lambda l: l.risk_rating == 'high'))
+            rec.medium_risk_count = len(lines.filtered(lambda l: l.risk_rating == 'medium'))
+            rec.low_risk_count = len(lines.filtered(lambda l: l.risk_rating == 'low'))
+            rec.significant_risks_count = len(lines.filtered(lambda l: l.is_significant_risk))
+            rec.fraud_risks_count = len(lines.filtered(lambda l: l.isa_240_fraud_risk))
+            
+            # Risk distribution by account cycle
+            cycle_counts = {}
+            for line in lines:
+                cycle = line.account_cycle or 'other'
+                cycle_counts[cycle] = cycle_counts.get(cycle, 0) + 1
+            rec.risks_by_account_cycle = str(cycle_counts)
+            
+            # Risk distribution by assertion
+            assertion_counts = {}
+            for line in lines:
+                assertion = line.assertion_type or 'unspecified'
+                assertion_counts[assertion] = assertion_counts.get(assertion, 0) + 1
+            rec.risks_by_assertion = str(assertion_counts)
 
     def action_prepare(self):
         self.state = 'prepared'
@@ -99,6 +206,19 @@ class PlanningP6Risk(models.Model):
         self.state = 'locked'
         self.partner_approved = True
         self.message_post(body="P-6 partner approved and locked.")
+        # Auto-unlock P-7 (Fraud Risk Assessment)
+        self._auto_unlock_p7()
+    
+    def _auto_unlock_p7(self):
+        """Auto-unlock P-7 when P-6 is approved (similar to P-5 -> P-6 pattern)."""
+        self.ensure_one()
+        if 'qaco.planning.p7.fraud' in self.env:
+            p7 = self.env['qaco.planning.p7.fraud'].search([
+                ('audit_id', '=', self.engagement_id.id)
+            ], limit=1)
+            if p7 and p7.state == 'not_started':
+                _logger.info(f"P-7 auto-unlock triggered by P-6 approval for audit {self.engagement_id.id}")
+                # Optionally set p7.state = 'draft' if using state-based unlocking
 
     @api.constrains('attachment_ids')
     def _check_mandatory_uploads(self):
@@ -241,6 +361,36 @@ class PlanningP6RiskLine(models.Model):
         related='is_significant_risk',
         readonly=False
     )
+    
+    # ===== Section D: Significant Risk Classification =====
+    basis_for_classification = fields.Text(
+        string='Basis for Significant Risk Classification',
+        help='MANDATORY: Explain why this risk is classified as significant'
+    )
+    mandatory_substantive_required = fields.Boolean(
+        string='Mandatory Substantive Procedures Required',
+        default=True,
+        help='Auto-set for significant risks per ISA 330'
+    )
+    control_testing_permitted = fields.Boolean(
+        string='Control Testing Permitted',
+        default=False,
+        help='Default No unless justified for significant risks'
+    )
+    control_testing_justification = fields.Text(
+        string='Justification for Control Testing',
+        help='Required if control_testing_permitted = True'
+    )
+    senior_involvement_required = fields.Boolean(
+        string='Senior Team Involvement Required',
+        compute='_compute_senior_involvement',
+        store=True
+    )
+    extended_procedures_required = fields.Boolean(
+        string='Extended Substantive Procedures Required',
+        compute='_compute_extended_procedures',
+        store=True
+    )
 
     # ===== Risk Factors =====
     risk_factors = fields.Text(
@@ -269,6 +419,46 @@ class PlanningP6RiskLine(models.Model):
     isa_540_estimate_risk = fields.Boolean(string='ISA 540 - Estimate Risk')
     isa_550_rp_risk = fields.Boolean(string='ISA 550 - Related Party Risk')
     isa_570_gc_risk = fields.Boolean(string='ISA 570 - Going Concern Risk')
+    
+    # ===== Section E: Fraud Risk Integration =====
+    fraud_type = fields.Selection([
+        ('revenue_recognition', 'Revenue Recognition (Presumed)'),
+        ('management_override', 'Management Override of Controls'),
+        ('misappropriation', 'Misappropriation of Assets'),
+        ('other', 'Other Fraud Risk'),
+    ], string='Fraud Risk Type', help='ISA 240 fraud risk classification')
+    fraud_scenario_narrative = fields.Text(
+        string='Specific Fraud Scenario',
+        help='Describe specific fraud scenario and how it could occur'
+    )
+    
+    # ===== Section F: Going Concern Integration =====
+    gc_conditions_identified = fields.Text(
+        string='Going Concern Conditions/Events',
+        help='ISA 570 - Conditions or events casting doubt on going concern'
+    )
+    gc_disclosure_impact = fields.Text(
+        string='Impact on FS Disclosures',
+        help='Required disclosures for material uncertainty or going concern issues'
+    )
+    
+    # ===== Section G: Controls Linkage =====
+    relevant_controls_identified = fields.Boolean(
+        string='Relevant Controls Identified',
+        help='Have controls been identified that could mitigate this risk?'
+    )
+    control_reliance_planned = fields.Boolean(
+        string='Control Reliance Planned',
+        help='Is the auditor planning to rely on controls for this risk?'
+    )
+    control_deficiency_impact = fields.Text(
+        string='Impact of Control Deficiencies on RMM',
+        help='Document how identified control weaknesses affect RMM assessment'
+    )
+    control_reference_p3 = fields.Char(
+        string='P-3 Control Reference',
+        help='Link to specific control in P-3 Internal Controls Assessment'
+    )
 
     # ===== Planned Response =====
     planned_procedures = fields.Text(
@@ -312,4 +502,18 @@ class PlanningP6RiskLine(models.Model):
         for record in self:
             key = (record.inherent_risk, record.control_risk)
             record.risk_rating = risk_matrix.get(key, 'medium')
+    
+    @api.depends('is_significant_risk', 'risk_rating')
+    def _compute_senior_involvement(self):
+        """Auto-flag senior involvement for significant or high risks."""
+        for record in self:
+            record.senior_involvement_required = (
+                record.is_significant_risk or record.risk_rating == 'high'
+            )
+    
+    @api.depends('is_significant_risk')
+    def _compute_extended_procedures(self):
+        """Auto-flag extended procedures for significant risks."""
+        for record in self:
+            record.extended_procedures_required = record.is_significant_risk
 

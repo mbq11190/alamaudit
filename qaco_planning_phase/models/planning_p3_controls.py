@@ -468,6 +468,41 @@ class PlanningP3Controls(models.Model):
         copy=False,
     )
 
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-3 can only be opened after P-2 is approved'
+    )
+
+    @api.depends('audit_id', 'audit_id.id')
+    def _compute_can_open(self):
+        """P-3 requires P-2 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-2 for this audit
+            p2 = self.env['qaco.planning.p2.entity'].search([
+                ('audit_id', '=', rec.audit_id.id)
+            ], limit=1)
+            rec.can_open = p2.state == 'approved' if p2 else False
+
+    @api.constrains('state')
+    def _check_sequential_gating(self):
+        """ISA 300/220: Enforce sequential planning approach."""
+        for rec in self:
+            if rec.state != 'not_started' and not rec.can_open:
+                raise UserError(
+                    'ISA 300/220 Violation: Sequential Planning Approach Required.\n\n'
+                    'P-3 (Internal Controls) cannot be started until P-2 (Entity Understanding) '
+                    'has been Partner-approved.\n\n'
+                    'Reason: Assessing controls requires prior understanding of the entity, '
+                    'its environment, and business risks.\n\n'
+                    'Action: Please complete and obtain Partner approval for P-2 first.'
+                )
+
     # =========================================================================
     # CORE IDENTIFIERS & LINKS
     # =========================================================================
