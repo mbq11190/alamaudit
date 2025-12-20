@@ -48,6 +48,9 @@ access_qaco_risk_register_line_audit_staff,qaco.risk.register.line.audit.staff,m
 access_qaco_risk_register_line_audit_manager,qaco.risk.register.line.audit.manager,model_qaco_risk_register_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_industry_readonly,qaco.industry.readonly,model_qaco_industry,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_industry_manager,qaco.industry.manager,model_qaco_industry,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_template_readonly,qaco.planning.template.readonly,model_qaco_planning_template,qaco_audit.group_audit_trainee,1,0,0,0
+access_qaco_planning_template_manager,qaco.planning.template.manager,model_qaco_planning_template,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_template_wizard,qaco.planning.template.wizard,model_qaco_planning_template_wizard,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_regulator_readonly,qaco.regulator.readonly,model_qaco_regulator,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_regulator_manager,qaco.regulator.manager,model_qaco_regulator,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_p1_engagement_trainee,qaco.planning.p1.engagement.trainee,model_qaco_planning_p1_engagement,qaco_audit.group_audit_trainee,1,1,1,0

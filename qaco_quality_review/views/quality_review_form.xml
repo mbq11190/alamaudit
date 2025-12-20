@@ -65,6 +65,17 @@
                         <button class="oe_stat_button" type="object" name="action_open_findings">
                             <field name="open_finding_count" string="Findings" widget="statinfo"/>
                         </button>
+                        <!-- Session 7E: Planning Dashboard Button -->
+                        <button name="action_open_planning_dashboard" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-dashboard"
+                                help="Open planning phase dashboard">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Planning</span>
+                                <span class="o_stat_text">Dashboard</span>
+                            </div>
+                        </button>
                     </div>
                     <group>
                         <group>
@@ -330,6 +341,72 @@
                                 </group>
                             </div>
                         </page>
+                        
+                        <!-- Session 7E: Planning Phase Integration Page -->
+                        <page name="section_65_planning" string="6.5 - Planning Metrics" class="o_quality_tab_page">
+                            <div id="section-6-5" class="o_onboarding_card">
+                                <div class="o_onboarding_card_header">
+                                    <span class="o_onboarding_card_number">6.5</span>
+                                    <span class="o_onboarding_card_title">Planning Phase Review</span>
+                                    <span class="o_onboarding_card_ref">ISA 300 / ISA 315</span>
+                                </div>
+                                <div class="alert alert-info" role="alert">
+                                    <strong>📊 EQCR Focus:</strong> Review planning phase completeness and risk assessment quality.
+                                    This section pulls metrics directly from the planning phase to support your quality control review.
+                                </div>
+                                
+                                <!-- Planning Completion Metrics -->
+                                <group string="Planning Phase Status">
+                                    <group>
+                                        <field name="planning_phase_id" readonly="1" 
+                                               options="{'no_create': True, 'no_open': False}"/>
+                                        <field name="planning_locked" widget="boolean" readonly="1"/>
+                                        <field name="planning_completion_pct" widget="progressbar" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="planning_p6_risk_count" readonly="1"/>
+                                        <field name="planning_significant_risk_count" readonly="1"/>
+                                        <field name="planning_missing_approvals" readonly="1"/>
+                                    </group>
+                                </group>
+                                
+                                <!-- Red Flags Section -->
+                                <group string="Planning Red Flags" class="o_planning_red_flags_section">
+                                    <field name="planning_red_flags" widget="html" readonly="1" nolabel="1" colspan="2"/>
+                                </group>
+                                
+                                <!-- EQCR Actions -->
+                                <group string="EQCR Actions">
+                                    <button name="action_open_planning_dashboard" 
+                                            string="Open Planning Dashboard" 
+                                            type="object" 
+                                            class="btn-primary"
+                                            help="View detailed planning phase progress and P-tab status"/>
+                                    <button name="%(qaco_planning_phase.action_planning_dashboard)d" 
+                                            string="View All Planning Records" 
+                                            type="action" 
+                                            class="btn-secondary"
+                                            help="Open planning phase list view"/>
+                                </group>
+                                
+                                <group string="EQCR Checklist - Planning Phase">
+                                    <div class="alert alert-warning" role="alert">
+                                        <strong>⚠️ Required Review:</strong> EQCR must verify that all planning tabs (P-1 through P-13) 
+                                        are complete and approved before execution begins per ISA 300.
+                                    </div>
+                                    <field name="checklist_line_ids" domain="[('checklist_type', '=', 'eqr_completion')]" 
+                                           context="{'default_checklist_type': 'eqr_completion'}" nolabel="1">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="question"/>
+                                            <field name="response" widget="radio"/>
+                                            <field name="comments"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </div>
+                        </page>
+                        
                     </notebook>
                 </sheet>
                 <chatter>

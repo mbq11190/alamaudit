@@ -15,4 +15,5 @@ from . import planning_p10_related_parties
 from . import planning_p11_group_audit
 from . import planning_p12_strategy
 from . import planning_p13_approval
+from . import planning_template  # Session 7B: Industry templates
 from . import planning_phase  # Keep existing for backward compatibility

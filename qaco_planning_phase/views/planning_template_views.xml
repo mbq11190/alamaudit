@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Session 7B: Planning Template Wizard Views -->
+    
+    <!-- Planning Template Form View -->
+    <record id="view_planning_template_form" model="ir.ui.view">
+        <field name="name">qaco.planning.template.form</field>
+        <field name="model">qaco.planning.template</field>
+        <field name="arch" type="xml">
+            <form string="Planning Template">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="industry_type"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <page string="Template Data (JSON)" name="template_data">
+                            <field name="template_data" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Planning Template Tree View -->
+    <record id="view_planning_template_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.template.tree</field>
+        <field name="model">qaco.planning.template</field>
+        <field name="arch" type="xml">
+            <tree string="Planning Templates">
+                <field name="name"/>
+                <field name="industry_type"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Planning Template Action -->
+    <record id="action_planning_template" model="ir.actions.act_window">
+        <field name="name">Planning Templates</field>
+        <field name="res_model">qaco.planning.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new planning template
+            </p>
+            <p>
+                Planning templates accelerate audit setup by pre-populating industry-specific risks and analytical procedures.
+            </p>
+        </field>
+    </record>
+
+    <!-- Planning Template Wizard Form -->
+    <record id="view_planning_template_wizard_form" model="ir.ui.view">
+        <field name="name">qaco.planning.template.wizard.form</field>
+        <field name="model">qaco.planning.template.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Apply Planning Template">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>📋 Quick Start:</strong> Select an industry-specific template to pre-populate 
+                        P-2 business risks and P-4 analytical procedures. This will save 30-45 minutes of planning setup time.
+                    </div>
+                    
+                    <group>
+                        <field name="planning_main_id" invisible="1"/>
+                        <field name="template_id" widget="selection" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="industry_type" readonly="1"/>
+                    </group>
+                    
+                    <group string="Template Description" invisible="not template_id">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    
+                    <div class="alert alert-warning" role="alert" invisible="not template_id">
+                        <strong>⚠️ Note:</strong> Applying this template will add data to P-2 and P-4 tabs. 
+                        If you already have data in those tabs, the template will add to existing records.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_apply_template" string="Apply Template" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_planning_template_wizard" model="ir.actions.act_window">
+        <field name="name">Apply Planning Template</field>
+        <field name="res_model">qaco.planning.template.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_qaco_planning_main"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <!-- Add "Apply Template" button to Planning Main form -->
+    <record id="view_planning_main_form_template_button" model="ir.ui.view">
+        <field name="name">qaco.planning.main.form.template.button</field>
+        <field name="model">qaco.planning.main</field>
+        <field name="inherit_id" ref="qaco_planning_phase.view_planning_main_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_generate_apm']" position="after">
+                <button name="%(action_planning_template_wizard)d" 
+                        string="Apply Template" 
+                        type="action" 
+                        class="btn-info"
+                        invisible="is_planning_locked"
+                        help="Pre-populate planning data from industry-specific template"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu Item for Templates (under Configuration) -->
+    <menuitem id="menu_planning_templates"
+              name="Planning Templates"
+              parent="qaco_audit.menu_audit_configuration"
+              action="action_planning_template"
+              sequence="30"/>
+
+</odoo>

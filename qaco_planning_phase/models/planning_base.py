@@ -4,8 +4,11 @@ Base Planning Model and Common Mixins for P-1 to P-13 Tabs
 Provides shared state workflow, status tracking, and sign-off logic.
 """
 
+import logging
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningTabMixin(models.AbstractModel):
@@ -110,6 +113,9 @@ class PlanningTabMixin(models.AbstractModel):
             record.partner_approved_user_id = self.env.user
             record.partner_approved_on = fields.Datetime.now()
             record.state = 'approved'
+            
+            # Session 7A: Send unlock notification for dependent tabs
+            record._send_tab_unlock_notifications()
 
     def action_send_back(self):
         """Send back for rework from Reviewed/Completed to In Progress."""
@@ -161,6 +167,103 @@ class PlanningTabMixin(models.AbstractModel):
     def _validate_mandatory_fields(self):
         """Override in each P-tab model to validate required fields."""
         pass
+
+    def _send_tab_unlock_notifications(self):
+        """
+        Session 7A: Send email notification when a P-tab approval unlocks dependent tabs.
+        Called after action_approve() to notify team members of newly accessible tabs.
+        """
+        self.ensure_one()
+        
+        # Get the planning_main record to find dependent tabs
+        planning_main = self.env['qaco.planning.main'].search([
+            ('audit_id', '=', self._get_audit_id())
+        ], limit=1)
+        
+        if not planning_main:
+            return
+        
+        # Map current model to next unlocked tab
+        tab_dependencies = {
+            'qaco.planning.p1.scope': ('p2_entity_id', 'P-2: Entity Understanding'),
+            'qaco.planning.p2.entity': ('p3_control_id', 'P-3: Control Environment'),
+            'qaco.planning.p3.control': ('p4_analytical_id', 'P-4: Analytical Procedures'),
+            'qaco.planning.p4.analytical': ('p5_materiality_id', 'P-5: Materiality'),
+            'qaco.planning.p5.materiality': ('p6_risk_id', 'P-6: Risk Assessment'),
+            'qaco.planning.p6.risk': ('p7_response_id', 'P-7: Risk Response'),
+            'qaco.planning.p7.response': ('p8_sampling_id', 'P-8: Sampling'),
+            'qaco.planning.p8.sampling': ('p9_team_id', 'P-9: Team & Budget'),
+            'qaco.planning.p9.team': ('p10_related_parties_id', 'P-10: Related Parties'),
+            'qaco.planning.p10.related.parties': ('p11_timeline_id', 'P-11: Timeline'),
+            'qaco.planning.p11.timeline': ('p12_strategy_id', 'P-12: Communication Strategy'),
+            'qaco.planning.p12.strategy': ('p13_approval_id', 'P-13: Final Approval'),
+        }
+        
+        dependency = tab_dependencies.get(self._name)
+        if not dependency:
+            return  # No dependent tab (e.g., P-13 is final)
+        
+        dependent_field, tab_display_name = dependency
+        dependent_tab = planning_main[dependent_field]
+        
+        if not dependent_tab:
+            return
+        
+        # Get team members to notify (Senior + Manager)
+        recipients = []
+        audit = planning_main.audit_id
+        
+        if audit.senior_id and audit.senior_id.email:
+            recipients.append(audit.senior_id.email)
+        if audit.manager_id and audit.manager_id.email:
+            recipients.append(audit.manager_id.email)
+        
+        if not recipients:
+            return
+        
+        # Send email notification
+        mail_template = self.env.ref('qaco_planning_phase.mail_template_ptab_unlocked', raise_if_not_found=False)
+        if not mail_template:
+            return
+        
+        for email in recipients:
+            try:
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                tab_url = f"{base_url}/web#id={dependent_tab.id}&model={dependent_tab._name}&view_type=form"
+                
+                mail_template.with_context(
+                    recipient_email=email,
+                    tab_name=tab_display_name,
+                    prerequisite_tab=self._get_tab_display_name(),
+                    approver_name=self.env.user.name,
+                    tab_url=tab_url,
+                ).send_mail(planning_main.id, force_send=True)
+            except Exception as e:
+                # Log error but don't block approval workflow
+                _logger.warning(f"Failed to send unlock notification to {email}: {str(e)}")
+    
+    def _get_audit_id(self):
+        """Helper to get audit_id from various P-tab models."""
+        return self.audit_id.id if hasattr(self, 'audit_id') else False
+    
+    def _get_tab_display_name(self):
+        """Return user-friendly tab name for notifications."""
+        tab_names = {
+            'qaco.planning.p1.scope': 'P-1: Audit Scope',
+            'qaco.planning.p2.entity': 'P-2: Entity Understanding',
+            'qaco.planning.p3.control': 'P-3: Control Environment',
+            'qaco.planning.p4.analytical': 'P-4: Analytical Procedures',
+            'qaco.planning.p5.materiality': 'P-5: Materiality',
+            'qaco.planning.p6.risk': 'P-6: Risk Assessment',
+            'qaco.planning.p7.response': 'P-7: Risk Response',
+            'qaco.planning.p8.sampling': 'P-8: Sampling',
+            'qaco.planning.p9.team': 'P-9: Team & Budget',
+            'qaco.planning.p10.related.parties': 'P-10: Related Parties',
+            'qaco.planning.p11.timeline': 'P-11: Timeline',
+            'qaco.planning.p12.strategy': 'P-12: Communication Strategy',
+            'qaco.planning.p13.approval': 'P-13: Final Approval',
+        }
+        return tab_names.get(self._name, 'Unknown Tab')
 
 
 class PlanningPhaseMain(models.Model):

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Session 7B: Planning Templates by Industry -->
+        
+        <!-- Template: Manufacturing Industry -->
+        <record id="planning_template_manufacturing" model="qaco.planning.template">
+            <field name="name">Manufacturing Industry - Standard Audit Planning</field>
+            <field name="industry_type">manufacturing</field>
+            <field name="description">Pre-configured planning template for manufacturing entities including textile, automotive, pharmaceutical, and industrial sectors.</field>
+            <field name="template_data" type="json">{
+                "p2_business_risks": [
+                    {
+                        "risk_description": "Inventory valuation errors due to obsolescence or damage",
+                        "impact": "high",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Conduct physical inventory counts, review slow-moving items, assess valuation methods per IAS 2"
+                    },
+                    {
+                        "risk_description": "Revenue recognition complexities for long-term manufacturing contracts",
+                        "impact": "high",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Review contract terms, assess IFRS 15 compliance, verify stage of completion calculations"
+                    },
+                    {
+                        "risk_description": "Fixed assets capitalization and depreciation policy non-compliance",
+                        "impact": "medium",
+                        "likelihood": "low",
+                        "risk_category": "compliance",
+                        "mitigation_strategy": "Review capitalization policy, test depreciation calculations, verify asset register"
+                    },
+                    {
+                        "risk_description": "Cost allocation between inventory and expenses",
+                        "impact": "medium",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Test overhead allocation methods, review standard costing system, verify direct vs indirect costs"
+                    }
+                ],
+                "p4_analytical_procedures": [
+                    {
+                        "procedure_name": "Gross Profit Margin Analysis",
+                        "expectation": "Margin should remain stable within 2-3% of prior year unless significant operational changes",
+                        "threshold": 5.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Inventory Turnover Ratio",
+                        "expectation": "Days inventory should align with production cycle (typically 60-90 days for manufacturing)",
+                        "threshold": 15.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Fixed Asset to Revenue Ratio",
+                        "expectation": "Capital intensity ratio should remain consistent unless major capex",
+                        "threshold": 10.0,
+                        "comparison_period": "industry_benchmark"
+                    }
+                ]
+            }</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Template: Financial Services -->
+        <record id="planning_template_financial" model="qaco.planning.template">
+            <field name="name">Financial Services - Banking & DFI Planning</field>
+            <field name="industry_type">financial_services</field>
+            <field name="description">Specialized planning template for banks, DFIs, microfinance institutions with SBP regulatory focus.</field>
+            <field name="template_data" type="json">{
+                "p2_business_risks": [
+                    {
+                        "risk_description": "Loan loss provisioning inadequacy per SBP Prudential Regulations",
+                        "impact": "high",
+                        "likelihood": "high",
+                        "risk_category": "regulatory",
+                        "mitigation_strategy": "Test ECL model, review NPL classification, verify provisioning adequacy per IFRS 9 and SBP guidelines"
+                    },
+                    {
+                        "risk_description": "Investment portfolio valuation and impairment assessment",
+                        "impact": "high",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Obtain independent valuations, review HTM vs FVOCI classification, test impairment triggers"
+                    },
+                    {
+                        "risk_description": "Capital adequacy ratio non-compliance",
+                        "impact": "high",
+                        "likelihood": "low",
+                        "risk_category": "regulatory",
+                        "mitigation_strategy": "Recalculate CAR, verify risk-weighted assets computation, review Basel III compliance"
+                    },
+                    {
+                        "risk_description": "Related party lending concentration risk",
+                        "impact": "medium",
+                        "likelihood": "medium",
+                        "risk_category": "compliance",
+                        "mitigation_strategy": "Identify all related parties per IAS 24, test lending limits, verify board approvals"
+                    }
+                ],
+                "p4_analytical_procedures": [
+                    {
+                        "procedure_name": "Net Interest Margin (NIM) Analysis",
+                        "expectation": "NIM should align with banking industry average (3-4% for commercial banks)",
+                        "threshold": 8.0,
+                        "comparison_period": "industry_benchmark"
+                    },
+                    {
+                        "procedure_name": "NPL Ratio Movement",
+                        "expectation": "Non-performing loans ratio should remain below SBP threshold (typically 10%)",
+                        "threshold": 15.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Cost-to-Income Ratio",
+                        "expectation": "Operating efficiency ratio should not exceed 50-60% for profitable banks",
+                        "threshold": 10.0,
+                        "comparison_period": "prior_year"
+                    }
+                ]
+            }</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Template: Services Sector -->
+        <record id="planning_template_services" model="qaco.planning.template">
+            <field name="name">Services Sector - Consulting, IT, Professional Services</field>
+            <field name="industry_type">services</field>
+            <field name="description">Planning template for service-based businesses including IT, consulting, professional services, and hospitality.</field>
+            <field name="template_data" type="json">{
+                "p2_business_risks": [
+                    {
+                        "risk_description": "Revenue recognition for multi-year service contracts",
+                        "impact": "high",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Review IFRS 15 contract assessment, verify performance obligations, test revenue allocation"
+                    },
+                    {
+                        "risk_description": "Work-in-progress valuation for ongoing projects",
+                        "impact": "medium",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Test project completion percentages, review cost accumulation, verify stage gates"
+                    },
+                    {
+                        "risk_description": "Related party transactions with group companies for shared services",
+                        "impact": "medium",
+                        "likelihood": "medium",
+                        "risk_category": "compliance",
+                        "mitigation_strategy": "Identify all intercompany arrangements, verify arm's length pricing, review transfer pricing documentation"
+                    },
+                    {
+                        "risk_description": "Employee benefit liabilities understatement",
+                        "impact": "medium",
+                        "likelihood": "low",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Review gratuity and bonus accruals, obtain actuarial valuations, verify leave encashment provisions"
+                    }
+                ],
+                "p4_analytical_procedures": [
+                    {
+                        "procedure_name": "Revenue per Employee Analysis",
+                        "expectation": "Professional services firms typically generate PKR 3-5M per employee annually",
+                        "threshold": 20.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Employee Cost Ratio",
+                        "expectation": "Salary and benefit costs should be 40-60% of revenue for service businesses",
+                        "threshold": 10.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Billing Realization Rate",
+                        "expectation": "Actual billing should be 80-95% of standard rates for consulting firms",
+                        "threshold": 5.0,
+                        "comparison_period": "budgeted"
+                    }
+                ]
+            }</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Template: Not-for-Profit Organizations -->
+        <record id="planning_template_npo" model="qaco.planning.template">
+            <field name="name">Not-for-Profit - NGOs, Charities, Foundations</field>
+            <field name="industry_type">npo</field>
+            <field name="description">Compliance-focused planning template for NPOs with donor fund restrictions and regulatory requirements.</field>
+            <field name="template_data" type="json">{
+                "p2_business_risks": [
+                    {
+                        "risk_description": "Donor fund restrictions not properly tracked and segregated",
+                        "impact": "high",
+                        "likelihood": "medium",
+                        "risk_category": "compliance",
+                        "mitigation_strategy": "Review fund accounting system, test restricted vs unrestricted classification, verify donor agreements"
+                    },
+                    {
+                        "risk_description": "Grant revenue recognition timing errors",
+                        "impact": "high",
+                        "likelihood": "medium",
+                        "risk_category": "financial",
+                        "mitigation_strategy": "Review grant agreements, assess performance conditions, verify milestone achievement documentation"
+                    },
+                    {
+                        "risk_description": "SECP NPO registration and reporting compliance gaps",
+                        "impact": "high",
+                        "likelihood": "low",
+                        "risk_category": "regulatory",
+                        "mitigation_strategy": "Verify annual return filing, review board composition requirements, ensure trust deed compliance"
+                    },
+                    {
+                        "risk_description": "Program expense allocation methodology non-compliance",
+                        "impact": "medium",
+                        "likelihood": "medium",
+                        "risk_category": "compliance",
+                        "mitigation_strategy": "Test direct vs indirect cost allocation, verify overhead distribution basis, review donor reporting requirements"
+                    }
+                ],
+                "p4_analytical_procedures": [
+                    {
+                        "procedure_name": "Program Expense Ratio",
+                        "expectation": "Program expenses should be 70-85% of total expenses per best practice",
+                        "threshold": 10.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Fundraising Efficiency",
+                        "expectation": "Fundraising costs should not exceed 15-20% of funds raised",
+                        "threshold": 15.0,
+                        "comparison_period": "prior_year"
+                    },
+                    {
+                        "procedure_name": "Donor Concentration Analysis",
+                        "expectation": "No single donor should exceed 40% of total funding (sustainability risk)",
+                        "threshold": 20.0,
+                        "comparison_period": "prior_year"
+                    }
+                ]
+            }</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

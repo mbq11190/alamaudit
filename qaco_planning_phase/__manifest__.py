@@ -44,10 +44,14 @@
         "views/audit_smart_button.xml",
         # Dashboard
         "views/planning_dashboard_views.xml",
+        # Templates (Session 7B)
+        "views/planning_template_views.xml",
         # Menu Structure
         "views/planning_menu.xml",
         # Data
         "data/industry_data.xml",
+        "data/mail_templates.xml",  # Session 7A: Email notifications
+        "data/planning_templates.xml",  # Session 7B: Industry templates
         "data/regulator_data.xml",
         "data/assertion_tags.xml",
         "data/materiality_defaults.xml",

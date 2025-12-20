@@ -248,6 +248,50 @@ class QualityReview(models.Model):
     archiving_completed_on = fields.Date(string='Archived On', tracking=True)
     locking_alerts_html = fields.Html(string='Locking Alerts', compute='_compute_locking_alerts')
     eqr_checklist_attachment_ids = fields.Many2many('ir.attachment', 'qaco_quality_eqr_check_rel', 'review_id', 'attachment_id', string='Checklist Evidence')
+    
+    # Session 7E: Planning Phase Integration Fields
+    planning_phase_id = fields.Many2one(
+        'qaco.planning.main',
+        string='Planning Phase',
+        compute='_compute_planning_metrics',
+        store=True,
+        help='Linked planning phase record for metrics'
+    )
+    planning_completion_pct = fields.Float(
+        string='Planning Completion %',
+        compute='_compute_planning_metrics',
+        store=True,
+        help='Percentage of planning tabs approved'
+    )
+    planning_locked = fields.Boolean(
+        string='Planning Locked',
+        compute='_compute_planning_metrics',
+        store=True,
+        help='Whether planning phase is locked'
+    )
+    planning_p6_risk_count = fields.Integer(
+        string='Identified Risks (P-6)',
+        compute='_compute_planning_metrics',
+        store=True,
+        help='Number of risks in P-6 risk register'
+    )
+    planning_significant_risk_count = fields.Integer(
+        string='Significant Risks',
+        compute='_compute_planning_metrics',
+        store=True,
+        help='Number of significant risks flagged'
+    )
+    planning_missing_approvals = fields.Char(
+        string='Missing Approvals',
+        compute='_compute_planning_metrics',
+        store=True,
+        help='Comma-separated list of P-tabs without partner approval'
+    )
+    planning_red_flags = fields.Html(
+        string='Planning Red Flags',
+        compute='_compute_planning_red_flags',
+        help='Critical planning phase issues for EQCR attention'
+    )
     file_lock_certificate_attachment_ids = fields.Many2many('ir.attachment', 'qaco_quality_lock_cert_rel', 'review_id', 'attachment_id', string='Lock Certificates')
     archiving_evidence_attachment_ids = fields.Many2many('ir.attachment', 'qaco_quality_archive_rel', 'review_id', 'attachment_id', string='Archiving Evidence')
 
@@ -359,6 +403,89 @@ class QualityReview(models.Model):
         if started:
             return 'amber'
         return 'red'
+    
+    # ------------------------------------------------------------------
+    # Session 7E: Planning Phase Integration Compute Methods
+    # ------------------------------------------------------------------
+    @api.depends('audit_id')
+    def _compute_planning_metrics(self):
+        """Pull planning phase metrics for EQCR review."""
+        for record in self:
+            planning = self.env['qaco.planning.main'].search([('audit_id', '=', record.audit_id.id)], limit=1)
+            
+            if not planning:
+                record.planning_phase_id = False
+                record.planning_completion_pct = 0.0
+                record.planning_locked = False
+                record.planning_p6_risk_count = 0
+                record.planning_significant_risk_count = 0
+                record.planning_missing_approvals = ''
+                continue
+            
+            record.planning_phase_id = planning.id
+            record.planning_locked = planning.is_planning_locked
+            
+            # Calculate completion percentage (count approved tabs)
+            approved_tabs = 0
+            total_tabs = 13
+            missing_tabs = []
+            
+            for tab_field in ['p1_engagement_id', 'p2_entity_id', 'p3_control_id', 'p4_analytical_id',
+                             'p5_materiality_id', 'p6_risk_id', 'p7_fraud_id', 'p8_going_concern_id',
+                             'p9_laws_id', 'p10_related_parties_id', 'p11_group_id',
+                             'p12_strategy_id', 'p13_approval_id']:
+                tab_record = planning[tab_field]
+                if tab_record and tab_record.state == 'approved':
+                    approved_tabs += 1
+                elif tab_record:
+                    tab_name = tab_field.replace('_id', '').replace('_', '-').upper()
+                    missing_tabs.append(tab_name)
+            
+            record.planning_completion_pct = round((approved_tabs / total_tabs) * 100, 1)
+            record.planning_missing_approvals = ', '.join(missing_tabs) if missing_tabs else ''
+            
+            # Count P-6 risks
+            if planning.p6_risk_id:
+                risk_lines = self.env['qaco.planning.p6.risk.line'].search([
+                    ('p6_risk_id', '=', planning.p6_risk_id.id)
+                ])
+                record.planning_p6_risk_count = len(risk_lines)
+                record.planning_significant_risk_count = len(risk_lines.filtered(lambda r: r.is_significant_risk))
+            else:
+                record.planning_p6_risk_count = 0
+                record.planning_significant_risk_count = 0
+    
+    @api.depends('planning_phase_id', 'planning_completion_pct', 'planning_locked', 'planning_missing_approvals')
+    def _compute_planning_red_flags(self):
+        """Generate HTML red flags for planning phase issues."""
+        for record in self:
+            if not record.planning_phase_id:
+                record.planning_red_flags = '<p style="color: grey;">⚠️ No planning phase found for this audit.</p>'
+                continue
+            
+            flags = []
+            
+            # Red Flag: Planning not locked
+            if not record.planning_locked:
+                flags.append('🔓 <strong>Planning phase not locked</strong> - ISA 300 requires planning completion before execution.')
+            
+            # Red Flag: Low completion percentage
+            if record.planning_completion_pct < 100:
+                flags.append(f'📊 <strong>Planning only {record.planning_completion_pct}% complete</strong> - Missing approvals: {record.planning_missing_approvals}')
+            
+            # Red Flag: No risks identified
+            if record.planning_p6_risk_count == 0:
+                flags.append('⚠️ <strong>No risks identified in P-6 Risk Assessment</strong> - ISA 315 requires documented risk assessment.')
+            
+            # Red Flag: No significant risks (unusual)
+            if record.planning_p6_risk_count > 0 and record.planning_significant_risk_count == 0:
+                flags.append(f'🟡 <strong>No significant risks flagged</strong> - Consider if {record.planning_p6_risk_count} identified risks include any significant risks per ISA 315.')
+            
+            if not flags:
+                record.planning_red_flags = '<p style="color: green;">✅ Planning phase complete with no red flags.</p>'
+            else:
+                formatted_flags = '<ul>' + ''.join(f'<li>{flag}</li>' for flag in flags) + '</ul>'
+                record.planning_red_flags = f'<div style="background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107;">{formatted_flags}</div>'
 
     @api.model_create_multi
     def create(self, vals_list: List[Dict[str, Any]]):
@@ -464,6 +591,33 @@ class QualityReview(models.Model):
     # ------------------------------------------------------------------
     # Completion / gating actions
     # ------------------------------------------------------------------
+    
+    def action_open_planning_dashboard(self):
+        """Session 7E: Open planning dashboard from EQCR form."""
+        self.ensure_one()
+        
+        if not self.planning_phase_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'No Planning Phase',
+                    'message': 'This audit does not have an associated planning phase.',
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Planning Dashboard',
+            'res_model': 'qaco.planning.main',
+            'res_id': self.planning_phase_id.id,
+            'view_mode': 'kanban',
+            'view_id': self.env.ref('qaco_planning_phase.view_planning_dashboard_kanban').id,
+            'target': 'current',
+        }
+    
     def action_finalize_eqr(self):
         for record in self:
             if not record.eqr_required:
