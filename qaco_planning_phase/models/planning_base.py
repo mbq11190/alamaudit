@@ -172,7 +172,7 @@ class PlanningTabMixin(models.AbstractModel):
     # ========================================================================
     @api.model
     def _get_default_currency(self):
-        \"\"\"Safe currency default that won't crash during module install/cron.\"\"\"
+        """Safe currency default that won't crash during module install/cron."""
         try:
             return self.env.company.currency_id.id if self.env.company else False
         except Exception as e:
@@ -181,7 +181,7 @@ class PlanningTabMixin(models.AbstractModel):
 
     @api.model
     def _get_default_user(self):
-        \"\"\"Safe user default that won't crash during module install/cron.\"\"\"
+        """Safe user default that won't crash during module install/cron."""
         try:
             return self.env.user.id if self.env.user else False
         except Exception as e:
@@ -190,7 +190,7 @@ class PlanningTabMixin(models.AbstractModel):
 
     @api.model
     def _get_active_planning_id(self):
-        \"\"\"Safe context access that won't crash during module install/cron.\"\"\"
+        """Safe context access that won't crash during module install/cron."""
         try:
             return self.env.context.get('active_id', False)
         except Exception as e:
