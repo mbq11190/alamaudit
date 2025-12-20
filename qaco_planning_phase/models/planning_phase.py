@@ -136,7 +136,7 @@ class PlanningPhase(models.Model):
 	overall_materiality = fields.Monetary(string='Overall Materiality', currency_field='company_currency_id', readonly=True)
 	performance_materiality = fields.Monetary(string='Performance Materiality', currency_field='company_currency_id', readonly=True)
 	clearly_trivial_threshold = fields.Monetary(string='Clearly Trivial Threshold', currency_field='company_currency_id', readonly=True)
-	company_currency_id = fields.Many2one('res.currency', string='Reporting Currency', default=lambda self: self.env.company.currency_id.id if self.env.company else False)
+	company_currency_id = fields.Many2one('res.currency', string='Reporting Currency', default=lambda self: self._get_default_currency())
 
 	control_environment_rating = fields.Selection(CONTROL_RATING, string='Control Environment', default='none')
 	entity_level_controls_rating = fields.Selection(CONTROL_RATING, string='Entity-Level Controls', default='none')
@@ -396,6 +396,15 @@ class PlanningPhase(models.Model):
 				record.overall_materiality = benchmark_value * (record.materiality_percentage / 100.0)
 				record.performance_materiality = record.overall_materiality * 0.75
 				record.clearly_trivial_threshold = record.overall_materiality * 0.05
+
+	@api.model
+	def _get_default_currency(self):
+		"""Safe currency default that won't crash during module install/cron."""
+		try:
+			return self.env.company.currency_id.id if self.env.company else False
+		except Exception as e:
+			_logger.warning(f'_get_default_currency failed: {e}')
+			return False
 
 	def _ensure_statuses_green(self):
 		self.ensure_one()
