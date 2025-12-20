@@ -7,8 +7,8 @@
 
     <!-- P-11 Form View - MASTER -->
     <record id="view_planning_p11_group_audit_form_complete" model="ir.ui.view">
-        <field name="name">qaco.planning.p11.group_audit.form.complete</field>
-        <field name="model">qaco.planning.p11.group_audit</field>
+        <field name="name">audit.planning.p11.group_audit.form.complete</field>
+        <field name="model">audit.planning.p11.group_audit</field>
         <field name="arch" type="xml">
             <form string="P-11: Group Audit Planning (ISA 600)">
                 <header>
@@ -540,8 +540,8 @@
 
     <!-- P-11 Tree View -->
     <record id="view_planning_p11_group_audit_tree_complete" model="ir.ui.view">
-        <field name="name">qaco.planning.p11.group_audit.tree.complete</field>
-        <field name="model">qaco.planning.p11.group_audit</field>
+        <field name="name">audit.planning.p11.group_audit.tree.complete</field>
+        <field name="model">audit.planning.p11.group_audit</field>
         <field name="arch" type="xml">
             <tree string="P-11: Group Audit Planning" 
                   decoration-danger="escalation_required"
@@ -566,7 +566,7 @@
     <!-- P-11 Action -->
     <record id="action_planning_p11_group_audit_complete" model="ir.actions.act_window">
         <field name="name">P-11: Group Audit Planning</field>
-        <field name="res_model">qaco.planning.p11.group_audit</field>
+        <field name="res_model">audit.planning.p11.group_audit</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
@@ -586,8 +586,8 @@
 
     <!-- Component Tree View -->
     <record id="view_planning_p11_component_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p11.component.tree</field>
-        <field name="model">qaco.planning.p11.component</field>
+        <field name="name">audit.planning.p11.component.tree</field>
+        <field name="model">audit.planning.p11.component</field>
         <field name="arch" type="xml">
             <tree string="Group Components" decoration-danger="is_significant">
                 <field name="component_name"/>
@@ -608,8 +608,8 @@
 
     <!-- Component Risk Tree View -->
     <record id="view_planning_p11_component_risk_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p11.component_risk.tree</field>
-        <field name="model">qaco.planning.p11.component_risk</field>
+        <field name="name">audit.planning.p11.component_risk.tree</field>
+        <field name="model">audit.planning.p11.component_risk</field>
         <field name="arch" type="xml">
             <tree string="Component Risks" decoration-danger="risk_level == 'significant'">
                 <field name="component_id"/>
@@ -626,8 +626,8 @@
 
     <!-- Component Auditor Tree View -->
     <record id="view_planning_p11_component_auditor_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p11.component_auditor.tree</field>
-        <field name="model">qaco.planning.p11.component_auditor</field>
+        <field name="name">audit.planning.p11.component_auditor.tree</field>
+        <field name="model">audit.planning.p11.component_auditor</field>
         <field name="arch" type="xml">
             <tree string="Component Auditors" decoration-danger="escalation_flag">
                 <field name="auditor_name"/>
@@ -643,4 +643,3 @@
     </record>
 
 </odoo>
-
