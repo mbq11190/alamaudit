@@ -409,6 +409,18 @@ class PlanningP11GroupAudit(models.Model):
     # ============================================================================
     # SECTION J: MANDATORY DOCUMENT UPLOADS
     # ============================================================================
+    group_structure_overview = fields.Html(
+        string='Group Structure Overview',
+        help='HTML description of the group structure and relationships'
+    )
+    group_chart = fields.Html(
+        string='Group Chart',
+        help='Visual representation of group structure in HTML format'
+    )
+    consolidation_process = fields.Html(
+        string='Consolidation Process',
+        help='Description of the consolidation process and procedures'
+    )
     group_structure_attachments = fields.Many2many(
         'ir.attachment',
         'p11_group_structure_rel',
