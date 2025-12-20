@@ -85,7 +85,7 @@
                                 <field name="component_ids" nolabel="1">
                                     <tree editable="bottom">
                                         <field name="component_name"/>
-                                        <field name="location"/>
+                                        <field name="jurisdiction"/>
                                         <field name="significance"/>
                                         <field name="type_of_work"/>
                                         <field name="component_auditor"/>
@@ -297,24 +297,6 @@
             <p>
                 Document overall audit strategy and audit plan per ISA 300.
             </p>
-        </field>
-    </record>
-
-    <!-- Component Line Tree View -->
-    <record id="view_component_line_tree" model="ir.ui.view">
-        <field name="name">qaco.component.line.tree</field>
-        <field name="model">qaco.component.line</field>
-        <field name="arch" type="xml">
-            <tree string="Components" editable="bottom">
-                <field name="component_name"/>
-                <field name="location"/>
-                <field name="significance"/>
-                <field name="type_of_work"/>
-                <field name="component_auditor"/>
-                <field name="component_materiality"/>
-                <field name="reporting_deadline"/>
-                <field name="status"/>
-            </tree>
         </field>
     </record>
 
