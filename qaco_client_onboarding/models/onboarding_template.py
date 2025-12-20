@@ -84,6 +84,7 @@ class OnboardingAttachedTemplate(models.Model):
         string='Onboarding',
         required=True,
         ondelete='cascade',
+        index=True,
     )
     template_id = fields.Many2one(
         'qaco.onboarding.template.document',

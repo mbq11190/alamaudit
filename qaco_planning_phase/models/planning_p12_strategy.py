@@ -810,13 +810,14 @@ class PlanningP12Strategy(models.Model):
                 _('\n\nAll planning phases P-1 through P-11 must be partner-approved and locked before P-12 can be created.')
             )
 
-    @api.model
-    def create(self, vals):
-        rec = super(AuditPlanningP12AuditStrategy, self).create(vals)
-        rec._check_preconditions()
-        rec._auto_populate_risk_responses()
-        rec._log_version('Created')
-        return rec
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for rec in records:
+            rec._check_preconditions()
+            rec._auto_populate_risk_responses()
+            rec._log_version('Created')
+        return records
 
     def write(self, vals):
         result = super(AuditPlanningP12AuditStrategy, self).write(vals)

@@ -315,7 +315,8 @@ class PlanningPhaseMain(models.Model):
         string='Audit Engagement',
         required=True,
         ondelete='cascade',
-        tracking=True
+        tracking=True,
+        index=True
     )
     client_id = fields.Many2one(
         'res.partner',

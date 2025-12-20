@@ -378,16 +378,18 @@ class PlanningP6Risk(models.Model):
                 raise ValidationError("At least one risk line must be entered.")
 
     # Pre-conditions enforcement
-    @api.model
-    def create(self, vals):
-        # Enforce P-5 locked, P-2/P-3/P-4 outputs present, materiality finalized
-        audit = self.env['qaco.audit'].browse(vals.get('engagement_id'))
-        planning = self.env['qaco.planning.main'].browse(vals.get('planning_main_id'))
-        if not planning or not planning.p5_partner_locked:
-            raise UserError("P-6 cannot be started until P-5 is partner-approved and locked.")
-        # Add checks for P-2, P-3, P-4 outputs
-        if not planning.p2_outputs_ready or not planning.p3_outputs_ready or not planning.p4_outputs_ready:
-            raise UserError("P-6 requires outputs from P-2, P-3, and P-4.")
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Enforce P-5 locked, P-2/P-3/P-4 outputs present, materiality finalized
+            audit = self.env['qaco.audit'].browse(vals.get('engagement_id'))
+            planning = self.env['qaco.planning.main'].browse(vals.get('planning_main_id'))
+            if not planning or not planning.p5_partner_locked:
+                raise UserError("P-6 cannot be started until P-5 is partner-approved and locked.")
+            # Add checks for P-2, P-3, P-4 outputs
+            if not planning.p2_outputs_ready or not planning.p3_outputs_ready or not planning.p4_outputs_ready:
+                raise UserError("P-6 requires outputs from P-2, P-3, and P-4.")
+        return super().create(vals_list)
         return super().create(vals)
 
 # =============================
