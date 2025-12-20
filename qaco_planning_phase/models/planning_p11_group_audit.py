@@ -376,7 +376,8 @@ class PlanningP11GroupAudit(models.Model):
     )
     specific_requirements = fields.Html(
         string='Specific Requirements',
-        help='Specific requirements for the group audit'
+        help='Specific requirements for the group audit',
+        tracking=True
     )
     reporting_requirements = fields.Html(
         string='Reporting Requirements',
