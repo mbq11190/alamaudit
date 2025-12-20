@@ -80,9 +80,10 @@ class QacoExecutionPhase(models.Model):
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
-    client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=True)
+    client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=False)
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True)
     planning_phase_id = fields.Many2one('qaco.planning.phase', string='Planning Phase', compute='_compute_planning_phase', store=True, readonly=False)
-    company_currency_id = fields.Many2one('res.currency', string='Company Currency', related='audit_id.currency_id', store=True, readonly=True)
+    company_currency_id = fields.Many2one('res.currency', string='Company Currency', related='audit_id.currency_id', store=False, readonly=True)
 
     # Status dashboard
     control_status = fields.Selection(SUBTAB_STATUS, default='red', tracking=True)
@@ -543,7 +544,7 @@ class ExecutionSubstantiveProcedure(models.Model):
     methodology_step = fields.Html(string='Detailed Steps / Reference')
     sample_size_planned = fields.Integer(string='Planned Sample Size')
     sample_size_tested = fields.Integer(string='Actual Sample Size')
-    company_currency_id = fields.Many2one('res.currency', related='execution_phase_id.company_currency_id', store=True, readonly=True)
+    company_currency_id = fields.Many2one('res.currency', related='execution_phase_id.company_currency_id', store=False, readonly=True)
     exception_amount = fields.Monetary(string='Exception Amount', currency_field='company_currency_id')
     sampling_request_id = fields.Many2one('qaco.exec.sampling.request', string='Sampling Request', ondelete='set null')
     evidence_attachment_ids = fields.Many2many(

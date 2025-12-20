@@ -54,6 +54,7 @@
 									<group string="Engagement Details">
 										<field name="audit_id" required="1"/>
 										<field name="client_id" readonly="1"/>
+										<field name="firm_name" readonly="1"/>
 									</group>
 									<group string="Audit Period">
 										<field name="audit_type" required="1"/>

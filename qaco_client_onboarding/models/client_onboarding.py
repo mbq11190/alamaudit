@@ -104,7 +104,8 @@ class ClientOnboarding(models.Model):
 
     name = fields.Char(string='Onboarding Title', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade', index=True)
-    client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=True)
+    client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=False)
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True)
 
     # Section 0: Gateway fields
     entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', required=True, tracking=True)
@@ -651,7 +652,7 @@ class OnboardingCity(models.Model):
 
     name = fields.Char(string='City', required=True)
     state_id = fields.Many2one('res.country.state', string='Province / Territory', ondelete='cascade', required=True)
-    country_id = fields.Many2one('res.country', string='Country', related='state_id.country_id', store=True, readonly=True)
+    country_id = fields.Many2one('res.country', string='Country', related='state_id.country_id', store=False, readonly=True)
 
     _sql_constraints = [
         ('name_state_unique', 'unique(name,state_id)', 'City must be unique within its province.'),

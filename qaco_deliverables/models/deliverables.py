@@ -104,7 +104,8 @@ class Deliverables(models.Model):
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
-    client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=True)
+    client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=False)
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True)
     finalisation_phase_id = fields.Many2one('qaco.finalisation.phase', string='Finalisation Phase', compute='_compute_related_phase', store=True, readonly=True)
 
     central_status = fields.Selection(SUBTAB_STATUS, compute='_compute_section_statuses', store=True, tracking=True)
@@ -435,7 +436,7 @@ class DeliverableAuditReport(models.Model):
     _order = 'id desc'
 
     deliverables_id = fields.Many2one('qaco.deliverables', string='Deliverables', required=True, ondelete='cascade')
-    client_id = fields.Many2one(related='deliverables_id.client_id', store=True, readonly=True)
+    client_id = fields.Many2one(related='deliverables_id.client_id', store=False, readonly=True)
     period_end = fields.Date(string='Reporting Period End', required=True)
     framework = fields.Selection(FRAMEWORK_TYPES, string='Framework', required=True)
     opinion_type = fields.Selection(OPINION_TYPES, string='Opinion Type', required=True, default='unmodified')
