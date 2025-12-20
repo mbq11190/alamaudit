@@ -181,6 +181,7 @@
         <field name="model">qaco.planning.p4.analytics</field>
         <field name="arch" type="xml">
             <form string="P-4: Preliminary Analytical Procedures">
+                <field name="can_open" invisible="1"/>
                 <header>
                     <field name="state" widget="statusbar" 
                            statusbar_visible="not_started,in_progress,completed,reviewed,locked"/>

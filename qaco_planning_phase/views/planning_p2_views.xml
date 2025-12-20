@@ -14,6 +14,8 @@
         <field name="model">qaco.planning.p2.entity</field>
         <field name="arch" type="xml">
             <form string="P-2: Understanding the Entity &amp; Its Environment">
+                <!-- Hidden field required for view modifiers -->
+                <field name="can_open" invisible="1"/>
                 <!-- Header with State Machine & Action Buttons -->
                 <header>
                     <button name="action_start_work"
