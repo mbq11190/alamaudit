@@ -20,7 +20,7 @@
     <menuitem id="menu_ai_substantive_tests" name="Substantive Procedures" parent="menu_ai_execution" action="ai_audit_management.action_substantive_tests"/>
     <menuitem id="menu_ai_ocr" name="OCR Documents" parent="menu_ai_execution" action="ai_audit_management.action_audit_ocr"/>
 
-    <menuitem id="menu_ai_completion_review" name="Completion & Review" parent="menu_ai_completion" action="ai_audit_management.action_completion_review"/>
+    <menuitem id="menu_ai_completion_review" name="Completion &amp; Review" parent="menu_ai_completion" action="ai_audit_management.action_completion_review"/>
 
     <menuitem id="menu_ai_final_reports" name="Final Reports" parent="menu_ai_reporting" action="ai_audit_management.action_final_reports"/>
     <menuitem id="menu_ai_evidence_index" name="Evidence Index" parent="menu_ai_reporting" action="ai_audit_management.action_evidence_index" groups="ai_audit_management.group_ai_audit_manager,ai_audit_management.group_ai_audit_partner"/>

@@ -16,7 +16,7 @@
         <field name="name">audit.completion.review.form</field>
         <field name="model">audit.completion.review</field>
         <field name="arch" type="xml">
-            <form string="Completion & Review">
+            <form string="Completion &amp; Review">
                 <header>
                     <button name="ai_generate_management_rep_letter" string="AI Rep Letter" type="object" class="btn-secondary"/>
                     <button name="ai_review_misstatements_materiality" string="AI Materiality" type="object" class="btn-secondary"/>
@@ -54,7 +54,7 @@
     </record>
 
     <record id="action_completion_review" model="ir.actions.act_window">
-        <field name="name">Completion & Review</field>
+        <field name="name">Completion &amp; Review</field>
         <field name="res_model">audit.completion.review</field>
         <field name="view_mode">tree,form</field>
     </record>
