@@ -1,7 +1,10 @@
+import logging
 from typing import Any, TYPE_CHECKING
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError  # type: ignore[attr-defined]
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningPhase(models.Model):
@@ -133,7 +136,7 @@ class PlanningPhase(models.Model):
 	overall_materiality = fields.Monetary(string='Overall Materiality', currency_field='company_currency_id', readonly=True)
 	performance_materiality = fields.Monetary(string='Performance Materiality', currency_field='company_currency_id', readonly=True)
 	clearly_trivial_threshold = fields.Monetary(string='Clearly Trivial Threshold', currency_field='company_currency_id', readonly=True)
-	company_currency_id = fields.Many2one('res.currency', string='Reporting Currency', default=lambda self: self._get_default_currency())
+	company_currency_id = fields.Many2one('res.currency', string='Reporting Currency', default=lambda self: self.env.company.currency_id.id if self.env.company else False)
 
 	control_environment_rating = fields.Selection(CONTROL_RATING, string='Control Environment', default='none')
 	entity_level_controls_rating = fields.Selection(CONTROL_RATING, string='Entity-Level Controls', default='none')
@@ -548,7 +551,7 @@ class RiskRegisterLine(models.Model):
 		('fs_level', 'Financial Statement Level'),
 		('other', 'Other'),
 	], string='Account/Cycle', required=True)
-	risk_description = fields.Html(string='Risk Description', required=True)
+	risk_description = fields.Html(string='Risk Description')
 	fs_level_risk = fields.Boolean(string='Financial Statement Level Risk')
 	assertion_type = fields.Selection(PlanningPhase.ASSERTION_TYPES, string='Assertion Level Risk')
 	risk_rating = fields.Selection(PlanningPhase.RISK_RATING, string='Risk Rating', required=True)

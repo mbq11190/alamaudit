@@ -6,7 +6,7 @@ Provides shared state workflow, status tracking, and sign-off logic.
 
 import logging
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 

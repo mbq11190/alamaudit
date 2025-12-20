@@ -310,7 +310,6 @@ class PlanningP11GroupAudit(models.Model):
     )
     planned_group_responses = fields.Html(
         string='Planned Group-Wide Responses',
-        required=True,
         help='Audit responses at group level (ISA 600.35)'
     )
     
@@ -363,6 +362,21 @@ class PlanningP11GroupAudit(models.Model):
         currency_field='currency_id',
         help='Threshold above which misstatements must be communicated'
     )
+    
+    # Component Materiality and Aggregation Risk (ISA 600.40)
+    aggregation_risk = fields.Html(
+        string='Aggregation Risk Assessment',
+        help='Assessment of the risk that aggregated misstatements may be material (ISA 600.40)'
+    )
+    component_pm_threshold = fields.Html(
+        string='Component Performance Materiality Thresholds',
+        help='Documentation of performance materiality levels set for components'
+    )
+    group_audit_instructions = fields.Html(
+        string='Group Audit Instructions',
+        help='Instructions issued to component auditors (ISA 600.40-41)'
+    )
+    
     timelines_agreed = fields.Boolean(
         string='Timelines Agreed with Component Auditors?',
         tracking=True
