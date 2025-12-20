@@ -649,6 +649,41 @@ class PlanningP11GroupAudit(models.Model):
         help='MANDATORY: Partner must provide substantive comments'
     )
     
+    # Legacy sign-off fields for view compatibility
+    senior_signed_user_id = fields.Many2one(
+        'res.users',
+        string='Senior Signed By',
+        related='prepared_by',
+        readonly=True
+    )
+    senior_signed_on = fields.Datetime(
+        string='Senior Signed On',
+        related='prepared_on',
+        readonly=True
+    )
+    manager_reviewed_user_id = fields.Many2one(
+        'res.users',
+        string='Manager Reviewed By',
+        related='reviewed_by',
+        readonly=True
+    )
+    manager_reviewed_on = fields.Datetime(
+        string='Manager Reviewed On',
+        related='reviewed_on',
+        readonly=True
+    )
+    partner_approved_user_id = fields.Many2one(
+        'res.users',
+        string='Partner Approved By',
+        related='partner_approved_by',
+        readonly=True
+    )
+    partner_approved_on = fields.Datetime(
+        string='Partner Approved On',
+        related='partner_approved_on',
+        readonly=True
+    )
+    
     locked = fields.Boolean(
         string='Locked',
         compute='_compute_locked',
