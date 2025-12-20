@@ -87,6 +87,7 @@
         <field name="model">qaco.planning.p3.key.control</field>
         <field name="arch" type="xml">
             <tree editable="bottom">
+                <field name="p3_id" invisible="1"/>
                 <field name="sequence" widget="handle"/>
                 <field name="cycle_id" optional="show"/>
                 <field name="control_objective"/>
@@ -194,6 +195,7 @@
         <field name="model">qaco.planning.p3.control.deficiency</field>
         <field name="arch" type="xml">
             <tree editable="bottom" decoration-danger="severity == 'material_weakness'" decoration-warning="severity == 'significant'">
+                <field name="p3_id" invisible="1"/>
                 <field name="sequence" widget="handle"/>
                 <field name="cycle_id" optional="show"/>
                 <field name="deficiency_description"/>
