@@ -137,6 +137,7 @@
                             class="btn-danger" invisible="state != 'locked'"
                             groups="qaco_audit.group_audit_partner"/>
                 </header>
+                <field name="can_open" invisible="1"/>
                 <sheet>
                     <!-- Sequential Gating Alert Banner (Session 5A) -->
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
