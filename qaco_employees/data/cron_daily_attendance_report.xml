@@ -1,5 +1,5 @@
 <odoo>
-  <data noupdate="1">
+  <!-- <data noupdate="1">
 
     <record id="ir_cron_daily_attendance_report" model="ir.cron">
       <field name="name">Daily Attendance Report</field>
@@ -13,5 +13,5 @@
       <field name="user_id" ref="base.user_admin"/>
     </record>
 
-  </data>
+  </data> -->
 </odoo>

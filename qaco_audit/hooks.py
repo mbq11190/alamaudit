@@ -83,32 +83,32 @@ def pre_init_hook(env):
         raise
 
 
-def post_init_hook(env):
-    """
-    Post-init hook to auto-install phase modules after qaco_audit is installed
-    """
-    _logger.info("Running post-init hook for qaco_audit - installing phase modules")
-    
-    phase_modules = [
-        'qaco_client_onboarding',
-        'qaco_planning_phase',
-        'qaco_execution_phase',
-        'qaco_finalisation_phase',
-        'qaco_deliverables',
-        'qaco_quality_review',
-    ]
-    
-    try:
-        modules = env['ir.module.module'].search([
-            ('name', 'in', phase_modules),
-            ('state', '!=', 'installed')
-        ])
-        if modules:
-            _logger.info("Marking phase modules for installation: %s", modules.mapped('name'))
-            modules.button_install()
-            env.cr.commit()
-    except Exception as e:
-        _logger.warning("Could not auto-install phase modules: %s", str(e))
+# def post_init_hook(env):
+#     """
+#     Post-init hook to auto-install phase modules after qaco_audit is installed
+#     """
+#     _logger.info("Running post-init hook for qaco_audit - installing phase modules")
+#     
+#     phase_modules = [
+#         'qaco_client_onboarding',
+#         'qaco_planning_phase',
+#         'qaco_execution_phase',
+#         'qaco_finalisation_phase',
+#         'qaco_deliverables',
+#         'qaco_quality_review',
+#     ]
+#     
+#     try:
+#         modules = env['ir.module.module'].search([
+#             ('name', 'in', phase_modules),
+#             ('state', '!=', 'installed')
+#         ])
+#         if modules:
+#             _logger.info("Marking phase modules for installation: %s", modules.mapped('name'))
+#             modules.button_install()
+#             env.cr.commit()
+#     except Exception as e:
+#         _logger.warning("Could not auto-install phase modules: %s", str(e))
 
 
 def uninstall_hook(env):

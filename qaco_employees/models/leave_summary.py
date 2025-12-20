@@ -479,6 +479,7 @@ class LeaveSummary(models.Model):
 
             record.opening_leaves = previous.closing_leaves if previous else 0.0
 
+    @api.model
     def _send_monthly_leave_summary_emails(self):
         today = fields.Date.today()
         last_month = today.replace(day=1) - relativedelta(months=1)

@@ -537,7 +537,7 @@ class ExecutionSubstantiveProcedure(models.Model):
 
     sequence = fields.Integer(default=10)
     area_id = fields.Many2one('qaco.exec.substantive.area', string='Audit Area', required=True, ondelete='cascade')
-    execution_phase_id = fields.Many2one(related='area_id.execution_phase_id', store=True)
+    execution_phase_id = fields.Many2one(related='area_id.execution_phase_id', store=False)
     risk_line_id = fields.Many2one('qaco.exec.risk.coverage', string='Linked Risk', ondelete='set null')
     name = fields.Char(string='Procedure', required=True)
     assertion_type = fields.Selection(ASSERTION_TYPES, string='Assertion', default='existence')
@@ -765,7 +765,7 @@ class ExecutionHeadDetails(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     execution_phase_id = fields.Many2one('execution.phase', string='Execution Phase', required=True, ondelete='cascade')
     account_head_id = fields.Many2one('account.account', string='Accounting Head', required=True)
-    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=True)
+    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=False)
     current_year_amount = fields.Float(string='Current Year Amount', digits=(16, 2))
     previous_year_amount = fields.Float(string='Previous Year Amount', digits=(16, 2))
     variance_amount = fields.Float(string='Variance Amount', compute='_compute_variance', digits=(16, 2))
@@ -951,7 +951,7 @@ class AuditProcedure(models.Model):
     head_execution_id = fields.Many2one('audit.head.execution', string='Head Execution', ondelete='cascade')
     procedure_template_id = fields.Many2one('audit.procedure.template', string='Procedure Template')
     procedure_name = fields.Char(string='Procedure Name', required=True)
-    procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=True)
+    procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=False)
     procedure_type = fields.Selection([
         ('risk_assessment', 'Risk Assessment'),
         ('test_of_controls', 'Test of Controls'),
@@ -1235,7 +1235,7 @@ class AuditHeadExecution(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     master_id = fields.Many2one('audit.execution.master', string='Master Execution', required=True, ondelete='cascade')
     account_head_id = fields.Many2one('account.account', string='Accounting Head', required=True)
-    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=True)
+    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=False)
     nature = fields.Selection([
         ('revenue', '💰 Revenue'),
         ('expense', '💸 Expense'),

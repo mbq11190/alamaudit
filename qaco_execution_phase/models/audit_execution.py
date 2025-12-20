@@ -23,7 +23,7 @@ class AuditExecution(models.Model):
     date_end = fields.Date(string='End Date')
     fiscal_year = fields.Char(string='Fiscal Year', compute='_compute_fiscal_year', store=True)
     account_head_id = fields.Many2one('account.account', string='Head of Account', required=True, domain=[('deprecated', '=', False)])
-    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=True)
+    account_code = fields.Char(string='Account Code', related='account_head_id.code', store=False)
     nature = fields.Selection([
         ('revenue', 'Revenue'),
         ('expense', 'Expense'),
@@ -162,10 +162,10 @@ class AuditProcedureDetail(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     execution_id = fields.Many2one('audit.execution', string='Audit Execution', required=True, ondelete='cascade')
     procedure_template_id = fields.Many2one('audit.procedure.template', string='Procedure Template', required=True)
-    procedure_name = fields.Char(string='Procedure Name', related='procedure_template_id.name', store=True)
-    procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=True)
+    procedure_name = fields.Char(string='Procedure Name', related='procedure_template_id.name', store=False)
+    procedure_description = fields.Html(string='Description', related='procedure_template_id.description', store=False)
     procedure_type = fields.Selection(
-        string='Procedure Type', related='procedure_template_id.procedure_type', store=True)
+        string='Procedure Type', related='procedure_template_id.procedure_type', store=False)
     custom_description = fields.Html(string='Custom Description')
     risk_level = fields.Selection([
         ('low', 'Low'),

@@ -168,7 +168,7 @@ class PlanningP3KeyControl(models.Model):
     )
     cycle_type = fields.Selection(
         related='cycle_id.cycle_type',
-        store=True,
+        store=False,
     )
     sequence = fields.Integer(string='Sequence', default=10)
 
@@ -537,7 +537,7 @@ class PlanningP3Controls(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True,
+        store=False,
     )
     currency_id = fields.Many2one(
         'res.currency',
