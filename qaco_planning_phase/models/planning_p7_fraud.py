@@ -16,6 +16,9 @@ through professional skepticism and risk-based audit procedures.
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningP7Fraud(models.Model):
@@ -51,16 +54,26 @@ class PlanningP7Fraud(models.Model):
 
     @api.depends('audit_id')
     def _compute_can_open(self):
-        """P-7 requires P-6 to be approved."""
+        """P-7 requires P-6 to be approved. Optimized for performance."""
+        if not self:
+            return
+
+        # Batch fetch all P-6 records for the audits in this recordset
+        audit_ids = self.mapped('audit_id.id')
+        p6_records = self.env['qaco.planning.p6.risk'].search([
+            ('engagement_id', 'in', audit_ids)
+        ])
+
+        # Create a mapping for quick lookup
+        p6_map = {p6.engagement_id.id: p6.state for p6 in p6_records}
+
         for rec in self:
             if not rec.audit_id:
                 rec.can_open = False
                 continue
-            # Find P-6 for this audit
-            p6 = self.env['qaco.planning.p6.risk'].search([
-                ('engagement_id', '=', rec.audit_id.id)
-            ], limit=1)
-            rec.can_open = p6.state == 'locked' if p6 else False  # P-6 uses 'locked' instead of 'approved'
+            # Use the mapping for O(1) lookup instead of O(n) search
+            p6_state = p6_map.get(rec.audit_id.id)
+            rec.can_open = p6_state == 'locked' if p6_state else False
 
     @api.constrains('state')
     def _check_sequential_gating(self):
@@ -668,14 +681,11 @@ class PlanningP7Fraud(models.Model):
 
     @api.depends('fraud_risk_line_ids')
     def _compute_fraud_risks_identified(self):
-        """Defensive: Compute the number of fraud risks identified."""
+        """Optimized: Compute the number of fraud risks identified with batch processing."""
         for record in self:
             try:
-                if not record.fraud_risk_line_ids:
-                    record.fraud_risks_identified = 0
-                    continue
-                
-                record.fraud_risks_identified = len(record.fraud_risk_line_ids)
+                # Use len() which is O(1) for recordsets
+                record.fraud_risks_identified = len(record.fraud_risk_line_ids) if record.fraud_risk_line_ids else 0
             except Exception as e:
                 _logger.warning(f'P-7 _compute_fraud_risks_identified failed for record {record.id}: {e}')
                 record.fraud_risks_identified = 0
