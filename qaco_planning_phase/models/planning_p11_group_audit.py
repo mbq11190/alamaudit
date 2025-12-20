@@ -52,6 +52,13 @@ class PlanningP11GroupAudit(models.Model):
         readonly=True,
         help='Computed from audit_id for backward compatibility'
     )
+    name = fields.Char(
+        string='Name',
+        compute='_compute_name',
+        store=True,
+        readonly=True,
+        help='Display name computed from engagement'
+    )
     audit_year_id = fields.Many2one(
         'audit.year',
         string='Audit Year',
@@ -550,11 +557,21 @@ class PlanningP11GroupAudit(models.Model):
     # COMPUTED FIELDS
     # ============================================================================
     @api.depends('audit_id')
+    @api.depends('audit_id')
     def _compute_engagement_id(self):
         """Compute engagement_id from audit_id for backward compatibility."""
         for rec in self:
             # Map qaco.audit to audit.engagement if needed
             rec.engagement_id = rec.audit_id.id if rec.audit_id else False
+
+    @api.depends('engagement_id')
+    def _compute_name(self):
+        """Compute display name from engagement."""
+        for rec in self:
+            if rec.engagement_id:
+                rec.name = f"P-11: {rec.engagement_id.name}"
+            else:
+                rec.name = "P-11: Group Audit Planning"
     
     @api.depends('component_ids', 'component_ids.is_significant')
     def _compute_component_metrics(self):
