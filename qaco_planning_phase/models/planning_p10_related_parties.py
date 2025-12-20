@@ -1,4 +1,22 @@
 
+# -*- coding: utf-8 -*-
+"""
+P-10: Related Parties Planning (ISA 550)
+=========================================
+Standards Compliance:
+- ISA 550: Related Parties
+- ISA 315: Identifying and Assessing the Risks of Material Misstatement
+- Companies Act, 2017 (Pakistan) - Section 36: Fraud and Error
+
+Purpose:
+Systematic identification and assessment of related party relationships
+and transactions that may affect financial statement assertions.
+=========================================
+"""
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
 
 class PlanningP10RelatedParties(models.Model):
     """P-10: Related Parties Planning (ISA 550)"""

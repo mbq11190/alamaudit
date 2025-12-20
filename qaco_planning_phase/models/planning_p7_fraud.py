@@ -1,4 +1,22 @@
 
+# -*- coding: utf-8 -*-
+"""
+P-7: Fraud Risk Assessment (ISA 240)
+=====================================
+Standards Compliance:
+- ISA 240: The Auditor's Responsibilities Relating to Fraud in an Audit of Financial Statements
+- ISA 315: Identifying and Assessing the Risks of Material Misstatement
+- Companies Act, 2017 (Pakistan) - Section 36: Fraud and Error
+
+Purpose:
+Systematic identification, assessment, and documentation of fraud risks
+through professional skepticism and risk-based audit procedures.
+=====================================
+"""
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
 
 class PlanningP7Fraud(models.Model):
     """P-7: Fraud Risk Assessment (ISA 240)"""
