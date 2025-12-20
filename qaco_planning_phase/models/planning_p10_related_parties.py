@@ -14,8 +14,11 @@ and transactions that may affect financial statement assertions.
 =========================================
 """
 
+import logging
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class PlanningP10RelatedParties(models.Model):

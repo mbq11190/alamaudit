@@ -227,7 +227,7 @@ class TestOfControlsDetail(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     execution_id = fields.Many2one('audit.execution', string='Audit Execution', required=True, ondelete='cascade')
     control_objective = fields.Char(string='Control Objective', required=True)
-    control_activity = fields.Html(string='Control Activity', required=True)
+    control_activity = fields.Html(string='Control Activity')
     control_owner = fields.Char(string='Control Owner')
     frequency = fields.Selection([
         ('daily', 'Daily'),
@@ -314,7 +314,7 @@ class AnalyticalProcedureDetail(models.Model):
     )
     sequence = fields.Integer(string='Sequence', default=10)
     execution_id = fields.Many2one('audit.execution', string='Audit Execution', required=True, ondelete='cascade')
-    procedure_description = fields.Html(string='Procedure Description', required=True)
+    procedure_description = fields.Html(string='Procedure Description')
     procedure_type = fields.Selection([
         ('ratio', 'Ratio Analysis'),
         ('trend', 'Trend Analysis'),
@@ -360,7 +360,7 @@ class AuditEvidenceDetail(models.Model):
         ('electronic', 'Electronic Evidence'),
         ('confirmation', 'External Confirmation'),
     ], string='Evidence Type', required=True)
-    description = fields.Html(string='Description', required=True)
+    description = fields.Html(string='Description')
     reliability = fields.Selection([
         ('high', 'High Reliability'),
         ('medium', 'Medium Reliability'),
