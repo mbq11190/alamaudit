@@ -732,7 +732,7 @@ class PlanningP12Strategy(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        \"\"\"PROMPT 3: Set HTML defaults safely in create() instead of field defaults.\"\"\"
+        """PROMPT 3: Set HTML defaults safely in create() instead of field defaults."""
         for vals in vals_list:
             if 'conclusion_narrative' not in vals:
                 vals['conclusion_narrative'] = self._default_conclusion_narrative()

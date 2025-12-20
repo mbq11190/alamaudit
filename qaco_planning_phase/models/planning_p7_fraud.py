@@ -624,7 +624,7 @@ class PlanningP7Fraud(models.Model):
     # ============================================================================
     @api.model_create_multi
     def create(self, vals_list):
-        \"\"\"Set HTML defaults safely in create() to avoid registry crashes.\"\"\"
+        """Set HTML defaults safely in create() to avoid registry crashes."""
         fraud_risk_template = '''
 <p><strong>Fraud Risk Assessment Summary (ISA 240)</strong></p>
 <ol>
