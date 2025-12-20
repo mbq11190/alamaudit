@@ -43,7 +43,7 @@ class PlanningP8GoingConcern(models.Model):
         help='P-8 can only be opened after P-7 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-8 requires P-7 to be approved."""
         for rec in self:
@@ -100,7 +100,7 @@ class PlanningP8GoingConcern(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
 
     # ===== Financial Indicators =====
@@ -688,17 +688,6 @@ class PlanningP8GoingConcern(models.Model):
     # ===== SECTION K: P-8 Conclusion & Professional Judgment =====
     going_concern_summary = fields.Html(
         string='Going Concern Summary (MANDATORY)',
-        default=lambda self: '''
-<p><strong>Preliminary Going Concern Assessment (ISA 570 Revised)</strong></p>
-<p>Based on the preliminary assessment performed in accordance with ISA 570 (Revised), indicators of going-concern risk have been identified and evaluated. Management's assessment and plans have been considered, and appropriate implications for audit strategy and reporting have been determined.</p>
-<ol>
-<li><strong>Assessment Period:</strong> [State period covered]</li>
-<li><strong>Indicators Identified:</strong> [Summarize key financial, operating, legal indicators]</li>
-<li><strong>Management's Assessment & Plans:</strong> [Summarize management's response]</li>
-<li><strong>Preliminary Conclusion:</strong> [State conclusion]</li>
-<li><strong>Audit Strategy Implications:</strong> [Link to P-12]</li>
-</ol>
-''',
         help='Consolidated going concern assessment per ISA 570'
     )
     
@@ -736,6 +725,28 @@ class PlanningP8GoingConcern(models.Model):
         ('audit_unique', 'UNIQUE(audit_id)', 'Only one P-8 record per Audit Engagement is allowed.')
     ]
 
+    # ============================================================================
+    # PROMPT 3: Safe HTML Default Template (Set in create, not field default)
+    # ============================================================================
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Set HTML defaults safely in create() to avoid registry crashes."""  
+        gc_summary_template = '''
+<p><strong>Preliminary Going Concern Assessment (ISA 570 Revised)</strong></p>
+<p>Based on the preliminary assessment performed in accordance with ISA 570 (Revised), indicators of going-concern risk have been identified and evaluated. Management's assessment and plans have been considered, and appropriate implications for audit strategy and reporting have been determined.</p>
+<ol>
+<li><strong>Assessment Period:</strong> [State period covered]</li>
+<li><strong>Indicators Identified:</strong> [Summarize key financial, operating, legal indicators]</li>
+<li><strong>Management's Assessment & Plans:</strong> [Summarize management's response]</li>
+<li><strong>Preliminary Conclusion:</strong> [State conclusion]</li>
+<li><strong>Audit Strategy Implications:</strong> [Link to P-12]</li>
+</ol>
+'''
+        for vals in vals_list:
+            if 'going_concern_summary' not in vals:
+                vals['going_concern_summary'] = gc_summary_template
+        return super().create(vals_list)
+
     @api.depends('audit_id', 'client_id')
     def _compute_name(self):
         for record in self:
@@ -757,12 +768,16 @@ class PlanningP8GoingConcern(models.Model):
     
     @api.depends('plans_feasibility_auditor', 'dependency_third_party')
     def _compute_unsupported_plans(self):
-        """Auto-flag if management plans are unsupported or not feasible"""
+        """Defensive: Auto-flag if management plans are unsupported or not feasible."""
         for record in self:
-            record.unsupported_plans_flag = (
-                record.plans_feasibility_auditor == 'not_feasible' or
-                (record.dependency_third_party and record.plans_feasibility_auditor != 'feasible')
-            )
+            try:
+                record.unsupported_plans_flag = (
+                    record.plans_feasibility_auditor == 'not_feasible' or
+                    (record.dependency_third_party and record.plans_feasibility_auditor != 'feasible')
+                )
+            except Exception as e:
+                _logger.warning(f'P-8 _compute_unsupported_plans failed for record {record.id}: {e}')
+                record.unsupported_plans_flag = False
 
     def _validate_mandatory_fields(self):
         """Validate mandatory fields before completing P-8."""

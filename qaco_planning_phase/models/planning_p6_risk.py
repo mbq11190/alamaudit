@@ -36,7 +36,7 @@ class PlanningP6Risk(models.Model):
         help='P-6 can only be opened after P-5 is approved'
     )
 
-    @api.depends('engagement_id', 'engagement_id.id')
+    @api.depends('engagement_id')
     def _compute_can_open(self):
         """P-6 requires P-5 to be approved."""
         for rec in self:
@@ -632,7 +632,7 @@ class PlanningP6RiskLine(models.Model):
 
     @api.depends('inherent_risk', 'control_risk')
     def _compute_risk_rating(self):
-        """Compute combined RMM based on inherent and control risk."""
+        """Defensive: Compute combined RMM based on inherent and control risk."""
         risk_matrix = {
             ('high', 'high'): 'high',
             ('high', 'medium'): 'high',
@@ -645,20 +645,32 @@ class PlanningP6RiskLine(models.Model):
             ('low', 'low'): 'low',
         }
         for record in self:
-            key = (record.inherent_risk, record.control_risk)
-            record.risk_rating = risk_matrix.get(key, 'medium')
+            try:
+                key = (record.inherent_risk, record.control_risk)
+                record.risk_rating = risk_matrix.get(key, 'medium')
+            except Exception as e:
+                _logger.warning(f'P-6 _compute_risk_rating failed for record {record.id}: {e}')
+                record.risk_rating = 'medium'
     
     @api.depends('is_significant_risk', 'risk_rating')
     def _compute_senior_involvement(self):
-        """Auto-flag senior involvement for significant or high risks."""
+        """Defensive: Auto-flag senior involvement for significant or high risks."""
         for record in self:
-            record.senior_involvement_required = (
-                record.is_significant_risk or record.risk_rating == 'high'
-            )
+            try:
+                record.senior_involvement_required = (
+                    record.is_significant_risk or record.risk_rating == 'high'
+                )
+            except Exception as e:
+                _logger.warning(f'P-6 _compute_senior_involvement failed for record {record.id}: {e}')
+                record.senior_involvement_required = False
     
     @api.depends('is_significant_risk')
     def _compute_extended_procedures(self):
-        """Auto-flag extended procedures for significant risks."""
+        """Defensive: Auto-flag extended procedures for significant risks."""
         for record in self:
-            record.extended_procedures_required = record.is_significant_risk
+            try:
+                record.extended_procedures_required = record.is_significant_risk
+            except Exception as e:
+                _logger.warning(f'P-6 _compute_extended_procedures failed for record {record.id}: {e}')
+                record.extended_procedures_required = False
 

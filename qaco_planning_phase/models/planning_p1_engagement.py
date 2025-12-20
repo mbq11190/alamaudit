@@ -138,11 +138,16 @@ class PlanningP1TimeBudget(models.Model):
 
     @api.depends('partner_hours', 'manager_hours', 'senior_hours', 'staff_hours')
     def _compute_total_hours(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.total_hours = (
-                rec.partner_hours + rec.manager_hours +
-                rec.senior_hours + rec.staff_hours
-            )
+            try:
+                rec.total_hours = (
+                    rec.partner_hours + rec.manager_hours +
+                    rec.senior_hours + rec.staff_hours
+                )
+            except Exception as e:
+                _logger.warning(f'P-1 Budget _compute_total_hours failed for record {rec.id}: {e}')
+                rec.total_hours = 0
 
 
 # =============================================================================
@@ -242,7 +247,7 @@ class PlanningP1Engagement(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id,
+        default=lambda self: self._get_default_currency(),
     )
 
     # =========================================================================
@@ -405,9 +410,20 @@ class PlanningP1Engagement(models.Model):
 
     @api.depends('team_member_ids', 'team_member_ids.assigned_hours')
     def _compute_team_summary(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.total_team_members = len(rec.team_member_ids)
-            rec.total_assigned_hours = sum(rec.team_member_ids.mapped('assigned_hours'))
+            try:
+                if not rec.team_member_ids:
+                    rec.total_team_members = 0
+                    rec.total_assigned_hours = 0
+                    continue
+                
+                rec.total_team_members = len(rec.team_member_ids)
+                rec.total_assigned_hours = sum(rec.team_member_ids.mapped('assigned_hours'))
+            except Exception as e:
+                _logger.warning(f'P-1 _compute_team_summary failed for record {rec.id}: {e}')
+                rec.total_team_members = 0
+                rec.total_assigned_hours = 0
 
     # =========================================================================
     # SECTION D: Specialists & External Experts

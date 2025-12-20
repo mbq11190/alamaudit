@@ -106,15 +106,23 @@ class PlanningP4FSLine(models.Model):
 
     @api.depends('current_year', 'prior_year')
     def _compute_variance(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.variance = rec.current_year - rec.prior_year
-            if rec.prior_year and rec.prior_year != 0:
-                rec.variance_pct = (rec.variance / abs(rec.prior_year)) * 100
-            else:
-                rec.variance_pct = 0 if rec.current_year == 0 else 100
-            # Threshold: 10% or absolute variance > 5% of materiality (placeholder logic)
-            rec.exceeds_threshold = abs(rec.variance_pct) > 10
-            rec.explanation_required = rec.exceeds_threshold
+            try:
+                rec.variance = rec.current_year - rec.prior_year
+                if rec.prior_year and rec.prior_year != 0:
+                    rec.variance_pct = (rec.variance / abs(rec.prior_year)) * 100
+                else:
+                    rec.variance_pct = 0 if rec.current_year == 0 else 100
+                # Threshold: 10% or absolute variance > 5% of materiality (placeholder logic)
+                rec.exceeds_threshold = abs(rec.variance_pct) > 10
+                rec.explanation_required = rec.exceeds_threshold
+            except Exception as e:
+                _logger.warning(f'P-4 _compute_variance failed for record {rec.id}: {e}')
+                rec.variance = 0
+                rec.variance_pct = 0
+                rec.exceeds_threshold = False
+                rec.explanation_required = False
 
 
 # =============================================================================
@@ -159,8 +167,13 @@ class PlanningP4RatioLine(models.Model):
 
     @api.depends('current_year_value', 'prior_year_value')
     def _compute_movement(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.movement = rec.current_year_value - rec.prior_year_value
+            try:
+                rec.movement = rec.current_year_value - rec.prior_year_value
+            except Exception as e:
+                _logger.warning(f'P-4 Ratio _compute_movement failed for record {rec.id}: {e}')
+                rec.movement = 0
 
 
 # =============================================================================
@@ -205,11 +218,21 @@ class PlanningP4BudgetLine(models.Model):
 
     @api.depends('budget_amount', 'actual_amount')
     def _compute_budget_variance(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.variance = rec.actual_amount - rec.budget_amount
-            if rec.budget_amount and rec.budget_amount != 0:
-                rec.variance_pct = (rec.variance / abs(rec.budget_amount)) * 100
-            else:
+            try:
+                rec.variance = rec.actual_amount - rec.budget_amount
+                if rec.budget_amount and rec.budget_amount != 0:
+                    rec.variance_pct = (rec.variance / abs(rec.budget_amount)) * 100
+                else:
+                    rec.variance_pct = 0
+                # Flag if variance exceeds 15%
+                rec.is_significant = abs(rec.variance_pct) > 15
+            except Exception as e:
+                _logger.warning(f'P-4 Budget _compute_budget_variance failed for record {rec.id}: {e}')
+                rec.variance = 0
+                rec.variance_pct = 0
+                rec.is_significant = False
                 rec.variance_pct = 0
             rec.is_significant = abs(rec.variance_pct) > 10
 
@@ -293,6 +316,16 @@ class PlanningP4NonFinancial(models.Model):
 
     @api.depends('current_value', 'prior_value')
     def _compute_change(self):
+        """Defensive: Safe even during module install."""
+        for rec in self:
+            try:
+                if rec.prior_value and rec.prior_value != 0:
+                    rec.change_pct = ((rec.current_value - rec.prior_value) / abs(rec.prior_value)) * 100
+                else:
+                    rec.change_pct = 0
+            except Exception as e:
+                _logger.warning(f'P-4 NFA _compute_change failed for record {rec.id}: {e}')
+                rec.change_pct = 0
         for rec in self:
             if rec.prior_value and rec.prior_value != 0:
                 rec.change_pct = ((rec.current_value - rec.prior_value) / abs(rec.prior_value)) * 100
@@ -432,7 +465,7 @@ class PlanningP4Analytics(models.Model):
         help='P-4 can only be opened after P-3 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-4 requires P-3 to be approved."""
         for rec in self:
@@ -483,7 +516,7 @@ class PlanningP4Analytics(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
 
     # =========================================================================
@@ -1028,13 +1061,21 @@ and the overall audit strategy.</strong></p>"""
 
     @api.depends('fs_line_ids.exceeds_threshold', 'fs_line_ids.auditor_explanation')
     def _compute_risk_linkage(self):
-        """Compute number of risks that would be created from unexplained variances."""
+        """Defensive: Compute number of risks from unexplained variances."""
         for rec in self:
-            # Count unexplained significant variances
-            unexplained_count = len(rec.fs_line_ids.filtered(
-                lambda l: l.exceeds_threshold and not l.auditor_explanation
-            ))
-            rec.risks_created_in_p6 = unexplained_count
+            try:
+                if not rec.fs_line_ids:
+                    rec.risks_created_in_p6 = 0
+                    continue
+                
+                # Count unexplained significant variances
+                unexplained_count = len(rec.fs_line_ids.filtered(
+                    lambda l: l.exceeds_threshold and not l.auditor_explanation
+                ))
+                rec.risks_created_in_p6 = unexplained_count
+            except Exception as e:
+                _logger.warning(f'P-4 _compute_risk_linkage failed for record {rec.id}: {e}')
+                rec.risks_created_in_p6 = 0
 
     # =========================================================================
     # VALIDATION METHODS

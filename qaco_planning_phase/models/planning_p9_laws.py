@@ -43,7 +43,7 @@ class PlanningP9Laws(models.Model):
         help='P-9 can only be opened after P-8 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-9 requires P-8 to be approved."""
         for rec in self:
@@ -384,7 +384,7 @@ class PlanningP9Laws(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
     non_compliance_details = fields.Html(
         string='Non-Compliance Details',
@@ -593,19 +593,7 @@ class PlanningP9Laws(models.Model):
     # ===== Section K: P-9 Conclusion & Professional Judgment =====
     compliance_summary = fields.Html(
         string='Legal & Regulatory Compliance Summary (MANDATORY)',
-        help='Consolidated compliance assessment per ISA 250',
-        default=lambda self: '''
-<p><strong>P-9: Laws & Regulations Compliance Assessment (ISA 250)</strong></p>
-<p>Relevant laws and regulations applicable to the entity have been identified and considered in accordance with ISA 250. Risks of material non-compliance have been assessed, and appropriate audit responses and reporting implications have been determined.</p>
-<ol>
-<li><strong>Applicable Laws:</strong> [Summarize Category A and B laws]</li>
-<li><strong>Compliance Assessment:</strong> [Overall compliance status]</li>
-<li><strong>Risks Identified:</strong> [Key compliance risks and non-compliance items]</li>
-<li><strong>Audit Responses:</strong> [Planned procedures per ISA 330]</li>
-<li><strong>Reporting Implications:</strong> [Impact on audit report and disclosures]</li>
-</ol>
-<p><strong>Conclusion:</strong> [State overall conclusion on compliance risk and audit strategy implications]</p>
-'''
+        help='Consolidated compliance assessment per ISA 250'
     )
     # XML view compatible alias
     laws_conclusion = fields.Html(
@@ -650,6 +638,29 @@ class PlanningP9Laws(models.Model):
     _sql_constraints = [
         ('audit_unique', 'UNIQUE(audit_id)', 'Only one P-9 record per Audit Engagement is allowed.')
     ]
+
+    # ============================================================================
+    # PROMPT 3: Safe HTML Default Template (Set in create, not field default)
+    # ============================================================================
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Set HTML defaults safely in create() to avoid registry crashes."""  
+        compliance_template = '''
+<p><strong>P-9: Laws & Regulations Compliance Assessment (ISA 250)</strong></p>
+<p>Relevant laws and regulations applicable to the entity have been identified and considered in accordance with ISA 250. Risks of material non-compliance have been assessed, and appropriate audit responses and reporting implications have been determined.</p>
+<ol>
+<li><strong>Applicable Laws:</strong> [Summarize Category A and B laws]</li>
+<li><strong>Compliance Assessment:</strong> [Overall compliance status]</li>
+<li><strong>Risks Identified:</strong> [Key compliance risks and non-compliance items]</li>
+<li><strong>Audit Responses:</strong> [Planned procedures per ISA 330]</li>
+<li><strong>Reporting Implications:</strong> [Impact on audit report and disclosures]</li>
+</ol>
+<p><strong>Conclusion:</strong> [State overall conclusion on compliance risk and audit strategy implications]</p>
+'''
+        for vals in vals_list:
+            if 'compliance_summary' not in vals:
+                vals['compliance_summary'] = compliance_template
+        return super().create(vals_list)
 
     @api.depends('audit_id', 'client_id')
     def _compute_name(self):
@@ -765,40 +776,57 @@ class PlanningP9Laws(models.Model):
 
     @api.depends('non_compliance_identified', 'non_compliance_status', 'non_compliance_financial_impact')
     def _compute_noncompliance_flags(self):
-        """Section D: Auto-flag disclosure risk and RMM impact if known non-compliance exists."""
+        """Defensive: Auto-flag disclosure risk and RMM impact."""
         for record in self:
-            # Disclosure risk if non-compliance identified and unresolved
-            record.disclosure_risk_from_noncompliance = (
-                record.non_compliance_identified and
-                record.non_compliance_status in ['ongoing', 'disputed']
-            )
-            # RMM impact if non-compliance is material (financial impact significant)
-            record.rmm_impact_flagged = (
-                record.non_compliance_identified and
-                record.non_compliance_financial_impact > 0
-            )
+            try:
+                # Disclosure risk if non-compliance identified and unresolved
+                record.disclosure_risk_from_noncompliance = (
+                    record.non_compliance_identified and
+                    record.non_compliance_status in ['ongoing', 'disputed']
+                )
+                # RMM impact if non-compliance is material (financial impact significant)
+                record.rmm_impact_flagged = (
+                    record.non_compliance_identified and
+                    record.non_compliance_financial_impact > 0
+                )
+            except Exception as e:
+                _logger.warning(f'P-9 _compute_noncompliance_flags failed for record {record.id}: {e}')
+                record.disclosure_risk_from_noncompliance = False
+                record.rmm_impact_flagged = False
 
     @api.depends('compliance_risk_level')
     def _compute_compliance_risk_escalation(self):
-        """Section E: Auto-flag if high compliance risk requires RMM escalation to P-6."""
+        """Defensive: Auto-flag if high compliance risk requires RMM escalation to P-6."""
         for record in self:
-            record.high_risk_requires_escalation = (record.compliance_risk_level == 'high')
+            try:
+                record.high_risk_requires_escalation = (record.compliance_risk_level == 'high')
+            except Exception as e:
+                _logger.warning(f'P-9 _compute_compliance_risk_escalation failed for record {record.id}: {e}')
+                record.high_risk_requires_escalation = False
 
     @api.depends('indicators_illegal_acts', 'management_involvement_suspected', 'whistleblower_complaints')
     def _compute_fraud_linkage(self):
-        """Section F: Auto-flag if illegal acts indicators require P-7 fraud risk update."""
+        """Defensive: Auto-flag if illegal acts indicators require P-7 fraud risk update."""
         for record in self:
-            record.fraud_linkage_required = any([
-                record.indicators_illegal_acts,
-                record.management_involvement_suspected,
-                record.whistleblower_complaints
-            ])
+            try:
+                record.fraud_linkage_required = any([
+                    record.indicators_illegal_acts,
+                    record.management_involvement_suspected,
+                    record.whistleblower_complaints
+                ])
+            except Exception as e:
+                _logger.warning(f'P-9 _compute_fraud_linkage failed for record {record.id}: {e}')
+                record.fraud_linkage_required = False
 
     @api.depends('noncompliance_impacts_gc')
     def _compute_gc_linkage(self):
-        """Section I: Auto-flag if non-compliance impacts P-8 going concern assessment."""
+        """Defensive: Auto-flag if non-compliance impacts P-8 going concern assessment."""
         for record in self:
-            record.gc_linkage_required = record.noncompliance_impacts_gc
+            try:
+                record.gc_linkage_required = record.noncompliance_impacts_gc
+            except Exception as e:
+                _logger.warning(f'P-9 _compute_gc_linkage failed for record {record.id}: {e}')
+                record.gc_linkage_required = False
 
 
 class PlanningP9LawLine(models.Model):

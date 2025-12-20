@@ -81,10 +81,16 @@ class PlanningP5SpecificMateriality(models.Model):
 
     @api.depends('specific_materiality', 'p5_id.overall_materiality')
     def _compute_as_pct(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            if rec.p5_id.overall_materiality:
+            try:
+                if not rec.p5_id or not rec.p5_id.overall_materiality:
+                    rec.as_pct_of_om = 0
+                    continue
+                
                 rec.as_pct_of_om = (rec.specific_materiality / rec.p5_id.overall_materiality) * 100
-            else:
+            except Exception as e:
+                _logger.warning(f'P-5 Component _compute_as_pct failed for record {rec.id}: {e}')
                 rec.as_pct_of_om = 0
 
 
@@ -198,7 +204,7 @@ class PlanningP5Revision(models.Model):
         'res.users',
         string='Revised By',
         required=True,
-        default=lambda self: self.env.user
+        default=lambda self: self._get_default_user()
     )
     partner_approved = fields.Boolean(
         string='Partner Approved',
@@ -302,7 +308,7 @@ class PlanningP5Materiality(models.Model):
         help='P-5 can only be opened after P-4 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-5 requires P-4 to be approved."""
         for rec in self:
@@ -353,7 +359,7 @@ class PlanningP5Materiality(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
 
     # =========================================================================
@@ -949,19 +955,29 @@ quantitative and qualitative factors, and are appropriate for planning and perfo
 
     @api.depends('overall_materiality', 'prior_year_om')
     def _compute_om_change(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            if rec.prior_year_om and rec.prior_year_om != 0:
-                rec.om_change_pct = ((rec.overall_materiality - rec.prior_year_om) / rec.prior_year_om) * 100
-            else:
+            try:
+                if rec.prior_year_om and rec.prior_year_om != 0:
+                    rec.om_change_pct = ((rec.overall_materiality - rec.prior_year_om) / rec.prior_year_om) * 100
+                else:
+                    rec.om_change_pct = 0
+            except Exception as e:
+                _logger.warning(f'P-5 _compute_om_change failed for record {rec.id}: {e}')
                 rec.om_change_pct = 0
 
     @api.depends('materiality_percentage', 'firm_min_pct', 'firm_max_pct')
     def _compute_outside_threshold(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.outside_firm_threshold = (
-                rec.materiality_percentage < rec.firm_min_pct or
-                rec.materiality_percentage > rec.firm_max_pct
-            )
+            try:
+                rec.outside_firm_threshold = (
+                    rec.materiality_percentage < rec.firm_min_pct or
+                    rec.materiality_percentage > rec.firm_max_pct
+                )
+            except Exception as e:
+                _logger.warning(f'P-5 _compute_outside_threshold failed for record {rec.id}: {e}')
+                rec.outside_firm_threshold = False
 
     # =========================================================================
     # VALIDATION METHODS

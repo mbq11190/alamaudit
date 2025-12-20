@@ -476,7 +476,7 @@ class PlanningP3Controls(models.Model):
         help='P-3 can only be opened after P-2 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-3 requires P-2 to be approved."""
         for rec in self:
@@ -542,7 +542,7 @@ class PlanningP3Controls(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id,
+        default=lambda self: self._get_default_currency(),
     )
 
     # =========================================================================
@@ -1090,52 +1090,105 @@ class PlanningP3Controls(models.Model):
 
     @api.depends('transaction_cycle_ids', 'transaction_cycle_ids.walkthrough_completed')
     def _compute_cycle_summary(self):
+        """Defensive: Safe even during module install."""
         for record in self:
-            record.total_cycles = len(record.transaction_cycle_ids)
-            record.walkthroughs_completed = len(
-                record.transaction_cycle_ids.filtered(lambda c: c.walkthrough_completed)
-            )
+            try:
+                if not record.transaction_cycle_ids:
+                    record.total_cycles = 0
+                    record.walkthroughs_completed = 0
+                    continue
+                
+                record.total_cycles = len(record.transaction_cycle_ids)
+                record.walkthroughs_completed = len(
+                    record.transaction_cycle_ids.filtered(lambda c: c.walkthrough_completed)
+                )
+            except Exception as e:
+                _logger.warning(f'P-3 _compute_cycle_summary failed for record {record.id}: {e}')
+                record.total_cycles = 0
+                record.walkthroughs_completed = 0
 
     @api.depends('key_control_ids', 'key_control_ids.implementation_confirmed')
     def _compute_control_summary(self):
+        """Defensive: Safe even during module install."""
         for record in self:
-            record.total_key_controls = len(record.key_control_ids)
-            record.controls_implemented = len(
-                record.key_control_ids.filtered(lambda c: c.implementation_confirmed)
-            )
+            try:
+                if not record.key_control_ids:
+                    record.total_key_controls = 0
+                    record.controls_implemented = 0
+                    continue
+                
+                record.total_key_controls = len(record.key_control_ids)
+                record.controls_implemented = len(
+                    record.key_control_ids.filtered(lambda c: c.implementation_confirmed)
+                )
+            except Exception as e:
+                _logger.warning(f'P-3 _compute_control_summary failed for record {record.id}: {e}')
+                record.total_key_controls = 0
+                record.controls_implemented = 0
 
     @api.depends('deficiency_ids', 'deficiency_ids.severity')
     def _compute_deficiency_summary(self):
+        """Defensive: Safe even during module install."""
         for record in self:
-            record.deficiencies_identified = len(record.deficiency_ids) > 0
-            record.significant_deficiencies_count = len(
-                record.deficiency_ids.filtered(lambda d: d.severity == 'significant')
-            )
-            record.material_weaknesses_count = len(
-                record.deficiency_ids.filtered(lambda d: d.severity == 'material_weakness')
-            )
-            record.tcwg_communication_required = (
-                record.significant_deficiencies_count > 0 or
-                record.material_weaknesses_count > 0
-            )
+            try:
+                if not record.deficiency_ids:
+                    record.deficiencies_identified = False
+                    record.significant_deficiencies_count = 0
+                    record.material_weaknesses_count = 0
+                    record.tcwg_communication_required = False
+                    continue
+                
+                record.deficiencies_identified = len(record.deficiency_ids) > 0
+                record.significant_deficiencies_count = len(
+                    record.deficiency_ids.filtered(lambda d: d.severity == 'significant')
+                )
+                record.material_weaknesses_count = len(
+                    record.deficiency_ids.filtered(lambda d: d.severity == 'material_weakness')
+                )
+                record.tcwg_communication_required = (
+                    record.significant_deficiencies_count > 0 or
+                    record.material_weaknesses_count > 0
+                )
+            except Exception as e:
+                _logger.warning(f'P-3 _compute_deficiency_summary failed for record {record.id}: {e}')
+                record.deficiencies_identified = False
+                record.significant_deficiencies_count = 0
+                record.material_weaknesses_count = 0
+                record.tcwg_communication_required = False
 
     @api.depends('reliance_strategy')
     def _compute_reliance_decision(self):
+        """Defensive: Safe even during module install."""
         for record in self:
-            record.reliance_planned = record.reliance_strategy in ('limited_reliance', 'combined')
+            try:
+                record.reliance_planned = record.reliance_strategy in ('limited_reliance', 'combined')
+            except Exception as e:
+                _logger.warning(f'P-3 _compute_reliance_decision failed for record {record.id}: {e}')
+                record.reliance_planned = False
 
     @api.depends('process_flowchart_ids', 'walkthrough_doc_ids')
     def _compute_attachment_counts(self):
+        """Defensive: Safe even during module install."""
         for record in self:
-            record.flowchart_count = len(record.process_flowchart_ids)
-            record.walkthrough_doc_count = len(record.walkthrough_doc_ids)
+            try:
+                record.flowchart_count = len(record.process_flowchart_ids) if record.process_flowchart_ids else 0
+                record.walkthrough_doc_count = len(record.walkthrough_doc_ids) if record.walkthrough_doc_ids else 0
+            except Exception as e:
+                _logger.warning(f'P-3 _compute_attachment_counts failed for record {record.id}: {e}')
+                record.flowchart_count = 0
+                record.walkthrough_doc_count = 0
 
     @api.depends('state', 'partner_approved')
     def _compute_proceed_to_p4(self):
+        """Defensive: Safe even during module install."""
         for record in self:
-            record.proceed_to_p4 = (
-                record.state == 'approved' and record.partner_approved
-            )
+            try:
+                record.proceed_to_p4 = (
+                    record.state == 'approved' and record.partner_approved
+                )
+            except Exception as e:
+                _logger.warning(f'P-3 _compute_proceed_to_p4 failed for record {record.id}: {e}')
+                record.proceed_to_p4 = False
 
     # =========================================================================
     # PRECONDITION CHECK

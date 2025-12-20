@@ -31,7 +31,7 @@ class PlanningP10RelatedParties(models.Model):
         help='P-10 can only be opened after P-9 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-10 requires P-9 to be approved."""
         for rec in self:
@@ -88,7 +88,7 @@ class PlanningP10RelatedParties(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
 
     # ===== Related Party Listing =====
@@ -521,22 +521,7 @@ class PlanningP10RelatedParties(models.Model):
     # ===== Section J: P-10 Conclusion & Professional Judgment =====
     rp_risk_summary = fields.Html(
         string='Related Party Risk Memo (MANDATORY)',
-        help='Consolidated related party assessment per ISA 550',
-        default=lambda self: '''
-<p><strong>P-10: Related Parties Planning (ISA 550)</strong></p>
-<p>Related parties and related party transactions have been identified, assessed for completeness, and evaluated for risk in accordance with ISA 550. Appropriate audit responses and disclosure considerations have been determined.</p>
-<ol>
-<li><strong>Related Parties Identified:</strong> [Summarize key related parties by category]</li>
-<li><strong>Completeness Assessment:</strong> [Summarize procedures performed per ISA 550.13]</li>
-<li><strong>Significant RPTs:</strong> [List significant related party transactions]</li>
-<li><strong>Risk Assessment:</strong> [Overall RPT risk level and key risks identified]</li>
-<li><strong>Fraud & Concealment Considerations:</strong> [ISA 240/550 linkage]</li>
-<li><strong>Disclosure Assessment:</strong> [IAS 24 compliance and disclosure risks]</li>
-<li><strong>Audit Responses:</strong> [Planned procedures per ISA 550.19-23]</li>
-<li><strong>Going Concern Implications:</strong> [If applicable - ISA 570 linkage]</li>
-</ol>
-<p><strong>Conclusion:</strong> [State overall conclusion on RPT risks and audit strategy implications]</p>
-'''
+        help='Consolidated related party assessment per ISA 550'
     )
     # XML view compatible alias
     rpt_conclusion = fields.Html(
@@ -581,6 +566,32 @@ class PlanningP10RelatedParties(models.Model):
     _sql_constraints = [
         ('audit_unique', 'UNIQUE(audit_id)', 'Only one P-10 record per Audit Engagement is allowed.')
     ]
+
+    # ============================================================================
+    # PROMPT 3: Safe HTML Default Template (Set in create, not field default)
+    # ============================================================================
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Set HTML defaults safely in create() to avoid registry crashes."""  
+        rp_risk_template = '''
+<p><strong>P-10: Related Parties Planning (ISA 550)</strong></p>
+<p>Related parties and related party transactions have been identified, assessed for completeness, and evaluated for risk in accordance with ISA 550. Appropriate audit responses and disclosure considerations have been determined.</p>
+<ol>
+<li><strong>Related Parties Identified:</strong> [Summarize key related parties by category]</li>
+<li><strong>Completeness Assessment:</strong> [Summarize procedures performed per ISA 550.13]</li>
+<li><strong>Significant RPTs:</strong> [List significant related party transactions]</li>
+<li><strong>Risk Assessment:</strong> [Overall RPT risk level and key risks identified]</li>
+<li><strong>Fraud & Concealment Considerations:</strong> [ISA 240/550 linkage]</li>
+<li><strong>Disclosure Assessment:</strong> [IAS 24 compliance and disclosure risks]</li>
+<li><strong>Audit Responses:</strong> [Planned procedures per ISA 550.19-23]</li>
+<li><strong>Going Concern Implications:</strong> [If applicable - ISA 570 linkage]</li>
+</ol>
+<p><strong>Conclusion:</strong> [State overall conclusion on RPT risks and audit strategy implications]</p>
+'''
+        for vals in vals_list:
+            if 'rp_risk_summary' not in vals:
+                vals['rp_risk_summary'] = rp_risk_template
+        return super().create(vals_list)
 
     @api.depends('audit_id', 'client_id')
     def _compute_name(self):

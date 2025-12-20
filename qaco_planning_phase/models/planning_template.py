@@ -115,7 +115,7 @@ class PlanningTemplateWizard(models.TransientModel):
         'qaco.planning.main',
         string='Planning Phase',
         required=True,
-        default=lambda self: self.env.context.get('active_id')
+        default=lambda self: self._get_active_planning_id()
     )
     template_id = fields.Many2one(
         'qaco.planning.template',

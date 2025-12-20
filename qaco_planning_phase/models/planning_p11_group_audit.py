@@ -73,7 +73,7 @@ class PlanningP11GroupAudit(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
     
     # STATE MANAGEMENT
@@ -92,7 +92,7 @@ class PlanningP11GroupAudit(models.Model):
         help='P-11 can only be opened after P-10 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-11 requires P-10 to be approved."""
         for rec in self:
@@ -442,7 +442,6 @@ class PlanningP11GroupAudit(models.Model):
     # ============================================================================
     conclusion_narrative = fields.Html(
         string='P-11 Conclusion',
-        default=lambda self: self._default_conclusion_narrative(),
         required=True,
         help='Mandatory professional judgment conclusion per ISA 600'
     )
@@ -559,27 +558,46 @@ class PlanningP11GroupAudit(models.Model):
     
     @api.depends('component_ids', 'component_ids.is_significant')
     def _compute_component_metrics(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.total_component_count = len(rec.component_ids)
-            rec.significant_component_count = len(
-                rec.component_ids.filtered(lambda c: c.is_significant)
-            )
+            try:
+                if not rec.component_ids:
+                    rec.total_component_count = 0
+                    rec.significant_component_count = 0
+                    continue
+                
+                rec.total_component_count = len(rec.component_ids)
+                rec.significant_component_count = len(
+                    rec.component_ids.filtered(lambda c: c.is_significant)
+                )
+            except Exception as e:
+                _logger.warning(f'P-11 _compute_component_metrics failed for record {rec.id}: {e}')
+                rec.total_component_count = 0
+                rec.significant_component_count = 0
 
     @api.depends('component_auditor_ids')
     def _compute_component_auditor_involvement(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.component_auditors_involved = bool(rec.component_auditor_ids)
+            try:
+                rec.component_auditors_involved = bool(rec.component_auditor_ids)
+            except Exception as e:
+                _logger.warning(f'P-11 _compute_component_auditor_involvement failed for record {rec.id}: {e}')
+                rec.component_auditors_involved = False
 
     @api.depends('component_auditor_ids.independence_confirmed',
                  'component_auditor_ids.competence_adequate')
     def _compute_auditor_confirmations(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            auditors = rec.component_auditor_ids
-            if not auditors:
-                rec.independence_confirmed_all = False
-                rec.competence_confirmed_all = False
-                rec.escalation_required = False
-            else:
+            try:
+                auditors = rec.component_auditor_ids
+                if not auditors:
+                    rec.independence_confirmed_all = False
+                    rec.competence_confirmed_all = False
+                    rec.escalation_required = False
+                    continue
+                
                 rec.independence_confirmed_all = all(
                     a.independence_confirmed for a in auditors
                 )
@@ -590,6 +608,11 @@ class PlanningP11GroupAudit(models.Model):
                     not rec.independence_confirmed_all or 
                     not rec.competence_confirmed_all
                 )
+            except Exception as e:
+                _logger.warning(f'P-11 _compute_auditor_confirmations failed for record {rec.id}: {e}')
+                rec.independence_confirmed_all = False
+                rec.competence_confirmed_all = False
+                rec.escalation_required = False
 
     @api.depends('prepared_by')
     def _compute_preparer_role(self):
@@ -625,6 +648,14 @@ class PlanningP11GroupAudit(models.Model):
             <li>Communication and supervision framework established</li>
         </ul>
         """
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        \"\"\"PROMPT 3: Set HTML defaults safely in create() instead of field defaults.\"\"\"
+        for vals in vals_list:
+            if 'conclusion_narrative' not in vals:
+                vals['conclusion_narrative'] = self._default_conclusion_narrative()
+        return super().create(vals_list)
 
     # ============================================================================
     # VALIDATION & CONSTRAINTS

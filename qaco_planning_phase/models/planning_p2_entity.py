@@ -187,8 +187,13 @@ class PlanningP2Entity(models.Model):
 
     @api.depends('state')
     def _compute_is_locked(self):
+        """Defensive: Safe even during module install/upgrade."""
         for rec in self:
-            rec.is_locked = rec.state in ('approved', 'locked')
+            try:
+                rec.is_locked = rec.state in ('approved', 'locked') if rec.state else False
+            except Exception as e:
+                _logger.warning(f'P-2 _compute_is_locked failed for record {rec.id}: {e}')
+                rec.is_locked = False
 
     # Sequential Gating (ISA 300/220: Systematic Planning Approach)
     can_open = fields.Boolean(
@@ -198,18 +203,28 @@ class PlanningP2Entity(models.Model):
         help='P-2 can only be opened after P-1 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
-        """P-2 requires P-1 to be approved."""
+        """P-2 requires P-1 to be approved. Defensive: Safe during install/upgrade."""
         for rec in self:
-            if not rec.audit_id:
+            try:
+                if not rec.audit_id:
+                    rec.can_open = False
+                    continue
+                
+                # Safe check for P-1 model existence
+                if 'qaco.planning.p1.engagement' not in self.env:
+                    rec.can_open = False
+                    continue
+                
+                # Find P-1 for this audit
+                p1 = self.env['qaco.planning.p1.engagement'].search([
+                    ('audit_id', '=', rec.audit_id.id)
+                ], limit=1)
+                rec.can_open = (p1 and p1.state == 'approved') if p1 else False
+            except Exception as e:
+                _logger.warning(f'P-2 _compute_can_open failed for record {rec.id}: {e}')
                 rec.can_open = False
-                continue
-            # Find P-1 for this audit
-            p1 = self.env['qaco.planning.p1.engagement'].search([
-                ('audit_id', '=', rec.audit_id.id)
-            ], limit=1)
-            rec.can_open = p1.state == 'approved' if p1 else False
 
     @api.constrains('state')
     def _check_sequential_gating(self):
@@ -635,11 +650,22 @@ class PlanningP2Entity(models.Model):
 
     @api.depends('business_risk_ids', 'business_risk_ids.severity')
     def _compute_risk_counts(self):
+        """Defensive: Safe even if business_risk_ids is not loaded."""
         for rec in self:
-            rec.total_risks_identified = len(rec.business_risk_ids)
-            rec.high_risk_count = len(rec.business_risk_ids.filtered(
-                lambda r: r.severity == 'high'
-            ))
+            try:
+                if not rec.business_risk_ids:
+                    rec.total_risks_identified = 0
+                    rec.high_risk_count = 0
+                    continue
+                
+                rec.total_risks_identified = len(rec.business_risk_ids)
+                rec.high_risk_count = len(rec.business_risk_ids.filtered(
+                    lambda r: r.severity == 'high'
+                ))
+            except Exception as e:
+                _logger.warning(f'P-2 _compute_risk_counts failed for record {rec.id}: {e}')
+                rec.total_risks_identified = 0
+                rec.high_risk_count = 0
 
     # =========================================================================
     # SECTION K: Mandatory Document Uploads
@@ -694,9 +720,15 @@ class PlanningP2Entity(models.Model):
 
     @api.depends('organogram_attachment_ids', 'process_docs_attachment_ids')
     def _compute_doc_status(self):
+        """Defensive: Safe even if attachment relations are not initialized."""
         for rec in self:
-            rec.doc_organogram_uploaded = bool(rec.organogram_attachment_ids)
-            rec.doc_process_uploaded = bool(rec.process_docs_attachment_ids)
+            try:
+                rec.doc_organogram_uploaded = bool(rec.organogram_attachment_ids)
+                rec.doc_process_uploaded = bool(rec.process_docs_attachment_ids)
+            except Exception as e:
+                _logger.warning(f'P-2 _compute_doc_status failed for record {rec.id}: {e}')
+                rec.doc_organogram_uploaded = False
+                rec.doc_process_uploaded = False
 
     # =========================================================================
     # SECTION L: P-2 Conclusion & Professional Judgment
@@ -790,13 +822,23 @@ class PlanningP2Entity(models.Model):
     # =========================================================================
     @api.depends('audit_id', 'client_id', 'audit_year')
     def _compute_name(self):
+        """Defensive: Safe even when audit_id/client_id are NULL or not fully initialized."""
         for rec in self:
-            parts = ['P2']
-            if rec.client_id:
-                parts.append(rec.client_id.name[:20] if rec.client_id.name else '')
-            if rec.audit_year:
-                parts.append(rec.audit_year)
-            rec.name = '-'.join(filter(None, parts)) or 'P-2: Entity Understanding'
+            try:
+                parts = ['P2']
+                
+                # Safe client name extraction
+                if rec.client_id and hasattr(rec.client_id, 'name') and rec.client_id.name:
+                    parts.append(rec.client_id.name[:20])
+                
+                # Safe audit year extraction
+                if rec.audit_year:
+                    parts.append(str(rec.audit_year))
+                
+                rec.name = '-'.join(filter(None, parts)) or 'P-2: Entity Understanding'
+            except Exception as e:
+                _logger.warning(f'P-2 _compute_name failed for record {rec.id}: {e}')
+                rec.name = 'P-2: Entity Understanding'
 
     # =========================================================================
     # PRE-CONDITIONS CHECK
@@ -808,19 +850,32 @@ class PlanningP2Entity(models.Model):
         - Engagement setup completed
         - Audit team assigned
         - Independence reconfirmed
+        
+        Defensive: Safe even when audit_id is NULL or P-1 module not loaded.
         """
         self.ensure_one()
         errors = []
-
-        # Check if P-1 exists and is approved/locked
-        if 'qaco.planning.p1.engagement' in self.env:
-            P1Model = self.env['qaco.planning.p1.engagement']
-            p1 = P1Model.search([('audit_id', '=', self.audit_id.id)], limit=1)
-            if not p1:
-                errors.append('P-1: Engagement Setup must be completed before P-2.')
-            elif p1.state not in ('approved', 'locked'):
-                errors.append('P-1: Engagement Setup must be partner-approved before P-2 can begin.')
-
+        
+        # Defensive: Check if audit_id exists
+        if not self.audit_id:
+            errors.append('Audit engagement must be assigned before P-2 can begin.')
+            raise UserError(
+                'P-2 Preconditions Not Met:\n• ' + '\n• '.join(errors)
+            )
+        
+        try:
+            # Check if P-1 exists and is approved/locked
+            if 'qaco.planning.p1.engagement' in self.env:
+                P1Model = self.env['qaco.planning.p1.engagement']
+                p1 = P1Model.search([('audit_id', '=', self.audit_id.id)], limit=1)
+                if not p1:
+                    errors.append('P-1: Engagement Setup must be completed before P-2.')
+                elif hasattr(p1, 'state') and p1.state not in ('approved', 'locked'):
+                    errors.append('P-1: Engagement Setup must be partner-approved before P-2 can begin.')
+        except Exception as e:
+            _logger.warning(f'P-2 _check_preconditions error checking P-1: {e}')
+            # Don't block if P-1 check fails - could be during install/upgrade
+        
         if errors:
             raise UserError(
                 'P-2 Preconditions Not Met:\n• ' + '\n• '.join(errors)

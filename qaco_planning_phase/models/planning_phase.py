@@ -133,7 +133,7 @@ class PlanningPhase(models.Model):
 	overall_materiality = fields.Monetary(string='Overall Materiality', currency_field='company_currency_id', readonly=True)
 	performance_materiality = fields.Monetary(string='Performance Materiality', currency_field='company_currency_id', readonly=True)
 	clearly_trivial_threshold = fields.Monetary(string='Clearly Trivial Threshold', currency_field='company_currency_id', readonly=True)
-	company_currency_id = fields.Many2one('res.currency', string='Reporting Currency', default=lambda self: self.env.company.currency_id)
+	company_currency_id = fields.Many2one('res.currency', string='Reporting Currency', default=lambda self: self._get_default_currency())
 
 	control_environment_rating = fields.Selection(CONTROL_RATING, string='Control Environment', default='none')
 	entity_level_controls_rating = fields.Selection(CONTROL_RATING, string='Entity-Level Controls', default='none')
@@ -281,34 +281,58 @@ class PlanningPhase(models.Model):
 
 	@api.depends('audit_id', 'client_id', 'create_date')
 	def _compute_name(self):
+		"""Defensive: Safe even during module install."""
 		for record in self:
-			if record.client_id and record.create_date:
-				record.name = f"PLAN-{record.client_id.name}-{record.create_date.strftime('%Y%m%d')}"
-			else:
+			try:
+				if record.client_id and record.create_date:
+					record.name = f"PLAN-{record.client_id.name}-{record.create_date.strftime('%Y%m%d')}"
+				else:
+					record.name = 'Planning Phase - Draft'
+			except Exception as e:
+				_logger.warning(f'Planning Phase _compute_name failed for record {record.id}: {e}')
 				record.name = 'Planning Phase - Draft'
 
 	@api.depends('audit_period_from', 'audit_period_to')
 	def _compute_audit_tenure(self):
+		"""Defensive: Safe even during module install."""
 		for record in self:
-			if record.audit_period_from and record.audit_period_to:
-				delta = record.audit_period_to - record.audit_period_from
-				record.audit_tenure_years = delta.days // 365
-			else:
+			try:
+				if record.audit_period_from and record.audit_period_to:
+					delta = record.audit_period_to - record.audit_period_from
+					record.audit_tenure_years = delta.days // 365
+				else:
+					record.audit_tenure_years = 0
+			except Exception as e:
+				_logger.warning(f'Planning Phase _compute_audit_tenure failed for record {record.id}: {e}')
 				record.audit_tenure_years = 0
 
 	@api.depends('control_environment_rating', 'control_activities_rating', 'itgc_rating')
 	def _compute_reliance_strategy(self):
+		"""Defensive: Safe even during module install."""
 		for record in self:
-			record.reliance_on_controls = (
-				record.control_environment_rating in ['moderate', 'strong']
-				and record.control_activities_rating in ['moderate', 'strong']
-				and record.itgc_rating in ['moderate', 'strong']
-			)
+			try:
+				record.reliance_on_controls = (
+					record.control_environment_rating in ['moderate', 'strong']
+					and record.control_activities_rating in ['moderate', 'strong']
+					and record.itgc_rating in ['moderate', 'strong']
+				)
+			except Exception as e:
+				_logger.warning(f'Planning Phase _compute_reliance_strategy failed for record {record.id}: {e}')
+				record.reliance_on_controls = False
 
 	@api.depends('risk_register_line_ids', 'risk_register_line_ids.is_significant_risk')
 	def _compute_significant_risks(self):
+		"""Defensive: Safe even during module install."""
 		for record in self:
-			record.significant_risks_identified = len(record.risk_register_line_ids.filtered(lambda r: r.is_significant_risk))
+			try:
+				if not record.risk_register_line_ids:
+					record.significant_risks_identified = 0
+					continue
+				
+				record.significant_risks_identified = len(record.risk_register_line_ids.filtered(lambda r: r.is_significant_risk))
+			except Exception as e:
+				_logger.warning(f'Planning Phase _compute_significant_risks failed for record {record.id}: {e}')
+				record.significant_risks_identified = 0
 
 	@api.depends(
 		'understanding_status', 'analytics_status', 'materiality_status', 'control_status',

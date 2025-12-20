@@ -74,7 +74,7 @@ class PlanningP12Strategy(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
     
     # STATE MANAGEMENT
@@ -93,7 +93,7 @@ class PlanningP12Strategy(models.Model):
         help='P-12 can only be opened after P-11 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-12 requires P-11 to be approved."""
         for rec in self:
@@ -494,7 +494,6 @@ class PlanningP12Strategy(models.Model):
     # ============================================================================
     conclusion_narrative = fields.Html(
         string='P-12 Professional Judgment Conclusion',
-        default=lambda self: self._default_conclusion_narrative(),
         required=True,
         help='Mandatory conclusion per ISA 300'
     )
@@ -611,38 +610,69 @@ class PlanningP12Strategy(models.Model):
     
     @api.depends('risk_response_ids', 'risk_response_ids.response_documented')
     def _compute_risk_metrics(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.total_risks = len(rec.risk_response_ids)
-            rec.risks_with_responses = len(
-                rec.risk_response_ids.filtered(lambda r: r.response_documented)
-            )
-            rec.unaddressed_risks = rec.total_risks - rec.risks_with_responses
-            rec.significant_risk_count = len(
-                rec.risk_response_ids.filtered(lambda r: r.risk_level == 'significant')
-            )
+            try:
+                if not rec.risk_response_ids:
+                    rec.total_risks = 0
+                    rec.risks_with_responses = 0
+                    rec.unaddressed_risks = 0
+                    rec.significant_risk_count = 0
+                    continue
+                
+                rec.total_risks = len(rec.risk_response_ids)
+                rec.risks_with_responses = len(
+                    rec.risk_response_ids.filtered(lambda r: r.response_documented)
+                )
+                rec.unaddressed_risks = rec.total_risks - rec.risks_with_responses
+                rec.significant_risk_count = len(
+                    rec.risk_response_ids.filtered(lambda r: r.risk_level == 'significant')
+                )
+            except Exception as e:
+                _logger.warning(f'P-12 _compute_risk_metrics failed for record {rec.id}: {e}')
+                rec.total_risks = 0
+                rec.risks_with_responses = 0
+                rec.unaddressed_risks = 0
+                rec.significant_risk_count = 0
 
     @api.depends('fs_area_strategy_ids')
     def _compute_fs_area_coverage(self):
-        """Check if all mandatory FS areas are covered"""
+        """Defensive: Check if all mandatory FS areas are covered."""
         mandatory_areas = [
             'revenue', 'ppe', 'inventory', 'cash', 'borrowings',
             'provisions', 'related_parties', 'taxes', 'equity', 'expenses'
         ]
         for rec in self:
-            covered_areas = rec.fs_area_strategy_ids.mapped('fs_area')
-            rec.mandatory_fs_areas_covered = all(
-                area in covered_areas for area in mandatory_areas
-            )
+            try:
+                if not rec.fs_area_strategy_ids:
+                    rec.mandatory_fs_areas_covered = False
+                    continue
+                
+                covered_areas = rec.fs_area_strategy_ids.mapped('fs_area')
+                rec.mandatory_fs_areas_covered = all(
+                    area in covered_areas for area in mandatory_areas
+                )
+            except Exception as e:
+                _logger.warning(f'P-12 _compute_fs_area_coverage failed for record {rec.id}: {e}')
+                rec.mandatory_fs_areas_covered = False
 
     @api.depends('kam_candidate_ids')
     def _compute_kam_metrics(self):
+        """Defensive: Safe even during module install."""
         for rec in self:
-            rec.kam_candidates_count = len(rec.kam_candidate_ids)
-            if rec.kam_candidate_ids:
+            try:
+                if not rec.kam_candidate_ids:
+                    rec.kam_candidates_count = 0
+                    rec.kam_from_significant_risks = False
+                    continue
+                
+                rec.kam_candidates_count = len(rec.kam_candidate_ids)
                 rec.kam_from_significant_risks = all(
                     kam.from_significant_risk for kam in rec.kam_candidate_ids
                 )
-            else:
+            except Exception as e:
+                _logger.warning(f'P-12 _compute_kam_metrics failed for record {rec.id}: {e}')
+                rec.kam_candidates_count = 0
                 rec.kam_from_significant_risks = False
 
     @api.depends('planned_hours_partner', 'planned_hours_manager',
@@ -699,6 +729,14 @@ class PlanningP12Strategy(models.Model):
             <li>Strategy approved by partner prior to execution</li>
         </ul>
         """
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        \"\"\"PROMPT 3: Set HTML defaults safely in create() instead of field defaults.\"\"\"
+        for vals in vals_list:
+            if 'conclusion_narrative' not in vals:
+                vals['conclusion_narrative'] = self._default_conclusion_narrative()
+        return super().create(vals_list)
 
     # ============================================================================
     # VALIDATION & CONSTRAINTS

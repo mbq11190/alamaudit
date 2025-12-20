@@ -167,7 +167,35 @@ class PlanningTabMixin(models.AbstractModel):
     def _validate_mandatory_fields(self):
         """Override in each P-tab model to validate required fields."""
         pass
+    # ========================================================================
+    # PROMPT 3: Safe Default Helper Methods (Cron-Safe / Registry-Safe)
+    # ========================================================================
+    @api.model
+    def _get_default_currency(self):
+        \"\"\"Safe currency default that won't crash during module install/cron.\"\"\"
+        try:
+            return self.env.company.currency_id.id if self.env.company else False
+        except Exception as e:
+            _logger.warning(f'_get_default_currency failed: {e}')
+            return False
 
+    @api.model
+    def _get_default_user(self):
+        \"\"\"Safe user default that won't crash during module install/cron.\"\"\"
+        try:
+            return self.env.user.id if self.env.user else False
+        except Exception as e:
+            _logger.warning(f'_get_default_user failed: {e}')
+            return False
+
+    @api.model
+    def _get_active_planning_id(self):
+        \"\"\"Safe context access that won't crash during module install/cron.\"\"\"
+        try:
+            return self.env.context.get('active_id', False)
+        except Exception as e:
+            _logger.warning(f'_get_active_planning_id failed: {e}')
+            return False
     def _send_tab_unlock_notifications(self):
         """
         Session 7A: Send email notification when a P-tab approval unlocks dependent tabs.
@@ -299,7 +327,7 @@ class PlanningPhaseMain(models.Model):
     company_currency_id = fields.Many2one(
         'res.currency',
         string='Reporting Currency',
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self._get_default_currency()
     )
 
     # Links to P-tabs (One2One relationship via unique constraint on audit_id)

@@ -31,7 +31,7 @@ class PlanningP7Fraud(models.Model):
         help='P-7 can only be opened after P-6 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-7 requires P-6 to be approved."""
         for rec in self:
@@ -570,16 +570,6 @@ class PlanningP7Fraud(models.Model):
     # ===== Section K: Summary & Conclusion =====
     fraud_risk_summary = fields.Html(
         string='Fraud Risk Memo (MANDATORY)',
-        default=lambda self: '''
-<p><strong>Fraud Risk Assessment Summary (ISA 240)</strong></p>
-<ol>
-<li><strong>Brainstorming Session:</strong> [Summarize key findings from fraud brainstorming]</li>
-<li><strong>Fraud Triangle Analysis:</strong> [Summarize incentives, opportunities, attitudes identified]</li>
-<li><strong>Presumed Fraud Risks:</strong> [Revenue recognition and management override status]</li>
-<li><strong>Specific Fraud Risks:</strong> [List significant fraud risks identified]</li>
-<li><strong>Overall Fraud Response:</strong> [Summarize how the audit strategy addresses fraud risks]</li>
-</ol>
-''',
         help='Consolidated fraud risk assessment summary per ISA 240'
     )
     # XML view compatible alias
@@ -629,6 +619,27 @@ class PlanningP7Fraud(models.Model):
         ('audit_unique', 'UNIQUE(audit_id)', 'Only one P-7 record per Audit Engagement is allowed.')
     ]
 
+    # ============================================================================
+    # PROMPT 3: Safe HTML Default Template (Set in create, not field default)
+    # ============================================================================
+    @api.model_create_multi
+    def create(self, vals_list):
+        \"\"\"Set HTML defaults safely in create() to avoid registry crashes.\"\"\"
+        fraud_risk_template = '''
+<p><strong>Fraud Risk Assessment Summary (ISA 240)</strong></p>
+<ol>
+<li><strong>Brainstorming Session:</strong> [Summarize key findings from fraud brainstorming]</li>
+<li><strong>Fraud Triangle Analysis:</strong> [Summarize incentives, opportunities, attitudes identified]</li>
+<li><strong>Presumed Fraud Risks:</strong> [Revenue recognition and management override status]</li>
+<li><strong>Specific Fraud Risks:</strong> [List significant fraud risks identified]</li>
+<li><strong>Overall Fraud Response:</strong> [Summarize how the audit strategy addresses fraud risks]</li>
+</ol>
+'''
+        for vals in vals_list:
+            if 'fraud_risk_summary' not in vals:
+                vals['fraud_risk_summary'] = fraud_risk_template
+        return super().create(vals_list)
+
     @api.depends('audit_id', 'client_id')
     def _compute_name(self):
         for record in self:
@@ -639,9 +650,17 @@ class PlanningP7Fraud(models.Model):
 
     @api.depends('fraud_risk_line_ids')
     def _compute_fraud_risks_identified(self):
-        """Compute the number of fraud risks identified."""
+        """Defensive: Compute the number of fraud risks identified."""
         for record in self:
-            record.fraud_risks_identified = len(record.fraud_risk_line_ids)
+            try:
+                if not record.fraud_risk_line_ids:
+                    record.fraud_risks_identified = 0
+                    continue
+                
+                record.fraud_risks_identified = len(record.fraud_risk_line_ids)
+            except Exception as e:
+                _logger.warning(f'P-7 _compute_fraud_risks_identified failed for record {record.id}: {e}')
+                record.fraud_risks_identified = 0
 
     def _validate_mandatory_fields(self):
         """Validate mandatory fields before completing P-7."""

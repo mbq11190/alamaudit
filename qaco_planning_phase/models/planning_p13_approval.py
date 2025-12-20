@@ -43,7 +43,7 @@ class PlanningP13Approval(models.Model):
         help='P-13 can only be opened after P-12 is approved'
     )
 
-    @api.depends('audit_id', 'audit_id.id')
+    @api.depends('audit_id')
     def _compute_can_open(self):
         """P-13 requires P-12 to be approved."""
         for rec in self:
@@ -725,7 +725,7 @@ class PlanningChangeLog(models.Model):
     changed_by_id = fields.Many2one(
         'res.users',
         string='Changed By',
-        default=lambda self: self.env.user,
+        default=lambda self: self._get_default_user(),
         required=True
     )
     tab_affected = fields.Char(
