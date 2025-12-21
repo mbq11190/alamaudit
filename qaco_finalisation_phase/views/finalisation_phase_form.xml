@@ -99,6 +99,10 @@
                             <field name="final_file_locked" readonly="1"/>
                         </group>
                     </group>
+                    <group string="Sign-offs">
+                        <field name="manager_signed_user_id" readonly="1"/>
+                        <field name="partner_signed_user_id" readonly="1"/>
+                    </group>
                     <group string="Attachments Snapshot">
                         <field name="misstatement_summary_attachment_ids" widget="many2many_binary" filename="datas"/>
                         <field name="subsequent_checklist_attachment_ids" widget="many2many_binary" filename="datas"/>
@@ -379,10 +383,8 @@
                                 <field name="checklist_partner_approval" widget="boolean_toggle" readonly="1"/>
                                 <field name="checklist_archive_ready" widget="boolean_toggle"/>
                             </group>
-                            <group string="Signatures">
-                                <field name="manager_signed_user_id" readonly="1"/>
+                            <group string="Signature Details">
                                 <field name="manager_signed_on" readonly="1"/>
-                                <field name="partner_signed_user_id" readonly="1"/>
                                 <field name="partner_signed_on" readonly="1"/>
                                 <field name="final_file_locked" readonly="1"/>
                                 <field name="final_locked_on" readonly="1"/>
