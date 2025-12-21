@@ -124,11 +124,12 @@
     </record>
     -->
 
-    <!-- Menu Item for Templates (under Configuration) -->
+    <!-- Menu Item for Templates (under Configuration) - DISABLED: parent menu doesn't exist
     <menuitem id="menu_planning_templates"
               name="Planning Templates"
               parent="qaco_audit.menu_audit_configuration"
               action="action_planning_template"
               sequence="30"/>
+    -->
 
 </odoo>
