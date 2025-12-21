@@ -42,7 +42,7 @@
         # Data
         "data/industry_data.xml",
         "data/mail_templates.xml",  # Session 7A: Email notifications
-        "data/planning_templates.xml",  # Session 7B: Industry templates
+        # "data/planning_templates.xml",  # Session 7B: Industry templates - DISABLED: XML schema issues
         "data/regulator_data.xml",
         "data/assertion_tags.xml",
         "data/materiality_defaults.xml",
