@@ -1,103 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ============================================== -->
-    <!-- P-12: Audit Strategy & Plan                   -->
-    <!-- ISA 300                                        -->
-    <!-- ============================================== -->
-
-    <!-- P-12 Form View -->
+    <!-- P-12: Audit Strategy & Plan - Simplified View -->
     <record id="view_planning_p12_strategy_form" model="ir.ui.view">
         <field name="name">qaco.planning.p12.strategy.form</field>
         <field name="model">qaco.planning.p12.strategy</field>
         <field name="arch" type="xml">
-            <form string="P-12: Audit Team, Budget &amp; Timeline">
-                <field name="can_open" invisible="1"/>
+            <form string="P-12: Audit Strategy">
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,partner,locked"/>
                     <button name="action_mark_complete" string="Mark Complete" type="object" class="btn-primary"
-                            invisible="state != 'in_progress'"/>
+                            invisible="state != 'draft'"/>
                     <button name="action_manager_review" string="Manager Review" type="object" class="btn-warning"
-                            invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
+                            invisible="state != 'draft'" groups="qaco_audit.group_audit_manager"/>
                     <button name="action_partner_approve" string="Partner Approve" type="object" class="btn-success"
-                            invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
+                            invisible="state != 'review'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
+                            invisible="state not in ['review', 'partner']"/>
                     <button name="action_partner_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
+                            invisible="state != 'locked'" groups="qaco_audit.group_audit_partner"/>
                 </header>
                 <sheet>
-                    <!-- Sequential Gating Alert Banner (Session 5A) -->
-                    <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
-                         invisible="can_open or state != 'not_started'">
-                        <h4><i class="fa fa-lock"/> Sequential Gating Active: P-12 is Locked</h4>
-                        <p><strong>ISA 300 Requirement:</strong> P-12 (Audit Strategy) cannot be started until P-6 (Risk Assessment) has been Partner-approved.</p>
-                        <p><strong>Reason:</strong> Per ISA 300, overall audit strategy and detailed audit plan must respond to assessed RMM, ensuring nature, timing, and extent of procedures are risk-responsive.</p>
-                        <p><strong>Action Required:</strong> Please complete and obtain Partner approval for P-6 (Risk Assessment) first.</p>
-                    </div>
-
-                    <!-- Unlocked Confirmation Banner (Session 5A) -->
-                    <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
-                         invisible="not can_open or state != 'not_started'">
-                        <h4><i class="fa fa-unlock"/> P-12 is Unlocked</h4>
-                        <p>P-6 (Risk Assessment) has been approved. You may now proceed with P-12 (Audit Strategy).</p>
-                    </div>
-
+                    <field name="can_open" invisible="1"/>
+                    <field name="locked" invisible="1"/>
+                    
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 300 | Audit Team, Budget &amp; Timeline</h3>
+                        <h3 class="text-muted">ISA 300 | Audit Strategy &amp; Plan</h3>
                     </div>
+                    
                     <group>
                         <group string="Audit Information">
-                            <field name="audit_id" readonly="state != 'not_started'"/>
-                            <field name="client_id"/>
+                            <field name="audit_id"/>
+                            <field name="client_id" readonly="1"/>
+                            <field name="partner_id"/>
                         </group>
-                        <group string="Overall Approach">
-                            <field name="overall_audit_approach"/>
-                            <field name="control_reliance_approach"/>
+                        <group string="Approach">
+                            <field name="audit_approach"/>
+                            <field name="interim_audit_planned"/>
+                            <field name="specialists_required"/>
+                            <field name="group_audit_applicable"/>
                         </group>
                     </group>
 
                     <notebook>
-                        <!-- Tab 1: Overall Audit Strategy -->
-                        <page string="Audit Strategy" name="strategy">
-                            <group string="Overall Audit Strategy">
-                                <field name="audit_strategy" widget="html" nolabel="1"/>
+                        <!-- Tab 1: Strategy Overview -->
+                        <page string="Strategy" name="strategy">
+                            <group string="Audit Approach">
+                                <field name="approach_rationale" widget="html"/>
+                                <field name="interim_audit_details" widget="html" invisible="not interim_audit_planned"/>
                             </group>
-                            <group string="Audit Scope">
-                                <field name="audit_scope" widget="html" nolabel="1"/>
+                            <group string="Specialist Requirements" invisible="not specialists_required">
+                                <field name="specialist_details" widget="html"/>
                             </group>
-                            <group string="Key Audit Matters (Expected)">
-                                <field name="expected_kam" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Nature, Timing, and Extent Direction">
-                                <field name="nature_timing_extent" widget="html" nolabel="1"/>
+                            <group string="Group Audit Strategy" invisible="not group_audit_applicable">
+                                <field name="group_audit_strategy" widget="html"/>
                             </group>
                         </page>
 
-                        <!-- Tab 2: Key Audit Areas -->
-                        <page string="Key Audit Areas" name="areas">
-                            <group string="Key Audit Area Register">
-                                <field name="key_area_ids" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="area_name"/>
-                                        <field name="risk_level"/>
-                                        <field name="assertion_focus"/>
-                                        <field name="audit_approach"/>
-                                        <field name="timing"/>
-                                        <field name="assigned_to"/>
-                                        <field name="budgeted_hours"/>
-                                    </tree>
-                                </field>
+                        <!-- Tab 2: Risk Responses -->
+                        <page string="Risk Responses" name="risks">
+                            <group>
+                                <field name="total_risks" readonly="1"/>
+                                <field name="risks_with_responses" readonly="1"/>
+                                <field name="unaddressed_risks" readonly="1"/>
+                                <field name="significant_risk_count" readonly="1"/>
+                                <field name="rmm_alignment_confirmed"/>
                             </group>
                         </page>
 
-                        <!-- Tab 3: Control Reliance -->
-                        <page string="Control Reliance" name="controls">
-                            <group string="Control Reliance Decision">
+                        <!-- Tab 3: Procedures -->
+                        <page string="Procedures" name="procedures">
+                            <group string="Analytical Procedures">
+                                <field name="analytical_procedures_planned" widget="html"/>
+                            </group>
+                            <group string="Fraud Response (ISA 240)">
+                                <field name="unpredictable_procedures_planned"/>
+                                <field name="unpredictable_procedures_details" widget="html" invisible="not unpredictable_procedures_planned"/>
+                                <field name="journal_entry_testing_approach" widget="html"/>
+                                <field name="management_override_procedures" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 4: Budget & Timeline -->
+                        <page string="Budget &amp; Timeline" name="budget">
+                            <group string="Planned Hours">
                                 <group>
-                                    <field name="control_reliance_approach"/>
+                                    <field name="planned_hours_partner"/>
+                                    <field name="planned_hours_manager"/>
                                 </group>
-                                <field name="control_reliance_rationale" widget="html" nolabel="1"/>
+                                <group>
+                                    <field name="planned_hours_senior"/>
+                                    <field name="planned_hours_trainee"/>
+                                </group>
+                                <group>
+                                    <field name="total_planned_hours" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Key Dates">
+                                <group>
+                                    <field name="planning_completion_date"/>
+                                    <field name="interim_audit_date" invisible="not interim_audit_planned"/>
+                                    <field name="fieldwork_start_date"/>
+                                </group>
+                                <group>
+                                    <field name="fieldwork_end_date"/>
+                                    <field name="draft_report_date"/>
+                                    <field name="final_report_date"/>
+                                </group>
+                            </group>
+                            <group string="Quality Control">
+                                <field name="eqcr_required"/>
+                                <field name="eqcr_reviewer_id" invisible="not eqcr_required"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 5: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Strategy Documentation">
+                                <field name="audit_strategy_memo_attachments" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Audit Programs">
+                                <field name="audit_programs_export_attachments" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 6: Conclusion -->
+                        <page string="Conclusion" name="conclusion">
+                            <group string="P-12 Conclusion">
+                                <field name="conclusion_narrative" widget="html"/>
+                            </group>
+                            <group string="Confirmations">
+                                <field name="all_risks_addressed"/>
+                                <field name="programs_finalized_confirmed"/>
+                                <field name="strategy_approved_before_execution"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 7: Review & Approval -->
+                        <page string="Review &amp; Approval" name="approval">
+                            <group>
+                                <group string="Preparation">
+                                    <field name="prepared_by" readonly="1"/>
+                                    <field name="prepared_by_role" readonly="1"/>
+                                    <field name="prepared_on" readonly="1"/>
+                                </group>
+                                <group string="Manager Review">
+                                    <field name="reviewed_by" readonly="1"/>
+                                    <field name="reviewed_on" readonly="1"/>
+                                    <field name="review_notes" widget="html"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Partner Approval">
+                                    <field name="partner_approved" readonly="1"/>
+                                    <field name="partner_approved_by" readonly="1"/>
+                                    <field name="partner_approved_on" readonly="1"/>
+                                    <field name="partner_comments" widget="html"/>
+                                </group>
+                                <group string="ISA Reference">
+                                    <field name="isa_reference"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- P-12 Tree View -->
+    <record id="view_planning_p12_strategy_tree" model="ir.ui.view">
+        <field name="name">qaco.planning.p12.strategy.tree</field>
+        <field name="model">qaco.planning.p12.strategy</field>
+        <field name="arch" type="xml">
+            <tree string="P-12: Audit Strategy">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-warning="state == 'review'" decoration-success="state == 'locked'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- P-12 Action -->
+    <record id="action_planning_p12_strategy" model="ir.actions.act_window">
+        <field name="name">P-12: Audit Strategy</field>
+        <field name="res_model">qaco.planning.p12.strategy</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-12 Audit Strategy
+            </p>
+            <p>
+                Document overall audit strategy per ISA 300.
+            </p>
+        </field>
+    </record>
+
+</odoo>
                             </group>
                             <group string="Controls to be Tested">
                                 <field name="controls_to_test" widget="html" nolabel="1"/>
