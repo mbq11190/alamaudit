@@ -40,5 +40,11 @@
             <field name="category_id" ref="qaco_audit.module_category_audit"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('qaco_audit.group_audit_partner'))]"/>
         </record>
+
+        <record id="group_audit_quality_partner" model="res.groups">
+            <field name="name">Audit Quality Partner</field>
+            <field name="category_id" ref="qaco_audit.module_category_audit"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('qaco_audit.group_audit_partner'))]"/>
+        </record>
     </data>
 </odoo>
