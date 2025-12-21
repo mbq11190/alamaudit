@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<data noupdate="1">
         
         <!-- Session 7B: Planning Templates by Industry -->
         
@@ -243,4 +243,4 @@
             <field name="active" eval="True"/>
         </record>
 
-</odoo>
+</data>
