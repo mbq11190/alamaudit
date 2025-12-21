@@ -137,6 +137,13 @@ class ClientOnboarding(models.Model):
 
     attached_template_ids = fields.One2many('qaco.onboarding.attached.template', 'onboarding_id', string='Attached Templates')
 
+    # Template library preview (read-only listing of active master templates)
+    template_library_ids = fields.Many2many(
+        'qaco.onboarding.template.document',
+        string='Template Library',
+        compute='_compute_template_library',
+    )
+
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
     trading_name = fields.Char(string='Trading Name')
@@ -218,6 +225,12 @@ class ClientOnboarding(models.Model):
     eqcr_partner_signature = fields.Binary(string='EQCR Partner Signature')
     managing_partner_id = fields.Many2one('res.users', string='Managing Partner', index=True)
     managing_partner_signature = fields.Binary(string='Managing Partner Signature')
+
+    @api.depends()
+    def _compute_template_library(self):
+        Template = self.env['qaco.onboarding.template.document'].search([('active', '=', True)], order='category_id, sequence, name')
+        for rec in self:
+            rec.template_library_ids = Template
 
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
     checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Engagement Partner Decision')

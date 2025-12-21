@@ -38,6 +38,19 @@
                                                 <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
                                                 <p class="text-muted small mt-2">Open the Template Library to manage or download master templates. Use the Legal Identity shortcut to filter templates typically required in section 1.1.</p>
                                             </group>
+
+                                            <group>
+                                                <label for="template_library_ids" string="Available Templates"/>
+                                                <field name="template_library_ids" nolabel="1">
+                                                    <tree string="Templates" editable="false">
+                                                        <field name="name"/>
+                                                        <field name="category_id"/>
+                                                        <field name="file_type"/>
+                                                        <field name="sequence"/>
+                                                        <button name="action_download" type="object" string="Download" class="btn-secondary"/>
+                                                    </tree>
+                                                </field>
+                                            </group>
                                         </page>
 
                                         <page string="1.0B - Onboarding Pack &amp; Tracker" name="subsection_1_0b">
