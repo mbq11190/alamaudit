@@ -10,8 +10,9 @@
         <field name="name">qaco.planning.p11.group.audit.form</field>
         <field name="model">qaco.planning.p11.group.audit</field>
         <field name="arch" type="xml">
-            <form string="P-11: Audit Strategy &amp; Audit Plan">
+            <form string="P-11: Group Audit Planning">
                 <field name="can_open" invisible="1"/>
+                <field name="locked" invisible="1"/>
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
                     <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
@@ -22,237 +23,78 @@
                             invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
                     <button name="action_partner_approve" string="Partner Approve" type="object" class="btn-success"
                             invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
-                    <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
-                    <button name="action_partner_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
                 </header>
                 <sheet>
-                    <!-- Sequential Gating Alert Banner (Session 5A) -->
+                    <!-- Sequential Gating Alert Banner -->
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'not_started'">
                         <h4><i class="fa fa-lock"/> Sequential Gating Active: P-11 is Locked</h4>
-                        <p><strong>ISA 600 Requirement:</strong> P-11 (Group Audit) cannot be started until P-6 (Risk Assessment) has been Partner-approved.</p>
-                        <p><strong>Reason:</strong> Per ISA 600, group audit strategy must consider identified RMM at group and component levels to ensure proper scoping and component auditor direction.</p>
-                        <p><strong>Action Required:</strong> Please complete and obtain Partner approval for P-6 (Risk Assessment) first.</p>
+                        <p><strong>ISA 600 Requirement:</strong> P-11 (Group Audit) cannot be started until P-10 (Related Parties) has been approved.</p>
+                        <p><strong>Action Required:</strong> Please complete and obtain approval for P-10 first.</p>
                     </div>
 
-                    <!-- Unlocked Confirmation Banner (Session 5A) -->
+                    <!-- Unlocked Confirmation Banner -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
                          invisible="not can_open or state != 'not_started'">
                         <h4><i class="fa fa-unlock"/> P-11 is Unlocked</h4>
-                        <p>P-6 (Risk Assessment) has been approved. You may now proceed with P-11 (Group Audit).</p>
+                        <p>P-10 (Related Parties) has been approved. You may now proceed with P-11 (Group Audit).</p>
                     </div>
 
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
-                        <h3 class="text-muted">ISA 300 | Audit Strategy &amp; Audit Plan</h3>
+                        <h3 class="text-muted">ISA 600 | Group Audit Planning</h3>
                     </div>
                     <group>
                         <group string="Audit Information">
                             <field name="audit_id" readonly="state != 'not_started'"/>
-                            <field name="client_id"/>
+                            <field name="client_id" readonly="1"/>
+                            <field name="firm_id" readonly="1"/>
                         </group>
-                        <group string="Group Audit Status">
-                            <field name="is_group_audit"/>
-                            <field name="component_count" invisible="not is_group_audit"/>
+                        <group string="Status">
+                            <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
 
-                    <div invisible="is_group_audit">
-                        <div class="alert alert-info">
-                            <strong>Note:</strong> This is not a group audit. If the entity is part of a group or has components, set "Is Group Audit" to Yes.
-                        </div>
-                    </div>
-
-                    <notebook invisible="not is_group_audit">
-                        <!-- Tab 1: Group Structure -->
-                        <page string="Group Structure" name="structure">
-                            <group string="Group Structure Overview">
-                                <field name="group_structure_overview" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Group Chart">
-                                <field name="group_chart" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Consolidation Process">
-                                <field name="consolidation_process" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 2: Components -->
-                        <page string="Components" name="components">
-                            <group string="Component Register">
-                                <field name="component_ids" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="component_name"/>
-                                        <field name="jurisdiction"/>
-                                        <field name="is_significant"/>
-                                        <field name="type_of_work"/>
-                                        <field name="component_auditor_name"/>
-                                        <field name="component_materiality"/>
-                                        <field name="reporting_deadline"/>
-                                        <field name="status"/>
-                                    </tree>
-                                </field>
-                            </group>
-                        </page>
-
-                        <!-- Tab 3: Significance Assessment -->
-                        <page string="Significance" name="significance">
-                            <group string="Significance Criteria">
-                                <field name="significance_criteria" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Significant Components">
-                                <field name="significant_components" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Non-Significant Components">
-                                <field name="non_significant_components" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Coverage Assessment">
-                                <field name="coverage_assessment" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 4: Component Auditors -->
-                        <page string="Component Auditors" name="auditors">
-                            <group string="Component Auditor Details">
-                                <field name="component_auditor_ids" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="auditor_name"/>
-                                        <field name="firm_affiliation"/>
-                                        <field name="jurisdiction"/>
-                                        <field name="competence_adequate"/>
-                                        <field name="independence_confirmed"/>
-                                        <field name="regulatory_environment_assessed"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group string="Competence &amp; Independence Assessment">
-                                <field name="auditor_assessment" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 5: Component Materiality -->
-                        <page string="Component Materiality" name="materiality">
-                            <group string="Component Materiality Determination">
-                                <field name="component_materiality_approach" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Aggregation Risk">
-                                <field name="aggregation_risk" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Component PM Threshold">
-                                <field name="component_pm_threshold" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 6: Instructions -->
-                        <page string="Instructions" name="instructions">
-                            <group string="Group Audit Instructions">
-                                <field name="group_audit_instructions" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Specific Requirements">
-                                <field name="specific_requirements" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Reporting Requirements">
-                                <field name="reporting_requirements" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Communication Requirements">
-                                <field name="communication_requirements" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 7: Communication -->
-                        <page string="Communication" name="communication">
-                            <group string="Communication with Component Auditors">
-                                <field name="component_communication" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Communication with Group Management">
-                                <field name="group_management_communication" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Communication with TCWG">
-                                <field name="tcwg_communication" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 8: Review of Component Work -->
-                        <page string="Review" name="review">
-                            <group string="Review of Component Auditor Work">
-                                <field name="component_work_review" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Significant Findings from Components">
-                                <field name="component_findings" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Sufficiency of Audit Evidence">
-                                <field name="evidence_sufficiency" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 9: Consolidation Procedures -->
-                        <page string="Consolidation" name="consolidation">
-                            <group string="Consolidation Audit Procedures">
-                                <field name="consolidation_procedures" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Intercompany Eliminations">
-                                <field name="intercompany_eliminations" widget="html" nolabel="1"/>
-                            </group>
-                            <group string="Subsequent Events">
-                                <field name="subsequent_events" widget="html" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 10: Attachments -->
-                        <page string="Attachments" name="attachments">
-                            <group string="Group Audit Documentation">
-                                <field name="group_audit_attachment_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                            <group string="Component Reports">
-                                <field name="component_report_ids" widget="many2many_binary" nolabel="1"/>
-                            </group>
-                        </page>
-
-                        <!-- Tab 11: Conclusion & Sign-off -->
-                        <page string="Conclusion &amp; Sign-off" name="conclusion">
-                            <group string="Group Audit Conclusion">
-                                <field name="group_audit_conclusion" widget="html" nolabel="1"/>
+                    <notebook>
+                    <notebook>
+                        <!-- Tab 1: Conclusion & Professional Judgment -->
+                        <page string="Conclusion" name="conclusion">
+                            <group string="P-11 Conclusion">
+                                <field name="conclusion_narrative" widget="html" nolabel="1"/>
                             </group>
                             <group>
-                                <group string="Summary">
-                                    <field name="is_group_audit" readonly="1"/>
-                                    <field name="component_count" readonly="1"/>
+                                <group string="Confirmations">
+                                    <field name="group_planning_completed"/>
+                                    <field name="component_risks_addressed"/>
+                                    <field name="basis_established_strategy"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Review & Approval -->
+                        <page string="Review &amp; Approval" name="approval">
+                            <group>
+                                <group string="Preparation">
+                                    <field name="prepared_by" readonly="1"/>
+                                    <field name="prepared_by_role" readonly="1"/>
+                                    <field name="prepared_on" readonly="1"/>
+                                </group>
+                                <group string="Manager Review">
+                                    <field name="reviewed_by" readonly="1"/>
+                                    <field name="reviewed_on" readonly="1"/>
+                                    <field name="review_notes" widget="html"/>
                                 </group>
                             </group>
                             <group>
-                                <group string="Sign-off">
-                                    <field name="senior_signed_user_id"/>
-                                    <field name="senior_signed_on"/>
-                                    <field name="manager_reviewed_user_id"/>
-                                    <field name="manager_reviewed_on"/>
-                                    <field name="partner_approved_user_id"/>
-                                    <field name="partner_approved_on"/>
+                                <group string="Partner Approval">
+                                    <field name="partner_approved" readonly="1"/>
+                                    <field name="partner_approved_by" readonly="1"/>
+                                    <field name="partner_approved_on" readonly="1"/>
+                                    <field name="partner_comments" widget="html"/>
                                 </group>
-                                <group string="ISA Reference">
-                                    <field name="isa_reference"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
-
-                    <!-- Non-Group Audit Summary -->
-                    <notebook invisible="is_group_audit">
-                        <page string="N/A - Not Group Audit" name="na">
-                            <group string="Non-Applicability Statement">
-                                <field name="not_applicable_rationale" widget="html"/>
-                            </group>
-                            <group>
-                                <group string="Sign-off">
-                                    <field name="senior_signed_user_id"/>
-                                    <field name="senior_signed_on"/>
-                                    <field name="manager_reviewed_user_id"/>
-                                    <field name="manager_reviewed_on"/>
-                                    <field name="partner_approved_user_id"/>
-                                    <field name="partner_approved_on"/>
-                                </group>
-                                <group string="ISA Reference">
+                                <group string="Audit Trail">
+                                    <field name="version_history" readonly="1"/>
+                                    <field name="reviewer_timestamps" readonly="1"/>
                                     <field name="isa_reference"/>
                                 </group>
                             </group>
@@ -276,8 +118,6 @@
             <tree string="P-11: Group Audit">
                 <field name="name"/>
                 <field name="client_id"/>
-                <field name="is_group_audit"/>
-                <field name="component_count"/>
                 <field name="state" widget="badge" decoration-info="state == 'not_started'"
                        decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
             </tree>
@@ -286,15 +126,15 @@
 
     <!-- P-11 Action -->
     <record id="action_planning_p11_group_audit" model="ir.actions.act_window">
-        <field name="name">P-11: Audit Strategy &amp; Audit Plan</field>
+        <field name="name">P-11: Group Audit Planning</field>
         <field name="res_model">qaco.planning.p11.group.audit</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create P-11 Audit Strategy &amp; Audit Plan
+                Create P-11 Group Audit Planning
             </p>
             <p>
-                Document overall audit strategy and audit plan per ISA 300.
+                Document group audit planning per ISA 600.
             </p>
         </field>
     </record>
