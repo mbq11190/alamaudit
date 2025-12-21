@@ -186,6 +186,14 @@ class PlanningP11GroupAudit(models.Model):
         copy=False,
     )
     
+    # Sequential Gating (ISA 300/220: Systematic Planning Approach)
+    can_open = fields.Boolean(
+        string='Can Open This Tab',
+        compute='_compute_can_open',
+        store=False,
+        help='P-11 can only be opened after P-10 is approved'
+    )
+    
     locked = fields.Boolean(
         string='Locked',
         compute='_compute_locked',
@@ -245,6 +253,19 @@ class PlanningP11GroupAudit(models.Model):
                 rec.name = f"P-11: {rec.engagement_id.name}"
             else:
                 rec.name = "P-11: Group Audit Planning"
+    
+    @api.depends('audit_id')
+    def _compute_can_open(self):
+        """P-11 requires P-10 to be approved."""
+        for rec in self:
+            if not rec.audit_id:
+                rec.can_open = False
+                continue
+            # Find P-10 for this audit
+            p10 = self.env['qaco.planning.p10.related.parties'].search([
+                ('audit_id', '=', rec.audit_id.id)
+            ], limit=1)
+            rec.can_open = p10.state == 'approved' if p10 else False
     
     @api.depends('component_ids', 'component_ids.is_significant')
     def _compute_component_metrics(self):
