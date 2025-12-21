@@ -494,6 +494,12 @@ class ClientOnboarding(models.Model):
             onboarding._populate_checklist_from_templates()
             onboarding._populate_preconditions()
             onboarding._populate_regulator_checklist()
+            # populate the template library with active templates if empty
+            try:
+                onboarding.populate_template_library()
+            except Exception:
+                # avoid failing create if templates cannot be populated
+                pass
             onboarding._log_action('Created onboarding record')
         return onboardings
 

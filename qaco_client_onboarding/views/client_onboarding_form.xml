@@ -28,55 +28,8 @@
                                 </div>
                                 <div class="o_template_repository">
                                     <p class="text-muted mb-3">
-                                        Download standard professional templates or attach them directly to this onboarding record.
+                                        Management of templates is handled centrally in the Template Library.
                                     </p>
-
-                                    <group col="2">
-                                        <group>
-                                            <div class="o_onboarding_section_header">
-                                                <h4>1.0A - Template Library</h4>
-                                            </div>
-                                            <group>
-                                                <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
-                                                <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
-                                                <button name="action_attach_selected" type="object" class="btn-primary ms-2 o_attach_selected" string="Attach selected"/>
-                                                <input type="search" class="o_template_search form-control form-control-sm ms-3" placeholder="Search templates..."/>
-                                                <p class="text-muted small mt-2">Use the Legal Identity shortcut to filter templates commonly used in section 1.1. Use "Attach selected" to attach multiple templates at once.</p>
-                                            </group>
-                                            <group>
-                                                <label for="template_library_rel_ids" string="Available Templates"/>
-                                                <field name="template_library_rel_ids" nolabel="1" mode="tree,form">
-                                                    <tree string="Templates" editable="false">
-                                                        <field name="name"/>
-                                                        <field name="category_id"/>
-                                                        <field name="file_type"/>
-                                                        <field name="sequence"/>
-                                                        <button name="action_download" type="object" string="Download" class="btn-secondary"/>
-                                                        <button name="action_attach_to_onboarding" type="object" string="Attach" class="btn-primary"/>
-                                                    </tree>
-                                                </field>
-                                            </group>
-                                        </group>
-
-                                        <group>
-                                            <div class="o_onboarding_section_header">
-                                                <h4>1.0B - Onboarding Pack &amp; Tracker</h4>
-                                            </div>
-                                            <div class="o_template_categories">
-                                                <field name="attached_template_ids" widget="one2many" mode="tree">
-                                                    <tree string="Attached Templates" editable="bottom" create="1" delete="1">
-                                                        <field name="template_id" options="{'no_create': True}"/>
-                                                        <field name="attached_filename" readonly="1"/>
-                                                        <field name="attached_file" filename="attached_filename" widget="binary"/>
-                                                        <field name="notes"/>
-                                                        <field name="attached_by" readonly="1"/>
-                                                        <field name="attached_date" readonly="1"/>
-                                                    </tree>
-                                                </field>
-                                            </div>
-                                            <p class="text-muted small mt-2">Use the tracker to manage templates attached to this onboarding record. Select a template to prefill the attached file.</p>
-                                        </group>
-                                    </group>
                                 </div>
                             </div>
                         </page>
@@ -86,11 +39,11 @@
                                     <span class="o_onboarding_card_number">1.1</span>
                                     <span class="o_onboarding_card_title">Legal Identity</span>
                                     <span class="o_onboarding_card_ref">ISA 210 / ISQM-1</span>
-                                </div>                                <group>
-                                    <button name="%(action_template_library_legal)d" type="action" class="btn-status" string="Legal Identity Templates"/>
-                                    <button name="action_attach_legal_identity_templates" type="object" class="btn-pdf ms-2" string="Attach Legal Identity Templates"/>
+                                </div>
+                                <group>
                                     <span class="text-muted ms-2">Quick shortcut to templates commonly used in Legal Identity (KYC/KYB, Regulatory Licences)</span>
-                                </group>                                <div class="row mb-2">
+                                </group>
+                                <div class="row mb-2">
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
                                             <field name="entity_type" class="w-100" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>
