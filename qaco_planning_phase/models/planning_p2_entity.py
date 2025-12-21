@@ -251,6 +251,7 @@ class PlanningP2Entity(models.Model):
         string='Audit Year',
         related='audit_id.audit_year',
         readonly=True,
+        store=False,
     )
 
     # =========================================================================
