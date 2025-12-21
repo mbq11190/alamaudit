@@ -43,6 +43,22 @@ class PlanningP11GroupAudit(models.Model):
         help='Link to planning orchestrator'
     )
     
+    # Related fields for easy access
+    client_id = fields.Many2one(
+        'res.partner',
+        string='Client Name',
+        related='audit_id.client_id',
+        readonly=True,
+        store=False,
+    )
+    firm_id = fields.Many2one(
+        'audit.firm.name',
+        string='Audit Firm',
+        related='audit_id.firm_name',
+        readonly=True,
+        store=False,
+    )
+    
     # Legacy fields (kept for backward compatibility)
     engagement_id = fields.Many2one(
         'qaco.audit',
