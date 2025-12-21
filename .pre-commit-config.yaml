@@ -1,0 +1,9 @@
+repos:
+- repo: local
+  hooks:
+  - id: check-xml-and-py
+    name: Check XML views and Python syntax
+    entry: python scripts/check_all.py
+    language: python
+    files: '^(qaco_.*|.*\.py)$'
+    stages: [commit, push]
