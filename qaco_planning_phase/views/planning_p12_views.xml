@@ -14,17 +14,15 @@
                 <field name="can_open" invisible="1"/>
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="not_started,in_progress,completed,reviewed,approved"/>
-                    <button name="action_start_work" string="Start Work" type="object" class="btn-primary"
-                            invisible="state != 'not_started' or not can_open"/>
-                    <button name="action_complete" string="Mark Complete" type="object" class="btn-primary"
+                    <button name="action_mark_complete" string="Mark Complete" type="object" class="btn-primary"
                             invisible="state != 'in_progress'"/>
-                    <button name="action_review" string="Manager Review" type="object" class="btn-warning"
+                    <button name="action_manager_review" string="Manager Review" type="object" class="btn-warning"
                             invisible="state != 'completed'" groups="qaco_audit.group_audit_manager"/>
-                    <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
+                    <button name="action_partner_approve" string="Partner Approve" type="object" class="btn-success"
                             invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
                             invisible="state not in ['completed', 'reviewed']"/>
-                    <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
+                    <button name="action_partner_unlock" string="Unlock" type="object" class="btn-danger"
                             invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
                 </header>
                 <sheet>
