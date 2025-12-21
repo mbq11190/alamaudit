@@ -164,6 +164,13 @@ class PlanningP11GroupAudit(models.Model):
     )
     # NOTE: partner_approved_on already defined above (line 127) - no need for duplicate related field
     
+    # Currency for monetary fields
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        default=lambda self: self._get_default_currency()
+    )
+    
     locked = fields.Boolean(
         string='Locked',
         compute='_compute_locked',
@@ -200,6 +207,14 @@ class PlanningP11GroupAudit(models.Model):
     # ============================================================================
     # COMPUTED FIELDS
     # ============================================================================
+    def _get_default_currency(self):
+        """Safe currency default that won't crash during module install/cron."""
+        try:
+            return self.env.company.currency_id.id if self.env.company else False
+        except Exception as e:
+            _logger.warning(f'_get_default_currency failed: {e}')
+            return False
+
     @api.depends('audit_id')
     def _compute_engagement_id(self):
         """Compute engagement_id from audit_id for backward compatibility."""
