@@ -2,8 +2,8 @@
 <odoo>
     <!-- P-10: Related Parties Planning Main Form View -->
     <record id="view_audit_planning_p10_related_parties_form" model="ir.ui.view">
-        <field name="name">qaco.planning.p10.related_parties.form</field>
-        <field name="model">qaco.planning.p10.related_parties</field>
+        <field name="name">qaco.planning.p10.related.parties.form</field>
+        <field name="model">qaco.planning.p10.related.parties</field>
         <field name="arch" type="xml">
             <form string="P-10: Related Parties Planning" create="1" edit="1">
                 <sheet>
@@ -141,8 +141,8 @@
 
     <!-- Tree View -->
     <record id="view_audit_planning_p10_related_parties_tree" model="ir.ui.view">
-        <field name="name">qaco.planning.p10.related_parties.tree</field>
-        <field name="model">qaco.planning.p10.related_parties</field>
+        <field name="name">qaco.planning.p10.related.parties.tree</field>
+        <field name="model">qaco.planning.p10.related.parties</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="engagement_id"/>
@@ -156,7 +156,7 @@
     <!-- Action -->
     <record id="action_audit_planning_p10_related_parties" model="ir.actions.act_window">
         <field name="name">P-10: Related Parties Planning</field>
-        <field name="res_model">qaco.planning.p10.related_parties</field>
+        <field name="res_model">qaco.planning.p10.related.parties</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_audit_planning_p10_related_parties_tree"/>
     </record>
