@@ -57,6 +57,8 @@ access_qaco_planning_p13_approval_partner,qaco.planning.p13.approval.partner,mod
 access_qaco_planning_main_trainee,qaco.planning.main.trainee,model_qaco_planning_main,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_main_manager,qaco.planning.main.manager,model_qaco_planning_main,qaco_audit.group_audit_manager,1,1,1,0
 access_qaco_planning_main_partner,qaco.planning.main.partner,model_qaco_planning_main,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_planning_p4_analytics_line_trainee,qaco.planning.p4.analytics.line.trainee,model_qaco_planning_p4_analytics_line,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p4_analytics_line_manager,qaco.planning.p4.analytics.line.manager,model_qaco_planning_p4_analytics_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_p6_risk_line_trainee,qaco.planning.p6.risk.line.trainee,model_qaco_planning_p6_risk_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p6_risk_line_manager,qaco.planning.p6.risk.line.manager,model_qaco_planning_p6_risk_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_p7_fraud_line_trainee,qaco.planning.p7.fraud.line.trainee,model_qaco_planning_p7_fraud_line,qaco_audit.group_audit_trainee,1,1,1,0
@@ -74,6 +76,8 @@ access_qaco_planning_p11_component_risk_partner,qaco.planning.p11.component.risk
 access_qaco_planning_p11_component_auditor_trainee,qaco.planning.p11.component.auditor.trainee,model_qaco_planning_p11_component_auditor,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p11_component_auditor_manager,qaco.planning.p11.component.auditor.manager,model_qaco_planning_p11_component_auditor,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_p11_component_auditor_partner,qaco.planning.p11.component.auditor.partner,model_qaco_planning_p11_component_auditor,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_planning_p12_expert_line_trainee,qaco.planning.p12.expert.line.trainee,model_qaco_planning_p12_expert_line,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p12_expert_line_manager,qaco.planning.p12.expert.line.manager,model_qaco_planning_p12_expert_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_law_line_trainee,qaco.law.line.trainee,model_qaco_law_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_law_line_manager,qaco.law.line.manager,model_qaco_law_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_non_compliance_line_trainee,qaco.non.compliance.line.trainee,model_qaco_non_compliance_line,qaco_audit.group_audit_trainee,1,1,1,0
@@ -82,10 +86,16 @@ access_qaco_related_party_line_trainee,qaco.related.party.line.trainee,model_qac
 access_qaco_related_party_line_manager,qaco.related.party.line.manager,model_qaco_related_party_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_rpt_transaction_line_trainee,qaco.rpt.transaction.line.trainee,model_qaco_rpt_transaction_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_rpt_transaction_line_manager,qaco.rpt.transaction.line.manager,model_qaco_rpt_transaction_line,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_component_line_trainee,qaco.component.line.trainee,model_qaco_component_line,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_component_line_manager,qaco.component.line.manager,model_qaco_component_line,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_planning_p12_key_area_line_trainee,qaco.planning.p12.key.area.line.trainee,model_qaco_planning_p12_key_area_line,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_planning_p12_key_area_line_manager,qaco.planning.p12.key.area.line.manager,model_qaco_planning_p12_key_area_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_checklist_line_trainee,qaco.planning.checklist.line.trainee,model_qaco_planning_checklist_line,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_checklist_line_manager,qaco.planning.checklist.line.manager,model_qaco_planning_checklist_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_change_log_trainee,qaco.planning.change.log.trainee,model_qaco_planning_change_log,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_change_log_manager,qaco.planning.change.log.manager,model_qaco_planning_change_log,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_component_auditor_line_trainee,qaco.component.auditor.line.trainee,model_qaco_component_auditor_line,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_component_auditor_line_manager,qaco.component.auditor.line.manager,model_qaco_component_auditor_line,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_assertion_tag_trainee,qaco.assertion.tag.trainee,model_qaco_assertion_tag,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_assertion_tag_manager,qaco.assertion.tag.manager,model_qaco_assertion_tag,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_materiality_benchmark_trainee,qaco.materiality.benchmark.trainee,model_qaco_materiality_benchmark,qaco_audit.group_audit_trainee,1,0,0,0
@@ -148,3 +158,4 @@ access_qaco_planning_p4_fraud_indicator_partner,qaco.planning.p4.fraud.indicator
 access_qaco_planning_p4_going_concern_trainee,qaco.planning.p4.going.concern.trainee,model_qaco_planning_p4_going_concern,qaco_audit.group_audit_trainee,1,1,1,0
 access_qaco_planning_p4_going_concern_manager,qaco.planning.p4.going.concern.manager,model_qaco_planning_p4_going_concern,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_planning_p4_going_concern_partner,qaco.planning.p4.going.concern.partner,model_qaco_planning_p4_going_concern,qaco_audit.group_audit_partner,1,1,1,1
+
