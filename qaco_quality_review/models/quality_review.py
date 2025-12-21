@@ -193,7 +193,7 @@ class QualityReview(models.Model):
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
     client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=False)
-    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True)
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True, store=False)
     eqr_partner_employee_id = fields.Many2one('hr.employee', string='EQR Partner', tracking=True, domain="[('designation_id.name', '=', 'Partner')]")
     eqr_required = fields.Boolean(string='EQR Required', tracking=True)
     eqr_engine_reason = fields.Text(string='Trigger Engine Notes', tracking=True)

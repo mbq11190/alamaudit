@@ -105,7 +105,7 @@ class ClientOnboarding(models.Model):
     name = fields.Char(string='Onboarding Title', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade', index=True)
     client_id = fields.Many2one('res.partner', string='Client', related='audit_id.client_id', readonly=True, store=False)
-    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True)
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True, store=False)
 
     # Section 0: Gateway fields
     entity_type = fields.Selection(ENTITY_SELECTION, string='Entity Type', required=True, tracking=True)

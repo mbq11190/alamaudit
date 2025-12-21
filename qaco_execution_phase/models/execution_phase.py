@@ -81,7 +81,7 @@ class QacoExecutionPhase(models.Model):
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     audit_id = fields.Many2one('qaco.audit', string='Audit', required=True, ondelete='cascade')
     client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=False)
-    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True)
+    firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True, store=False)
     planning_phase_id = fields.Many2one('qaco.planning.phase', string='Planning Phase', compute='_compute_planning_phase', store=True, readonly=False)
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', related='audit_id.currency_id', store=False, readonly=True)
 
