@@ -1,15 +1,12 @@
-odoo.define('qaco_client_onboarding.attach_selected', function (require) {
+odoo.define('qaco_client_onboarding.attach_selected', ['web.FormController', 'web.rpc', 'web.core'], function (FormController, rpc, core) {
     'use strict';
 
-    const FormController = require('web.FormController');
-    const rpc = require('web.rpc');
-    const core = require('web.core');
-    const _t = core._t;
+    var _t = core._t;
 
     FormController.include({
         events: Object.assign({}, FormController.prototype.events, {
             'click .o_attach_selected': '_onAttachSelected',
-            'input .o_template_search': '_onTemplateSearch',
+            'input .o_template_search': '_onTemplateSearch'
         }),
 
         _onAttachSelected: function (ev) {
@@ -26,11 +23,10 @@ odoo.define('qaco_client_onboarding.attach_selected', function (require) {
             var ids = Array.prototype.slice.call(inputs).map(function (i) { return Number(i.dataset.id || i.value); }).filter(Boolean);
             var recordId = this.model.get(this.handle).data.id;
             // If no ids selected, open wizard prefilled with empty selection (user can choose)
-            this._rpc({
+            rpc.query({
                 model: this.modelName,
                 method: 'action_open_attach_wizard_with_templates',
-                // pass record id as list so Odoo treats it as a recordset
-                args: [[recordId], ids],
+                args: [[recordId], ids]
             }).then(function (action) {
                 self.trigger_up('do_action', {action: action});
             }).catch(function (err) {
@@ -55,6 +51,6 @@ odoo.define('qaco_client_onboarding.attach_selected', function (require) {
                 var text = nameCell ? nameCell.textContent.trim().toLowerCase() : '';
                 row.style.display = q && text.indexOf(q) === -1 ? 'none' : '';
             }
-        },
+        }
     });
 });
