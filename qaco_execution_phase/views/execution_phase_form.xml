@@ -91,13 +91,6 @@
                             <field name="compliance_beacon_state" widget="badge" readonly="1"/>
                         </group>
                     </group>
-                    <group string="Status Heatmap">
-                        <field name="control_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                        <field name="substantive_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                        <field name="sampling_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                        <field name="evidence_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                        <field name="workpaper_status" widget="statusbar" statusbar_visible="red,amber,green" options="{'clickable': False}"/>
-                    </group>
                     <div class="o_execution_alert" modifiers="{'invisible': [('compliance_alert_message', '=', False)]}">
                         <field name="compliance_alert_message" readonly="1" widget="html"/>
                     </div>
