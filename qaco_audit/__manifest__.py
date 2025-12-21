@@ -33,6 +33,7 @@
         'data/audit_document_sequences.xml',
         'views/audit_attachment_views.xml',
         'views/audit_changelog_views.xml',
+        'views/lock_approval_views.xml',
         'data/audit_stages_data.xml',
         'views/search_view.xml',
         'data/audit_year_data.xml',
