@@ -18,7 +18,7 @@ class PlanningP6Risk(models.Model):
     _order = 'id desc'
 
     engagement_id = fields.Many2one('qaco.audit', string='Audit Engagement', required=True, ondelete='cascade', index=True, tracking=True)
-    audit_year = fields.Many2one('qaco.audit.year', string='Audit Year', required=True, ondelete='cascade', index=True)
+    audit_year = fields.Many2one('audit.year', string='Audit Year', required=True, ondelete='cascade', index=True)
     partner_id = fields.Many2one('res.users', string='Engagement Partner', required=True)
     planning_main_id = fields.Many2one('qaco.planning.main', string='Planning Phase', ondelete='cascade', index=True)
     state = fields.Selection([
