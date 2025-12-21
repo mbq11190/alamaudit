@@ -170,7 +170,7 @@ class OnboardingNote(models.Model):
         'qaco.client.onboarding',
         string='Client Onboarding',
         related='notebook_id.onboarding_id',
-        store=True,
+        store=False,
         readonly=True,
     )
     sequence = fields.Integer(
