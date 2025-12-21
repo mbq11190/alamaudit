@@ -248,6 +248,19 @@ class ClientOnboarding(models.Model):
         for rec in self:
             rec.template_library_rel_ids = Template
 
+    def action_open_attach_wizard_with_templates(self, template_ids):
+        """Return an action to open the Attach Templates wizard prefilled with selected templates.
+
+        This method is intended for JS to call with selected template ids and return an
+        act_window action containing default template_ids and onboarding_id in the context.
+        """
+        self.ensure_one()
+        action = self.env.ref('qaco_client_onboarding.action_attach_templates_wizard').read()[0]
+        ctx = dict(action.get('context') or {})
+        ctx.update({'default_template_ids': [(6, 0, template_ids)], 'default_onboarding_id': self.id, 'onboarding_id': self.id})
+        action['context'] = ctx
+        return action
+
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
     checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Engagement Partner Decision')
     audit_trail_ids = fields.One2many('qaco.onboarding.audit.trail', 'onboarding_id', string='Audit Trail', readonly=True)

@@ -58,6 +58,7 @@ Features:
             'qaco_client_onboarding/static/src/scss/onboarding.scss',
             'qaco_client_onboarding/static/src/js/onboarding_autosave.js',
             'qaco_client_onboarding/static/src/js/save_next_widget.js',
+            'qaco_client_onboarding/static/src/js/attach_selected.js',
             'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
         ],
     },
