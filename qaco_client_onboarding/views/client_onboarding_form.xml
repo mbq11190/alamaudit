@@ -37,7 +37,9 @@
                                                 <h4>1.0A - Template Library</h4>
                                             </div>
                                             <group>
+                                                <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
                                                 <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
+<<<<<<< HEAD
                                                 <button type="button" class="btn-primary ms-2 o_attach_selected" string="Attach selected">Attach selected</button>
                                                 <input type="search" class="o_template_search form-control form-control-sm ms-3" placeholder="Search templates..."/>
                                                 <p class="text-muted small mt-2">Use the Legal Identity shortcut to filter templates commonly used in section 1.1. Use "Attach selected" to attach multiple templates at once.</p>
@@ -54,6 +56,9 @@
                                                         <button name="action_attach_to_onboarding" type="object" string="Attach" class="btn-primary"/>
                                                     </tree>
                                                 </field>
+=======
+                                                <p class="text-muted small mt-2">Open the Template Library to manage or download master templates. Use the Legal Identity shortcut to filter templates typically required in section 1.1.</p>
+>>>>>>> parent of 9fd8942 (300)
                                             </group>
                                         </group>
 
