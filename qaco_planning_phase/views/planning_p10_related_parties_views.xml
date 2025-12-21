@@ -5,163 +5,142 @@
         <field name="name">qaco.planning.p10.related.parties.form</field>
         <field name="model">qaco.planning.p10.related.parties</field>
         <field name="arch" type="xml">
-            <form string="P-10: Related Parties Planning" create="1" edit="1">
+            <form string="P-10: Related Parties Planning">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet>
+                    <field name="can_open" invisible="1"/>
                     <group>
-                        <field name="audit_id"/>
-                        <field name="client_id" readonly="1"/>
-                        <field name="state" readonly="1"/>
+                        <group string="Audit Information">
+                            <field name="audit_id"/>
+                            <field name="client_id" readonly="1"/>
+                        </group>
+                        <group string="Status">
+                            <field name="currency_id" invisible="1"/>
+                        </group>
                     </group>
+
                     <notebook>
-                        <!-- SECTION A: Related Parties Listing -->
-                        <page string="A. Related Parties">
-                            <field name="related_party_ids">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="party_type"/>
-                                    <field name="relationship_nature"/>
-                                    <field name="country"/>
-                                    <field name="changes_during_year"/>
-                                    <field name="changes_details"/>
-                                </tree>
-                            </field>
+                        <!-- Tab 1: Risk Assessment -->
+                        <page string="Risk Assessment" name="risk">
                             <group>
-                                <field name="confirm_all_rp_identified"/>
-                                <field name="confirm_changes_captured"/>
+                                <group string="RP Risk">
+                                    <field name="rp_risk_assessment" widget="html"/>
+                                </group>
+                                <group string="RPT Risk">
+                                    <field name="rpt_risk_assessment" widget="html"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="significant_rpt_identified"/>
+                                <field name="rpt_fraud_risk_identified"/>
+                                <field name="undisclosed_rp_risk"/>
                             </group>
                         </page>
-                        <!-- SECTION B: Completeness Procedures -->
-                        <page string="B. Completeness Procedures">
-                            <group>
-                                <field name="completeness_procedures_multi" widget="many2many_tags"/>
-                                <field name="completeness_results"/>
+
+                        <!-- Tab 2: Procedures -->
+                        <page string="Procedures" name="procedures">
+                            <group string="Planned Audit Procedures">
+                                <field name="planned_procedures" widget="html"/>
+                                <field name="risk_assessment_procedures" widget="html"/>
+                                <field name="identification_procedures" widget="html"/>
+                                <field name="substantive_procedures" widget="html"/>
                             </group>
                         </page>
-                        <!-- SECTION C: RPT Listing -->
-                        <page string="C. RPT Listing">
-                            <field name="rpt_transaction_ids">
-                                <tree editable="bottom">
-                                    <field name="related_party_id"/>
-                                    <field name="nature_of_transaction"/>
-                                    <field name="period"/>
-                                    <field name="amount"/>
-                                    <field name="terms_arms_length"/>
-                                    <field name="approved_by_tcw"/>
-                                    <field name="non_routine"/>
-                                </tree>
-                            </field>
-                            <group>
-                                <field name="rpt_all_captured"/>
-                                <field name="rpt_non_routine_highlighted"/>
-                            </group>
-                        </page>
-                        <!-- SECTION D: RPT Risk Assessment -->
-                        <page string="D. RPT Risk Assessment">
-                            <field name="rpt_risk_line_ids">
-                                <tree editable="bottom">
-                                    <field name="rpt_transaction_id"/>
-                                    <field name="business_purpose"/>
-                                    <field name="fraud_risk"/>
-                                    <field name="disclosure_risk"/>
-                                    <field name="rpt_risk_level"/>
-                                    <field name="significant_flag"/>
-                                    <field name="partner_override"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <!-- SECTION E: Fraud & Concealment -->
-                        <page string="E. Fraud &amp; Concealment">
-                            <group>
-                                <field name="risk_undisclosed_rpt"/>
-                                <field name="mgmt_override_indicators"/>
-                                <field name="circular_transactions"/>
-                                <field name="fraud_assessment"/>
-                            </group>
-                        </page>
-                        <!-- SECTION F: Disclosure Requirements -->
-                        <page string="F. Disclosure Requirements">
+
+                        <!-- Tab 3: Disclosure -->
+                        <page string="Disclosure" name="disclosure">
                             <group>
                                 <field name="disclosure_framework"/>
-                                <field name="disclosures_identified"/>
+                                <field name="disclosure_requirements" widget="html"/>
+                                <field name="disclosure_adequacy" widget="html"/>
+                                <field name="ias24_compliance" widget="html"/>
                                 <field name="risk_incomplete_disclosure"/>
-                                <field name="enhanced_disclosure_areas"/>
                             </group>
                         </page>
-                        <!-- SECTION G: Audit Responses -->
-                        <page string="G. Audit Responses">
-                            <group>
-                                <field name="planned_procedures" widget="many2many_tags"/>
-                                <field name="response_nature_timing_extent"/>
-                                <field name="senior_team_involvement"/>
+
+                        <!-- Tab 4: Attachments -->
+                        <page string="Attachments" name="attachments">
+                            <group string="Related Party Schedules">
+                                <field name="rp_schedule_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Supporting Documentation">
+                                <field name="supporting_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="RPT Documentation">
+                                <field name="rpt_attachment_ids" widget="many2many_binary" nolabel="1"/>
+                            </group>
+                            <group string="Approval Documentation">
+                                <field name="approval_attachment_ids" widget="many2many_binary" nolabel="1"/>
                             </group>
                         </page>
-                        <!-- SECTION H: Going Concern & Support -->
-                        <page string="H. Going Concern &amp; Support">
-                            <group>
-                                <field name="rpt_critical_liquidity"/>
-                                <field name="support_nature"/>
-                                <field name="enforceability_assessed"/>
-                                <field name="disclosure_impact_assessed"/>
+
+                        <!-- Tab 5: Conclusion -->
+                        <page string="Conclusion" name="conclusion">
+                            <group string="P-10 Conclusion">
+                                <field name="rp_risk_summary" widget="html"/>
+                                <field name="rpt_conclusion" widget="html"/>
+                            </group>
+                            <group string="Confirmations">
+                                <field name="confirm_rp_complete"/>
+                                <field name="confirm_rpt_risks_assessed"/>
+                                <field name="confirm_audit_responses_established"/>
                             </group>
                         </page>
-                        <!-- SECTION I: Attachments -->
-                        <page string="I. Attachments">
-                            <field name="attachment_ids" widget="many2many_binary"/>
-                        </page>
-                        <!-- SECTION J: Conclusion -->
-                        <page string="J. Conclusion">
-                            <group>
-                                <field name="conclusion_narrative"/>
-                                <field name="related_parties_complete_final"/>
-                                <field name="rpt_risks_assessed_linked"/>
-                                <field name="basis_established"/>
-                            </group>
-                        </page>
-                        <!-- SECTION K: Review & Approval -->
-                        <page string="K. Review &amp; Approval">
-                            <group>
-                                <field name="prepared_by"/>
-                                <field name="prepared_by_role"/>
-                                <field name="prepared_by_date"/>
-                                <field name="reviewed_by"/>
-                                <field name="review_notes"/>
-                                <field name="partner_approval"/>
-                                <field name="partner_comments"/>
-                                <field name="locked" readonly="1"/>
+
+                        <!-- Tab 6: Review & Approval -->
+                        <page string="Review &amp; Approval" name="approval">
+                            <group string="ISA Reference">
+                                <field name="isa_reference"/>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
-                    <button name="action_lock" string="Lock P-10" type="object" class="btn-primary" attrs="{'invisible': [('locked','=',True)]}"/>
-                </footer>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
 
-    <!-- Tree View -->
+    <!-- P-10 Tree View -->
     <record id="view_audit_planning_p10_related_parties_tree" model="ir.ui.view">
         <field name="name">qaco.planning.p10.related.parties.tree</field>
         <field name="model">qaco.planning.p10.related.parties</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="engagement_id"/>
-                <field name="audit_year_id"/>
-                <field name="state"/>
-                <field name="locked"/>
+            <tree string="P-10: Related Parties">
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="client_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'not_started'"
+                       decoration-warning="state == 'in_progress'" decoration-success="state == 'approved'"/>
             </tree>
         </field>
     </record>
 
-    <!-- Action -->
+    <!-- P-10 Action -->
     <record id="action_audit_planning_p10_related_parties" model="ir.actions.act_window">
         <field name="name">P-10: Related Parties Planning</field>
         <field name="res_model">qaco.planning.p10.related.parties</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_audit_planning_p10_related_parties_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create P-10 Related Parties Planning
+            </p>
+            <p>
+                Document related parties and RPT planning per ISA 550.
+            </p>
+        </field>
     </record>
 
-    <!-- Menuitem (should be linked to audit planning phase menu) -->
-    <menuitem id="menu_audit_planning_p10_related_parties" name="P-10: Related Parties Planning" parent="qaco_planning_phase.menu_audit_planning_phase_root" action="action_audit_planning_p10_related_parties" sequence="110"/>
+    <!-- Menuitem -->
+    <menuitem id="menu_audit_planning_p10_related_parties" 
+              name="P-10: Related Parties Planning" 
+              parent="qaco_planning_phase.menu_audit_planning_phase_root" 
+              action="action_audit_planning_p10_related_parties" 
+              sequence="110"/>
 </odoo>
 
