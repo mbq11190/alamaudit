@@ -784,7 +784,7 @@ class PlanningP11Component(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         related='p11_id.currency_id',
-        store=True
+        store=False
     )
     component_materiality = fields.Monetary(
         string='Component Materiality',

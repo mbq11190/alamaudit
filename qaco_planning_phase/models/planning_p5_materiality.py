@@ -65,7 +65,7 @@ class PlanningP5SpecificMateriality(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         related='p5_id.currency_id',
-        store=True
+        store=False
     )
     as_pct_of_om = fields.Float(
         string='% of OM',
@@ -135,7 +135,7 @@ class PlanningP5ComponentMateriality(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         related='p5_id.currency_id',
-        store=True
+        store=False
     )
     allocation_basis = fields.Selection([
         ('revenue', 'Revenue Based'),
@@ -193,7 +193,7 @@ class PlanningP5Revision(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         related='p5_id.currency_id',
-        store=True
+        store=False
     )
     revision_reason = fields.Text(
         string='Reason for Revision',

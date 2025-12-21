@@ -42,7 +42,7 @@ class OnboardingNotebook(models.Model):
         'qaco.audit',
         string='Audit',
         related='onboarding_id.audit_id',
-        store=True,
+        store=False,
         readonly=True,
         index=True,
     )
