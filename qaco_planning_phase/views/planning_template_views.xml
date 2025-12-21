@@ -106,7 +106,7 @@
         <field name="binding_view_types">form</field>
     </record>
 
-    <!-- Add "Apply Template" button to Planning Main form -->
+    <!-- Add "Apply Template" button to Planning Main form - DISABLED: parent view doesn't exist
     <record id="view_planning_main_form_template_button" model="ir.ui.view">
         <field name="name">qaco.planning.main.form.template.button</field>
         <field name="model">qaco.planning.main</field>
@@ -122,6 +122,7 @@
             </xpath>
         </field>
     </record>
+    -->
 
     <!-- Menu Item for Templates (under Configuration) -->
     <menuitem id="menu_planning_templates"
