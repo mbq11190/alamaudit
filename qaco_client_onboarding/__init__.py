@@ -2,3 +2,6 @@
 
 from . import models
 from . import controllers
+
+# Hook module
+from . import hooks
