@@ -596,6 +596,38 @@ class ClientOnboarding(models.Model):
             record.write({'state': 'locked'})
             record._log_action('Locked onboarding for final authorization')
 
+    def action_attach_legal_identity_templates(self):
+        """Attach commonly-required legal identity templates (KYC / KYB) to this onboarding record.
+
+        The method searches the template library for documents with names matching KYC or KYB and
+        creates `qaco.onboarding.attached.template` records for any templates not already attached.
+        """
+        Template = self.env['qaco.onboarding.template.document']
+        Attached = self.env['qaco.onboarding.attached.template']
+        # Search for commonly used legal identity templates (expand if needed)
+        domain = ['|', ('name', 'ilike', 'KYC'), ('name', 'ilike', 'KYB')]
+        templates = Template.search(domain)
+        if not templates:
+            return True
+        for record in self:
+            existing_ids = record.attached_template_ids.mapped('template_id.id')
+            new_templates = templates.filtered(lambda t: t.id not in existing_ids)
+            if not new_templates:
+                continue
+            vals = []
+            for t in new_templates:
+                vals.append({
+                    'onboarding_id': record.id,
+                    'template_id': t.id,
+                    'attached_file': t.template_file,
+                    'attached_filename': t.template_filename,
+                    'attached_by': self.env.uid,
+                })
+            if vals:
+                Attached.create(vals)
+                record._log_action('Attached legal identity templates', notes=', '.join(new_templates.mapped('name')))
+        return True
+
 
 class OnboardingBranchLocation(models.Model):
     _name = 'qaco.onboarding.branch.location'

@@ -38,6 +38,7 @@ Features:
         'security/ir.model.access.csv',
         'data/pakistan_location_data.xml',
         'data/onboarding_template_data.xml',
+        'views/onboarding_template_views.xml',
         'data/audit_standard_library_data.xml',
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',

@@ -30,26 +30,32 @@
                                     <p class="text-muted mb-3">
                                         Download standard professional templates or attach them directly to this onboarding record.
                                     </p>
-                                    
-                                    <!-- Template Categories with Documents -->
-                                    <div class="o_template_categories">
-                                        <field name="attached_template_ids" widget="one2many" mode="tree">
-                                            <tree string="Attached Templates" editable="bottom" create="1" delete="1">
-                                                <field name="template_id" options="{'no_create': True}"/>
-                                                <field name="attached_filename" readonly="1"/>
-                                                <field name="attached_file" filename="attached_filename" widget="binary"/>
-                                                <field name="notes"/>
-                                                <field name="attached_by" readonly="1"/>
-                                                <field name="attached_date" readonly="1"/>
-                                            </tree>
-                                        </field>
-                                    </div>
 
-                                    <separator string="Available Templates Library"/>
-                                    <p class="text-muted small">
-                                        To attach a template: Click "Add a line" above, select a template, and it will be automatically populated. 
-                                        To download templates directly, use the Template Library menu.
-                                    </p>
+                                    <notebook>
+                                        <page string="1.0A - Template Library" name="subsection_1_0a">
+                                            <group>
+                                                <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
+                                                <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
+                                                <p class="text-muted small mt-2">Open the Template Library to manage or download master templates. Use the Legal Identity shortcut to filter templates typically required in section 1.1.</p>
+                                            </group>
+                                        </page>
+
+                                        <page string="1.0B - Onboarding Pack &amp; Tracker" name="subsection_1_0b">
+                                            <div class="o_template_categories">
+                                                <field name="attached_template_ids" widget="one2many" mode="tree">
+                                                    <tree string="Attached Templates" editable="bottom" create="1" delete="1">
+                                                        <field name="template_id" options="{'no_create': True}"/>
+                                                        <field name="attached_filename" readonly="1"/>
+                                                        <field name="attached_file" filename="attached_filename" widget="binary"/>
+                                                        <field name="notes"/>
+                                                        <field name="attached_by" readonly="1"/>
+                                                        <field name="attached_date" readonly="1"/>
+                                                    </tree>
+                                                </field>
+                                            </div>
+                                            <p class="text-muted small mt-2">Use the tracker to manage templates attached to this onboarding record. Select a template to prefill the attached file.</p>
+                                        </page>
+                                    </notebook>
                                 </div>
                             </div>
                         </page>
@@ -59,8 +65,11 @@
                                     <span class="o_onboarding_card_number">1.1</span>
                                     <span class="o_onboarding_card_title">Legal Identity</span>
                                     <span class="o_onboarding_card_ref">ISA 210 / ISQM-1</span>
-                                </div>
-                                <div class="row mb-2">
+                                </div>                                <group>
+                                    <button name="%(action_template_library_legal)d" type="action" class="btn-status" string="Legal Identity Templates"/>
+                                    <button name="action_attach_legal_identity_templates" type="object" class="btn-pdf ms-2" string="Attach Legal Identity Templates"/>
+                                    <span class="text-muted ms-2">Quick shortcut to templates commonly used in Legal Identity (KYC/KYB, Regulatory Licences)</span>
+                                </group>                                <div class="row mb-2">
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
                                             <field name="entity_type" class="w-100" help="Select the entity classification dictating compulsory thresholds and regulatory triggers."/>

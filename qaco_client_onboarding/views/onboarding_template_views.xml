@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Views for Onboarding Template Documents -->
+    <record id="view_onboarding_template_document_tree" model="ir.ui.view">
+        <field name="name">qaco.onboarding.template.document.tree</field>
+        <field name="model">qaco.onboarding.template.document</field>
+        <field name="arch" type="xml">
+            <tree string="Templates">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="file_type"/>
+                <field name="sequence"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_onboarding_template_document_form" model="ir.ui.view">
+        <field name="name">qaco.onboarding.template.document.form</field>
+        <field name="model">qaco.onboarding.template.document</field>
+        <field name="arch" type="xml">
+            <form string="Template Document">
+                <header>
+                    <button name="action_download" type="object" string="Download" class="btn-secondary"/>
+                    <field name="active"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_id"/>
+                        <field name="file_type"/>
+                        <field name="sequence"/>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="template_file" filename="template_filename" widget="binary"/>
+                        <field name="template_filename" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions for Template Library -->
+    <record id="action_template_library" model="ir.actions.act_window">
+        <field name="name">Template Library</field>
+        <field name="res_model">qaco.onboarding.template.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_onboarding_template_document_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Use this library to manage firm templates and download master copies.</p>
+        </field>
+    </record>
+
+    <record id="action_template_library_legal" model="ir.actions.act_window">
+        <field name="name">Template Library - Legal Identity</field>
+        <field name="res_model">qaco.onboarding.template.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_onboarding_template_document_tree"/>
+        <field name="domain">['|',('name','ilike','KYC'),('name','ilike','KYB')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Filtered view showing templates commonly used for Legal Identity (KYC / KYB).</p>
+        </field>
+    </record>
+</odoo>
