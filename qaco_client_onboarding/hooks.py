@@ -27,8 +27,9 @@ def pre_init_hook(cr):
             except Exception:
                 pass
 
-        # 2) Broad cleanup: remove any ir.ui.view that references the old class in its arch
+        # 2) Broad cleanup: remove any ir.ui.view that references the old class or template field in its arch
         bad_views = env['ir.ui.view'].search([('arch_db', 'ilike', 'o_attach_selected')])
+        bad_views += env['ir.ui.view'].search([('arch_db', 'ilike', 'template_library_rel_ids')])
         for bv in bad_views:
             try:
                 # Also remove any ir.model.data pointing to it
