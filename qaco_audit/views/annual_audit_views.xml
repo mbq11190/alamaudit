@@ -1,13 +1,16 @@
 <odoo>
     <data>
-        <!-- Action -->
+        <!-- Action (commented out; model qaco.recurring.annual.audit is not present in this repo) -->
+        <!--
         <record id="action_qaco_recurring_annual_audit" model="ir.actions.act_window">
             <field name="name">Recurring Annual Audit</field>
             <field name="res_model">qaco.recurring.annual.audit</field>
             <field name="view_mode">tree,form</field>
         </record>
+        -->
 
-        <!-- Tree View -->
+        <!-- Tree View (commented out; model qaco.recurring.annual.audit is not present in this repo) -->
+        <!--
         <record id="view_qaco_recurring_annual_audit_tree" model="ir.ui.view">
             <field name="name">qaco.recurring.annual.audit.tree</field>
             <field name="model">qaco.recurring.annual.audit</field>
@@ -21,8 +24,10 @@
                 </tree>
             </field>
         </record>
+        -->
 
-        <!-- Form View -->
+        <!-- Form View (commented out; model qaco.recurring.annual.audit is not present in this repo) -->
+        <!--
         <record id="view_qaco_recurring_annual_audit_form" model="ir.ui.view">
             <field name="name">qaco.recurring.annual.audit.form</field>
             <field name="model">qaco.recurring.annual.audit</field>
@@ -33,6 +38,7 @@
                         <button name="move_to_next_stage" string="Next Stage" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
                     </header>
+        -->
                     <sheet>
                         <div name="button_box">
                             <!-- buttons will be added here by the inherited view -->
@@ -85,21 +91,23 @@
             </field>
         </record>
 
-        <!-- Stage Action -->
+        <!-- Stage/Year Actions (commented out; models annual.audit.stages and annual.audit.year are not present in this repo) -->
+        <!--
         <record id="action_annual_audit_stage" model="ir.actions.act_window">
             <field name="name">Recurring Audit Stages</field>
             <field name="res_model">annual.audit.stages</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Year Action -->
         <record id="action_annual_audit_year" model="ir.actions.act_window">
             <field name="name">Recurring Audit Years</field>
             <field name="res_model">annual.audit.year</field>
             <field name="view_mode">tree,form</field>
         </record>
+        -->
 
-        <!-- Menus -->
+        <!-- Menus (commented out; related actions were commented out above) -->
+        <!--
         <menuitem id="menu_recurring_annual_audit" name="Recurring Annual Audit"
                   parent="qaco_audit.menu_root" action="action_qaco_recurring_annual_audit" sequence="2"/>
 
@@ -110,5 +118,6 @@
         <menuitem id="menu_annual_audit_year" name="Recurring Audit Years"
                   parent="qaco_audit.menu_2" action="action_annual_audit_year"
                   groups="qaco_audit.group_audit_administrator"/>
+        -->
     </data>
 </odoo>

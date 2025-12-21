@@ -1,5 +1,7 @@
 <odoo>
     <data>
+        <!-- Monthly tree (commented out; model qaco.monthly.internal.audit is missing) -->
+        <!--
         <record id="view_monthly_internal_audit_tree" model="ir.ui.view">
             <field name="name">qaco.monthly.internal.audit.tree</field>
             <field name="model">qaco.monthly.internal.audit</field>
@@ -12,7 +14,10 @@
                 </tree>
             </field>
         </record>
+        -->
 
+        <!-- Monthly form (commented out; model qaco.monthly.internal.audit is missing) -->
+        <!--
         <record id="view_monthly_internal_audit_form" model="ir.ui.view">
             <field name="name">qaco.monthly.internal.audit.form</field>
             <field name="model">qaco.monthly.internal.audit</field>
@@ -25,6 +30,7 @@
                         <button name="move_to_next_month" string="Next Month" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
                     </header>
+        -->
                     <sheet>
                         <div name="button_box"/>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger"/>
