@@ -89,7 +89,7 @@
                                     </group>
                                 </group>
                                 <group>
-                                    <label string="Roles &amp; Segregation of Duties"/>
+                                    <label string="Roles &amp; Segregation of Duties" class="o_form_label"/>
                                     <group col="3">
                                         <field name="preparer_id"/>
                                         <field name="reviewer_id"/>
