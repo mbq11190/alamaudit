@@ -8,7 +8,6 @@
     "depends": ["qaco_audit", "qaco_planning_phase", "account"],
     "data": [
         "security/ir.model.access.csv",
-        "data/audit_master_data.xml",
         "views/execution_phase_actions.xml",
         "views/execution_phase_form.xml",
         "views/execution_phase_views.xml",
