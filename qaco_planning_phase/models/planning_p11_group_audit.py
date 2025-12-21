@@ -171,6 +171,21 @@ class PlanningP11GroupAudit(models.Model):
         default=lambda self: self._get_default_currency()
     )
     
+    # State for workflow and gating
+    state = fields.Selection(
+        [
+            ('not_started', 'Not Started'),
+            ('in_progress', 'In Progress'),
+            ('completed', 'Completed'),
+            ('reviewed', 'Reviewed'),
+            ('approved', 'Approved'),
+        ],
+        string='Status',
+        default='not_started',
+        tracking=True,
+        copy=False,
+    )
+    
     locked = fields.Boolean(
         string='Locked',
         compute='_compute_locked',
