@@ -56,7 +56,6 @@
                     </group>
 
                     <notebook>
-                    <notebook>
                         <!-- Tab 1: Conclusion & Professional Judgment -->
                         <page string="Conclusion" name="conclusion">
                             <group string="P-11 Conclusion">
