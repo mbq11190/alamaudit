@@ -137,7 +137,26 @@ class ClientOnboarding(models.Model):
 
     attached_template_ids = fields.One2many('qaco.onboarding.attached.template', 'onboarding_id', string='Attached Templates')
 
-    # Template library preview (removed — rendered via action to avoid virtual relation issues)
+    # Stored Template Library: active templates available for quick attach in the onboarding UI
+    template_library_rel_ids = fields.Many2many(
+        'qaco.onboarding.template.document',
+        'qaco_onb_tlib_rel',
+        'onboarding_id',
+        'template_id',
+        string='Template Library',
+        readonly=False,
+    )
+
+    # Template library population helper
+    def populate_template_library(self):
+        """Populate `template_library_rel_ids` with active templates for these records."""
+        Template = self.env['qaco.onboarding.template.document']
+        active_templates = Template.search([('active', '=', True)])
+        if not active_templates:
+            return
+        for rec in self:
+            if not rec.template_library_rel_ids:
+                rec.template_library_rel_ids = [(6, 0, active_templates.ids)]
 
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
