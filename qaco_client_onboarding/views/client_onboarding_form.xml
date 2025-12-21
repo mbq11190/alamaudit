@@ -34,12 +34,6 @@
                                     <notebook>
                                         <page string="1.0A - Template Library" name="subsection_1_0a">
                                             <group>
-                                                <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
-                                                <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
-                                                <p class="text-muted small mt-2">Open the Template Library to manage or download master templates. Use the Legal Identity shortcut to filter templates typically required in section 1.1.</p>
-                                            </group>
-
-                                            <group>
                                                 <label for="template_library_ids" string="Available Templates"/>
                                                 <field name="template_library_ids" nolabel="1">
                                                     <tree string="Templates" editable="false">
