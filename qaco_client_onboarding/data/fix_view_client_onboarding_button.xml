@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Compatibility patch: replace any stray <button> with class 'o_attach_selected'
+        that might have been left without a name attribute (causes "Button must have a name" parse error).
+        This inheritance will replace such buttons with a proper server-callable button
+        that falls back to opening the attach wizard when JS is not available.
+    -->
+    <record id="view_client_onboarding_fix_attach_button" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.form.fix.attach.button</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="inherit_id" ref="qaco_client_onboarding.view_client_onboarding_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[contains(@class, 'o_attach_selected')]" position="replace">
+                <button name="action_attach_selected" type="object" class="btn-primary ms-2 o_attach_selected" string="Attach selected"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
