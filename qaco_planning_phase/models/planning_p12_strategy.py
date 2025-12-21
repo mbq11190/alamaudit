@@ -52,6 +52,13 @@ class PlanningP12Strategy(models.Model):
         readonly=True,
         help='Computed from audit_id for backward compatibility'
     )
+    name = fields.Char(
+        string='P-12 Reference',
+        compute='_compute_name',
+        store=True,
+        readonly=True,
+        help='Display name for P-12 records'
+    )
     audit_year_id = fields.Many2one(
         'audit.year',
         string='Audit Year',
@@ -106,6 +113,23 @@ class PlanningP12Strategy(models.Model):
             ], limit=1)
             # P-11 uses 'locked' as its final approved state
             rec.can_open = p11.state in ('partner', 'locked') if p11 else False
+
+    @api.depends('audit_id')
+    def _compute_engagement_id(self):
+        """Compute engagement_id from audit_id for backward compatibility."""
+        for rec in self:
+            rec.engagement_id = rec.audit_id
+
+    @api.depends('audit_id', 'audit_id.client_id')
+    def _compute_name(self):
+        """Compute display name for P-12 records."""
+        for rec in self:
+            if rec.audit_id and rec.audit_id.client_id:
+                rec.name = f"P-12: {rec.audit_id.client_id.name}"
+            elif rec.audit_id:
+                rec.name = f"P-12: {rec.audit_id.name}"
+            else:
+                rec.name = "P-12: Audit Strategy"
 
     @api.constrains('state')
     def _check_sequential_gating(self):
