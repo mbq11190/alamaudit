@@ -137,26 +137,6 @@ class ClientOnboarding(models.Model):
 
     attached_template_ids = fields.One2many('qaco.onboarding.attached.template', 'onboarding_id', string='Attached Templates')
 
-    # Quick preview of templates (computed) – used in 1.0A Template Library UI
-    template_library_preview_ids = fields.Many2many(
-        'qaco.onboarding.template.document',
-        string='Template Library Preview',
-        compute='_compute_template_library_preview',
-        readonly=True,
-    )
-
-    @api.depends()
-    def _compute_template_library_preview(self):
-        """Compute a short, filtered preview of templates to show under 1.0A.
-
-        This quick preview helps users find commonly-used Legal Identity templates (KYC/KYB).
-        It does not store data on the record; users can click to open the library for full actions.
-        """
-        Template = self.env['qaco.onboarding.template.document']
-        for rec in self:
-            # Simple filter: names containing KYC or KYB – limit to 6 for compact preview
-            rec.template_library_preview_ids = Template.search(['|', ('name', 'ilike', 'KYC'), ('name', 'ilike', 'KYB')], limit=6, order='sequence')
-
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
     trading_name = fields.Char(string='Trading Name')
