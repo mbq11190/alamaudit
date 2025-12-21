@@ -137,7 +137,15 @@ class ClientOnboarding(models.Model):
 
     attached_template_ids = fields.One2many('qaco.onboarding.attached.template', 'onboarding_id', string='Attached Templates')
 
-    # Template library preview (removed — rendered via action to avoid virtual relation issues)
+    # Stored Template library (persistent many2many to safely render inline list in the form)
+    template_library_rel_ids = fields.Many2many(
+        'qaco.onboarding.template.document',
+        'qaco_onboarding_template_rel',
+        'onboarding_id',
+        'template_id',
+        string='Template Library',
+        copy=False,
+    )
 
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
@@ -221,7 +229,24 @@ class ClientOnboarding(models.Model):
     managing_partner_id = fields.Many2one('res.users', string='Managing Partner', index=True)
     managing_partner_signature = fields.Binary(string='Managing Partner Signature')
 
-    # compute method removed
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Default onboarding records to include all active templates unless overridden in vals."""
+        Template = self.env['qaco.onboarding.template.document'].search([('active', '=', True)])
+        template_ids = Template.ids
+        for vals in vals_list:
+            if 'template_library_rel_ids' not in vals:
+                vals['template_library_rel_ids'] = [(6, 0, template_ids)]
+        return super().create(vals_list)
+
+    def populate_template_library(self):
+        """Utility method to set active templates on existing onboarding records.
+
+        Usage: record.populate_template_library() or model.populate_template_library() for all.
+        """
+        Template = self.env['qaco.onboarding.template.document'].search([('active', '=', True)])
+        for rec in self:
+            rec.template_library_rel_ids = Template
 
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
     checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Engagement Partner Decision')
