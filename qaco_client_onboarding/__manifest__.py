@@ -43,7 +43,6 @@ Features:
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',
         'views/client_onboarding_form.xml',
-        'data/fix_view_client_onboarding_button.xml',
         'views/audit_smart_button.xml',
         'views/notebook_views.xml',
         'reports/client_onboarding_report.xml',
