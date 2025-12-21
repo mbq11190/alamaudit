@@ -34,9 +34,25 @@
                                     <notebook>
                                         <page string="1.0A - Template Library" name="subsection_1_0a">
                                             <group>
-                                                <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
-                                                <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
-                                                <p class="text-muted small mt-2">Open the Template Library to manage or download master templates. Use the Legal Identity shortcut to filter templates typically required in section 1.1.</p>
+                                                <group class="o_onboarding_grid">
+                                                    <group>
+                                                        <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
+                                                        <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
+                                                        <button name="action_attach_legal_identity_templates" type="object" class="btn-pdf ms-2" string="Attach Legal Identity Templates"/>
+                                                        <p class="text-muted small mt-2">Open the Template Library or attach commonly-required Legal Identity templates directly to this onboarding.</p>
+                                                    </group>
+                                                    <group>
+                                                        <label for="template_library_preview_ids"/>
+                                                        <field name="template_library_preview_ids" mode="tree">
+                                                            <tree string="Quick Preview" editable="false">
+                                                                <field name="name"/>
+                                                                <field name="file_type"/>
+                                                                <field name="sequence"/>
+                                                            </tree>
+                                                        </field>
+                                                        <p class="text-muted small mt-2">Quick preview of Legal Identity templates (click to open a template record).</p>
+                                                    </group>
+                                                </group>
                                             </group>
                                         </page>
 
