@@ -12,48 +12,49 @@ odoo.define('qaco_client_onboarding.attach_selected', function (require) {
             'input .o_template_search': '_onTemplateSearch',
         }),
 
-        async _onAttachSelected(ev) {
+        _onAttachSelected: function (ev) {
             ev.preventDefault();
+            var self = this;
             // find the one2many field container
-            const fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
+            var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
             if (!fieldEl) {
                 this.displayNotification({title: _t('Error'), message: _t('Template list not found.'), type: 'warning'});
                 return;
             }
             // collect checked row selectors
-            const inputs = fieldEl.querySelectorAll('input.o_list_record_selector:checked');
-            const ids = Array.from(inputs).map((i) => (i.dataset.id || i.value)).map(Number).filter(Boolean);
-            try {
-                const recordId = this.model.get(this.handle).data.id;
-                // If no ids selected, open wizard prefilled with empty selection (user can choose)
-                const action = await this._rpc({
-                    model: this.modelName,
-                    method: 'action_open_attach_wizard_with_templates',
-                    args: [recordId, ids],
-                });
-                this.trigger_up('do_action', {action: action});
-            } catch (err) {
+            var inputs = fieldEl.querySelectorAll('input.o_list_record_selector:checked');
+            var ids = Array.prototype.slice.call(inputs).map(function (i) { return Number(i.dataset.id || i.value); }).filter(Boolean);
+            var recordId = this.model.get(this.handle).data.id;
+            // If no ids selected, open wizard prefilled with empty selection (user can choose)
+            this._rpc({
+                model: this.modelName,
+                method: 'action_open_attach_wizard_with_templates',
+                // pass record id as list so Odoo treats it as a recordset
+                args: [[recordId], ids],
+            }).then(function (action) {
+                self.trigger_up('do_action', {action: action});
+            }).catch(function (err) {
                 console.error(err);
-                this.displayNotification({title: _t('Error'), message: _t('Could not open attach wizard.'), type: 'danger'});
-            }
+                self.displayNotification({title: _t('Error'), message: _t('Could not open attach wizard.'), type: 'danger'});
+            });
         },
 
-        _onTemplateSearch(ev) {
-            const q = (ev.target.value || '').trim().toLowerCase();
-            const fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
+        _onTemplateSearch: function (ev) {
+            var q = (ev.target.value || '').trim().toLowerCase();
+            var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
             if (!fieldEl) { return; }
             // find rows (one2many list rows)
-            const rows = fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
-            rows.forEach((row) => {
-                let nameCell = row.querySelector('td[data-field="name"]');
+            var rows = fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var nameCell = row.querySelector('td[data-field="name"]');
                 if (!nameCell) {
                     // fallback: first cell
                     nameCell = row.querySelector('td');
                 }
-                const text = nameCell ? nameCell.textContent.trim().toLowerCase() : '';
+                var text = nameCell ? nameCell.textContent.trim().toLowerCase() : '';
                 row.style.display = q && text.indexOf(q) === -1 ? 'none' : '';
-            });
-        },
+            }
         },
     });
 });
