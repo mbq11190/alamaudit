@@ -54,7 +54,8 @@ class PlanningP11GroupAudit(models.Model):
     )
     name = fields.Char(
         string='Name',
-        compute='_compute_name',
+        compute='_compute_name'
+    )
 
     # ============================================================================
     # SECTION K: P-11 CONCLUSION & PROFESSIONAL JUDGMENT
