@@ -12,7 +12,8 @@ class TestEngagementMaster(TransactionCase):
         audit = self.Audit.create({
             'client_id': self.env.ref('base.res_partner_1').id,
         })
-        self.assertTrue(audit.engagement_code, 'Engagement code should be generated')
+        # Engagement code removed; ensure record has a seq_code identifier instead
+        self.assertTrue(audit.seq_code, 'Record should have a seq_code')
 
     def test_maker_checker_enforced(self):
         u = self.env.user

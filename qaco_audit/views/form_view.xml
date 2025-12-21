@@ -33,9 +33,7 @@
                                     <field name="client_id" options="{'line_breaks': False}" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Select The Client Name in Below Field" readonly="True"/>
                                 </div>
                                 <div class="d-flex justify-content-end o_state_container">
-                                    <div class="me-3">
-                                        <field name="engagement_code" readonly="1"/>
-                                    </div>
+                                
                                     <div>
                                         <field name="engagement_status" readonly="1"/>
                                     </div>
@@ -76,11 +74,10 @@
                             <page name="section_00" string="0.0 - Engagement Master">
                                 <group>
                                     <group>
-                                        <field name="engagement_code" readonly="1"/>
-                                        <field name="engagement_type"/>
-                                        <field name="reporting_framework"/>
-                                        <field name="auditing_standard_ids" widget="many2many_tags"/>
-                                    </group>
+                                            <field name="engagement_type"/>
+                                            <field name="reporting_framework"/>
+                                            <field name="auditing_standard_ids" widget="many2many_tags"/>
+                                        </group>
                                     <group>
                                         <field name="regulator_ids" widget="many2many_tags"/>
                                         <field name="engagement_status"/>

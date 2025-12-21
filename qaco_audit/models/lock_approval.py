@@ -52,6 +52,6 @@ class AuditLockApproval(models.Model):
     def create(self, vals):
         rec = super(AuditLockApproval, self).create(vals)
         # notify the managing partners/group for attention
-        subject = _('Unlock override requested for %s') % (rec.audit_id.engagement_code or rec.audit_id.seq_code or rec.audit_id.name)
+        subject = _('Unlock override requested for %s') % (rec.audit_id.seq_code or rec.audit_id.name)
         rec.audit_id.message_post(body=f"{rec.requestor_id.name} requested unlock: {rec.reason}")
         return rec

@@ -95,21 +95,8 @@ class Qacoaudit(models.Model):
     def _get_default_seq_code(self):
         return 'New'
 
-    @api.model
-    def create(self, vals):
-        # Ensure an engagement code is generated using an ir.sequence
-        if not vals.get('engagement_code'):
-            seq = self.env['ir.sequence'].next_by_code('qaco.audit.engagement.code')
-            vals['engagement_code'] = seq or 'ENG-NEW'
-        rec = super(Qacoaudit, self).create(vals)
-        # Initialize engagement_status tracking log
-        rec.message_post(body=f"Engagement created with code {rec.engagement_code}")
-        return rec
-
     seq_code = fields.Char(string='Seq Number', required=True, copy=False, readonly=False, index=True, default=_get_default_seq_code)
-
     # Engagement master fields (single source of truth)
-    engagement_code = fields.Char(string='Engagement Code', required=True, copy=False, readonly=True, index=True)
     engagement_type = fields.Selection([
         ('statutory','Statutory'),
         ('special','Special'),
@@ -321,24 +308,31 @@ class Qacoaudit(models.Model):
         return new_record
 
     def write(self, vals):
-        """Override write to capture field-level changes in the changelog."""
+        """Unified write: logs changes and keeps message subscribers in sync.
+
+        - Records field-level changes into `qaco.audit.changelog`.
+        - When `employee_id` or `team_id` are updated, unsubscribe old partners
+          before the write and subscribe new partners after the write.
+        """
         logs = []
+
+        # Build changelog entries pre-write (capture old values)
         for rec in self:
             for field, new in vals.items():
                 if field not in rec._fields:
                     continue
                 old = getattr(rec, field)
-                # Format values (try to display meaningful string for records)
+
                 def val_to_str(v):
                     if v is None:
                         return ''
                     if hasattr(v, 'ids'):
-                        # recordset
                         try:
                             return ','.join(map(str, v.mapped('name') or v.ids))
                         except Exception:
                             return str(v.ids)
                     return str(v)
+
                 old_str = val_to_str(old)
                 new_str = val_to_str(new)
                 if old_str != new_str:
@@ -349,11 +343,48 @@ class Qacoaudit(models.Model):
                         'new_value': new_str,
                         'changed_by': self.env.uid,
                     })
+
+        # If team/employee being changed, unsubscribe old partners first
+        if 'employee_id' in vals or 'team_id' in vals:
+            for record in self:
+                old_partners = []
+                if 'employee_id' in vals and record.employee_id and record.employee_id.user_id and record.employee_id.user_id.partner_id:
+                    old_partners.append(record.employee_id.user_id.partner_id.id)
+                if 'team_id' in vals:
+                    old_partners += [
+                        emp.user_id.partner_id.id
+                        for emp in record.team_id
+                        if emp.user_id and emp.user_id.partner_id
+                    ]
+                if old_partners:
+                    record.message_unsubscribe(partner_ids=list(set(old_partners)))
+
+        # Perform actual write
         res = super(Qacoaudit, self).write(vals)
+
+        # Persist changelogs and post messages
         if logs:
-            self.env['qaco.audit.changelog'].create(logs)
-            for log in logs:
-                self.message_post(body="Change logged: %s: %s -> %s" % (log['field_name'], log['old_value'], log['new_value']))
+            try:
+                self.env['qaco.audit.changelog'].create(logs)
+                for log in logs:
+                    self.message_post(body="Change logged: %s: %s -> %s" % (log['field_name'], log['old_value'], log['new_value']))
+            except Exception:
+                _logger.exception('Failed to create changelog records')
+
+        # Subscribe new partners if team/employee changed
+        if 'employee_id' in vals or 'team_id' in vals:
+            for record in self:
+                new_partners = []
+                if record.employee_id and record.employee_id.user_id and record.employee_id.user_id.partner_id:
+                    new_partners.append(record.employee_id.user_id.partner_id.id)
+                new_partners += [
+                    emp.user_id.partner_id.id
+                    for emp in record.team_id
+                    if emp.user_id and emp.user_id.partner_id
+                ]
+                if new_partners:
+                    record.message_subscribe(partner_ids=list(set(new_partners)))
+
         return res
 
     def unlink(self):

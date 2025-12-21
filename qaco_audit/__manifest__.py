@@ -29,7 +29,7 @@
         'views/firm_name_views.xml',
         'views/form_view.xml',
         'views/kanban_view.xml',
-        'data/qaco_engagement_sequence.xml',
+        # engagement code sequence removed
         'data/audit_document_sequences.xml',
         'views/audit_attachment_views.xml',
         'views/audit_changelog_views.xml',
