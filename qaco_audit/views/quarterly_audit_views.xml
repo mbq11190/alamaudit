@@ -29,7 +29,6 @@
                         <button name="move_to_next_stage" string="Next Stage" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
                     </header>
-        -->
                     <sheet>
                         <div name="button_box"/>
                         <field name="active" invisible="1"/>
@@ -79,6 +78,7 @@
                 </form>
             </field>
         </record>
+        -->
 
         <!-- Kanban view (commented out; model qaco.quarterly.audit is missing) -->
         <!--

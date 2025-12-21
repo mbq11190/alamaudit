@@ -38,7 +38,6 @@
                         <button name="move_to_next_stage" string="Next Stage" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '0', 'fold_field': 'is_folded_in_kanban'}"/>
                     </header>
-        -->
                     <sheet>
                         <div name="button_box">
                             <!-- buttons will be added here by the inherited view -->
@@ -90,6 +89,7 @@
                 </form>
             </field>
         </record>
+        -->
 
         <!-- Stage/Year Actions (commented out; models annual.audit.stages and annual.audit.year are not present in this repo) -->
         <!--
