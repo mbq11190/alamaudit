@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="view_qaco_audit_changelog_tree" model="ir.ui.view">
+      <field name="name">qaco.audit.changelog.tree</field>
+      <field name="model">qaco.audit.changelog</field>
+      <field name="arch" type="xml">
+        <tree string="Change Log">
+          <field name="changed_on"/>
+          <field name="changed_by"/>
+          <field name="field_name"/>
+          <field name="old_value"/>
+          <field name="new_value"/>
+        </tree>
+      </field>
+    </record>
+  </data>
+</odoo>

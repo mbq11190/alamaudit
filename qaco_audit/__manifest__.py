@@ -21,6 +21,7 @@
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
+        'security/audit_security_rules.xml',
         'views/auto_follower_views.xml',
         'views/menu_view.xml',
         'data/firm_name_data.xml',
@@ -28,7 +29,10 @@
         'views/firm_name_views.xml',
         'views/form_view.xml',
         'views/kanban_view.xml',
+        'data/qaco_engagement_sequence.xml',
+        'data/audit_document_sequences.xml',
         'views/audit_attachment_views.xml',
+        'views/audit_changelog_views.xml',
         'data/audit_stages_data.xml',
         'views/search_view.xml',
         'data/audit_year_data.xml',

@@ -95,7 +95,105 @@ class Qacoaudit(models.Model):
     def _get_default_seq_code(self):
         return 'New'
 
+    @api.model
+    def create(self, vals):
+        # Ensure an engagement code is generated using an ir.sequence
+        if not vals.get('engagement_code'):
+            seq = self.env['ir.sequence'].next_by_code('qaco.audit.engagement.code')
+            vals['engagement_code'] = seq or 'ENG-NEW'
+        rec = super(Qacoaudit, self).create(vals)
+        # Initialize engagement_status tracking log
+        rec.message_post(body=f"Engagement created with code {rec.engagement_code}")
+        return rec
+
     seq_code = fields.Char(string='Seq Number', required=True, copy=False, readonly=False, index=True, default=_get_default_seq_code)
+
+    # Engagement master fields (single source of truth)
+    engagement_code = fields.Char(string='Engagement Code', required=True, copy=False, readonly=True, index=True)
+    engagement_type = fields.Selection([
+        ('statutory','Statutory'),
+        ('special','Special'),
+        ('group','Group'),
+        ('pie','Public Interest Entity (PIE)'),
+        ('listed','Listed')
+    ], string='Engagement Type')
+    reporting_framework = fields.Selection([
+        ('ifrs','IFRS'),
+        ('ifrs_smes','IFRS for SMEs'),
+        ('ifas','IFAS')
+    ], string='Reporting Framework')
+    auditing_standard_ids = fields.Many2many('audit.standard.library', string='Applicable Auditing Standards')
+    regulator_ids = fields.Many2many('qaco.regulator', 'qaco_audit_regulator_rel', 'audit_id', 'regulator_id', string='Regulators in Scope')
+
+    engagement_status = fields.Selection([
+        ('draft','Draft'),
+        ('prepared','Prepared'),
+        ('reviewed','Reviewed'),
+        ('partner_approved','Partner Approved'),
+        ('locked','Locked')
+    ], string='Engagement Status', default='draft', tracking=True)
+
+    lock_reason = fields.Text(string='Lock / Unlock Rationale')
+    locked_on = fields.Datetime(string='Locked On')
+    locked_by = fields.Many2one('res.users', string='Locked By')
+
+    # Role assignments (for segregation of duties)
+    preparer_id = fields.Many2one('res.users', string='Preparer')
+    reviewer_id = fields.Many2one('res.users', string='Reviewer')
+    engagement_partner_user_id = fields.Many2one('res.users', string='Engagement Partner')
+    eqcr_partner_user_id = fields.Many2one('res.users', string='EQCR Partner')
+    quality_partner_user_id = fields.Many2one('res.users', string='Quality Partner')
+    managing_partner_user_id = fields.Many2one('res.users', string='Managing Partner')
+
+    def action_set_status_prepared(self):
+        for rec in self:
+            rec.engagement_status = 'prepared'
+            rec.message_post(body='Status set to Prepared')
+
+    def action_set_status_reviewed(self):
+        for rec in self:
+            rec.engagement_status = 'reviewed'
+            rec.message_post(body='Status set to Reviewed')
+
+    def action_partner_approve(self):
+        for rec in self:
+            # maker-checker: reviewer must not be same as preparer
+            if rec.reviewer_id and rec.preparer_id and rec.reviewer_id == rec.preparer_id:
+                raise exceptions.ValidationError(_('Reviewer must be different from Preparer (Maker-Checker violation)'))
+            rec.engagement_status = 'partner_approved'
+            rec.message_post(body='Partner Approved')
+
+    def action_lock_engagement(self, reason=None):
+        for rec in self:
+            if rec.engagement_status != 'partner_approved':
+                raise exceptions.ValidationError(_('Engagement must be partner approved before locking.'))
+            rec.engagement_status = 'locked'
+            rec.lock_reason = reason or rec.lock_reason
+            rec.locked_on = fields.Datetime.now()
+            rec.locked_by = self.env.user
+            rec.message_post(body=f'Engagement locked by {self.env.user.name}: {rec.lock_reason}')
+
+    def action_unlock_engagement(self, reason=None):
+        for rec in self:
+            # First: if caller is a manager, allow immediate unlock
+            if self.user_has_groups('qaco_audit.group_audit_manager'):
+                rec.engagement_status = 'partner_approved'
+                rec.lock_reason = reason or rec.lock_reason
+                rec.locked_on = False
+                rec.locked_by = False
+                rec.message_post(body=f'Engagement unlocked by {self.env.user.name}: {rec.lock_reason}')
+                continue
+            # Otherwise, look for an approved lock approval that has not been applied
+            approval = self.env['qaco.audit.lock.approval'].search([('audit_id', '=', rec.id), ('status', '=', 'approved'), ('applied', '=', False)], limit=1, order='approved_on desc')
+            if approval:
+                rec.engagement_status = 'partner_approved'
+                rec.lock_reason = reason or rec.lock_reason or f'Unlock via approval {approval.id}'
+                rec.locked_on = False
+                rec.locked_by = approval.approver_id or rec.locked_by
+                rec.message_post(body=f'Engagement unlocked via approved override {approval.id}: {approval.requestor_id.name} requested on {approval.requested_on}')
+                approval.applied = True
+                continue
+            raise exceptions.AccessError(_('Only managing partners may unlock engagements, or an approved override must exist.'))
 
     # Function to Show Empty Stages in Kanban View
     def _group_expand_stage_ids(self, stages, domain, order):
@@ -150,6 +248,12 @@ class Qacoaudit(models.Model):
 
         if next_stage.name == 'Invoiced' and not self.user_has_groups('base.group_system'):
             raise exceptions.ValidationError("Only Partner may move it to the next stage.")
+
+        # Gateway control: do not allow entering Execution unless Planning is complete
+        if 'execution' in (next_stage.name or '').lower():
+            planning = self.env['qaco.planning.phase'].search([('audit_id', '=', self.id), ('planning_complete', '=', True)], limit=1)
+            if not planning:
+                raise exceptions.ValidationError(_('Planning phase must be completed and partner-signed before starting Execution.'))
 
         if next_stage.name == 'Done':
             return {
@@ -215,6 +319,42 @@ class Qacoaudit(models.Model):
         new_record = super(Qacoaudit, self).copy(default)
         new_record.message_post(body="This record is duplicated from record with ID %s" % self.id)
         return new_record
+
+    def write(self, vals):
+        """Override write to capture field-level changes in the changelog."""
+        logs = []
+        for rec in self:
+            for field, new in vals.items():
+                if field not in rec._fields:
+                    continue
+                old = getattr(rec, field)
+                # Format values (try to display meaningful string for records)
+                def val_to_str(v):
+                    if v is None:
+                        return ''
+                    if hasattr(v, 'ids'):
+                        # recordset
+                        try:
+                            return ','.join(map(str, v.mapped('name') or v.ids))
+                        except Exception:
+                            return str(v.ids)
+                    return str(v)
+                old_str = val_to_str(old)
+                new_str = val_to_str(new)
+                if old_str != new_str:
+                    logs.append({
+                        'audit_id': rec.id,
+                        'field_name': field,
+                        'old_value': old_str,
+                        'new_value': new_str,
+                        'changed_by': self.env.uid,
+                    })
+        res = super(Qacoaudit, self).write(vals)
+        if logs:
+            self.env['qaco.audit.changelog'].create(logs)
+            for log in logs:
+                self.message_post(body="Change logged: %s: %s -> %s" % (log['field_name'], log['old_value'], log['new_value']))
+        return res
 
     def unlink(self):
         if not self.user_has_groups(

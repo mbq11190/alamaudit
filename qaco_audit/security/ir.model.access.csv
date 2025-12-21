@@ -12,3 +12,5 @@ access_qaco_ubo,qaco.ubo,model_qaco_ubo,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_inspection,qaco.regulatory.inspection,model_qaco_regulatory_inspection,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_pep,qaco.pep,model_qaco_pep,qaco_audit.group_audit_trainee,1,0,0,0
 access_qaco_checklist,qaco.audit.checklist,model_qaco_audit_checklist,qaco_audit.group_audit_trainee,1,1,1,0
+access_qaco_audit_changelog,qaco.audit.changelog,model_qaco_audit_changelog,qaco_audit.group_audit_partner,1,0,0,0
+access_qaco_audit_lock_approval,qaco.audit.lock.approval,model_qaco_audit_lock_approval,base.group_user,1,1,1,1

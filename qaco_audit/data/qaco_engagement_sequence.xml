@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="seq_qaco_engagement_code" model="ir.sequence">
+      <field name="name">QACO Engagement Code</field>
+      <field name="code">qaco.audit.engagement.code</field>
+      <field name="prefix">ENG/%(year)s/</field>
+      <field name="padding">4</field>
+      <field name="use_date_range">False</field>
+    </record>
+  </data>
+</odoo>

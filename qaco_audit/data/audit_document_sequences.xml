@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="seq_audit_document_index" model="ir.sequence">
+      <field name="name">Audit Document Index</field>
+      <field name="code">audit.document.index</field>
+      <field name="prefix">DOC/%(year)s/</field>
+      <field name="padding">4</field>
+    </record>
+
+    <record id="seq_audit_evidence_ref" model="ir.sequence">
+      <field name="name">Audit Evidence Reference</field>
+      <field name="code">audit.evidence.ref</field>
+      <field name="prefix">EVID/%(year)s/</field>
+      <field name="padding">4</field>
+    </record>
+  </data>
+</odoo>

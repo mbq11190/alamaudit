@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="view_qaco_audit_lock_approval_tree" model="ir.ui.view">
+      <field name="name">qaco.audit.lock.approval.tree</field>
+      <field name="model">qaco.audit.lock.approval</field>
+      <field name="arch" type="xml">
+        <tree string="Lock/Unlock Approvals">
+          <field name="audit_id"/>
+          <field name="requestor_id"/>
+          <field name="requested_on"/>
+          <field name="status"/>
+          <field name="approver_id"/>
+          <field name="approved_on"/>
+          <field name="applied"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_qaco_audit_lock_approval_form" model="ir.ui.view">
+      <field name="name">qaco.audit.lock.approval.form</field>
+      <field name="model">qaco.audit.lock.approval</field>
+      <field name="arch" type="xml">
+        <form string="Lock/Unlock Approval">
+          <sheet>
+            <group>
+              <field name="audit_id"/>
+              <field name="requestor_id" readonly="1"/>
+              <field name="requested_on" readonly="1"/>
+            </group>
+            <group>
+              <field name="reason"/>
+              <field name="attachment_ids"/>
+            </group>
+            <group>
+              <field name="status" readonly="1"/>
+              <field name="approver_id" readonly="1"/>
+              <field name="approved_on" readonly="1"/>
+              <field name="resolution_note"/>
+            </group>
+            <footer>
+              <button name="action_approve" type="object" string="Approve" class="btn-primary"/>
+              <button name="action_reject" type="object" string="Reject" class="btn-secondary"/>
+              <button string="Close" class="btn-light" special="cancel"/>
+            </footer>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_qaco_audit_lock_approval" model="ir.actions.act_window">
+      <field name="name">Lock Approvals</field>
+      <field name="res_model">qaco.audit.lock.approval</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_qaco_audit_lock_approval_tree"/>
+    </record>
+
+    <!-- Add a button on the audit form (0.0 page) to request an approval -->
+    <record id="view_qaco_audit_form_button_lock_approval" model="ir.ui.view">
+      <field name="name">qaco.audit.form.lock.approval.button</field>
+      <field name="model">qaco.audit</field>
+      <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//page[@name='section_00']/group" position="inside">
+          <group>
+            <button name="%(action_qaco_audit_lock_approval)d" type="action" class="btn-status" string="View Lock Approvals"/>
+            <button name="%(action_qaco_audit_lock_approval)d" type="action" class="btn-pdf ms-2" string="Request Unlock" context="{'default_audit_id': active_id}"/>
+          </group>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

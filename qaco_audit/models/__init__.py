@@ -8,4 +8,5 @@ from . import firm_name
 from . import auto_follower
 from . import audit_engagement
 from . import res_partner
+from . import audit_changelog
 
