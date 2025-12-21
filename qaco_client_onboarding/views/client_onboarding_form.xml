@@ -39,7 +39,7 @@
                                             <group>
                                                 <button name="%(action_template_library)d" type="action" class="btn-primary" string="Open Template Library"/>
                                                 <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
-                                                <button type="button" class="btn-primary ms-2 o_attach_selected" string="Attach selected">Attach selected</button>
+                                                <button name="action_attach_selected" type="object" class="btn-primary ms-2 o_attach_selected" string="Attach selected"/>
                                                 <input type="search" class="o_template_search form-control form-control-sm ms-3" placeholder="Search templates..."/>
                                                 <p class="text-muted small mt-2">Use the Legal Identity shortcut to filter templates commonly used in section 1.1. Use "Attach selected" to attach multiple templates at once.</p>
                                             </group>

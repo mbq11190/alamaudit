@@ -236,6 +236,16 @@ class ClientOnboarding(models.Model):
         action['context'] = ctx
         return action
 
+    def action_attach_selected(self):
+        """Server handler for the "Attach selected" button.
+
+        Returns the same attach wizard action but without any preselected templates.
+        This ensures the view will parse (button requires a name) and provides a
+        graceful server-side fallback if JS is not available.
+        """
+        self.ensure_one()
+        return self.action_open_attach_wizard_with_templates([])
+
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
     checklist_line_ids = fields.One2many('qaco.onboarding.checklist.line', 'onboarding_id', string='Engagement Partner Decision')
     audit_trail_ids = fields.One2many('qaco.onboarding.audit.trail', 'onboarding_id', string='Audit Trail', readonly=True)
