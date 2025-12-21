@@ -496,7 +496,7 @@ class PlanningP6RiskLine(models.Model):
     combined_rmm = fields.Selection(
         string='Combined RMM',
         related='risk_rating',
-        store=True
+        store=False
     )
     is_significant_risk = fields.Boolean(
         string='Significant Risk',

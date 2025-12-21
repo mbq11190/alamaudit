@@ -262,7 +262,7 @@ class PlanningP2Entity(models.Model):
         string='Legal Name',
         related='client_id.name',
         readonly=True,
-        store=True,
+        store=False,
     )
     entity_type = fields.Selection([
         ('private_limited', 'Private Limited'),
