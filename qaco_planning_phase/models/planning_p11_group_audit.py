@@ -162,11 +162,7 @@ class PlanningP11GroupAudit(models.Model):
         related='partner_approved_by',
         readonly=True
     )
-    partner_approved_on = fields.Datetime(
-        string='Partner Approved On',
-        related='partner_approved_on',
-        readonly=True
-    )
+    # NOTE: partner_approved_on already defined above (line 127) - no need for duplicate related field
     
     locked = fields.Boolean(
         string='Locked',
