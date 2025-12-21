@@ -225,14 +225,14 @@ class PlanningP2Entity(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True,
+        store=False,
     )
     firm_id = fields.Many2one(
         'audit.firm.name',
         string='Audit Firm',
         related='audit_id.firm_name',
         readonly=True,
-        store=True,
+        store=False,
     )
     industry_id = fields.Many2one(
         'qaco.industry',
@@ -244,7 +244,7 @@ class PlanningP2Entity(models.Model):
         string='Engagement Partner',
         related='audit_id.qaco_audit_partner',
         readonly=True,
-        store=True,
+        store=False,
     )
     audit_year = fields.Many2many(
         'audit.year',

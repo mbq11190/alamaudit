@@ -235,14 +235,14 @@ class PlanningP1Engagement(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True,
+        store=False,
     )
     firm_id = fields.Many2one(
         'audit.firm.name',
         string='Audit Firm',
         related='audit_id.firm_name',
         readonly=True,
-        store=True,
+        store=False,
     )
     currency_id = fields.Many2one(
         'res.currency',
