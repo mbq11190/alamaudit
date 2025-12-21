@@ -20,6 +20,8 @@
     "assets": {
         "web.assets_backend": [
             "qaco_execution_phase/static/src/css/dashboard.css",
+            "qaco_planning_phase/static/src/scss/planning.scss",
+            "qaco_planning_phase/static/src/css/planning_phase.css",
         ],
     },
 }

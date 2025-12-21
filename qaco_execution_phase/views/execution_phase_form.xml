@@ -52,7 +52,7 @@
         <field name="name">qaco.execution.phase.form</field>
         <field name="model">qaco.execution.phase</field>
         <field name="arch" type="xml">
-            <form string="Execution Phase" class="o_qaco_execution_form" create="false">
+            <form string="Execution Phase" class="o_planning_form" create="false">
                 <header>
                     <button name="action_manager_sign" type="object" string="Manager Sign" class="btn-primary"
                         modifiers="{'invisible': ['|', ('manager_signed_user_id', '!=', False), ('execution_complete', '=', True)]}"/>
@@ -70,7 +70,7 @@
                     <field name="completion_status" widget="statusbar" statusbar_visible="red,amber,green" class="oe_inline" readonly="1"
                         modifiers="{'readonly': True}"/>
                 </header>
-                <sheet string="Execution Phase">
+                <sheet class="o_planning_sheet" string="Execution Phase">
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -94,13 +94,13 @@
                     <div class="o_execution_alert" modifiers="{'invisible': [('compliance_alert_message', '=', False)]}">
                         <field name="compliance_alert_message" readonly="1" widget="html"/>
                     </div>
-                    <notebook class="o_execution_tabs">
-                        <page name="section_30" string="3.0 - Dashboard" class="o_execution_tab_page">
-                            <div id="section-3-0" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.0</span>
-                                    <span class="o_onboarding_card_title">Execution Dashboard</span>
-                                    <span class="o_onboarding_card_ref">ISA 330 / Risk Coverage</span>
+                    <notebook class="o_planning_tabs">
+                        <page name="section_30" string="3.0 - Dashboard" class="o_planning_tab_page">
+                            <div id="section-3-0" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.0</span>
+                                    <span class="o_planning_card_title">Execution Dashboard</span>
+                                    <span class="o_planning_card_ref">ISA 330 / Risk Coverage</span>
                                 </div>
                                 <field name="execution_risk_line_ids" context="{'default_execution_phase_id': active_id}" mode="tree" colspan="4">
                                     <tree string="Risk Coverage" editable="bottom">
@@ -114,14 +114,14 @@
                                 </field>
                             </div>
                         </page>
-                        <page name="section_31" string="3.1 - Controls" class="o_execution_tab_page">
-                            <div id="section-3-1" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.1</span>
-                                    <span class="o_onboarding_card_title">Tests of Controls</span>
-                                    <span class="o_onboarding_card_ref">ISA 330 / ISA 265</span>
+                        <page name="section_31" string="3.1 - Controls" class="o_planning_tab_page">
+                            <div id="section-3-1" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.1</span>
+                                    <span class="o_planning_card_title">Tests of Controls</span>
+                                    <span class="o_planning_card_ref">ISA 330 / ISA 265</span>
                                 </div>
-                                <group class="o_onboarding_grid">
+                                <group class="o_planning_grid">
                                     <field name="checklist_controls_linked" widget="boolean_toggle"/>
                                     <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
                                     <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
@@ -203,14 +203,14 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_32" string="3.2 - Substantive" class="o_execution_tab_page">
-                            <div id="section-3-2" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.2</span>
-                                    <span class="o_onboarding_card_title">Substantive Procedures</span>
-                                    <span class="o_onboarding_card_ref">ISA 330 / ISA 500</span>
+                        <page name="section_32" string="3.2 - Substantive" class="o_planning_tab_page">
+                            <div id="section-3-2" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.2</span>
+                                    <span class="o_planning_card_title">Substantive Procedures</span>
+                                    <span class="o_planning_card_ref">ISA 330 / ISA 500</span>
                                 </div>
-                                <group class="o_onboarding_grid">
+                                <group class="o_planning_grid">
                                     <field name="checklist_substantive_assertions" widget="boolean_toggle"/>
                                     <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
                                 </group>
@@ -278,14 +278,14 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_33" string="3.3 - Sampling" class="o_execution_tab_page">
-                            <div id="section-3-3" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.3</span>
-                                    <span class="o_onboarding_card_title">Audit Sampling</span>
-                                    <span class="o_onboarding_card_ref">ISA 530</span>
+                        <page name="section_33" string="3.3 - Sampling" class="o_planning_tab_page">
+                            <div id="section-3-3" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.3</span>
+                                    <span class="o_planning_card_title">Audit Sampling</span>
+                                    <span class="o_planning_card_ref">ISA 530</span>
                                 </div>
-                                <group class="o_onboarding_grid">
+                                <group class="o_planning_grid">
                                     <field name="checklist_sampling_signed" widget="boolean_toggle"/>
                                 </group>
                                 <field name="sampling_request_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
@@ -330,14 +330,14 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_34" string="3.4 - Evidence" class="o_execution_tab_page">
-                            <div id="section-3-4" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.4</span>
-                                    <span class="o_onboarding_card_title">Audit Evidence</span>
-                                    <span class="o_onboarding_card_ref">ISA 500 / ISA 501</span>
+                        <page name="section_34" string="3.4 - Evidence" class="o_planning_tab_page">
+                            <div id="section-3-4" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.4</span>
+                                    <span class="o_planning_card_title">Audit Evidence</span>
+                                    <span class="o_planning_card_ref">ISA 500 / ISA 501</span>
                                 </div>
-                                <group class="o_onboarding_grid">
+                                <group class="o_planning_grid">
                                     <field name="checklist_evidence_sufficient" widget="boolean_toggle"/>
                                 </group>
                                 <field name="evidence_item_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
@@ -371,14 +371,14 @@
                                 </field>
                             </div>
                         </page>
-                        <page name="section_35" string="3.5 - Workpapers" class="o_execution_tab_page">
-                            <div id="section-3-5" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.5</span>
-                                    <span class="o_onboarding_card_title">Audit Workpapers</span>
-                                    <span class="o_onboarding_card_ref">ISA 230</span>
+                        <page name="section_35" string="3.5 - Workpapers" class="o_planning_tab_page">
+                            <div id="section-3-5" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.5</span>
+                                    <span class="o_planning_card_title">Audit Workpapers</span>
+                                    <span class="o_planning_card_ref">ISA 230</span>
                                 </div>
-                                <group class="o_onboarding_grid">
+                                <group class="o_planning_grid">
                                     <field name="checklist_workpapers_reviewed" widget="boolean_toggle"/>
                                 </group>
                                 <field name="workpaper_ids" context="{'default_execution_phase_id': active_id}" colspan="4">
@@ -418,14 +418,14 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_36" string="3.6 - Sign-off" class="o_execution_tab_page">
-                            <div id="section-3-6" class="o_onboarding_card">
-                                <div class="o_onboarding_card_header">
-                                    <span class="o_onboarding_card_number">3.6</span>
-                                    <span class="o_onboarding_card_title">Execution Sign-off</span>
-                                    <span class="o_onboarding_card_ref">ISA 220 / ISQM-1</span>
+                        <page name="section_36" string="3.6 - Sign-off" class="o_planning_tab_page">
+                            <div id="section-3-6" class="o_planning_card">
+                                <div class="o_planning_card_header">
+                                    <span class="o_planning_card_number">3.6</span>
+                                    <span class="o_planning_card_title">Execution Sign-off</span>
+                                    <span class="o_planning_card_ref">ISA 220 / ISQM-1</span>
                                 </div>
-                                <group string="Completion Checklist" class="o_onboarding_grid">
+                                <group string="Completion Checklist" class="o_planning_grid">
                                     <field name="checklist_controls_linked" widget="boolean_toggle"/>
                                     <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
                                     <field name="checklist_exceptions_escalated" widget="boolean_toggle"/>
