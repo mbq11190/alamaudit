@@ -35,7 +35,7 @@
         <field name="name">qaco.deliverables.form</field>
         <field name="model">qaco.deliverables</field>
         <field name="arch" type="xml">
-            <form string="Deliverables" class="o_qaco_deliverables_form">
+            <form string="Deliverables" class="o_planning_form">
                 <header>
                     <button name="action_run_gateway_check" type="object" string="Gateway Check"
                             class="btn-secondary" modifiers="{'invisible': [('deliverables_locked','=',True)]}"/>
@@ -46,7 +46,7 @@
                     <field name="deliverables_locked" widget="boolean_toggle" readonly="1"/>
                     <field name="ready_for_dispatch" widget="boolean_toggle" readonly="1"/>
                 </header>
-                <sheet>
+                <sheet class="o_planning_sheet">
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" readonly="1"/></h1>
@@ -75,8 +75,8 @@
                     <group string="Gateway Findings" modifiers="{'invisible': [('outstanding_items_log','=',False)]}">
                         <field name="outstanding_items_log" widget="html" readonly="1"/>
                     </group>
-                    <notebook class="o_deliverables_tabs">
-                        <page name="section_50" string="5.0 - Dashboard" class="o_deliverables_tab_page">
+                    <notebook class="o_planning_tabs">
+                        <page name="section_50" string="5.0 - Dashboard" class="o_planning_tab_page">
                             <div id="section-5-0" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">5.0</span>
@@ -105,7 +105,7 @@
                             </group>
                             </div>
                         </page>
-                        <page name="section_51" string="5.1 - Auditor's Report" class="o_deliverables_tab_page">
+                        <page name="section_51" string="5.1 - Auditor's Report" class="o_planning_tab_page">
                             <div id="section-5-1" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">5.1</span>
@@ -204,7 +204,7 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_52" string="5.2 - Management Letter" class="o_deliverables_tab_page">
+                        <page name="section_52" string="5.2 - Management Letter" class="o_planning_tab_page">
                             <div id="section-5-2" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">5.2</span>
@@ -259,7 +259,7 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_53" string="5.3 - TCWG Communication" class="o_deliverables_tab_page">
+                        <page name="section_53" string="5.3 - TCWG Communication" class="o_planning_tab_page">
                             <div id="section-5-3" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">5.3</span>
@@ -290,7 +290,7 @@
                                 </group>
                             </div>
                         </page>
-                        <page name="section_54" string="5.4 - Other Information" class="o_deliverables_tab_page">
+                        <page name="section_54" string="5.4 - Other Information" class="o_planning_tab_page">
                             <div id="section-5-4" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">5.4</span>
@@ -335,7 +335,7 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_55" string="5.5 - Archiving &amp; Dispatch" class="o_deliverables_tab_page">
+                        <page name="section_55" string="5.5 - Archiving &amp; Dispatch" class="o_planning_tab_page">
                             <div id="section-5-5" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">5.5</span>

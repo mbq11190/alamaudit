@@ -44,7 +44,7 @@
         <field name="name">qaco.quality.review.form</field>
         <field name="model">qaco.quality.review</field>
         <field name="arch" type="xml">
-            <form string="Quality Review" create="0">
+            <form string="Quality Review" create="0" class="o_planning_form">
                 <header>
                     <button name="action_run_trigger_engine" type="object" string="Run Trigger Engine" class="oe_secondary"/>
                     <button name="action_finalize_eqr" type="object" string="Finalize EQR" class="oe_highlight" invisible="eqr_required == False or eqr_concluded == True"/>
@@ -53,7 +53,7 @@
                     <button name="action_mark_archived" type="object" string="Mark Archived" invisible="archiving_completed == True"/>
                     <field name="overall_status" widget="statusbar" statusbar_visible="red,amber,green"/>
                 </header>
-                <sheet>
+                <sheet class="o_planning_sheet">
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" name="action_validate_quality_gate">
                             <field name="quality_gate_passed" widget="boolean_button"/>
@@ -92,8 +92,8 @@
                             <field name="locking_status" widget="badge"/>
                         </group>
                     </group>
-                    <notebook class="o_quality_review_tabs">
-                        <page name="section_61" string="6.1 - Triggers &amp; Scope" class="o_quality_tab_page">
+                    <notebook class="o_planning_tabs">
+                        <page name="section_61" string="6.1 - Triggers &amp; Scope" class="o_planning_tab_page">
                             <div id="section-6-1" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">6.1</span>
@@ -139,7 +139,7 @@
                             </group>
                             </div>
                         </page>
-                        <page name="section_62" string="6.2 - Procedures" class="o_quality_tab_page">
+                        <page name="section_62" string="6.2 - Procedures" class="o_planning_tab_page">
                             <div id="section-6-2" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">6.2</span>
@@ -210,7 +210,7 @@
                                 </group>
                             </div>
                         </page>
-                        <page name="section_63" string="6.3 - Monitoring" class="o_quality_tab_page">
+                        <page name="section_63" string="6.3 - Monitoring" class="o_planning_tab_page">
                             <div id="section-6-3" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">6.3</span>
@@ -280,7 +280,7 @@
                             </field>
                             </div>
                         </page>
-                        <page name="section_64" string="6.4 - Locking &amp; Archiving" class="o_quality_tab_page">
+                        <page name="section_64" string="6.4 - Locking &amp; Archiving" class="o_planning_tab_page">
                             <div id="section-6-4" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">6.4</span>
@@ -343,7 +343,7 @@
                         </page>
                         
                         <!-- Session 7E: Planning Phase Integration Page -->
-                        <page name="section_65_planning" string="6.5 - Planning Metrics" class="o_quality_tab_page">
+                        <page name="section_65_planning" string="6.5 - Planning Metrics" class="o_planning_tab_page">
                             <div id="section-6-5" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">6.5</span>

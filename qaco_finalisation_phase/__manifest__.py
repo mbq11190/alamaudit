@@ -15,4 +15,10 @@
     "installable": True,
     "application": False,
     "auto_install": True,
+    "assets": {
+        "web.assets_backend": [
+            "qaco_planning_phase/static/src/scss/planning.scss",
+            "qaco_planning_phase/static/src/css/planning_phase.css",
+        ],
+    },
 }
