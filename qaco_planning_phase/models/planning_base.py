@@ -323,7 +323,7 @@ class PlanningPhaseMain(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True
+        store=False
     )
     company_currency_id = fields.Many2one(
         'res.currency',

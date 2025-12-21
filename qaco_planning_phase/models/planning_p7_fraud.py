@@ -114,7 +114,7 @@ class PlanningP7Fraud(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True
+        store=False
     )
 
     # ===== Overall Fraud Risk Summary (ISA 240) =====

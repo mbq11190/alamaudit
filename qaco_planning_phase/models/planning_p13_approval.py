@@ -96,7 +96,7 @@ class PlanningP13Approval(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True
+        store=False
     )
 
     # ===== Planning Completion Checklist =====

@@ -72,7 +72,7 @@ class PlanningPhase(models.Model):
 	name = fields.Char(string='Planning Reference', compute='_compute_name', store=True, readonly=True)
 	audit_id = fields.Many2one('qaco.audit', string='Audit Engagement', required=True, ondelete='cascade', index=True)
 	client_id = fields.Many2one('res.partner', string='Client Name', related='audit_id.client_id', readonly=True, store=False, index=True)
-	firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True, index=True)
+	firm_name = fields.Many2one('audit.firm.name', string='Firm Name', related='audit_id.firm_name', readonly=True, store=False, index=True)
 	understanding_status = fields.Selection(SUBTAB_STATUS, default='red', tracking=True, string='Entity Understanding Status')
 	analytics_status = fields.Selection(SUBTAB_STATUS, default='red', tracking=True, string='Analytics Status')
 	materiality_status = fields.Selection(SUBTAB_STATUS, default='red', tracking=True, string='Materiality Status')

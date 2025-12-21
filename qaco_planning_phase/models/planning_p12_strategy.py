@@ -62,7 +62,7 @@ class PlanningP12Strategy(models.Model):
         'res.partner',
         string='Client',
         related='audit_id.client_id',
-        store=True,
+        store=False,
         readonly=True
     )
     partner_id = fields.Many2one(

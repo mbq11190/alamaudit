@@ -104,7 +104,7 @@ class PlanningP10RelatedParties(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True
+        store=False
     )
     currency_id = fields.Many2one(
         'res.currency',

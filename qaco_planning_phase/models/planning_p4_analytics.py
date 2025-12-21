@@ -510,7 +510,7 @@ class PlanningP4Analytics(models.Model):
         'res.partner',
         string='Client',
         related='audit_id.client_id',
-        store=True,
+        store=False,
         readonly=True
     )
     currency_id = fields.Many2one(

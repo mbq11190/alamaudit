@@ -95,7 +95,7 @@ class PlanningP9Laws(models.Model):
         string='Client Name',
         related='audit_id.client_id',
         readonly=True,
-        store=True
+        store=False
     )
 
     # ===== Applicable Laws & Regulations =====
