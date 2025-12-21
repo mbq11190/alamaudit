@@ -393,39 +393,6 @@ class PlanningP12Strategy(models.Model):
     # ============================================================================
     # SECTION J: BUDGET, TIMELINE & RESOURCE ALIGNMENT
     # ============================================================================
-    # Data flow from P-1: Staffing and budget
-    p1_total_partner_hours = fields.Float(
-        related='planning_main_id.p1_engagement_id.total_partner_hours',
-        readonly=True,
-        string='P-1 Total Partner Hours'
-    )
-    p1_total_manager_hours = fields.Float(
-        related='planning_main_id.p1_engagement_id.total_manager_hours',
-        readonly=True,
-        string='P-1 Total Manager Hours'
-    )
-    p1_total_senior_hours = fields.Float(
-        related='planning_main_id.p1_engagement_id.total_senior_hours',
-        readonly=True,
-        string='P-1 Total Senior Hours'
-    )
-    p1_total_staff_hours = fields.Float(
-        related='planning_main_id.p1_engagement_id.total_staff_hours',
-        readonly=True,
-        string='P-1 Total Staff Hours'
-    )
-    p1_grand_total_hours = fields.Float(
-        related='planning_main_id.p1_engagement_id.grand_total_hours',
-        readonly=True,
-        string='P-1 Grand Total Hours'
-    )
-    p1_budget_amount = fields.Monetary(
-        related='planning_main_id.p1_engagement_id.budget_amount',
-        readonly=True,
-        string='P-1 Engagement Fee',
-        currency_field='currency_id'
-    )
-    
     planned_hours_partner = fields.Float(
         string='Planned Hours - Partner',
         help='Budgeted partner hours'
@@ -1350,14 +1317,6 @@ class PlanningP12SamplingPlan(models.Model):
         string='Basis for Sample Size',
         required=True,
         help='Explain how sample size was determined'
-    )
-    
-    # Data flow from P-5: Sampling thresholds
-    sampling_materiality = fields.Monetary(
-        related='planning_main_id.p5_materiality_id.performance_materiality',
-        readonly=True,
-        string='Sampling Threshold from P-5',
-        currency_field='currency_id'
     )
     
     sampling_unit = fields.Char(

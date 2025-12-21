@@ -83,19 +83,6 @@ class PlanningP6Risk(models.Model):
     sources_controls = fields.Boolean(string='Internal Controls (P-3)', default=True, readonly=True)
     sources_analytics = fields.Boolean(string='Analytics (P-4)', default=True, readonly=True)
     sources_materiality = fields.Boolean(string='Materiality (P-5)', default=True, readonly=True)
-    # Data flow from P-5: Materiality thresholds for risk assessment
-    overall_materiality = fields.Monetary(
-        related='planning_main_id.p5_materiality_id.overall_materiality',
-        readonly=True,
-        string='Overall Materiality from P-5',
-        currency_field='currency_id'
-    )
-    performance_materiality = fields.Monetary(
-        related='planning_main_id.p5_materiality_id.performance_materiality',
-        readonly=True,
-        string='Performance Materiality from P-5',
-        currency_field='currency_id'
-    )
     sources_prior_year = fields.Boolean(string='Prior-Year Issues', default=True, readonly=True)
     sources_fraud_brainstorm = fields.Boolean(string='Fraud Brainstorming', default=True, readonly=True)
     sources_checklist = fields.Boolean(string='All planning sources considered?')
