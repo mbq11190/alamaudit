@@ -34,6 +34,7 @@ Features:
     'author': 'QACO',
     'website': 'https://www.qaco.com',
     'depends': ['qaco_audit'],
+    'post_init_hook': 'post_init_hook',
     'data': [
         'security/ir.model.access.csv',
         'data/pakistan_location_data.xml',
