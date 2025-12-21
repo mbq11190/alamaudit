@@ -11,7 +11,6 @@
         "mail",
         "web",
         "qaco_audit",
-        "qaco_client_onboarding",
     ],
     "data": [
         # Security
