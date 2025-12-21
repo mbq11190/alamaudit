@@ -42,6 +42,7 @@ Features:
         'data/audit_standard_library_data.xml',
         'data/audit_onboarding_checklist_data.xml',
         'data/onboarding_seed.xml',
+        'data/fix_attach_button_override.xml',
         'views/client_onboarding_form.xml',
         'views/audit_smart_button.xml',
         'views/notebook_views.xml',

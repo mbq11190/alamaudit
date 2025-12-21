@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Safety override: provide safe, no-op ir.ui.view records with ids that may match
+        previously-created compatibility views which had failing XPath expressions.
+        These records will be applied during module upgrade and replace the problematic
+        views, preventing XPath parse errors during upgrade.
+    -->
+
+    <record id="view_client_onboarding_form_fix_attach_button" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.form.fix.attach.button.safe</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <!-- Safe placeholder view to replace broken compatibility view -->
+            <form>
+                <sheet>
+                    <div class="o_onboarding_fix_placeholder"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_client_onboarding_fix_attach_button" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.fix.attach.button.safe</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <!-- Safe placeholder variant in case different xmlid was used -->
+            <form>
+                <sheet>
+                    <div class="o_onboarding_fix_placeholder"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
