@@ -8,8 +8,8 @@
             <form string="P-10: Related Parties Planning" create="1" edit="1">
                 <sheet>
                     <group>
-                        <field name="engagement_id"/>
-                        <field name="audit_year_id"/>
+                        <field name="audit_id"/>
+                        <field name="client_id" readonly="1"/>
                         <field name="state" readonly="1"/>
                     </group>
                     <notebook>
@@ -26,8 +26,8 @@
                                 </tree>
                             </field>
                             <group>
-                                <field name="related_parties_complete"/>
-                                <field name="changes_captured"/>
+                                <field name="confirm_all_rp_identified"/>
+                                <field name="confirm_changes_captured"/>
                             </group>
                         </page>
                         <!-- SECTION B: Completeness Procedures -->
