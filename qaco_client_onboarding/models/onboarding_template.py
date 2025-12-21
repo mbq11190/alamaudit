@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, exceptions
 
 
 TEMPLATE_CATEGORY = [
@@ -72,6 +72,57 @@ class OnboardingTemplateDocument(models.Model):
             'target': 'self',
         }
 
+    def action_attach_to_onboarding(self):
+        """Attach this template to the active onboarding record.
+
+        This will create a `qaco.onboarding.attached.template` record with the
+        template file prefilled if available.
+        """
+        self.ensure_one()
+        onboarding_id = (self.env.context.get('onboarding_id') or
+                         self.env.context.get('active_id') or
+                         self.env.context.get('res_id'))
+        if not onboarding_id:
+            raise exceptions.UserError(_('Open an Onboarding record to attach this template.'))
+        onboarding = self.env['qaco.client.onboarding'].browse(onboarding_id)
+        if not onboarding:
+            raise exceptions.UserError(_('Onboarding record not found.'))
+
+        # Avoid duplicate attachments
+        existing = onboarding.attached_template_ids.filtered(lambda t: t.template_id.id == self.id)
+        if existing:
+            onboarding.message_post(body=_('Template %s already attached') % self.name)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Info'),
+                    'message': _('Template %s already attached.') % self.name,
+                    'type': 'info',
+                    'sticky': False,
+                },
+            }
+
+        vals = {
+            'onboarding_id': onboarding.id,
+            'template_id': self.id,
+        }
+        if self.template_file:
+            vals['attached_file'] = self.template_file
+            vals['attached_filename'] = self.template_filename
+        attached = self.env['qaco.onboarding.attached.template'].create(vals)
+        onboarding.message_post(body=_('Template %s attached by %s') % (self.name, self.env.user.name))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Attached'),
+                'message': _('Template %s attached to onboarding.') % self.name,
+                'type': 'success',
+                'sticky': False,
+            },
+        }
+
 
 class OnboardingAttachedTemplate(models.Model):
     """Templates attached to a specific onboarding record."""
@@ -117,3 +168,38 @@ class OnboardingAttachedTemplate(models.Model):
                     vals['attached_file'] = template.template_file
                     vals['attached_filename'] = template.template_filename
         return super().create(vals_list)
+
+
+class OnboardingAttachTemplatesWizard(models.TransientModel):
+    """Wizard to attach multiple templates to an onboarding record."""
+    _name = 'qaco.onboarding.attach.templates.wizard'
+    _description = 'Attach Templates to Onboarding Wizard'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', string='Onboarding', required=True)
+    template_ids = fields.Many2many('qaco.onboarding.template.document', string='Templates', required=True)
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        onboarding_id = self.env.context.get('onboarding_id') or self.env.context.get('active_id')
+        if onboarding_id and 'onboarding_id' in fields:
+            res['onboarding_id'] = onboarding_id
+        # default template selection may be empty; UI can select
+        return res
+
+    def action_attach(self):
+        self.ensure_one()
+        Attached = self.env['qaco.onboarding.attached.template']
+        onboarding = self.onboarding_id
+        attached_templates = []
+        for tpl in self.template_ids:
+            if not onboarding.attached_template_ids.filtered(lambda t: t.template_id.id == tpl.id):
+                vals = {'onboarding_id': onboarding.id, 'template_id': tpl.id}
+                if tpl.template_file:
+                    vals['attached_file'] = tpl.template_file
+                    vals['attached_filename'] = tpl.template_filename
+                Attached.create([vals])
+                attached_templates.append(tpl.name)
+        if attached_templates:
+            onboarding.message_post(body=_('Attached templates: %s') % ', '.join(attached_templates))
+        return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {'title': _('Done'), 'message': _('Templates attached'), 'type': 'success', 'sticky': False}}

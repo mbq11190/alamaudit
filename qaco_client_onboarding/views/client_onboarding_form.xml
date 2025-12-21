@@ -31,28 +31,35 @@
                                         Download standard professional templates or attach them directly to this onboarding record.
                                     </p>
 
-                                    <notebook>
-                                        <page string="1.0A - Template Library" name="subsection_1_0a">
+                                    <group col="2">
+                                        <group>
+                                            <div class="o_onboarding_section_header">
+                                                <h4>1.0A - Template Library</h4>
+                                            </div>
                                             <group>
                                                 <button name="%(action_template_library_legal)d" type="action" class="btn-status ms-2" string="Legal Identity Templates"/>
-                                                <p class="text-muted small mt-2">Use the Legal Identity shortcut to filter templates commonly used in section 1.1.</p>
+                                                <button name="%(action_attach_templates_wizard)d" type="action" class="btn-primary ms-2" string="Attach selected"/>
+                                                <p class="text-muted small mt-2">Use the Legal Identity shortcut to filter templates commonly used in section 1.1. Use "Attach selected" to attach multiple templates at once.</p>
                                             </group>
-
                                             <group>
                                                 <label for="template_library_rel_ids" string="Available Templates"/>
-                                                <field name="template_library_rel_ids" nolabel="1">
+                                                <field name="template_library_rel_ids" nolabel="1" mode="tree,form">
                                                     <tree string="Templates" editable="false">
                                                         <field name="name"/>
                                                         <field name="category_id"/>
                                                         <field name="file_type"/>
                                                         <field name="sequence"/>
                                                         <button name="action_download" type="object" string="Download" class="btn-secondary"/>
+                                                        <button name="action_attach_to_onboarding" type="object" string="Attach" class="btn-primary"/>
                                                     </tree>
                                                 </field>
                                             </group>
-                                        </page>
+                                        </group>
 
-                                        <page string="1.0B - Onboarding Pack &amp; Tracker" name="subsection_1_0b">
+                                        <group>
+                                            <div class="o_onboarding_section_header">
+                                                <h4>1.0B - Onboarding Pack &amp; Tracker</h4>
+                                            </div>
                                             <div class="o_template_categories">
                                                 <field name="attached_template_ids" widget="one2many" mode="tree">
                                                     <tree string="Attached Templates" editable="bottom" create="1" delete="1">
@@ -66,8 +73,8 @@
                                                 </field>
                                             </div>
                                             <p class="text-muted small mt-2">Use the tracker to manage templates attached to this onboarding record. Select a template to prefill the attached file.</p>
-                                        </page>
-                                    </notebook>
+                                        </group>
+                                    </group>
                                 </div>
                             </div>
                         </page>

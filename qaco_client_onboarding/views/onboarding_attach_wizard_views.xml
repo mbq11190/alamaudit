@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_onboarding_attach_wizard_form" model="ir.ui.view">
+        <field name="name">qaco.onboarding.attach.templates.wizard.form</field>
+        <field name="model">qaco.onboarding.attach.templates.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attach Templates">
+                <sheet>
+                    <group>
+                        <field name="onboarding_id"/>
+                        <field name="template_ids" widget="many2many_tags" options="{'no_create': False}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_attach" type="object" string="Attach" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_attach_templates_wizard" model="ir.actions.act_window">
+        <field name="name">Attach Templates</field>
+        <field name="res_model">qaco.onboarding.attach.templates.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_onboarding_attach_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
