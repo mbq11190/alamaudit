@@ -176,7 +176,15 @@ class OnboardingAttachTemplatesWizard(models.TransientModel):
     _description = 'Attach Templates to Onboarding Wizard'
 
     onboarding_id = fields.Many2one('qaco.client.onboarding', string='Onboarding', required=True)
-    template_ids = fields.Many2many('qaco.onboarding.template.document', string='Templates', required=True)
+    # Use an explicit, short relation name to avoid exceeding DB identifier length limits
+    template_ids = fields.Many2many(
+        'qaco.onboarding.template.document',
+        'qaco_onb_attach_tpl_rel',
+        'wizard_id',
+        'template_id',
+        string='Templates',
+        required=True,
+    )
 
     @api.model
     def default_get(self, fields):

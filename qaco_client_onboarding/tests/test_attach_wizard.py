@@ -29,6 +29,12 @@ class TestAttachWizard(TransactionCase):
         self.assertEqual(sorted(default_templates), sorted([self.tpl1.id, self.tpl2.id]))
         self.assertEqual(ctx.get('default_onboarding_id'), self.onboarding.id)
 
+        # also support empty selection (no ids) -> wizard opens with empty defaults
+        action2 = self.onboarding.action_open_attach_wizard_with_templates([])
+        ctx2 = action2.get('context', {})
+        self.assertIn('default_template_ids', ctx2)
+        self.assertEqual(ctx2['default_template_ids'][0][2], [])
+
     def test_wizard_attach_creates_attached(self):
         wiz = self.env['qaco.onboarding.attach.templates.wizard'].create({'onboarding_id': self.onboarding.id, 'template_ids': [(6,0,[self.tpl1.id, self.tpl2.id])]})
         wiz.action_attach()
@@ -36,3 +42,9 @@ class TestAttachWizard(TransactionCase):
         self.assertEqual(len(attached), 2)
         self.assertTrue(attached.filtered(lambda r: r.template_id == self.tpl1))
         self.assertTrue(attached.filtered(lambda r: r.template_id == self.tpl2))
+
+        # invoking attach again with the same templates should not create duplicates
+        wiz2 = self.env['qaco.onboarding.attach.templates.wizard'].create({'onboarding_id': self.onboarding.id, 'template_ids': [(6,0,[self.tpl1.id, self.tpl2.id])]})
+        wiz2.action_attach()
+        attached2 = self.Attached.search([('onboarding_id','=',self.onboarding.id)])
+        self.assertEqual(len(attached2), 2)
