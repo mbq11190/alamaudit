@@ -136,11 +136,5 @@
         </field>
     </record>
 
-    <!-- Menuitem -->
-    <menuitem id="menu_audit_planning_p10_related_parties" 
-              name="P-10: Related Parties Planning" 
-              parent="qaco_planning_phase.menu_audit_planning_phase_root" 
-              action="action_audit_planning_p10_related_parties" 
-              sequence="110"/>
 </odoo>
 
