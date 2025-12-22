@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inject a richer Templates & Docs UI into the Client Onboarding form (section 1.0) -->
+    <record id="view_client_onboarding_form_templates_section" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.form.templates.section</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="inherit_id" ref="qaco_client_onboarding.view_client_onboarding_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='o_template_repository']" position="replace">
+                <div class="o_template_repository">
+                    <div class="row">
+                        <!-- LEFT COLUMN: Template Library -->
+                        <div class="col-md-4">
+                            <h3 class="block-title">1.0A - Template Library</h3>
+
+                            <div class="btn-col mb-3">
+                                <!-- Open the central Template Library action -->
+                                <button type="action" name="%(qaco_client_onboarding.action_template_library)d" class="btn btn-primary o_open_template_library">Open Template Library</button>
+                                <!-- Server-side fallback for Attach Selected; JS also listens to .o_attach_selected -->
+                                <button name="action_attach_selected" type="object" class="btn btn-primary o_attach_selected">Attach selected</button>
+                            </div>
+
+                            <div class="help mb-2">Use the <b>Legal Identity</b> shortcut to filter templates commonly used in section 1.1. Use <b>Attach selected</b> to attach multiple templates at once.</div>
+
+                            <div class="subhead">Available Templates</div>
+
+                            <div class="tbl-wrap mt-2" aria-label="Available templates table">
+                                <field name="template_library_rel_ids" nolabel="1" widget="one2many_list">
+                                    <tree string="Available Templates">
+                                        <field name="name"/>
+                                        <field name="category_id"/>
+                                        <field name="file_type"/>
+                                        <field name="sequence"/>
+                                        <button name="action_download" type="object" string="Download" class="btn-secondary"/>
+                                        <button name="action_attach_to_onboarding" type="object" string="Upload" class="btn-secondary"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </div>
+
+                        <!-- MIDDLE COLUMN: Filter / Search -->
+                        <div class="col-md-4">
+                            <div class="mini-card">
+                                <h4>Legal Identity<br/>Templates</h4>
+                                <!-- JS attaches a handler for .o_template_search input to filter the list client-side -->
+                                <input class="search o_template_search" type="search" placeholder="Search template" aria-label="Search template"/>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT COLUMN: Onboarding Pack & Tracker -->
+                        <div class="col-md-4">
+                            <h3 class="block-title">1.0B - Onboarding Pack &amp; Tracker</h3>
+                            <div class="block-note">Use the tracker to manage templates attached to this onboarding record. Select a template to prefill the attached file.</div>
+
+                            <div class="tbl-wrap mt-3" aria-label="Onboarding pack tracker table">
+                                <field name="attached_template_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="template_id"/>
+                                        <field name="attached_filename"/>
+                                        <field name="attached_by"/>
+                                        <field name="attached_date"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

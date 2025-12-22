@@ -44,6 +44,7 @@ Features:
         'data/onboarding_seed.xml',
         'data/fix_attach_button_override.xml',
         'views/client_onboarding_form.xml',
+        'views/client_onboarding_template_section.xml',
         'views/audit_smart_button.xml',
         'views/notebook_views.xml',
         'reports/client_onboarding_report.xml',
@@ -56,9 +57,11 @@ Features:
     'assets': {
         'web.assets_backend': [
             'qaco_client_onboarding/static/src/scss/onboarding.scss',
+            'qaco_client_onboarding/static/src/scss/templates_section.scss',
             'qaco_client_onboarding/static/src/js/onboarding_autosave.js',
             'qaco_client_onboarding/static/src/js/save_next_widget.js',
             'qaco_client_onboarding/static/src/js/attach_selected.js',
+            'qaco_client_onboarding/static/src/js/templates_ui.js',
             'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
         ],
     },
