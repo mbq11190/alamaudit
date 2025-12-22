@@ -44,6 +44,7 @@ Features:
         'data/onboarding_seed.xml',
         'data/fix_attach_button_override.xml',
         'views/client_onboarding_form.xml',
+        'views/onboarding_attach_wizard_views.xml',
         'views/client_onboarding_template_section.xml',
         'views/audit_smart_button.xml',
         'views/notebook_views.xml',

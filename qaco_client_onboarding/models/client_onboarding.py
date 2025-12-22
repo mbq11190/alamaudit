@@ -249,11 +249,24 @@ class ClientOnboarding(models.Model):
         act_window action containing default template_ids and onboarding_id in the context.
         """
         self.ensure_one()
-        action = self.env.ref('qaco_client_onboarding.action_attach_templates_wizard').read()[0]
-        ctx = dict(action.get('context') or {})
-        ctx.update({'default_template_ids': [(6, 0, template_ids)], 'default_onboarding_id': self.id, 'onboarding_id': self.id})
-        action['context'] = ctx
-        return action
+        action = self.env.ref('qaco_client_onboarding.action_attach_templates_wizard', raise_if_not_found=False)
+        ctx = {}
+        if action and getattr(action, 'id', False):
+            action = action.read()[0]
+            ctx = dict(action.get('context') or {})
+            ctx.update({'default_template_ids': [(6, 0, template_ids)], 'default_onboarding_id': self.id, 'onboarding_id': self.id})
+            action['context'] = ctx
+            return action
+        else:
+            # Fallback: construct a minimal act_window action that opens the transient wizard form
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Attach Templates',
+                'res_model': 'qaco.onboarding.attach.templates.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'default_template_ids': [(6, 0, template_ids)], 'default_onboarding_id': self.id, 'onboarding_id': self.id},
+            }
 
     def action_attach_selected(self):
         """Server handler for the "Attach selected" button.

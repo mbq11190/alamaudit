@@ -17,6 +17,44 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         'keydown tr.o_data_row': '_onTemplateRowKeydown',
     }),
 
+    willStart: function () {
+        var self = this;
+        // call parent willStart if present
+        if (FormController.prototype.willStart) {
+            var maybe = FormController.prototype.willStart.apply(this, arguments);
+            if (maybe && maybe.then) {
+                return maybe.then(function () { self._setupTemplateListObserver(); });
+            }
+        }
+        this._setupTemplateListObserver();
+    },
+
+    _setupTemplateListObserver: function () {
+        var self = this;
+        // find the template list container and the placeholder block
+        var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
+        var placeholder = this.el.querySelector('.empty-placeholder-container');
+        if (!placeholder) { return; }
+        // toggle based on presence of data rows initially
+        var hasRows = fieldEl && fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row').length;
+        placeholder.style.display = hasRows ? 'none' : 'block';
+
+        // observe the fieldEl for changes and toggle placeholder accordingly
+        if (!fieldEl || typeof MutationObserver === 'undefined') { return; }
+        var tbody = fieldEl.querySelector('tbody');
+        if (!tbody) { return; }
+        var mo = new MutationObserver(function (mutations) {
+            var rows = tbody.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
+            placeholder.style.display = rows && rows.length ? 'none' : 'block';
+        });
+        try {
+            mo.observe(tbody, { childList: true, subtree: false });
+        } catch (e) {
+            // ignore if observation fails
+            console.warn('Template list observer setup failed', e);
+        }
+    },
+
     // Ensure rows are keyboard focusable when clicked / interacted
     _ensureRowFocusable: function (row) {
         if (!row) { return; }
