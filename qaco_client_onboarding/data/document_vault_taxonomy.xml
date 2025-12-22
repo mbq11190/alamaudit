@@ -12,12 +12,14 @@
         <field name="name">01_Client Master Data & Authorizations</field>
         <field name="code">01_01_Client_Master</field>
         <field name="parent_id" ref="folder_onboarding_root"/>
+        <field name="client_visible">True</field>
     </record>
     <record id="folder_kyc" model="qaco.onboarding.document.folder">
         <field name="onboarding_id" eval="False"/>
         <field name="name">02_KYC / AML-CFT</field>
         <field name="code">02_KYC</field>
         <field name="parent_id" ref="folder_onboarding_root"/>
+        <field name="client_visible">False</field>
     </record>
     <record id="folder_independence" model="qaco.onboarding.document.folder">
         <field name="onboarding_id" eval="False"/>

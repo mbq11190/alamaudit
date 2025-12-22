@@ -39,6 +39,7 @@ class OnboardingDocumentFolder(models.Model):
     status = fields.Selection(FOLDER_STATUS, default='partial')
     sequence = fields.Integer(string='Sequence', default=10)
     description = fields.Text(string='Description')
+    client_visible = fields.Boolean(string='Client Uploads Visible', default=False, help='If true, client uploaded docs in this folder are visible to the portal user')
     doc_count = fields.Integer(string='Documents', compute='_compute_doc_count')
 
     @api.depends('onboarding_id')

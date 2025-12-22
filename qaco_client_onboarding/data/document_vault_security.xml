@@ -28,4 +28,12 @@
 
     <!-- Confidential group (Onboarding Confidential) will have access to all documents - no domain_force is set for that group. -->
 
+    <!-- Allow portal users to view client-visible normal docs that were uploaded by client -->
+    <record id="rule_docs_portal_client_uploads" model="ir.rule">
+        <field name="name">Portal: client uploads visible in client-visible folders</field>
+        <field name="model_id" ref="model_qaco_onboarding_document"/>
+        <field name="domain_force">[('is_client_upload','=',True), ('sensitivity','=','normal'), ('folder_id.client_visible','=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
 </odoo>
