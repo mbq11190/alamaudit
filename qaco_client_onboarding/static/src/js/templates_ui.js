@@ -312,4 +312,5 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         }).catch(function (err) { try { self.displayNotification({ title: _t('Error'), message: _t('Delete failed.'), type: 'danger' }); } catch (e) {} });
     },
 
+});
 
