@@ -203,6 +203,11 @@ class ClientOnboarding(models.Model):
     verification_method = fields.Selection([('secp','SECP Portal'),('doc_inspection','Document Inspection'),('third_party','Third Party')], string='Verification Method')
     verification_exception_ids = fields.One2many('qaco.onboarding.verification.exception', 'onboarding_id', string='Verification Exceptions')
 
+    @api.depends('signatory_ids')
+    def _compute_signatory_count(self):
+        for rec in self:
+            rec.signatory_count = len(rec.signatory_ids)
+
     # Section 2: Compliance History
     financial_framework = fields.Selection(FINANCIAL_FRAMEWORK_SELECTION, string='Applicable Framework', required=True)
     financial_framework_other = fields.Char(string='Other Framework Details')
@@ -269,16 +274,17 @@ class ClientOnboarding(models.Model):
         company_types = set(['pic','lsc','msc','ssc'])
         for rec in self:
             if rec.state in ('partner_approved','locked') and rec.entity_type in company_types:
+                # Use in-memory collection where possible to avoid extra DB roundtrips
                 # Check for Memorandum & Articles / governing instrument and Incorporation Certificate
-                doc_env = self.env['qaco.onboarding.document']
-                has_moa = bool(doc_env.search([('onboarding_id','=',rec.id), ('name','ilike','memorandum')], limit=1))
-                has_incorp = bool(doc_env.search([('onboarding_id','=',rec.id), ('name','ilike','incorporation')], limit=1))
+                names = ' '.join((d.name or '').lower() for d in rec.document_ids)
+                has_moa = 'memorandum' in names or 'moa' in names
+                has_incorp = 'incorporation' in names or 'registration' in names
                 if not has_moa:
                     raise ValidationError(_('Memorandum & Articles (MoA/AoA) must be uploaded for company-type entities before partner approval.'))
                 if not has_incorp:
                     raise ValidationError(_('Incorporation / Registration Certificate must be uploaded for company-type entities before partner approval.'))
-            # Ensure signatory authority evidence exists before final authorization
-            signatories_missing = self.env['qaco.onboarding.signatory'].search([('onboarding_id','=',rec.id), ('authority_evidence_id','=',False)])
+            # Ensure signatory authority evidence exists before final authorization (in-memory check)
+            signatories_missing = rec.signatory_ids.filtered(lambda s: not s.authority_evidence_id)
             if signatories_missing:
                 raise ValidationError(_('All authorised signatories must have authority evidence attached before partner approval.'))
             # Ensure evidence documents are received/accepted
