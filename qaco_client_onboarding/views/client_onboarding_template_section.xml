@@ -14,7 +14,7 @@
                             <div class="panel-head">
                                 <h3 class="block-title">1.0A - Template Library</h3>
                                 <div class="panel-actions">
-                                    <label class="filter-toggle"><input type="checkbox" class="o_quick_filter_legal"/> Legal Identity</label>
+                                    <div class="o_form_label filter-toggle"><input type="checkbox" class="o_quick_filter_legal"/> Legal Identity</div>
                                     <input class="search o_template_search" type="search" placeholder="Search templates" aria-label="Search templates"/>
                                 </div>
                             </div>
