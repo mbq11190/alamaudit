@@ -66,6 +66,9 @@ Features:
             'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
         ],
     },
+    'web.qunit_suite_tests': [
+        'qaco_client_onboarding/static/tests/templates_ui_tests.esm.js',
+    ],
     # Note: python-docx and weasyprint are optional for Word/PDF generation
     # If not installed, the system falls back to HTML-based downloads
     'installable': True,
