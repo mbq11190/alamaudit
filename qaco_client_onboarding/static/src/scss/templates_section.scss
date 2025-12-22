@@ -50,6 +50,16 @@
 .o_onboarding_sheet .btn:hover{ background:#5f4f98; }
 .o_onboarding_sheet .help{ margin-top:6px; font-size:12px; color:#6b7280; line-height:1.5; max-width:270px }
 
+/* Small outline buttons for inline row actions */
+.o_onboarding_sheet .btn-outline-secondary{ background:transparent; color:#374151; border:1px solid #e6e9f0; padding:4px 8px; font-size:12px; box-shadow:none; border-radius:6px; }
+.o_onboarding_sheet .btn-outline-secondary:hover{ background:#f8fafc; }
+.o_onboarding_sheet .btn-sm{ padding:4px 8px; font-size:12px; }
+.o_onboarding_sheet .o_tpl_download::after{ content: '\21E9'; margin-left:6px; opacity:0.8; }
+.o_onboarding_sheet .o_tpl_attach::after{ content: '\1F4E4'; margin-left:6px; opacity:0.8; }
+
+/* Make inline list buttons compact */
+.tbl-wrap td .btn-outline-secondary{ margin-left:6px; }
+
 .mini-card{ border:1px solid #e6e9f0; border-radius:12px; padding:12px; background:#fff; }
 .mini-card h4{ margin:0 0 8px 0; font-size:13px; font-weight:800 }
 .mini-card .search{ width:100%; border:1px solid #e6e9f0; border-radius:8px; padding:8px 10px; font-size:13px; background:#fff }

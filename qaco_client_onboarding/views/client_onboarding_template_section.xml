@@ -31,8 +31,9 @@
                                         <field name="category_id"/>
                                         <field name="file_type"/>
                                         <field name="sequence"/>
-                                        <button name="action_download" type="object" string="Download" class="btn-secondary"/>
-                                        <button name="action_attach_to_onboarding" type="object" string="Upload" class="btn-secondary"/>
+                                        <!-- Inline actions: Download the master copy or Upload (attach to onboarding) -->
+                                        <button name="action_download" type="object" string="Download" class="btn btn-sm btn-outline-secondary o_tpl_download"/>
+                                        <button name="action_attach_to_onboarding" type="object" string="Upload" class="btn btn-sm btn-outline-secondary o_tpl_attach"/>
                                     </tree>
                                 </field>
                             </div>
