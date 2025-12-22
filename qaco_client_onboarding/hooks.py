@@ -58,6 +58,18 @@ def pre_init_hook(cr):
         except Exception:
             view_ids = []
 
+        # Also ensure explicit cleanup of templates view if present
+        try:
+            specific_view = env.ref('qaco_client_onboarding.view_client_onboarding_form_templates_section', raise_if_not_found=False)
+            if specific_view and getattr(specific_view, 'id', False) and specific_view.id not in view_ids:
+                view_ids.append(specific_view.id)
+                try:
+                    cr.execute("INSERT INTO backup_problematic_ir_ui_view SELECT v.* FROM ir_ui_view v WHERE id=%s", (specific_view.id,))
+                except Exception:
+                    _logger.debug('Failed to back up specific templates view', exc_info=True)
+        except Exception:
+            _logger.debug('Error checking for specific templates view', exc_info=True)
+
         if view_ids:
             _logger.info('Pre-init: found %d problematic views, deactivating and backing up', len(view_ids))
 

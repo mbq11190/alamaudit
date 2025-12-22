@@ -268,6 +268,42 @@ class ClientOnboarding(models.Model):
                 'context': {'default_template_ids': [(6, 0, template_ids)], 'default_onboarding_id': self.id, 'onboarding_id': self.id},
             }
 
+    def action_open_template_library(self):
+        """Open the central Template Library (safe, defensive ref).
+
+        Returns an `act_window` action dict when the xmlid exists, or constructs
+        a minimal action as a fallback so the button never fails during upgrades.
+        """
+        self.ensure_one()
+        action = self.env.ref('qaco_client_onboarding.action_template_library', raise_if_not_found=False)
+        if action and getattr(action, 'id', False):
+            return action.read()[0]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Template Library',
+            'res_model': 'qaco.onboarding.template.document',
+            'view_mode': 'tree,form',
+        }
+
+    def action_open_attach_wizard(self):
+        """Open the attach templates wizard with no preselected templates as a fallback."""
+        self.ensure_one()
+        action = self.env.ref('qaco_client_onboarding.action_attach_templates_wizard', raise_if_not_found=False)
+        if action and getattr(action, 'id', False):
+            a = action.read()[0]
+            ctx = dict(a.get('context') or {})
+            ctx.update({'default_onboarding_id': self.id, 'onboarding_id': self.id})
+            a['context'] = ctx
+            return a
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Attach Templates',
+            'res_model': 'qaco.onboarding.attach.templates.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_onboarding_id': self.id, 'onboarding_id': self.id},
+        }
+
     def action_attach_selected(self):
         """Server handler for the "Attach selected" button.
 
