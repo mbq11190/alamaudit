@@ -137,6 +137,69 @@ def pre_init_hook(cr):
                     _logger.debug('Failed to delete problematic ir.model.fields rows', exc_info=True)
         except Exception:
             _logger.exception('Error while checking for problematic ir.model.fields (continuing)')
+
+        # Defensive cleanup: scan views for invalid default_order attributes referencing missing fields
+        try:
+            cr.execute("SELECT id, model, arch_db FROM ir_ui_view WHERE arch_db ILIKE '%default_order=%'")
+            bad_views = []
+            for vid, model_name, arch in cr.fetchall():
+                try:
+                    from lxml import etree
+                    root = etree.fromstring(arch.encode('utf-8'))
+                    # find all tree nodes with default_order
+                    trees = root.xpath(".//tree[@default_order]")
+                    if not trees:
+                        continue
+                    # collect model fields
+                    md_fields = set(f.name for f in env['ir.model.fields'].search([('model', '=', model_name)]))
+                    invalid = False
+                    for t in trees:
+                        default_order = t.get('default_order')
+                        # split by comma and check each field token (field_name or field_name asc/desc)
+                        for token in [x.strip() for x in default_order.split(',') if x.strip()]:
+                            fname = token.split()[0]
+                            if fname not in md_fields:
+                                invalid = True
+                                _logger.warning('Pre-init: view %s Default order references unknown field %s on model %s', vid, fname, model_name)
+                    if invalid:
+                        bad_views.append(vid)
+                except Exception:
+                    _logger.debug('Failed to parse view arch for view id %s', vid, exc_info=True)
+            if bad_views:
+                _logger.info('Pre-init: backing up and deactivating %d views due to invalid default_order', len(bad_views))
+                try:
+                    cr.execute("INSERT INTO backup_problematic_ir_ui_view SELECT v.* FROM ir_ui_view v WHERE id IN %s", (tuple(bad_views),))
+                except Exception:
+                    _logger.debug('Failed to back up problematic views with invalid default_order', exc_info=True)
+                try:
+                    cr.execute("UPDATE ir_ui_view SET active = false WHERE id IN %s", (tuple(bad_views),))
+                except Exception:
+                    _logger.debug('Failed to deactivate problematic views with invalid default_order', exc_info=True)
+                try:
+                    cr.execute("DELETE FROM ir_model_data WHERE model='ir.ui.view' AND res_id IN %s", (tuple(bad_views),))
+                except Exception:
+                    _logger.debug('Failed to remove ir.model.data entries for problematic views with invalid default_order', exc_info=True)
+        except Exception:
+            _logger.exception('Error while scanning views for invalid default_order (continuing)')
+
+        # Defensive cleanup: One2many fields whose inverse_name is missing on the relation model
+        try:
+            cr.execute("CREATE TABLE IF NOT EXISTS backup_problematic_ir_model_fields AS SELECT * FROM ir_model_fields WHERE false")
+            cr.execute("SELECT f.id, f.model, f.name, f.relation, f.inverse_name FROM ir_model_fields f WHERE f.ttype='one2many' AND (f.inverse_name IS NULL OR f.inverse_name = '' OR NOT EXISTS (SELECT 1 FROM ir_model_fields rf WHERE rf.model = f.relation AND rf.name = f.inverse_name))")
+            rows = cr.fetchall()
+            if rows:
+                ids = [r[0] for r in rows]
+                _logger.info('Pre-init: found %d One2many fields with missing inverse on relation model; backing up and removing', len(ids))
+                try:
+                    cr.execute("INSERT INTO backup_problematic_ir_model_fields SELECT * FROM ir_model_fields WHERE id IN %s", (tuple(ids),))
+                except Exception:
+                    _logger.debug('Failed to backup problematic One2many ir.model.fields', exc_info=True)
+                try:
+                    cr.execute("DELETE FROM ir_model_fields WHERE id IN %s", (tuple(ids),))
+                except Exception:
+                    _logger.debug('Failed to delete problematic One2many ir.model.fields', exc_info=True)
+        except Exception:
+            _logger.exception('Error while checking One2many inverse consistency (continuing)')
     except Exception:
         # swallow any error: the cleanup is best-effort and must not block upgrades
         _logger.exception('Pre-init hook failed during defensive cleanup (continuing)')
