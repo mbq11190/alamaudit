@@ -41,7 +41,7 @@
                                     <span class="o_onboarding_card_ref">ISA 210 / ISQM-1 | Companies Act 2017 (inc. registration obligations) | SECP rules</span>
                                 </div>
                                 <group>
-                                    <span class="text-muted ms-2">Purpose: capture & verify client's legal existence and authorised signatories. Reference: ISA 210, ISQM-1, Companies Act 2017. (Fields under this section drive legal verifications and must be completed during pre-onboarding.)</span>
+                                    <span class="text-muted ms-2">Purpose: capture &amp; verify client's legal existence and authorised signatories. Reference: ISA 210, ISQM-1, Companies Act 2017. (Fields under this section drive legal verifications and must be completed during pre-onboarding.)</span>
                                 </group>
                                 <div class="row mb-2">
                                     <div class="col-md-6">
@@ -153,7 +153,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="Verification & Controls" class="o_onboarding_grid">
+                                <group string="Verification &amp; Controls" class="o_onboarding_grid">
                                     <field name="verification_performed_by"/>
                                     <field name="verification_date"/>
                                     <field name="verification_method"/>
