@@ -59,8 +59,8 @@ Features:
         'web.assets_backend': [
             'qaco_client_onboarding/static/src/scss/onboarding.scss',
             'qaco_client_onboarding/static/src/scss/templates_section.scss',
-            'qaco_client_onboarding/static/src/js/onboarding_autosave.js',
-            'qaco_client_onboarding/static/src/js/save_next_widget.js',
+            'qaco_client_onboarding/static/src/js/onboarding_autosave.esm.js',
+            'qaco_client_onboarding/static/src/js/save_next_widget.esm.js',
             'qaco_client_onboarding/static/src/js/attach_selected.js',
             'qaco_client_onboarding/static/src/js/templates_ui.js',
             'qaco_client_onboarding/static/src/xml/save_next_templates.xml',
