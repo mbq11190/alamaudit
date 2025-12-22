@@ -117,6 +117,26 @@ def pre_init_hook(cr):
         except Exception:
             _logger.debug('Error while cleaning stale ir.model.data by name', exc_info=True)
 
+        # Defensive cleanup: find ir.model.fields that reference missing models (relation not present in ir.model)
+        try:
+            cr.execute("CREATE TABLE IF NOT EXISTS backup_problematic_ir_model_fields AS SELECT * FROM ir_model_fields WHERE false")
+        except Exception:
+            _logger.debug('Could not ensure backup table for ir.model.fields exists; continuing', exc_info=True)
+        try:
+            cr.execute("SELECT id FROM ir_model_fields f WHERE f.relation IS NOT NULL AND f.relation NOT IN (SELECT model FROM ir_model)")
+            missing_fields = [r[0] for r in cr.fetchall()]
+            if missing_fields:
+                _logger.info('Pre-init: found %d ir.model.fields with missing relation model; backing up and removing', len(missing_fields))
+                try:
+                    cr.execute("INSERT INTO backup_problematic_ir_model_fields SELECT * FROM ir_model_fields WHERE id IN %s", (tuple(missing_fields),))
+                except Exception:
+                    _logger.debug('Failed to backup problematic ir.model.fields rows', exc_info=True)
+                try:
+                    cr.execute("DELETE FROM ir_model_fields WHERE id IN %s", (tuple(missing_fields),))
+                except Exception:
+                    _logger.debug('Failed to delete problematic ir.model.fields rows', exc_info=True)
+        except Exception:
+            _logger.exception('Error while checking for problematic ir.model.fields (continuing)')
     except Exception:
         # swallow any error: the cleanup is best-effort and must not block upgrades
         _logger.exception('Pre-init hook failed during defensive cleanup (continuing)')
