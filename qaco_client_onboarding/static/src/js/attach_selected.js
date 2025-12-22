@@ -38,7 +38,6 @@ patch(FormController.prototype, 'qaco_client_onboarding.attach_selected', {
         }).then(function (action) {
             self.trigger_up('do_action', {action: action});
         }).catch(function (err) {
-            console.error(err);
             try {
                 self.displayNotification({title: _t('Error'), message: _t('Could not open attach wizard.'), type: 'danger'});
             } catch (e) {

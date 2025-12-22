@@ -33,7 +33,7 @@
           <h3>Revert Condonation</h3>
           <form method="post">
             <div class="form-group">
-              <label>Remark</label>
+              <div class="o_form_label">Remark</div>
               <textarea class="form-control" name="remark" rows="4"></textarea>
             </div>
             <button class="btn btn-secondary" type="submit">Revert</button>

@@ -72,8 +72,8 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         try {
             mo.observe(tbody, { childList: true, subtree: false });
         } catch (e) {
-            // ignore if observation fails
-            console.warn('Template list observer setup failed', e);
+            // ignore if observation fails, but notify in UI
+            try { self.displayNotification({ title: _t('Error'), message: _t('Template observer failed.'), type: 'warning' }); } catch (err) { self.env.services.notification.add(_t('Template observer failed.'), { type: 'warning' }); }
         }
     },
 
@@ -154,7 +154,6 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                     }
                 }
             }).catch(function (err) {
-                console.error(err);
                 try {
                     self.displayNotification({ title: _t('Error'), message: _t('Could not attach template.'), type: 'danger' });
                 } catch (e) {
@@ -165,7 +164,7 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 if (prev) { prev.classList.remove('o-preview-busy'); }
             });
         } catch (err) {
-            console.error(err);
+            try { self.displayNotification({ title: _t('Error'), message: _t('Could not attach template.'), type: 'danger' }); } catch (e) { self.env.services.notification.add(_t('Could not attach template.'), { type: 'danger' }); }
             row.classList.remove('o-row-busy');
             if (prev) { prev.classList.remove('o-preview-busy'); }
         }
@@ -225,7 +224,7 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 if (metaEl) { metaEl.textContent = (tpl.category_id && tpl.category_id[1] ? tpl.category_id[1] + ' | ' : '') + (tpl.file_type || '').toUpperCase() + (tpl.create_uid && tpl.create_uid[1] ? ' | Author: ' + tpl.create_uid[1] : ''); }
                 if (sizeEl) { sizeEl.textContent = tpl.file_size ? (tpl.file_size + ' bytes') : '—'; }
                 if (dl) { dl.setAttribute('href', '/web/content/qaco.onboarding.template.document/' + id + '/template_file/' + (tpl.template_filename || 'file') + '?download=true'); }
-            }).catch(function (err) { console.error(err); });
+            }).catch(function (err) { try { self.displayNotification({ title: _t('Error'), message: _t('Could not load template preview.'), type: 'warning' }); } catch (e) { self.env.services.notification.add(_t('Could not load template preview.'), { type: 'warning' }); } });
     },
 
     _handleUploadClick: function (ev) {
@@ -252,7 +251,6 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                         // refresh the form to show new attachments
                         try { self.trigger_up('reload'); } catch (e) { window.location.reload(); }
                     }).catch(function (err) {
-                        console.error(err);
                         try { self.displayNotification({title: _t('Error'), message: _t('Upload failed.'), type: 'danger'}); } catch (e) {}
                     });
             };
@@ -311,9 +309,7 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         rpc.query({ model: 'qaco.onboarding.template.document', method: 'unlink', args: [[id]] }).then(function () {
             try { self.displayNotification({ title: _t('Deleted'), message: _t('Template deleted.'), type: 'success' }); } catch (e) {}
             try { self.trigger_up('reload'); } catch (e) { window.location.reload(); }
-        }).catch(function (err) { console.error(err); try { self.displayNotification({ title: _t('Error'), message: _t('Delete failed.'), type: 'danger' }); } catch (e) {} });
+        }).catch(function (err) { try { self.displayNotification({ title: _t('Error'), message: _t('Delete failed.'), type: 'danger' }); } catch (e) {} });
     },
 
-    _handleUploadClick: function (ev) {
 
-});

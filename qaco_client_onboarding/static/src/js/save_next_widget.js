@@ -47,8 +47,7 @@ class AutoSaveManager {
             this.intervalId = setInterval(() => {
                 this.autoSave();
             }, this.autoSaveInterval);
-            
-            console.log(`[AutoSave] Started auto-save for note ${recordId}`);
+
         }
     }
 
@@ -59,7 +58,6 @@ class AutoSaveManager {
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
-            console.log('[AutoSave] Stopped auto-save');
         }
     }
 
@@ -98,11 +96,9 @@ class AutoSaveManager {
                     "Draft auto-saved",
                     { type: 'info', sticky: false }
                 );
-                
-                console.log(`[AutoSave] Successfully auto-saved note ${this.currentRecordId}`);
+
             }
         } catch (error) {
-            console.error('[AutoSave] Error during auto-save:', error);
             this.notification.add(
                 "Auto-save failed. Your changes may not be saved.",
                 { type: 'warning', sticky: true }
@@ -159,7 +155,6 @@ class AutoSaveManager {
             
             return result;
         } catch (error) {
-            console.error('[AutoSave] Error during save and next:', error);
             this.notification.add(
                 "Error saving note. Please try again.",
                 { type: 'danger', sticky: true }
@@ -193,7 +188,6 @@ class AutoSaveManager {
             
             return result;
         } catch (error) {
-            console.error('[AutoSave] Error restoring draft:', error);
             this.notification.add(
                 "Error restoring draft",
                 { type: 'danger', sticky: true }
@@ -329,7 +323,7 @@ export class AutoSaveStatusWidget extends Component {
                 this.state.lastSaved = record[0].last_save_date;
             }
         } catch (error) {
-            console.error('[AutoSaveStatus] Error checking draft status:', error);
+            this.notification?.add('Could not check draft status.', { type: 'warning' });
         }
     }
 
@@ -403,7 +397,6 @@ export class SaveNextButton extends Component {
                 await this.action.doAction(result);
             }
         } catch (error) {
-            console.error('[SaveNextButton] Error:', error);
             this.notification.add(
                 "Error navigating to next note",
                 { type: 'danger' }

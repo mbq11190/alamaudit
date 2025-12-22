@@ -61,7 +61,7 @@ export class OnboardingAutoSaveController extends FormController {
         await this._checkLockStatus();
         
         if (this.isLocked) {
-            console.log('[OnboardingAutoSave] Record is locked, auto-save disabled');
+            this.notification.add('Auto-save is disabled because this onboarding record is locked.', { type: 'info', sticky: false });
             return;
         }
         
@@ -70,7 +70,7 @@ export class OnboardingAutoSaveController extends FormController {
             this._performAutoSave();
         }, AUTO_SAVE_INTERVAL);
         
-        console.log('[OnboardingAutoSave] Auto-save initialized (10s interval)');
+
     }
 
     /**
@@ -85,7 +85,7 @@ export class OnboardingAutoSaveController extends FormController {
             clearTimeout(this.debounceTimeout);
             this.debounceTimeout = null;
         }
-        console.log('[OnboardingAutoSave] Cleaned up auto-save timers');
+
     }
 
     /**
@@ -111,7 +111,7 @@ export class OnboardingAutoSaveController extends FormController {
                 this._showLockedNotification();
             }
         } catch (error) {
-            console.warn('[OnboardingAutoSave] Error checking lock status:', error);
+            this.notification.add('Unable to verify auto-save lock status.', { type: 'warning', sticky: false });
         }
     }
 
@@ -171,17 +171,17 @@ export class OnboardingAutoSaveController extends FormController {
                 // Reload record to sync state
                 await record.load();
                 
-                console.log('[OnboardingAutoSave] Auto-saved:', result.fields_saved);
+
             } else if (result.status === 'locked') {
                 this.isLocked = true;
                 this._cleanupAutoSave();
                 this._showLockedNotification();
             } else if (result.status === 'error') {
-                console.warn('[OnboardingAutoSave] Save error:', result.message);
+                this.notification.add(`Auto-save error: ${result.message || 'Unknown'}`, { type: 'warning', sticky: false });
             }
             
         } catch (error) {
-            console.error('[OnboardingAutoSave] Auto-save failed:', error);
+            this.notification.add('Auto-save failed. Your changes may not have been saved.', { type: 'danger', sticky: true });
         } finally {
             this.isAutoSaving = false;
         }
