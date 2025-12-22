@@ -7,6 +7,9 @@ import core from 'web.core';
 
 var _t = core._t;
 
+// capture original willStart to avoid recursive calls when patching
+var _origFormControllerWillStart = FormController.prototype.willStart;
+
 patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
     events: Object.assign({}, FormController.prototype.events, {
         // click anywhere on a list row to toggle the checkbox for easier selection
@@ -23,9 +26,9 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
 
     willStart: function () {
         var self = this;
-        // call parent willStart if present
-        if (FormController.prototype.willStart) {
-            var maybe = FormController.prototype.willStart.apply(this, arguments);
+        // call captured original willStart if present
+        if (typeof _origFormControllerWillStart === 'function') {
+            var maybe = _origFormControllerWillStart.apply(this, arguments);
             if (maybe && maybe.then) {
                 return maybe.then(function () { self._setupTemplateListObserver(); });
             }
