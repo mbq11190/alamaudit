@@ -36,8 +36,18 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         var placeholder = this.el.querySelector('.empty-placeholder-container');
         if (!placeholder) { return; }
         // toggle based on presence of data rows initially
-        var hasRows = fieldEl && fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row').length;
-        placeholder.style.display = hasRows ? 'none' : 'block';
+        var rows = fieldEl && fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
+        placeholder.style.display = rows && rows.length ? 'none' : 'block';
+
+        // Setup search and quick filter handlers
+        var search = this.el.querySelector('.o_template_search');
+        if (search) {
+            search.addEventListener('input', function (ev) { self._filterTemplateRows(fieldEl, ev.target.value); });
+        }
+        var legal = this.el.querySelector('.o_quick_filter_legal');
+        if (legal) {
+            legal.addEventListener('change', function (ev) { self._applyQuickLegalFilter(fieldEl, ev.target.checked); });
+        }
 
         // observe the fieldEl for changes and toggle placeholder accordingly
         if (!fieldEl || typeof MutationObserver === 'undefined') { return; }
@@ -106,6 +116,11 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
 
         // show busy spinner on row
         row.classList.add('o-row-busy');
+
+        // also show loading in preview
+        var prev = this.el.querySelector('.preview-card');
+        if (prev) { prev.classList.add('o-preview-busy'); }
+
         // call server method on the template to attach it to the onboarding using context
         // show a small notification on success/failure
         try {
@@ -133,11 +148,70 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 }
             }).finally(function () {
                 row.classList.remove('o-row-busy');
+                if (prev) { prev.classList.remove('o-preview-busy'); }
             });
         } catch (err) {
             console.error(err);
             row.classList.remove('o-row-busy');
+            if (prev) { prev.classList.remove('o-preview-busy'); }
         }
+    },
+
+    _filterTemplateRows: function (fieldEl, q) {
+        if (!fieldEl) { return; }
+        q = (q || '').trim().toLowerCase();
+        var rows = fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var nameCell = row.querySelector('td[data-field="name"]');
+            var text = nameCell ? nameCell.textContent.trim().toLowerCase() : '';
+            row.style.display = q && text.indexOf(q) === -1 ? 'none' : '';
+        }
+    },
+
+    _applyQuickLegalFilter: function (fieldEl, enabled) {
+        if (!fieldEl) { return; }
+        var rows = fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var nameCell = row.querySelector('td[data-field="name"]');
+            var text = nameCell ? nameCell.textContent.trim().toLowerCase() : '';
+            var match = (text.indexOf('kyc') !== -1) || (text.indexOf('kyb') !== -1) || (text.indexOf('legal') !== -1);
+            row.style.display = enabled && !match ? 'none' : '';
+        }
+    },
+
+    _updatePreviewForSelection: function () {
+        var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
+        if (!fieldEl) { return; }
+        var selected = fieldEl.querySelectorAll('input.o_list_record_selector:checked');
+        var preview = this.el.querySelector('.preview-card');
+        var content = this.el.querySelector('.preview-content');
+        var empty = this.el.querySelector('.preview-empty');
+        if (!preview || !content || !empty) { return; }
+        if (!selected || !selected.length) {
+            content.style.display = 'none';
+            empty.style.display = 'block';
+            return;
+        }
+        var id = Number(selected[0].dataset.id || selected[0].value);
+        if (!id) { content.style.display = 'none'; empty.style.display = 'block'; return; }
+        // fetch metadata via rpc
+        rpc.query({ model: 'qaco.onboarding.template.document', method: 'read', args: [[id], ['name','category_id','file_type','template_filename','write_date','file_size','create_uid']] })
+            .then(function (res) {
+                if (!res || !res.length) { content.style.display = 'none'; empty.style.display = 'block'; return; }
+                var tpl = res[0];
+                empty.style.display = 'none';
+                content.style.display = 'block';
+                var nameEl = document.querySelector('.tpl-name');
+                var metaEl = document.querySelector('.tpl-meta');
+                var sizeEl = document.querySelector('.tpl-size');
+                var dl = document.querySelector('.tpl-download');
+                if (nameEl) { nameEl.textContent = tpl.name || ''; }
+                if (metaEl) { metaEl.textContent = (tpl.category_id && tpl.category_id[1] ? tpl.category_id[1] + ' | ' : '') + (tpl.file_type || '').toUpperCase() + (tpl.create_uid && tpl.create_uid[1] ? ' | Author: ' + tpl.create_uid[1] : ''); }
+                if (sizeEl) { sizeEl.textContent = tpl.file_size ? (tpl.file_size + ' bytes') : '—'; }
+                if (dl) { dl.setAttribute('href', '/web/content/qaco.onboarding.template.document/' + id + '/template_file/' + (tpl.template_filename || 'file') + '?download=true'); }
+            }).catch(function (err) { console.error(err); });
     },
 
     _onTemplateRowKeydown: function (ev) {

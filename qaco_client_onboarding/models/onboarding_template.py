@@ -59,7 +59,20 @@ class OnboardingTemplateDocument(models.Model):
         string='File Type',
         default='docx',
     )
+    file_size = fields.Integer(string='File Size (bytes)', compute='_compute_file_size', store=True)
     active = fields.Boolean(string='Active', default=True)
+
+    def _compute_file_size(self):
+        import base64
+        for rec in self:
+            try:
+                if rec.template_file:
+                    # template_file is base64-encoded binary
+                    rec.file_size = len(base64.b64decode(rec.template_file))
+                else:
+                    rec.file_size = 0
+            except Exception:
+                rec.file_size = 0
 
     def action_download(self):
         """Download the template file."""
