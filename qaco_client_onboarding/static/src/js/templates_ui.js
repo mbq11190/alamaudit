@@ -15,6 +15,10 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         'dblclick tr.o_data_row': '_onTemplateRowDoubleClick',
         // keyboard support for rows
         'keydown tr.o_data_row': '_onTemplateRowKeydown',
+        // preview actions
+        'click a.tpl-edit': '_onTplEditClick',
+        'click a.tpl-delete': '_onTplDeleteClick',
+        'click a.o_upload_attach': '_handleUploadClick',
     }),
 
     willStart: function () {
@@ -94,6 +98,8 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         // Fire change event for any listeners
         var changeEvent = new Event('change', { bubbles: true });
         checkbox.dispatchEvent(changeEvent);
+        // Update preview for the new selection
+        this._updatePreviewForSelection();
     },
 
     _onTemplateRowDoubleClick: function (ev) {
@@ -266,6 +272,7 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
             var changeEvent = new Event('change', { bubbles: true });
             checkbox.dispatchEvent(changeEvent);
             this._ensureRowFocusable(row);
+            this._updatePreviewForSelection();
             return;
         }
         // Enter triggers attach (same as double-click)
@@ -276,4 +283,34 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
             return;
         }
     },
+
+    // Client handlers for preview actions
+    _onTplEditClick: function (ev) {
+        ev.preventDefault();
+        var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
+        var selected = fieldEl && fieldEl.querySelectorAll('input.o_list_record_selector:checked');
+        if (!selected || !selected.length) { return; }
+        var id = Number(selected[0].dataset.id || selected[0].value);
+        if (!id) { return; }
+        // Open form view for the template
+        this.trigger_up('do_action', { action: { type: 'ir.actions.act_window', name: 'Template', res_model: 'qaco.onboarding.template.document', res_id: id, views: [[false, 'form']], target: 'current' } });
+    },
+
+    _onTplDeleteClick: function (ev) {
+        ev.preventDefault();
+        if (!confirm('Delete selected template? This cannot be undone.')) { return; }
+        var self = this;
+        var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
+        var selected = fieldEl && fieldEl.querySelectorAll('input.o_list_record_selector:checked');
+        if (!selected || !selected.length) { return; }
+        var id = Number(selected[0].dataset.id || selected[0].value);
+        if (!id) { return; }
+        rpc.query({ model: 'qaco.onboarding.template.document', method: 'unlink', args: [[id]] }).then(function () {
+            try { self.displayNotification({ title: _t('Deleted'), message: _t('Template deleted.'), type: 'success' }); } catch (e) {}
+            try { self.trigger_up('reload'); } catch (e) { window.location.reload(); }
+        }).catch(function (err) { console.error(err); try { self.displayNotification({ title: _t('Error'), message: _t('Delete failed.'), type: 'danger' }); } catch (e) {} });
+    },
+
+    _handleUploadClick: function (ev) {
+
 });

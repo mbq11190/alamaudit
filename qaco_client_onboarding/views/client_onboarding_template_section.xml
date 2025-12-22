@@ -25,8 +25,8 @@
 
                             <div class="tbl-wrap mt-2" aria-label="Available templates table">
                                 <div class="table-controls">
-                                    <button class="btn btn-sm btn-outline-secondary o_attach_selected">Attach selected</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary o_upload_attach" aria-label="Upload template">Upload</button>
+                                    <button name="action_attach_selected" type="object" class="btn btn-sm btn-outline-secondary o_attach_selected">Attach selected</button>
+                                    <a role="button" class="btn btn-sm btn-outline-secondary o_upload_attach" aria-label="Upload template">Upload</a>
                                     <button name="action_open_template_library" type="object" class="btn btn-sm btn-outline-secondary" aria-label="Open library">Library</button>
                                 </div>
 
@@ -63,8 +63,8 @@
                                     <p class="tpl-size"/>
                                     <div class="preview-actions">
                                         <a class="btn btn-sm btn-outline-secondary tpl-download" role="button">Download</a>
-                                        <button class="btn btn-sm btn-outline-secondary tpl-edit" type="button">Edit</button>
-                                        <button class="btn btn-sm btn-outline-secondary tpl-delete" type="button">Delete</button>
+                                        <a role="button" class="btn btn-sm btn-outline-secondary tpl-edit">Edit</a>
+                                        <a role="button" class="btn btn-sm btn-outline-secondary tpl-delete">Delete</a>
                                     </div>
                                 </div>
                             </div>
