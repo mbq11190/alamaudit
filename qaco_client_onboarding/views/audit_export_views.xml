@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_audit_export_wizard" model="ir.ui.view">
+    <field name="name">qaco.onboarding.audit.export.wizard.form</field>
+    <field name="model">qaco.onboarding.audit.export.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Export Audit Trail">
+        <sheet>
+          <group>
+            <field name="date_from"/>
+            <field name="date_to"/>
+            <field name="action_type"/>
+            <field name="user_id"/>
+            <field name="include_overrides"/>
+            <field name="export_format"/>
+          </group>
+          <footer>
+            <button string="Export" type="object" name="action_export" class="btn-primary"/>
+            <button string="Cancel" class="btn-secondary" special="cancel"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_audit_resolution_wizard" model="ir.ui.view">
+    <field name="name">qaco.onboarding.audit.resolution.wizard.form</field>
+    <field name="model">qaco.onboarding.audit.resolution.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Add Resolution">
+        <sheet>
+          <group>
+            <field name="audit_id"/>
+            <field name="resolution"/>
+            <field name="mark_override"/>
+          </group>
+          <footer>
+            <button string="Apply" type="object" name="action_apply_resolution" class="btn-primary"/>
+            <button string="Cancel" class="btn-secondary" special="cancel"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_open_audit_export_wizard" model="ir.actions.act_window">
+    <field name="name">Export Audit Trail</field>
+    <field name="res_model">qaco.onboarding.audit.export.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_audit_export_wizard"/>
+    <field name="target">new</field>
+  </record>
+
+  <record id="action_open_audit_resolution_wizard" model="ir.actions.act_window">
+    <field name="name">Add Audit Resolution</field>
+    <field name="res_model">qaco.onboarding.audit.resolution.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_audit_resolution_wizard"/>
+    <field name="target">new</field>
+  </record>
+
+  <record id="view_audit_trail_search" model="ir.ui.view">
+    <field name="name">qaco.onboarding.audit.trail.search</field>
+    <field name="model">qaco.onboarding.audit.trail</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="action_type"/>
+        <field name="user_id"/>
+        <filter string="Overrides only" name="overrides_only" domain="[('is_override','=',True)]"/>
+        <field name="create_date"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="view_audit_trail_tree" model="ir.ui.view">
+    <field name="name">qaco.onboarding.audit.trail.tree</field>
+    <field name="model">qaco.onboarding.audit.trail</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="create_date"/>
+        <field name="user_id"/>
+        <field name="action"/>
+        <field name="action_type"/>
+        <field name="is_override"/>
+        <field name="resolution"/>
+        <field name="notes"/>
+        <button name="action_open_resolution_wizard" type="object" string="Resolve"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_audit_trail_form" model="ir.ui.view">
+    <field name="name">qaco.onboarding.audit.trail.form</field>
+    <field name="model">qaco.onboarding.audit.trail</field>
+    <field name="arch" type="xml">
+      <form string="Audit Entry">
+        <sheet>
+          <group>
+            <field name="create_date" readonly="1"/>
+            <field name="user_id" readonly="1"/>
+            <field name="action" readonly="1"/>
+            <field name="action_type" readonly="1"/>
+            <field name="is_override" readonly="1"/>
+            <field name="related_model" readonly="1"/>
+            <field name="related_res_id" readonly="1"/>
+          </group>
+          <group>
+            <field name="notes" readonly="1"/>
+            <field name="resolution"/>
+          </group>
+          <footer>
+            <button name="action_open_resolution_wizard" type="object" string="Add Resolution" class="btn-primary"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_open_audit_trail" model="ir.actions.act_window">
+    <field name="name">Audit Trail</field>
+    <field name="res_model">qaco.onboarding.audit.trail</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="view_audit_trail_tree"/>
+    <field name="search_view_id" ref="view_audit_trail_search"/>
+    <field name="target">current</field>
+  </record>
+</odoo>

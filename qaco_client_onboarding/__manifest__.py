@@ -66,6 +66,8 @@ Features:
         'reports/report_engagement_decision.xml',
         'reports/report_predecessor_clearance_memo.xml',
         'reports/report_predecessor_clearance_pack.xml',
+        'views/audit_export_views.xml',
+        'reports/report_audit_snapshot.xml',
     ],
     'assets': {
         'web.assets_backend': [

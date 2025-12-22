@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <report id="report_audit_snapshot" string="Audit Snapshot" model="qaco.onboarding.audit.trail" report_type="qweb-pdf" name="qaco_client_onboarding.report_audit_snapshot" file="qaco_client_onboarding.report_audit_snapshot"/>
+
+  <template id="report_audit_snapshot">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <div class="page">
+          <h2>Audit Snapshot</h2>
+          <p><strong>Audit ID:</strong> <t t-esc="doc.id"/></p>
+          <p><strong>Action Type:</strong> <t t-esc="doc.action_type"/></p>
+          <p><strong>User:</strong> <t t-esc="doc.user_id.display_name if doc.user_id else 'system'"/></p>
+          <p><strong>Timestamp:</strong> <t t-esc="doc.create_date"/></p>
+          <p><strong>Summary:</strong> <t t-esc="doc.summary or '-'"/></p>
+          <p><strong>Details:</strong></p>
+          <pre><t t-esc="doc.details or '-'"/></pre>
+          <p><strong>Resolution:</strong> <t t-esc="doc.resolution or '-'"/></p>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

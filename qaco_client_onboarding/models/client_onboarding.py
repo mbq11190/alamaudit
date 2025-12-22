@@ -911,14 +911,35 @@ class ClientOnboarding(models.Model):
                 })
         self.env['audit.onboarding.checklist'].create(lines)
 
-    def _log_action(self, action, notes=None):
+    def _log_action(self, action, notes=None, action_type='activity', is_override=False, resolution=None, related_model=None, related_res_id=None, user_id=None):
+        """Create a structured audit trail entry for onboarding activity.
+
+        Parameters:
+        - action: short action label
+        - notes: free-text notes
+        - action_type: one of 'activity','override','system','user'
+        - is_override: mark if this entry documents an override
+        - resolution: optional resolution or follow-up text
+        - related_model/related_res_id: optional link to related model record
+        - user_id: optional user id to attribute (defaults to current user)
+        """
         trail = self.env['qaco.onboarding.audit.trail']
         for record in self:
-            trail.create({
+            vals = {
                 'onboarding_id': record.id,
                 'action': action,
                 'notes': notes or '',
-            })
+                'action_type': action_type,
+                'is_override': bool(is_override),
+                'resolution': resolution or False,
+                'related_model': related_model or False,
+                'related_res_id': related_res_id or False,
+                'user_id': user_id or self.env.uid,
+            }
+            try:
+                trail.create(vals)
+            except Exception:
+                _logger.exception('Failed to create audit trail for onboarding %s action %s', record.id, action)
 
     def _validate_mandatory_checklist_completion(self):
         for record in self:
@@ -1467,8 +1488,31 @@ class OnboardingAuditTrail(models.Model):
     _name = 'qaco.onboarding.audit.trail'
     _description = 'Client Onboarding Audit Trail'
 
+    ACTION_TYPES = [
+        ('activity', 'Activity'),
+        ('override', 'Override'),
+        ('system', 'System'),
+        ('user', 'User'),
+    ]
+
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user.id)
     action = fields.Char(string='Action', required=True)
+    action_type = fields.Selection(ACTION_TYPES, string='Action type', default='activity')
+    is_override = fields.Boolean(string='Override', default=False)
+    resolution = fields.Text(string='Resolution / Notes')
+    related_model = fields.Char(string='Related model')
+    related_res_id = fields.Integer(string='Related record id')
     notes = fields.Text(string='Notes')
     create_date = fields.Datetime(string='Timestamp', default=fields.Datetime.now)
+
+    def action_open_resolution_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'qaco.onboarding.audit.resolution.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_audit_id': self.id},
+        }
+

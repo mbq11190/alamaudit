@@ -888,12 +888,19 @@
                                     <span class="o_onboarding_card_title">Audit Trail</span>
                                     <span class="o_onboarding_card_ref">ISQM-1</span>
                                 </div>
+                                <div class="o_onboarding_card_actions" style="margin-top:8px;">
+                                    <button name="%(qaco_client_onboarding.action_open_audit_export_wizard)d" type="action" string="Export" class="btn-primary"/>
+                                </div>
                                 <field name="audit_trail_ids">
                                     <tree>
                                         <field name="create_date"/>
                                         <field name="user_id"/>
                                         <field name="action"/>
+                                        <field name="action_type"/>
+                                        <field name="is_override"/>
+                                        <field name="resolution"/>
                                         <field name="notes"/>
+                                        <button name="action_open_resolution_wizard" type="object" string="Resolve" class="oe_highlight"/>
                                     </tree>
                                 </field>
                             </div>
