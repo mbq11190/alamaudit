@@ -9,9 +9,7 @@ TEMPLATE_CATEGORY = [
     ('audit_assurance', 'C. Audit & Assurance Engagement'),
     ('tax_engagements', 'D. Tax Engagements'),
     ('other_letters', 'E. Other Standard Letters & Confirmations'),
-]tail -f /var/log/odoo/odoo-server.log
-# or container logs
-docker logs -f <container-id>
+]
 
 
 class OnboardingTemplateCategory(models.Model):
