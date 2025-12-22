@@ -13,7 +13,17 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         'click tr.o_data_row': '_onTemplateRowClick',
         // double-click a template row to attach it directly to this onboarding
         'dblclick tr.o_data_row': '_onTemplateRowDoubleClick',
+        // keyboard support for rows
+        'keydown tr.o_data_row': '_onTemplateRowKeydown',
     }),
+
+    // Ensure rows are keyboard focusable when clicked / interacted
+    _ensureRowFocusable: function (row) {
+        if (!row) { return; }
+        if (!row.hasAttribute('tabindex')) {
+            try { row.setAttribute('tabindex', '0'); } catch (e) { /* ignore */ }
+        }
+    },
 
     _onTemplateRowClick: function (ev) {
         // Avoid toggling if user clicked on a button/link or input
@@ -26,6 +36,8 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         var checkbox = row.querySelector('input.o_list_record_selector');
         if (!checkbox) { return; }
         checkbox.checked = !checkbox.checked;
+        // Make row keyboard-focusable
+        this._ensureRowFocusable(row);
         // Fire change event for any listeners
         var changeEvent = new Event('change', { bubbles: true });
         checkbox.dispatchEvent(changeEvent);
@@ -36,7 +48,7 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         var target = ev.target;
         var row = target.closest('tr.o_data_row');
         if (!row) { return; }
-        // ensure we are in the Template Library list (don't trigger from tracker table)
+        // ensure we are in the Template Library list (don't trigger from other lists)
         var libField = row.closest('[data-field="template_library_rel_ids"]');
         if (!libField) { return; }
 
@@ -54,10 +66,11 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         var recordId = this.model.get(this.handle).data.id;
         if (!recordId) { return; }
 
+        // show busy spinner on row
+        row.classList.add('o-row-busy');
         // call server method on the template to attach it to the onboarding using context
         // show a small notification on success/failure
         try {
-            var busy = true;
             rpc.query({
                 model: 'qaco.onboarding.template.document',
                 method: 'action_attach_to_onboarding',
@@ -65,10 +78,8 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 context: { onboarding_id: recordId },
             }).then(function (action) {
                 if (action) {
-                    // if the server returned an action (notification), dispatch it
                     self.trigger_up('do_action', { action: action });
                 } else {
-                    // fallback notification
                     try {
                         self.displayNotification({ title: _t('Attached'), message: _t('Template attached.'), type: 'success' });
                     } catch (e) {
@@ -82,9 +93,37 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 } catch (e) {
                     self.env.services.notification.add(_t('Could not attach template.'), { type: 'danger' });
                 }
-            }).finally(function () { busy = false; });
+            }).finally(function () {
+                row.classList.remove('o-row-busy');
+            });
         } catch (err) {
             console.error(err);
+            row.classList.remove('o-row-busy');
+        }
+    },
+
+    _onTemplateRowKeydown: function (ev) {
+        var key = ev.key || ev.keyCode;
+        var target = ev.target;
+        var row = target.closest && target.closest('tr.o_data_row');
+        if (!row) { return; }
+        // Space toggles selection
+        if (key === ' ' || key === 'Spacebar' || key === 32) {
+            ev.preventDefault();
+            var checkbox = row.querySelector('input.o_list_record_selector');
+            if (!checkbox) { return; }
+            checkbox.checked = !checkbox.checked;
+            var changeEvent = new Event('change', { bubbles: true });
+            checkbox.dispatchEvent(changeEvent);
+            this._ensureRowFocusable(row);
+            return;
+        }
+        // Enter triggers attach (same as double-click)
+        if (key === 'Enter' || key === 13) {
+            ev.preventDefault();
+            // reuse double-click handler logic
+            this._onTemplateRowDoubleClick({ target: row });
+            return;
         }
     },
 });

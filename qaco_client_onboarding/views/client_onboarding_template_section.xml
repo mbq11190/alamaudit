@@ -30,10 +30,17 @@
                                         <button name="action_download" type="object" string="Download" class="btn btn-sm btn-outline-secondary o_tpl_download"/>
                                         <button name="action_attach_to_onboarding" type="object" string="Upload" class="btn btn-sm btn-outline-secondary o_tpl_attach"/>
 
-                                        <!-- Friendly empty state row when no templates exist -->
+                                        <!-- Friendly empty state row when no templates exist with quick actions -->
                                         <t t-if="not template_library_rel_ids">
                                             <tr class="empty-placeholder-row">
-                                                <td class="empty-placeholder" colspan="4">No templates available — manage templates in the <strong>Template Library</strong>.</td>
+                                                <td class="empty-placeholder" colspan="4">
+                                                    <div>
+                                                        <div>No templates available — <button type="action" name="%(qaco_client_onboarding.action_template_library)d" class="btn btn-link" aria-label="Open template library">Open Template Library</button></div>
+                                                        <div style="margin-top:10px;">
+                                                            <button type="action" name="%(qaco_client_onboarding.action_attach_templates_wizard)d" class="btn btn-sm btn-outline-secondary" aria-label="Upload template">Upload a template</button>
+                                                        </div>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </t>
                                     </tree>

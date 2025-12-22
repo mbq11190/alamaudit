@@ -82,12 +82,17 @@
 /* Subtle row hover to indicate clickability */
 .tbl-wrap tbody tr:hover{ background:#fbfbff; }
 
+/* Row busy spinner */
+.tbl-wrap tbody tr.o-row-busy{ position:relative; opacity:0.65; }
+.tbl-wrap tbody tr.o-row-busy::after{ content: ''; position:absolute; right:12px; top:12px; width:16px; height:16px; border:2px solid rgba(0,0,0,0.08); border-top-color:#6f5aa7; border-radius:50%; animation: qaco-spin .8s linear infinite }
+@keyframes qaco-spin { to { transform: rotate(360deg); } }
+
 /* Responsive tweaks */
 @media (max-width: 1100px){
   .o_onboarding_sheet .grid{ grid-template-columns: 1fr; }
   .o_onboarding_sheet .btn-col{ flex-direction:row; }
   .o_onboarding_sheet .btn{ width:100% }
-  .mini-card{ margin-top:6px }
+  
 }
 
 /* Accessibility: focus state for keyboard users */
