@@ -48,6 +48,11 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
         if (legal) {
             legal.addEventListener('change', function (ev) { self._applyQuickLegalFilter(fieldEl, ev.target.checked); });
         }
+        // Upload button handler
+        var uploadBtn = this.el.querySelector('.o_upload_attach');
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', function (ev) { self._handleUploadClick(ev); });
+        }
 
         // observe the fieldEl for changes and toggle placeholder accordingly
         if (!fieldEl || typeof MutationObserver === 'undefined') { return; }
@@ -212,6 +217,39 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 if (sizeEl) { sizeEl.textContent = tpl.file_size ? (tpl.file_size + ' bytes') : '—'; }
                 if (dl) { dl.setAttribute('href', '/web/content/qaco.onboarding.template.document/' + id + '/template_file/' + (tpl.template_filename || 'file') + '?download=true'); }
             }).catch(function (err) { console.error(err); });
+    },
+
+    _handleUploadClick: function (ev) {
+        var self = this;
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.docx,.xlsx,.pdf';
+        input.onchange = function (e) {
+            var file = e.target.files[0];
+            if (!file) { return; }
+            var reader = new FileReader();
+            reader.onload = function (r) {
+                var dataUrl = r.target.result;
+                // dataUrl is like data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,AAAA
+                var b64 = dataUrl.split(',')[1];
+                // call server method to upload and attach
+                var recordId = self.model.get(self.handle).data.id;
+                if (!recordId) { self.displayNotification({title: _t('Error'), message: _t('Cannot determine onboarding record.'), type: 'danger'}); return; }
+                // show a notification / busy state
+                try { self.displayNotification({title: _t('Uploading'), message: _t('Uploading file...'), type: 'info', sticky: false}); } catch (e) {}
+                rpc.query({ model: 'qaco.client.onboarding', method: 'upload_and_attach', args: [[recordId], file.name, b64] })
+                    .then(function (action) {
+                        try { if (action) { self.trigger_up('do_action', {action: action}); } } catch (e) {}
+                        // refresh the form to show new attachments
+                        try { self.trigger_up('reload'); } catch (e) { window.location.reload(); }
+                    }).catch(function (err) {
+                        console.error(err);
+                        try { self.displayNotification({title: _t('Error'), message: _t('Upload failed.'), type: 'danger'}); } catch (e) {}
+                    });
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
     },
 
     _onTemplateRowKeydown: function (ev) {

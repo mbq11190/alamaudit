@@ -26,7 +26,7 @@
                             <div class="tbl-wrap mt-2" aria-label="Available templates table">
                                 <div class="table-controls">
                                     <button class="btn btn-sm btn-outline-secondary o_attach_selected">Attach selected</button>
-                                    <button name="action_open_attach_wizard" type="object" class="btn btn-sm btn-outline-secondary" aria-label="Upload template">Upload</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary o_upload_attach" aria-label="Upload template">Upload</button>
                                     <button name="action_open_template_library" type="object" class="btn btn-sm btn-outline-secondary" aria-label="Open library">Library</button>
                                 </div>
 

@@ -304,6 +304,26 @@ class ClientOnboarding(models.Model):
             'context': {'default_onboarding_id': self.id, 'onboarding_id': self.id},
         }
 
+    def upload_and_attach(self, filename, file_b64):
+        """Upload a binary file and attach it to this onboarding as an Attached Template.
+
+        Called via RPC with args: ([onboarding_id], filename, file_b64)
+        """
+        self.ensure_one()
+        Attached = self.env['qaco.onboarding.attached.template']
+        vals = {
+            'onboarding_id': self.id,
+            'attached_filename': filename,
+            'attached_file': file_b64,
+        }
+        attached = Attached.create([vals])
+        self.message_post(body=_('Template %s uploaded and attached by %s') % (filename, self.env.user.name))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {'title': _('Uploaded'), 'message': _('Template uploaded and attached.'), 'type': 'success', 'sticky': False},
+        }
+
     def action_attach_selected(self):
         """Server handler for the "Attach selected" button.
 
