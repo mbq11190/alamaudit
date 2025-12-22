@@ -160,6 +160,21 @@ class PredecessorRequest(models.Model):
         if skipped:
             notes = '\n'.join(['Skipped (size>threshold or non-PDF): %s' % (a.name,) for a in skipped])
             merged_att.write({'description': notes})
+        # Attach merged bundle into the predecessor folder if available
+        try:
+            onboarding = self.onboarding_id
+            folder = onboarding.get_folder_by_code('04_Predecessor')
+            if folder:
+                self.env['qaco.onboarding.document'].create({
+                    'onboarding_id': onboarding.id,
+                    'name': merged_name,
+                    'file': base64.b64encode(merged_bytes).decode('ascii'),
+                    'file_name': merged_name,
+                    'state': 'final',
+                    'folder_id': folder.id,
+                })
+        except Exception:
+            _logger.exception('Failed to index merged predecessor pack into folder for request %s', self.id)
         return merged_att
 
 class PredecessorFollowup(models.Model):

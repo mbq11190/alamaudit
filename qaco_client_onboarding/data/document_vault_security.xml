@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Groups for Document Vault sensitivity control -->
+    <record id="group_onboarding_confidential" model="res.groups">
+        <field name="name">Onboarding Confidential</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="group_onboarding_restricted" model="res.groups">
+        <field name="name">Onboarding Restricted</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <!-- Record rule: audit trainees only see Normal sensitivity documents -->
+    <record id="rule_docs_normal_for_trainee" model="ir.rule">
+        <field name="name">Normal docs for trainees</field>
+        <field name="model_id" ref="model_qaco_onboarding_document"/>
+        <field name="domain_force">[('sensitivity','=','normal')]</field>
+        <field name="groups" eval="[(4, ref('qaco_audit.group_audit_trainee'))]"/>
+    </record>
+
+    <!-- Record rule: Restricted group sees normal + restricted (exclude highly_restricted) -->
+    <record id="rule_docs_restricted_for_restricted_group" model="ir.rule">
+        <field name="name">Restricted docs for restricted group</field>
+        <field name="model_id" ref="model_qaco_onboarding_document"/>
+        <field name="domain_force">[('sensitivity','!=','highly_restricted')]</field>
+        <field name="groups" eval="[(4, ref('qaco_client_onboarding.group_onboarding_restricted'))]"/>
+    </record>
+
+    <!-- Confidential group (Onboarding Confidential) will have access to all documents - no domain_force is set for that group. -->
+
+</odoo>

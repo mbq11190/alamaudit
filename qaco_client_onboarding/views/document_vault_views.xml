@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_onboarding_document_tree" model="ir.ui.view">
+        <field name="name">qaco.onboarding.document.tree</field>
+        <field name="model">qaco.onboarding.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="file_name"/>
+                <field name="folder_id"/>
+                <field name="sensitivity"/>
+                <field name="version"/>
+                <field name="state"/>
+                <field name="file_size"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_onboarding_document_form" model="ir.ui.view">
+        <field name="name">qaco.onboarding.document.form</field>
+        <field name="model">qaco.onboarding.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="file_name"/>
+                        <field name="file" widget="binary"/>
+                        <field name="folder_id"/>
+                        <field name="sensitivity"/>
+                        <field name="version"/>
+                        <field name="state"/>
+                        <field name="checksum" readonly="1"/>
+                    </group>
+                    <group>
+                        <button name="action_view_history" type="object" string="Version history"/>
+                        <button name="action_record_download" type="object" string="Record download"/>
+                        <button name="action_set_legal_hold" type="object" string="Toggle legal hold"/>
+                    </group>
+                    <notebook>
+                        <page string="Audit">
+                            <field name="audit_ids">
+                                <tree>
+                                    <field name="action"/>
+                                    <field name="user_id"/>
+                                    <field name="notes"/>
+                                    <field name="create_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="History">
+                            <field name="history_ids">
+                                <tree>
+                                    <field name="version"/>
+                                    <field name="file_name"/>
+                                    <field name="checksum"/>
+                                    <field name="create_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_onboarding_documents" model="ir.actions.act_window">
+        <field name="name">Document Vault</field>
+        <field name="res_model">qaco.onboarding.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_onboarding_document_tree"/>
+    </record>
+</odoo>

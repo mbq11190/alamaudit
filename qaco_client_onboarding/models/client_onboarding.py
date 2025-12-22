@@ -313,6 +313,61 @@ class ClientOnboarding(models.Model):
     precondition_line_ids = fields.One2many('qaco.onboarding.precondition.line', 'onboarding_id', string='ISA 210 Preconditions')
     # Document Vault relationship
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
+    document_folder_ids = fields.One2many('qaco.onboarding.document.folder', 'onboarding_id', string='Document Folders')
+
+    def _create_default_document_folders(self):
+        """Create a copy of the template folder taxonomy for this onboarding."""
+        Folder = self.env['qaco.onboarding.document.folder']
+        templates = Folder.search([('onboarding_id', '=', False)])
+        created = {}
+        roots = templates.filtered(lambda t: not t.parent_id)
+        for rec in self:
+            # Create root-level folders
+            for tmpl in roots:
+                new = Folder.create({
+                    'onboarding_id': rec.id,
+                    'name': tmpl.name,
+                    'code': tmpl.code,
+                    'status': 'created',
+                    'sequence': tmpl.sequence,
+                    'description': tmpl.description,
+                })
+                created[tmpl.id] = new
+            # Create child folders iteratively
+            children = templates.filtered(lambda t: t.parent_id)
+            pending = children
+            while pending:
+                for tmpl in list(pending):
+                    parent_new = created.get(tmpl.parent_id.id)
+                    if parent_new:
+                        new = Folder.create({
+                            'onboarding_id': rec.id,
+                            'name': tmpl.name,
+                            'code': tmpl.code,
+                            'parent_id': parent_new.id,
+                            'status': 'created',
+                            'sequence': tmpl.sequence,
+                            'description': tmpl.description,
+                        })
+                        created[tmpl.id] = new
+                        pending = pending - tmpl
+                    else:
+                        # Wait until parent is created
+                        pass
+        return True
+
+    def get_folder_by_code(self, code):
+        self.ensure_one()
+        return self.document_folder_ids.filtered(lambda f: f.code == code)[:1]
+
+    @api.model
+    def create(self, vals):
+        rec = super(ClientOnboarding, self).create(vals)
+        try:
+            rec._create_default_document_folders()
+        except Exception:
+            _logger.exception('Failed to create default document folders for onboarding %s', rec.id)
+        return rec
 
     @api.constrains('state')
     def _check_company_required_documents_on_approval(self):
@@ -1004,8 +1059,53 @@ class ClientOnboarding(models.Model):
                 'res_id': self.id,
                 'mimetype': 'application/pdf',
             })
+            try:
+                folder = self.get_folder_by_code('08_Final_Authorization')
+                if folder:
+                    self.env['qaco.onboarding.document'].create({
+                        'onboarding_id': self.id,
+                        'name': att.name,
+                        'file': att.datas,
+                        'file_name': att.name,
+                        'state': 'final',
+                        'folder_id': folder.id,
+                    })
+            except Exception:
+                _logger.exception('Failed to index onboarding summary pack into folder for onboarding %s', self.id)
             return att
         return False
+
+    def action_generate_independence_memo(self):
+        """Render the independence/ethics report and index it into the Independence folder."""
+        self.ensure_one()
+        report = self.env.ref('qaco_client_onboarding.report_ethics_independence', raise_if_not_found=False)
+        if not report:
+            _logger.warning('Ethics independence report not found')
+            return False
+        try:
+            pdf = report._render_qweb_pdf([self.id])[0]
+            att = self.env['ir.attachment'].create({
+                'name': f'independence_memo_{self.id}.pdf',
+                'type': 'binary',
+                'datas': base64.b64encode(pdf).decode('ascii'),
+                'res_model': 'qaco.client.onboarding',
+                'res_id': self.id,
+                'mimetype': 'application/pdf',
+            })
+            folder = self.get_folder_by_code('03_Independence')
+            if folder:
+                self.env['qaco.onboarding.document'].create({
+                    'onboarding_id': self.id,
+                    'name': att.name,
+                    'file': att.datas,
+                    'file_name': att.name,
+                    'state': 'final',
+                    'folder_id': folder.id,
+                })
+            return att
+        except Exception:
+            _logger.exception('Failed to generate independence memo for onboarding %s', self.id)
+            return False
 
     def action_lock_onboarding(self):
         for record in self:

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Default folder taxonomy for onboarding -->
+    <record id="folder_onboarding_root" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">01_Onboarding</field>
+        <field name="code">01_Onboarding</field>
+        <field name="status">created</field>
+    </record>
+    <record id="folder_client_master" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">01_Client Master Data & Authorizations</field>
+        <field name="code">01_01_Client_Master</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_kyc" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">02_KYC / AML-CFT</field>
+        <field name="code">02_KYC</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_independence" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">03_Independence & Ethics</field>
+        <field name="code">03_Independence</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_predecessor" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">04_Predecessor Auditor Clearance</field>
+        <field name="code">04_Predecessor</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_engagement_terms" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">05_Engagement Letter, Scope & Terms</field>
+        <field name="code">05_Engagement_Terms</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_commercials" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">06_Commercials (Fees, Retainer, Billing, PO)</field>
+        <field name="code">06_Commercials</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_governance" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">07_Governance & Key Contacts</field>
+        <field name="code">07_Governance</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+    <record id="folder_final_auth" model="qaco.onboarding.document.folder">
+        <field name="onboarding_id" eval="False"/>
+        <field name="name">08_Final Authorization</field>
+        <field name="code">08_Final_Authorization</field>
+        <field name="parent_id" ref="folder_onboarding_root"/>
+    </record>
+</odoo>

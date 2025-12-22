@@ -138,7 +138,7 @@ class FinalAuthorizationWizard(models.TransientModel):
                     report = self.env.ref('qaco_client_onboarding.report_client_onboarding_pdf', raise_if_not_found=False)
                     if report:
                         pdf = report._render_qweb_pdf([onboarding.id])[0]
-                        self.env['ir.attachment'].create({
+                        att = self.env['ir.attachment'].create({
                             'name': f'onboarding_certificate_{onboarding.id}.pdf',
                             'type': 'binary',
                             'datas': base64.b64encode(pdf).decode('ascii'),
@@ -146,6 +146,20 @@ class FinalAuthorizationWizard(models.TransientModel):
                             'res_id': onboarding.id,
                             'mimetype': 'application/pdf',
                         })
+                        # Index into final auth folder if available
+                        try:
+                            folder = onboarding.get_folder_by_code('08_Final_Authorization')
+                            if folder:
+                                self.env['qaco.onboarding.document'].create({
+                                    'onboarding_id': onboarding.id,
+                                    'name': att.name,
+                                    'file': att.datas,
+                                    'file_name': att.name,
+                                    'state': 'final',
+                                    'folder_id': folder.id,
+                                })
+                        except Exception:
+                            _logger.exception('Failed to index acceptance certificate into folder for onboarding %s', onboarding.id)
                 except Exception:
                     _logger.exception('Failed to generate acceptance/certificate report for onboarding %s', onboarding.id)
             if self.include_summary_pack:

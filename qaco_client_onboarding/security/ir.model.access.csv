@@ -98,5 +98,8 @@ access_qaco_gift_global,qaco.onboarding.gift,model_qaco_onboarding_gift,,1,1,1,1
 access_qaco_predecessor_request_global,qaco.onboarding.predecessor.request,model_qaco_onboarding_predecessor_request,,1,1,1,1
 access_qaco_predecessor_followup_global,qaco.onboarding.predecessor.followup,model_qaco_onboarding_predecessor_followup,,1,1,1,1
 access_qaco_predecessor_response_global,qaco.onboarding.predecessor.response,model_qaco_onboarding_predecessor_response,,1,1,1,1
+access_qaco_document_folder_global,qaco.onboarding.document.folder,model_qaco_onboarding_document_folder,,1,1,1,1
+access_qaco_document_history_global,qaco.onboarding.document.history,model_qaco_onboarding_document_history,,1,1,1,1
+access_qaco_document_audit_global,qaco.onboarding.document.audit,model_qaco_onboarding_document_audit,,1,1,1,1
 access_qaco_final_authorization_global,qaco.onboarding.final.authorization,model_qaco_onboarding_final_authorization,,1,1,1,1
 access_qaco_final_authorization_condition_global,qaco.onboarding.final.authorization.condition,model_qaco_onboarding_final_authorization_condition,,1,1,1,1

@@ -717,6 +717,9 @@
                                                 </tree>
                                             </field>
                                         </group>
+                                        <group class="o_onboarding_grid">
+                                            <button name="action_generate_predecessor_pack_bundle" type="object" string="Generate Pack Bundle" class="btn-secondary"/>
+                                        </group>
                                         <group string="Issues categorisation" class="o_onboarding_grid">
                                             <field name="predecessor_escalated" readonly="1"/>
                                             <field name="predecessor_locked" readonly="1"/>
@@ -777,6 +780,8 @@
                                     <field name="resources_timeline_confirmed"/>
                                     <field name="specialists_required"/>
                                     <button name="%(action_open_final_authorization_wizard)d" type="action" string="Finalize Authorization" class="btn-primary"/>
+                                    <button name="%(action_onboarding_documents)d" type="action" string="Open Document Vault" class="btn-secondary"/>
+                                    <button name="action_generate_onboarding_summary_pack" type="object" string="Generate Summary Pack" class="btn-secondary"/>
                                 </group>
                                 <group string="Standards &amp; Checklist" class="o_onboarding_grid">
                                     <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','engagement_terms') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">

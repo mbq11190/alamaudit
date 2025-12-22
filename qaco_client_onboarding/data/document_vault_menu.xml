@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_document_vault" name="Document Vault" parent="menu_admin_audit" action="action_onboarding_documents" sequence="20"/>
+</odoo>
