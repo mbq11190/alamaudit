@@ -190,6 +190,98 @@
                                     <field name="regulatory_inspection_notes" help="Detail any inspections by SECP, SBP, FBR or other regulators."/>
                                     <field name="regulatory_inspection_attachment" filename="Regulatory Inspection Report" widget="binary" help="Attach inspection or notice documents."/>
                                 </group>
+                                <group string="Regulators in scope" class="o_onboarding_grid">
+                                    <field name="regulator_ids" widget="many2many_tags" options="{'no_create': True}" />
+                                    <field name="regulator_contact_ids">
+                                        <tree editable="bottom">
+                                            <field name="regulator_id"/>
+                                            <field name="name"/>
+                                            <field name="designation"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Licenses &amp; Approvals" class="o_onboarding_grid">
+                                    <field name="license_ids">
+                                        <tree editable="bottom">
+                                            <field name="license_type"/>
+                                            <field name="issuing_authority"/>
+                                            <field name="license_no"/>
+                                            <field name="scope"/>
+                                            <field name="issue_date"/>
+                                            <field name="expiry_date"/>
+                                            <field name="renewal_status"/>
+                                            <field name="required"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Statutory Filings Tracker" class="o_onboarding_grid">
+                                    <field name="filing_ids">
+                                        <tree editable="bottom">
+                                            <field name="filing_name"/>
+                                            <field name="authority"/>
+                                            <field name="period_covered"/>
+                                            <field name="statutory_due_date"/>
+                                            <field name="actual_filing_date"/>
+                                            <field name="status"/>
+                                            <field name="evidence_filename"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Tax &amp; Labour (Summary)" class="o_onboarding_grid">
+                                    <field name="income_tax_status"/>
+                                    <field name="withholding_agent_status"/>
+                                    <field name="sales_tax_status"/>
+                                    <field name="provincial_sales_tax"/>
+                                    <field name="tax_audits_summary"/>
+                                    <field name="tax_arrears_summary"/>
+                                    <field name="eobi_registration"/>
+                                    <field name="social_security_registration"/>
+                                    <field name="min_wage_overtime_risk"/>
+                                    <field name="hr_legal_matters"/>
+                                </group>
+                                <group string="Legal Matters &amp; Disputes" class="o_onboarding_grid">
+                                    <field name="dispute_ids">
+                                        <tree editable="bottom">
+                                            <field name="matter_type"/>
+                                            <field name="counterparty"/>
+                                            <field name="amount_exposure"/>
+                                            <field name="status"/>
+                                            <field name="counsel_name"/>
+                                            <field name="management_assessment"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Prior Non-Compliance &amp; Remediation" class="o_onboarding_grid">
+                                    <field name="non_compliance_ids">
+                                        <tree editable="bottom">
+                                            <field name="nature"/>
+                                            <field name="period"/>
+                                            <field name="root_cause"/>
+                                            <field name="corrective_action"/>
+                                            <field name="target_date"/>
+                                            <field name="status"/>
+                                            <field name="evidence_filename"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Required Documents (Regulatory &amp; Compliance)" class="o_onboarding_grid">
+                                    <field name="required_document_line_ids">
+                                        <tree editable="bottom">
+                                            <field name="template_name" readonly="1"/>
+                                            <field name="download_url" widget="url" string="Download" readonly="1"/>
+                                            <field name="status"/>
+                                            <field name="uploaded_filename"/>
+                                            <field name="uploaded_file" widget="binary"/>
+                                            <field name="restricted"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Alerts & Deadlines" class="o_onboarding_grid">
+                                    <field name="upcoming_renewals_count" readonly="1"/>
+                                    <field name="overdue_filings_count" readonly="1"/>
+                                </group>
                                 <group string="Standards &amp; Checklist" class="o_onboarding_grid">
                                     <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','regulatory_compliance') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                         <tree editable="bottom" class="o_onboarding_checklist">
@@ -201,6 +293,21 @@
                                             <field name="completed_on" readonly="1"/>
                                             <field name="standard_ids" widget="many2many_tags" readonly="1"/>
                                             <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Verification &amp; Controls" class="o_onboarding_grid">
+                                    <field name="verification_performed_by"/>
+                                    <field name="verification_date"/>
+                                    <field name="verification_method"/>
+                                    <field name="verification_exception_ids">
+                                        <tree editable="bottom">
+                                            <field name="field_name"/>
+                                            <field name="expected_value"/>
+                                            <field name="observed_value"/>
+                                            <field name="impact"/>
+                                            <field name="resolution"/>
+                                            <field name="approved_by"/>
                                         </tree>
                                     </field>
                                 </group>

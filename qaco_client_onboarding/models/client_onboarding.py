@@ -294,6 +294,15 @@ class ClientOnboarding(models.Model):
             for s in rec.signatory_ids:
                 if s.authority_evidence_id and s.authority_evidence_id.state not in ('received','reviewed'):
                     raise ValidationError(_('Authority evidence for signatory %s must be received/verified before partner approval.') % s.name)
+            # Ensure there are no overdue statutory filings or, if present, prevent partner approval until resolved
+            overdue = rec.filing_ids.filtered(lambda f: f.statutory_due_date and f.statutory_due_date < fields.Date.context_today(rec) and f.status != 'filed')
+            if overdue:
+                names = ', '.join(overdue.mapped('filing_name'))
+                raise ValidationError(_('Overdue filings detected (%s). Resolve or obtain partner acknowledgement before partner approval.') % names)
+            # Ensure open investigations have financial reporting impact documented
+            open_investigations = rec.dispute_ids.filtered(lambda d: d.status in ('notice','appeal','court'))
+            if open_investigations and not rec.financial_reporting_impact:
+                raise ValidationError(_('Open investigation/notice exists; document the financial reporting impact before partner approval.'))
 
     def write(self, vals):
         """Index specific uploads into the Document Vault on change."""
@@ -654,6 +663,12 @@ class ClientOnboarding(models.Model):
             onboarding._populate_checklist_from_templates()
             onboarding._populate_preconditions()
             onboarding._populate_regulator_checklist()
+            # populate regulatory required document rows from regulatory template category
+            try:
+                onboarding.populate_required_documents_from_templates()
+            except Exception:
+                # avoid failing create if required documents cannot be populated
+                _logger.exception('Failed to populate regulatory required documents for onboarding %s', onboarding.id)
             # populate the template library with active templates if empty
             try:
                 onboarding.populate_template_library()

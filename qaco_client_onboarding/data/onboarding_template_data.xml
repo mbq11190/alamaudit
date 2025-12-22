@@ -32,6 +32,17 @@
             <field name="sequence">50</field>
         </record>
 
+        <!-- New: Regulatory & Compliance category for section 1.2 -->
+        <record id="template_category_regulatory" model="qaco.onboarding.template.category">
+            <field name="name">Regulatory &amp; Compliance</field>
+            <field name="code">regulatory</field>
+            <field name="sequence">25</field>
+        </record>
+            <field name="name">E. Other Standard Letters &amp; Confirmations</field>
+            <field name="code">other_letters</field>
+            <field name="sequence">50</field>
+        </record>
+
         <!-- A. Client Onboarding & Administration Templates -->
         <record id="template_client_onboarding_checklist" model="qaco.onboarding.template.document">
             <field name="name">Client Onboarding Checklist</field>
@@ -262,12 +273,78 @@
 
         <record id="template_regulatory_licenses" model="qaco.onboarding.template.document">
             <field name="name">Regulatory Licenses Register</field>
-            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="category_id" ref="template_category_regulatory"/>
             <field name="sequence">80</field>
             <field name="stage">throughout_onboarding</field>
             <field name="mandatory">as_applicable</field>
             <field name="requires_working_paper">1</field>
             <field name="description">Register of regulatory licenses and permits.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_regulatory_profile_master" model="qaco.onboarding.template.document">
+            <field name="name">Regulatory &amp; Compliance Profile (Master)</field>
+            <field name="category_id" ref="template_category_regulatory"/>
+            <field name="sequence">81</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Captures regulator scope, obligations, key contacts and high-level compliance profile.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_statutory_filings_tracker" model="qaco.onboarding.template.document">
+            <field name="name">Statutory Filings Tracker</field>
+            <field name="category_id" ref="template_category_regulatory"/>
+            <field name="sequence">82</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Tracker for statutory filings, due dates and evidence references.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_tax_compliance_summary_high" model="qaco.onboarding.template.document">
+            <field name="name">Tax Compliance Summary (High-Level)</field>
+            <field name="category_id" ref="template_category_regulatory"/>
+            <field name="sequence">83</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">High-level tax compliance information and audit highlights.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_notices_investigations_log" model="qaco.onboarding.template.document">
+            <field name="name">Notices / Investigations Log</field>
+            <field name="category_id" ref="template_category_regulatory"/>
+            <field name="sequence">84</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Log for regulatory notices, investigations and correspondence with authorities.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_litigation_register" model="qaco.onboarding.template.document">
+            <field name="name">Litigation &amp; Disputes Register</field>
+            <field name="category_id" ref="template_category_regulatory"/>
+            <field name="sequence">85</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Register capturing litigation, amounts, counsel and management assessment.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_non_compliance_tracker" model="qaco.onboarding.template.document">
+            <field name="name">Prior Non-Compliance &amp; Remediation Tracker</field>
+            <field name="category_id" ref="template_category_regulatory"/>
+            <field name="sequence">86</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Tracker capturing prior non-compliances, corrective actions and evidence of remediation.</field>
             <field name="file_type">docx</field>
         </record>
 
