@@ -586,38 +586,67 @@
                                     <span class="o_onboarding_card_title">Independence &amp; Ethics</span>
                                     <span class="o_onboarding_card_ref">IESBA Code</span>
                                 </div>
-                                <group string="Threat Assessment" class="o_onboarding_grid">
-                                    <field name="independence_threat_ids">
-                                        <tree editable="bottom">
-                                            <field name="threat_type"/>
-                                            <field name="answer"/>
-                                            <field name="details"/>
-                                            <field name="safeguards"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                                <group class="o_onboarding_grid">
-                                    <field name="non_audit_services_confirmed"/>
-                                    <field name="non_audit_services_attachment" widget="binary"/>
-                                </group>
-                                <group class="o_onboarding_grid">
-                                    <field name="currency_id" readonly="1"/>
-                                    <field name="proposed_audit_fee"/>
-                                    <field name="total_fee_income"/>
-                                    <field name="fee_dependency_percent" readonly="1" help="Calculated as proposed audit fee divided by total firm income."/>
-                                    <field name="fee_dependency_flag" readonly="1"/>
-                                </group>
-                                <group string="Team Declarations" class="o_onboarding_grid">
-                                    <field name="independence_declaration_ids">
-                                        <tree editable="bottom">
-                                            <field name="user_id"/>
-                                            <field name="state"/>
-                                            <field name="confirmation_date"/>
-                                            <field name="reminder_sent"/>
-                                        </tree>
-                                    </field>
-                                    <field name="independence_status_feedback" readonly="1"/>
-                                </group>
+                                <notebook class="o_onboarding_subtabs">
+                                    <page name="independence_questionnaire" string="Independence Questionnaire">
+                                        <group string="Engagement context" class="o_onboarding_grid">
+                                            <field name="client_id" readonly="1"/>
+                                            <field name="engagement_type"/>
+                                            <field name="first_year"/>
+                                            <field name="engagement_partner_id"/>
+                                            <field name="manager_id"/>
+                                        </group>
+                                        <group string="Team declarations" class="o_onboarding_grid">
+                                            <field name="independence_declaration_ids">
+                                                <tree editable="bottom">
+                                                    <field name="user_id"/>
+                                                    <field name="role"/>
+                                                    <field name="status"/>
+                                                    <field name="submitted_on"/>
+                                                    <field name="approved_on"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                        <group string="Independence relationships & disclosures" class="o_onboarding_grid">
+                                            <field name="fee_dependency_flag" readonly="1"/>
+                                            <field name="prior_services_summary" readonly="1"/>
+                                            <field name="long_association_years" readonly="1"/>
+                                        </group>
+                                    </page>
+                                    <page name="conflicts_register" string="Conflicts of Interest">
+                                        <field name="conflict_ids">
+                                            <tree editable="bottom">
+                                                <field name="conflict_type"/>
+                                                <field name="parties_involved"/>
+                                                <field name="status"/>
+                                                <field name="approver_id"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page name="non_audit_services" string="Non-Audit Services / Safeguards">
+                                        <field name="non_audit_service_ids">
+                                            <tree editable="bottom">
+                                                <field name="service_category"/>
+                                                <field name="service_from"/>
+                                                <field name="service_to"/>
+                                                <field name="fee"/>
+                                                <field name="same_team"/>
+                                                <field name="self_review_indicator"/>
+                                                <field name="outcome"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page name="gifts_hospitality" string="Gifts &amp; Hospitality">
+                                        <field name="gift_ids">
+                                            <tree editable="bottom">
+                                                <field name="date"/>
+                                                <field name="offered_by"/>
+                                                <field name="nature"/>
+                                                <field name="estimated_value"/>
+                                                <field name="decision"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                </notebook>
                                 <group string="Standards &amp; Checklist" class="o_onboarding_grid">
                                     <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','independence_ethics') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                         <tree editable="bottom" class="o_onboarding_checklist">

@@ -89,3 +89,9 @@ access_qaco_filing_global,qaco.onboarding.filing,model_qaco_onboarding_filing,,1
 access_qaco_dispute_global,qaco.onboarding.dispute,model_qaco_onboarding_dispute,,1,1,1,1
 access_qaco_noncompliance_global,qaco.onboarding.noncompliance,model_qaco_onboarding_noncompliance,,1,1,1,1
 access_qaco_required_document_global,qaco.onboarding.required.document,model_qaco_onboarding_required_document,,1,1,1,1
+access_qaco_independence_safeguard_global,qaco.onboarding.safeguard,model_qaco_onboarding_safeguard,,1,1,1,1
+access_qaco_independence_declaration_global,qaco.onboarding.independence.declaration,model_qaco_onboarding_independence_declaration,,1,1,1,1
+access_qaco_independence_threat_global,qaco.onboarding.independence.threat,model_qaco_onboarding_independence_threat,,1,1,1,1
+access_qaco_conflict_global,qaco.onboarding.conflict,model_qaco_onboarding_conflict,,1,1,1,1
+access_qaco_non_audit_service_global,qaco.onboarding.non.audit,model_qaco_onboarding_non_audit,,1,1,1,1
+access_qaco_gift_global,qaco.onboarding.gift,model_qaco_onboarding_gift,,1,1,1,1

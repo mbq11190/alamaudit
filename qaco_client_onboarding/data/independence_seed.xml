@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Safeguard master records -->
+    <record id="safeguard_separate_team" model="qaco.onboarding.safeguard">
+        <field name="code">SEPARATE_TEAM</field>
+        <field name="name">Separate team / Chinese wall</field>
+        <field name="description">Use separate personnel or Chinese wall to prevent information flow.</field>
+    </record>
+    <record id="safeguard_second_partner" model="qaco.onboarding.safeguard">
+        <field name="code">SECOND_PARTNER</field>
+        <field name="name">Second partner review / EQCR</field>
+        <field name="description">Require a second partner review or EQCR for high-risk matters.</field>
+    </record>
+    <record id="safeguard_rotation" model="qaco.onboarding.safeguard">
+        <field name="code">ROTATION</field>
+        <field name="name">Partner rotation / staff re-assignment</field>
+        <field name="description">Rotate team members or partners to reduce familiarity threats.</field>
+    </record>
+    <record id="safeguard_independent_consult" model="qaco.onboarding.safeguard">
+        <field name="code">INDEPENDENT_CONSULT</field>
+        <field name="name">Independent technical consultation</field>
+        <field name="description">Seek independent technical consultation where specialised knowledge is required.</field>
+    </record>
+    <record id="safeguard_additional_supervision" model="qaco.onboarding.safeguard">
+        <field name="code">SUPERVISION</field>
+        <field name="name">Additional supervision / review levels</field>
+        <field name="description">Introduce extra supervision or review steps for the engagement.</field>
+    </record>
+    <record id="safeguard_discontinue_service" model="qaco.onboarding.safeguard">
+        <field name="code">DISCONTINUE_SERVICE</field>
+        <field name="name">Discontinue/limit non-audit service</field>
+        <field name="description">Discontinue or limit non-audit services that create self-review threats.</field>
+    </record>
+    <record id="safeguard_client_governance" model="qaco.onboarding.safeguard">
+        <field name="code">CLIENT_GOVERNANCE</field>
+        <field name="name">Client governance communication and approvals</field>
+        <field name="description">Obtain client governance approvals or documented corrective actions where necessary.</field>
+    </record>
+    <record id="safeguard_withdrawal" model="qaco.onboarding.safeguard">
+        <field name="code">WITHDRAWAL</field>
+        <field name="name">Withdrawal from engagement</field>
+        <field name="description">Withdraw from the engagement if the threat cannot be mitigated to an acceptable level.</field>
+    </record>
+
+    <!-- Default thresholds stored as ir.config_parameter (preview/overridable via Settings) -->
+    <record id="independence_gift_threshold_param" model="ir.config_parameter">
+        <field name="key">qaco_client_onboarding.gift_auto_decline_threshold</field>
+        <field name="value">5000</field>
+    </record>
+
+</odoo>

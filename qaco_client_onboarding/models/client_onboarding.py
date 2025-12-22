@@ -882,6 +882,8 @@ class ClientOnboarding(models.Model):
             if record.state != 'under_review':
                 raise ValidationError(_('Submit the onboarding for review before partner approval.'))
             record._validate_mandatory_checklist_completion()
+            # Independence & Ethics compliance check (1.5)
+            record.action_check_independence_before_approval()
             if record.high_risk_onboarding and not record.engagement_partner_id:
                 raise ValidationError(_('High-risk onboardings require an Engagement Partner before approval.'))
             record.write({'state': 'partner_approved'})

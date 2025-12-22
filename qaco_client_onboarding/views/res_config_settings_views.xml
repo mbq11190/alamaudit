@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Settings form for Onboarding (exposes gift auto-decline threshold) -->
+    <record id="view_res_config_settings_onboarding" model="ir.ui.view">
+        <field name="name">res.config.settings.onboarding</field>
+        <field name="model">res.config.settings</field>
+        <field name="arch" type="xml">
+            <form string="Onboarding Settings">
+                <sheet>
+                    <group string="Independence & Ethics Settings">
+                        <field name="gift_auto_decline_threshold"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" type="object" name="set_values" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_onboarding_settings" model="ir.actions.act_window">
+        <field name="name">Onboarding Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_res_config_settings_onboarding"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Place the menu under Settings/Administration → Audit → Onboarding - visible to system administrators -->
+    <menuitem id="menu_admin_audit" name="Audit" parent="base.menu_administration" sequence="70" groups="base.group_system" web_icon="qaco_audit,static/description/icon.png"/>
+    <menuitem id="menu_onboarding_settings" name="Onboarding" parent="menu_admin_audit" action="action_onboarding_settings" groups="base.group_system" sequence="5"/>
+</odoo>
