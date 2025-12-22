@@ -13,12 +13,7 @@
                         <div class="col-md-4">
                             <h3 class="block-title">1.0A - Template Library</h3>
 
-                            <div class="btn-col mb-3">
-                                <!-- Open the central Template Library action -->
-                                <button type="action" name="%(qaco_client_onboarding.action_template_library)d" class="btn btn-primary o_open_template_library">Open Template Library</button>
-                                <!-- Server-side fallback for Attach Selected; JS also listens to .o_attach_selected -->
-                                <button name="action_attach_selected" type="object" class="btn btn-primary o_attach_selected">Attach selected</button>
-                            </div>
+
 
                             <div class="help mb-2">Use the <b>Legal Identity</b> shortcut to filter templates commonly used in section 1.1. Use <b>Attach selected</b> to attach multiple templates at once.</div>
 
