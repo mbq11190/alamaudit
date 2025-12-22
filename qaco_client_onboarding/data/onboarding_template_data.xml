@@ -38,10 +38,6 @@
             <field name="code">regulatory</field>
             <field name="sequence">25</field>
         </record>
-            <field name="name">E. Other Standard Letters &amp; Confirmations</field>
-            <field name="code">other_letters</field>
-            <field name="sequence">50</field>
-        </record>
 
         <!-- A. Client Onboarding & Administration Templates -->
         <record id="template_client_onboarding_checklist" model="qaco.onboarding.template.document">
