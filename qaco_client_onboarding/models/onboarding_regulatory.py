@@ -347,3 +347,26 @@ class ClientOnboardingRegulatory(models.Model):
                 })
         if lines:
             self.env['qaco.onboarding.required.document'].create(lines)
+
+    def populate_ownership_required_documents_from_templates(self):
+        """Populate `required_document_line_ids` from template library filtered to ownership category."""
+        Template = self.env['qaco.onboarding.template.document']
+        cat = self.env['qaco.onboarding.template.category'].search([('code', '=', 'ownership')], limit=1)
+        if not cat:
+            return
+        templates = Template.search([('category_id', '=', cat.id)])
+        lines = []
+        for rec in self:
+            existing = rec.required_document_line_ids.mapped('template_id')
+            for tpl in templates:
+                if tpl.id in existing:
+                    continue
+                lines.append({
+                    'onboarding_id': rec.id,
+                    'template_id': tpl.id,
+                    'stage': tpl.stage,
+                    'mandatory': tpl.mandatory if tpl.mandatory in ('yes','conditional','as_applicable') else 'conditional',
+                    'notes': tpl.description,
+                })
+        if lines:
+            self.env['qaco.onboarding.required.document'].create(lines)

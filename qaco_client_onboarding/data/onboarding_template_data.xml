@@ -39,6 +39,13 @@
             <field name="sequence">25</field>
         </record>
 
+        <!-- New: Ownership & Governance category for section 1.3 -->
+        <record id="template_category_ownership" model="qaco.onboarding.template.category">
+            <field name="name">Ownership &amp; Governance</field>
+            <field name="code">ownership</field>
+            <field name="sequence">26</field>
+        </record>
+
         <!-- A. Client Onboarding & Administration Templates -->
         <record id="template_client_onboarding_checklist" model="qaco.onboarding.template.document">
             <field name="name">Client Onboarding Checklist</field>
@@ -341,6 +348,84 @@
             <field name="mandatory">conditional</field>
             <field name="requires_working_paper">1</field>
             <field name="description">Tracker capturing prior non-compliances, corrective actions and evidence of remediation.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <!-- Ownership & Governance Templates -->
+        <record id="template_ownership_profile_master" model="qaco.onboarding.template.document">
+            <field name="name">Ownership &amp; Governance Profile (Master)</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">101</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Captures ownership, governance and group structure details for planning.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_shareholding_register" model="qaco.onboarding.template.document">
+            <field name="name">Shareholding / Owners Register (Working Paper)</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">102</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Shareholding register with classes, percentages and changes during the year.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_ubo_declaration" model="qaco.onboarding.template.document">
+            <field name="name">UBO Declaration &amp; Effective Interest Calculation</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">103</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Declaration capturing basis of control and effective interest calculations for identified UBOs.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_group_components_register" model="qaco.onboarding.template.document">
+            <field name="name">Group Structure &amp; Components Register</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">104</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Register of group components, ownership, voting and reporting alignment; required where group exists.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_board_register" model="qaco.onboarding.template.document">
+            <field name="name">Board &amp; Committees Register</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">105</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Board composition, independence, committee memberships and meeting frequency.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_related_party_master" model="qaco.onboarding.template.document">
+            <field name="name">Related Parties Master List (ISA 550)</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">106</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Master list of related parties and expectations for disclosures and planned procedures.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_related_party_expectations" model="qaco.onboarding.template.document">
+            <field name="name">Related Party Transactions Expectation Sheet</field>
+            <field name="category_id" ref="template_category_ownership"/>
+            <field name="sequence">107</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Expected categories of related party transactions to help plan completeness procedures.</field>
             <field name="file_type">docx</field>
         </record>
 

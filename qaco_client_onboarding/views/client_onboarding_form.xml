@@ -342,6 +342,74 @@
                                         </tree>
                                     </field>
                                 </group>
+                                <group string="UBOs & Beneficial Ownership" class="o_onboarding_grid">
+                                    <field name="ubo_ids" nolabel="1">
+                                        <tree editable="bottom">
+                                            <field name="name"/>
+                                            <field name="cnic_passport"/>
+                                            <field name="country_id"/>
+                                            <field name="ownership_percent"/>
+                                            <field name="basis_of_control"/>
+                                            <field name="effective_interest"/>
+                                            <field name="pep_screening_result"/>
+                                            <field name="filing_status"/>
+                                            <field name="filing_evidence_filename"/>
+                                            <field name="is_restricted"/>
+                                        </tree>
+                                    </field>
+                                    <field name="ubo_identification_method"/>
+                                    <field name="ubo_section_complete"/>
+                                </group>
+                                <group string="Group Structure & Components" class="o_onboarding_grid">
+                                    <field name="group_status"/>
+                                    <field name="group_component_ids">
+                                        <tree editable="bottom">
+                                            <field name="entity_name"/>
+                                            <field name="country_id"/>
+                                            <field name="relationship_type"/>
+                                            <field name="percent_ownership"/>
+                                            <field name="percent_voting"/>
+                                            <field name="control_basis"/>
+                                            <field name="component_auditor"/>
+                                        </tree>
+                                    </field>
+                                    <field name="consolidation_changes"/>
+                                    <field name="intercompany_expected"/>
+                                </group>
+                                <group string="Share Capital Movements" class="o_onboarding_grid">
+                                    <field name="share_capital_movement_ids">
+                                        <tree editable="bottom">
+                                            <field name="movement_type"/>
+                                            <field name="description"/>
+                                            <field name="amount"/>
+                                            <field name="movement_date"/>
+                                            <field name="approval_reference"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Governance &amp; KMP" class="o_onboarding_grid">
+                                    <field name="kmp_ids">
+                                        <tree editable="bottom">
+                                            <field name="name"/>
+                                            <field name="role"/>
+                                        </tree>
+                                    </field>
+                                    <field name="delegation_of_authority"/>
+                                    <field name="internal_audit"/>
+                                    <field name="internal_audit_head"/>
+                                </group>
+                                <group string="Related Parties (ISA 550)" class="o_onboarding_grid">
+                                    <field name="related_party_ids">
+                                        <tree editable="bottom">
+                                            <field name="name"/>
+                                            <field name="relationship"/>
+                                            <field name="control_influence"/>
+                                            <field name="expected_transactions"/>
+                                        </tree>
+                                    </field>
+                                    <field name="has_significant_related_parties"/>
+                                    <field name="related_parties_procedures"/>
+                                </group>
                                 <group class="o_onboarding_grid">
                                     <field name="fit_proper_confirmed"/>
                                     <field name="fit_proper_document" widget="binary"/>
@@ -360,6 +428,21 @@
                                             <field name="completed_on" readonly="1"/>
                                             <field name="standard_ids" widget="many2many_tags" readonly="1"/>
                                             <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Verification &amp; Controls (Ownership)" class="o_onboarding_grid">
+                                    <field name="ownership_verified_by"/>
+                                    <field name="ownership_verified_on"/>
+                                    <field name="ownership_verification_method"/>
+                                    <field name="verification_exception_ids" domain="[('area','=','ownership_governance')]">
+                                        <tree editable="bottom">
+                                            <field name="field_name"/>
+                                            <field name="expected_value"/>
+                                            <field name="observed_value"/>
+                                            <field name="impact"/>
+                                            <field name="resolution"/>
+                                            <field name="approved_by"/>
                                         </tree>
                                     </field>
                                 </group>

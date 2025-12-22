@@ -73,6 +73,10 @@ access_qaco_onboarding_notebook_manager,qaco.onboarding.notebook.manager,model_q
 access_qaco_onboarding_note_user,qaco.onboarding.note.user,model_qaco_onboarding_note,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_onboarding_note_partner,qaco.onboarding.note.partner,model_qaco_onboarding_note,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_onboarding_note_manager,qaco.onboarding.note.manager,model_qaco_onboarding_note,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_sharecapital_movement_global,qaco.onboarding.sharecapital.movement,model_qaco_onboarding_sharecapital_movement,,1,1,1,1
+access_qaco_group_component_global,qaco.onboarding.group.component,model_qaco_onboarding_group_component,,1,1,1,1
+access_qaco_related_party_global,qaco.onboarding.related.party,model_qaco_onboarding_related_party,,1,1,1,1
+access_qaco_kmp_global,qaco.onboarding.kmp,model_qaco_onboarding_kmp,,1,1,1,1
 access_qaco_regulator_global,qaco.onboarding.regulator,model_qaco_onboarding_regulator,,1,1,1,1
 access_qaco_regulator_contact_global,qaco.onboarding.regulator.contact,model_qaco_onboarding_regulator_contact,,1,1,1,1
 access_qaco_license_global,qaco.onboarding.license,model_qaco_onboarding_license,,1,1,1,1

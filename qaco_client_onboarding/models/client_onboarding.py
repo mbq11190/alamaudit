@@ -223,13 +223,56 @@ class ClientOnboarding(models.Model):
 
     # Section 3: Ownership & Governance
     shareholder_ids = fields.One2many('qaco.onboarding.shareholder', 'onboarding_id', string='Shareholding Pattern')
+    shareholding_total = fields.Float(string='Shareholding % Total', compute='_compute_shareholding_total', store=True)
+    shareholding_difference_explanation = fields.Text(string='Shareholding difference explanation')
+    share_capital_movement_ids = fields.One2many('qaco.onboarding.sharecapital.movement', 'onboarding_id', string='Share Capital Movements')
+
+    # UBOs
+    ubo_ids = fields.One2many('qaco.onboarding.ubo', 'onboarding_id', string='Ultimate Beneficial Owners')
+    ubo_identification_method = fields.Selection([('client_declaration','Client declaration'),('registry_filings','Registry filings'),('group_organogram','Group organogram'),('other','Other')], string='UBO identification method')
+    ubo_section_complete = fields.Boolean(string='UBO section complete')
+
+    # Group & consolidation
+    group_status = fields.Selection([('standalone','Standalone'),('parent','Parent'),('subsidiary','Subsidiary'),('associate','Associate'),('joint_venture','Joint Venture')], string='Group status')
+    group_component_ids = fields.One2many('qaco.onboarding.group.component', 'onboarding_id', string='Group Components')
+    consolidation_changes = fields.Text(string='Consolidation changes and impact')
+    intercompany_expected = fields.Boolean(string='Intercompany transactions expected')
+    intercompany_categories = fields.Char(string='Intercompany categories')
+
+    # Governance
     board_member_ids = fields.One2many('qaco.onboarding.board.member', 'onboarding_id', string='Board & Key Personnel')
+    kmp_ids = fields.One2many('qaco.onboarding.kmp', 'onboarding_id', string='Key Management Personnel')
+    delegation_of_authority = fields.Text(string='Delegation of authority / signing limits')
+    internal_audit = fields.Boolean(string='Internal audit function present')
+    internal_audit_head = fields.Char(string='Head of internal audit')
+    internal_audit_scope = fields.Text(string='Internal audit scope (high-level)')
+
+    # Related parties
+    related_party_ids = fields.One2many('qaco.onboarding.related.party', 'onboarding_id', string='Related Parties Master List')
+    has_significant_related_parties = fields.Boolean(string='Significant related parties present')
+    related_parties_procedures = fields.Text(string='Planned completeness procedures for related parties')
+
+    # Validation & risk flags
     fit_proper_confirmed = fields.Boolean(string='Fit & Proper Checks Completed')
     fit_proper_document = fields.Binary(string='Fit & Proper Evidence')
     has_pep = fields.Boolean(string='Politically Exposed Person Identified', compute='_compute_pep_flag', store=True)
     enhanced_due_diligence_required = fields.Boolean(string='Enhanced Due Diligence Required', compute='_compute_pep_flag', store=True)
     enhanced_due_diligence_details = fields.Text(string='Enhanced Due Diligence Notes')
     enhanced_due_diligence_attachment = fields.Binary(string='Enhanced Due Diligence Documentation')
+
+    ownership_complex_ownership = fields.Boolean(string='Complex ownership / nominee shareholders')
+    ownership_frequent_director_changes = fields.Boolean(string='Frequent director changes / weak oversight')
+    ownership_significant_related_party_transactions = fields.Boolean(string='Significant related party transactions')
+    ownership_cross_border_group = fields.Boolean(string='Cross-border group structure / tax complexity')
+    ownership_dominant_owner_override_risk = fields.Boolean(string='Dominant owner/management override risk')
+    ownership_risk_rating = fields.Selection([('low','Low'),('medium','Medium'),('high','High')], string='Ownership / governance risk rating')
+    ownership_risk_rationale = fields.Text(string='Ownership risk rationale')
+
+    # Verification for ownership section
+    ownership_verified_by = fields.Many2one('res.users', string='Ownership Verified By')
+    ownership_verified_on = fields.Date(string='Ownership Verified On')
+    ownership_verification_method = fields.Selection([('registry','Registry filings'),('minutes','Minutes'),('declaration','Management declaration'),('other','Other')], string='Verification method')
+
 
     # Section 4: Pre-Acceptance Risk
     management_integrity_rating = fields.Selection(MANAGEMENT_INTEGRITY_SELECTION, string='Management Integrity Rating', required=True)
@@ -583,6 +626,40 @@ class ClientOnboarding(models.Model):
             record.section6_status = 'green' if record.pcl_document and record.pcl_no_outstanding_fees and record.pcl_no_disputes and record.pcl_no_ethics_issues else 'red'
             record.section7_status = 'green' if record.engagement_decision == 'accept' and record.engagement_partner_signature else 'red'
 
+    @api.depends('shareholder_ids.percentage')
+    def _compute_shareholding_total(self):
+        for rec in self:
+            rec.shareholding_total = sum(sh.percentage or 0.0 for sh in rec.shareholder_ids)
+
+    @api.constrains('shareholder_ids', 'shareholding_difference_explanation')
+    def _check_shareholding_total(self):
+        """Shareholding % total must equal 100% unless an explanation is provided."""
+        for rec in self:
+            total = sum(sh.percentage or 0.0 for sh in rec.shareholder_ids)
+            # allow small rounding tolerance
+            if rec.shareholder_ids and abs(total - 100.0) > 0.5 and not rec.shareholding_difference_explanation:
+                raise ValidationError(_('Shareholding percentages must sum to approximately 100%%, or provide an explanation in the Shareholding difference explanation field.'))
+
+    @api.constrains('ubo_section_complete')
+    def _check_ubo_basis(self):
+        for rec in self:
+            if rec.ubo_section_complete and rec.ubo_ids:
+                missing = rec.ubo_ids.filtered(lambda u: not u.basis_of_control)
+                if missing:
+                    raise ValidationError(_('UBO section marked complete but some UBOs are missing a basis of control.'))
+
+    @api.constrains('group_status')
+    def _check_group_components(self):
+        for rec in self:
+            if rec.group_status and rec.group_status != 'standalone' and not rec.group_component_ids:
+                raise ValidationError(_('Group status indicates a group entity; at least one group component must be recorded.'))
+
+    @api.constrains('has_significant_related_parties')
+    def _check_related_parties_presence(self):
+        for rec in self:
+            if rec.has_significant_related_parties and (not rec.related_party_ids or not rec.related_parties_procedures):
+                raise ValidationError(_('Significant related parties flagged; provide related parties master list and planned completeness procedures.'))
+
     def _compute_pep_flag(self):
         for record in self:
             has_pep = bool(record.board_member_ids.filtered('is_pep'))
@@ -669,6 +746,11 @@ class ClientOnboarding(models.Model):
             except Exception:
                 # avoid failing create if required documents cannot be populated
                 _logger.exception('Failed to populate regulatory required documents for onboarding %s', onboarding.id)
+            # populate ownership required documents (1.3)
+            try:
+                onboarding.populate_ownership_required_documents_from_templates()
+            except Exception:
+                _logger.exception('Failed to populate ownership required documents for onboarding %s', onboarding.id)
             # populate the template library with active templates if empty
             try:
                 onboarding.populate_template_library()
@@ -928,17 +1010,31 @@ class OnboardingUBO(models.Model):
 
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='UBO Name', required=True)
-    cnic_passport = fields.Char(string='CNIC / Passport Number', required=True)
+    cnic_passport = fields.Char(string='CNIC / Passport Number')
     is_restricted = fields.Boolean(string='Restricted (ID)', default=True, help='Sensitive identifier - limited access')
     nationality = fields.Char(string='Nationality')
     country_id = fields.Many2one('res.country', string='Country')
     ownership_percent = fields.Float(string='Ownership %', digits=(5, 2))
+    basis_of_control = fields.Selection([('shareholding','Shareholding'),('voting','Voting rights'),('contract','Contract/Arrangement'),('other','Other')], string='Basis of Control')
+    effective_interest = fields.Float(string='Effective interest (direct+indirect %)', digits=(5,2))
+    pep_screening_result = fields.Selection([('clear','Clear'),('pep','PEP'),('sanction_check','Sanctions hit'),('not_checked','Not checked')], string='PEP / Sanctions Screening')
+    filing_status = fields.Selection([('filed','Filed'),('not_filed','Not filed'),('overdue','Overdue')], string='Beneficial ownership filing status')
+    filing_evidence_file = fields.Binary(string='Filing Evidence', attachment=True)
+    filing_evidence_filename = fields.Char(string='Filing Evidence Filename')
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
         for record in self:
             if record.country_id:
                 record.nationality = record.country_id.name
+
+    @api.constrains('ownership_percent','effective_interest')
+    def _check_percentages_non_negative(self):
+        for rec in self:
+            if rec.ownership_percent and rec.ownership_percent < 0:
+                raise ValidationError(_('Ownership percent cannot be negative.'))
+            if rec.effective_interest and rec.effective_interest < 0:
+                raise ValidationError(_('Effective interest cannot be negative.'))
 
 
 class OnboardingSignatory(models.Model):
@@ -964,6 +1060,7 @@ class OnboardingVerificationException(models.Model):
     _description = 'Verification Exception / Mismatch'
 
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    area = fields.Selection([('legal_identity','Legal Identity'),('regulatory','Regulatory'),('ownership_governance','Ownership & Governance'),('other','Other')], string='Area', default='other')
     field_name = fields.Char(string='Field')
     expected_value = fields.Char(string='Expected Value')
     observed_value = fields.Char(string='Observed Value')
@@ -979,9 +1076,71 @@ class OnboardingShareholder(models.Model):
 
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='Shareholder Name', required=True)
+    id_number = fields.Char(string='CNIC / Passport / Reg. No.')
+    country_id = fields.Many2one('res.country', string='Country / Residency')
     share_class = fields.Char(string='Class of Shares')
+    nature_of_ownership = fields.Selection([('direct','Direct'),('indirect','Indirect'),('nominee','Nominee'),('other','Other')], string='Nature of ownership')
     percentage = fields.Float(string='Percentage', digits=(5, 2))
     voting_rights = fields.Char(string='Voting Rights Structure')
+    beneficial_vs_legal = fields.Selection([('beneficial','Beneficial'),('legal','Legal')], string='Beneficial vs Legal')
+    acquisition_date = fields.Date(string='Acquisition Date')
+    changes_during_year = fields.Boolean(string='Changes during year')
+    changes_details = fields.Text(string='Changes details')
+    pledges_charges = fields.Boolean(string='Pledge / Charge on Shares')
+    pledges_details = fields.Text(string='Pledge details')
+
+
+class OnboardingShareCapitalMovement(models.Model):
+    _name = 'qaco.onboarding.sharecapital.movement'
+    _description = 'Share Capital Movement'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    movement_type = fields.Selection([('issuance','Issuance'),('transfer','Transfer'),('buy_back','Buy-back'),('conversion','Conversion')], string='Movement Type')
+    description = fields.Char(string='Description')
+    amount = fields.Monetary(string='Amount', currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, default=lambda self: self.env.company.currency_id)
+    approval_reference = fields.Char(string='Approvals / Reference')
+    movement_date = fields.Date(string='Date')
+
+
+class OnboardingGroupComponent(models.Model):
+    _name = 'qaco.onboarding.group.component'
+    _description = 'Group Component / Entity'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    entity_name = fields.Char(string='Entity Name', required=True)
+    country_id = fields.Many2one('res.country', string='Country')
+    relationship_type = fields.Selection([('subsidiary','Subsidiary'),('associate','Associate'),('joint_venture','Joint Venture'),('branch','Branch'),('other','Other')], string='Relationship Type')
+    percent_ownership = fields.Float(string='% Ownership', digits=(5,2))
+    percent_voting = fields.Float(string='% Voting', digits=(5,2))
+    control_basis = fields.Selection([('ifrs10','IFRS 10'),('ias28','IAS 28'),('ifrs11','IFRS 11'),('other','Other')], string='Control Basis')
+    financial_significance = fields.Char(string='Financial significance (assets/revenue/PBT)')
+    reporting_framework = fields.Char(string='Reporting Framework')
+    year_end_alignment = fields.Selection([('same','Same'),('different','Different')], string='Year-end alignment')
+    component_auditor = fields.Char(string='Component auditor')
+
+
+class OnboardingRelatedParty(models.Model):
+    _name = 'qaco.onboarding.related.party'
+    _description = 'Related Party Master List'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    name = fields.Char(string='Entity / Person', required=True)
+    relationship = fields.Char(string='Relationship Nature')
+    control_influence = fields.Char(string='Control / Influence Basis')
+    expected_transactions = fields.Char(string='Expected Transactions')
+    disclosure_expectations = fields.Char(string='Disclosure Expectations')
+
+
+class OnboardingKMP(models.Model):
+    _name = 'qaco.onboarding.kmp'
+    _description = 'Key Management Personnel'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    name = fields.Char(string='Name', required=True)
+    role = fields.Char(string='Role')
+    contact = fields.Char(string='Contact Details')
+
 
 
 class OnboardingBoardMember(models.Model):
