@@ -278,7 +278,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="Alerts & Deadlines" class="o_onboarding_grid">
+                                <group string="Alerts &amp; Deadlines" class="o_onboarding_grid">
                                     <field name="upcoming_renewals_count" readonly="1"/>
                                     <field name="overdue_filings_count" readonly="1"/>
                                 </group>
