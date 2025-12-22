@@ -172,9 +172,15 @@ class OnboardingTemplateDocument(models.Model):
         for r in self:
             if r.mandatory == 'yes_hard_stop' and r.stage != 'pre_onboarding':
                 raise exceptions.ValidationError(_("Hard-stop mandatory templates must be Pre Onboarding"))
+
+
+class OnboardingAttachedTemplate(models.Model):
+    """Templates attached to a specific onboarding record."""
     _name = 'qaco.onboarding.attached.template'
     _description = 'Attached Template to Onboarding'
     _order = 'create_date desc'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', string='Onboarding', required=True, ondelete='cascade', index=True)
     template_id = fields.Many2one(
         'qaco.onboarding.template.document',
         string='Template',
@@ -199,7 +205,7 @@ class OnboardingTemplateDocument(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """Auto-populate file from template if not provided, and index attachments in Document Vault."""
-        Created = super().create(vals_list)
+        Created = super(OnboardingAttachedTemplate, self).create(vals_list)
         for rec in Created:
             # Populate from template if necessary
             if rec.template_id and not rec.attached_file and rec.template_id.template_file:
