@@ -363,6 +363,29 @@
             <field name="file_type">docx</field>
         </record>
 
+        <!-- Pre-Acceptance Templates (1.4) -->
+        <record id="template_pre_acceptance_master" model="qaco.onboarding.template.document">
+            <field name="name">Pre Acceptance Risk Assessment Form (Master)</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">200</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes_hard_stop</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Pre-acceptance risk assessment form consolidating integrity, complexity, scoring and decision.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_aml_checklist" model="qaco.onboarding.template.document">
+            <field name="name">AML / KYC Checklist</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">201</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">AML / KYC checklist to be used where AML is applicable.</field>
+            <field name="file_type">docx</field>
+        </record>
+
         <record id="template_shareholding_register" model="qaco.onboarding.template.document">
             <field name="name">Shareholding / Owners Register (Working Paper)</field>
             <field name="category_id" ref="template_category_ownership"/>

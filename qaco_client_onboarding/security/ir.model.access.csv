@@ -77,6 +77,11 @@ access_qaco_sharecapital_movement_global,qaco.onboarding.sharecapital.movement,m
 access_qaco_group_component_global,qaco.onboarding.group.component,model_qaco_onboarding_group_component,,1,1,1,1
 access_qaco_related_party_global,qaco.onboarding.related.party,model_qaco_onboarding_related_party,,1,1,1,1
 access_qaco_kmp_global,qaco.onboarding.kmp,model_qaco_onboarding_kmp,,1,1,1,1
+access_qaco_adverse_media_global,qaco.onboarding.adverse.media,model_qaco_onboarding_adverse_media,,1,1,1,1
+access_qaco_sanctions_screen_global,qaco.onboarding.sanctions.screen,model_qaco_onboarding_sanctions_screen,,1,1,1,1
+access_qaco_fee_terms_global,qaco.onboarding.fee.terms,model_qaco_onboarding_fee_terms,,1,1,1,1
+access_qaco_conditional_acceptance_global,qaco.onboarding.conditional.acceptance,model_qaco_onboarding_conditional_acceptance,,1,1,1,1
+access_qaco_risk_driver_global,qaco.onboarding.risk.driver,model_qaco_onboarding_risk_driver,,1,1,1,1
 access_qaco_regulator_global,qaco.onboarding.regulator,model_qaco_onboarding_regulator,,1,1,1,1
 access_qaco_regulator_contact_global,qaco.onboarding.regulator.contact,model_qaco_onboarding_regulator_contact,,1,1,1,1
 access_qaco_license_global,qaco.onboarding.license,model_qaco_onboarding_license,,1,1,1,1

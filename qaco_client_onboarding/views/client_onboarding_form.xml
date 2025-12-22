@@ -456,14 +456,107 @@
                                     <span class="o_onboarding_card_title">Pre-Acceptance Risk</span>
                                     <span class="o_onboarding_card_ref">ISA 315 / ISA 300</span>
                                 </div>
-                                <group class="o_onboarding_grid">
-                                    <field name="management_integrity_rating" widget="radio"/>
-                                    <field name="management_integrity_comment" placeholder="Explain the rating referencing reputation, background and documentation."/>
-                                    <field name="litigation_history"/>
-                                    <field name="fraud_history"/>
-                                    <field name="fraud_explanation" invisible="fraud_history == 'no'"/>
-                                    <field name="aml_risk_rating" readonly="1"/>
-                                    <field name="eqcr_required" readonly="1" invisible="1"/>
+                                <group string="Engagement overview" class="o_onboarding_grid">
+                                    <field name="engagement_type"/>
+                                    <field name="reporting_framework"/>
+                                    <field name="auditing_standards"/>
+                                    <field name="period_from"/>
+                                    <field name="period_to"/>
+                                    <field name="first_year"/>
+                                    <field name="reason_for_appointment"/>
+                                    <field name="deadline_constraints"/>
+                                </group>
+                                <group string="Client integrity & background" class="o_onboarding_grid">
+                                    <field name="integrity_history_noncompliance"/>
+                                    <field name="integrity_aggressive_accounting"/>
+                                    <field name="integrity_scope_limitations"/>
+                                    <field name="integrity_prior_auditor_disagreements"/>
+                                    <field name="integrity_litigation_patterns"/>
+                                    <field name="integrity_adverse_media"/>
+                                    <field name="prior_auditor_issues"/>
+                                    <field name="outstanding_disputes"/>
+                                    <field name="management_attitude"/>
+                                </group>
+                                <group string="AML / KYC" class="o_onboarding_grid">
+                                    <field name="aml_applicable"/>
+                                    <field name="client_identity_verified"/>
+                                    <field name="ubo_verified"/>
+                                    <field name="source_of_funds"/>
+                                    <field name="unusual_funding_patterns"/>
+                                    <field name="unusual_funding_details"/>
+                                    <field name="aml_high_risk_indicators"/>
+                                    <field name="aml_conclusion"/>
+                                </group>
+                                <group string="Sanctions / PEP screening" class="o_onboarding_grid">
+                                    <field name="sanctions_screen_performed"/>
+                                    <field name="sanctions_screen_ids">
+                                        <tree editable="bottom">
+                                            <field name="screening_performed"/>
+                                            <field name="screening_scope"/>
+                                            <field name="screening_method"/>
+                                            <field name="sanctions_hit"/>
+                                            <field name="pep_identified"/>
+                                            <field name="match_level"/>
+                                            <field name="screening_conclusion"/>
+                                        </tree>
+                                    </field>
+                                    <field name="adverse_media_ids">
+                                        <tree editable="bottom">
+                                            <field name="source"/>
+                                            <field name="summary"/>
+                                            <field name="evidence_filename"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Engagement risk factors" class="o_onboarding_grid">
+                                    <field name="complexity_estimates"/>
+                                    <field name="complexity_revenue"/>
+                                    <field name="complexity_going_concern"/>
+                                    <field name="complexity_related_party"/>
+                                    <field name="complexity_group"/>
+                                    <field name="complexity_regulatory"/>
+                                    <field name="complexity_it"/>
+                                    <field name="complexity_judgments"/>
+                                    <field name="capability_available"/>
+                                    <field name="specialists_required"/>
+                                    <field name="specialists_plan"/>
+                                    <field name="time_pressure_risk"/>
+                                </group>
+                                <group string="Engagement risk scoring" class="o_onboarding_grid">
+                                    <field name="score_driver_ids">
+                                        <tree editable="bottom">
+                                            <field name="driver"/>
+                                            <field name="weight"/>
+                                            <field name="score"/>
+                                        </tree>
+                                    </field>
+                                    <field name="engagement_score" readonly="1"/>
+                                    <field name="engagement_risk_rating" readonly="1"/>
+                                    <field name="score_override"/>
+                                    <field name="score_override_reason"/>
+                                    <field name="score_override_partner_id"/>
+                                </group>
+                                <group string="Fee &amp; Collection risk" class="o_onboarding_grid">
+                                    <field name="fee_terms_id"/>
+                                    <field name="fee_term_ids">
+                                        <tree editable="bottom">
+                                            <field name="total_fee"/>
+                                            <field name="retainer_amount"/>
+                                            <field name="retainer_due_date"/>
+                                            <field name="collection_risk_rating"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Acceptance decision & safeguards" class="o_onboarding_grid">
+                                    <field name="engagement_decision"/>
+                                    <field name="decision_conditions"/>
+                                    <field name="eqcr_required"/>
+                                    <field name="eqcr_rationale"/>
+                                    <field name="safeguards_required"/>
+                                    <field name="prepared_by"/>
+                                    <field name="reviewed_by"/>
+                                    <field name="partner_approved_by"/>
+                                    <field name="approval_date"/>
                                 </group>
                                 <group class="o_onboarding_grid">
                                     <field name="business_risk_profile"/>
