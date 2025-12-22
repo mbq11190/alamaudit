@@ -42,7 +42,7 @@
 .o_onboarding_sheet .section-sub{ padding:10px 16px 14px; font-size:13px; color:#6b7280; border-bottom:1px solid #e6e9f0; }
 
 /* Grid: two friendly columns, more breathing room */
-.o_onboarding_sheet .grid{ display:grid; grid-template-columns: 1.15fr 0.9fr; gap:20px; padding:18px; align-items:start; }
+.o_onboarding_sheet .grid{ display:grid; grid-template-columns: 1fr; gap:20px; padding:18px; align-items:start; }
 
 /* Block title */
 .o_onboarding_sheet .block-title{ font-size:16px; font-weight:800; margin:0 0 10px 0; color:#111827; }
@@ -68,20 +68,16 @@
 /* Make inline list buttons compact */
 .tbl-wrap td .btn-outline-secondary{ margin-left:8px; }
 
-/* Mini card: lift and clearer search */
-.mini-card{ border:1px solid #eef2ff; border-radius:12px; padding:14px; background:#fff; box-shadow: 0 6px 18px rgba(99,102,241,.06); }
-.mini-card h4{ margin:0 0 10px 0; font-size:14px; font-weight:900; color:#111827 }
-.mini-card .search{ width:100%; border:1px solid #eef2ff; border-radius:10px; padding:12px 12px; font-size:14px; background:#fff; box-shadow:none }
-.mini-card .search::placeholder{ color:#9ca3af }
-
-/* Table: friendlier spacing, fixed min height so empty state looks intentional */
-.tbl-wrap{ margin-top:10px; border:1px solid #e6e9f0; border-radius:12px; overflow:hidden; background:#fff; min-height:170px; display:block; }
+/* Table: friendlier spacing, larger empty state so it uses available space */
+.tbl-wrap{ margin-top:10px; border:1px solid #e6e9f0; border-radius:12px; overflow:hidden; background:#fff; min-height:260px; display:block; }
 .tbl-wrap table{ width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
 .tbl-wrap thead th{ text-align:left; font-weight:800; font-size:12px; color:#374151; padding:10px 12px; border-bottom:1px solid #e6e9f0; white-space:nowrap; }
 .tbl-wrap tbody td{ padding:10px 12px; border-bottom:1px solid #e6e9f0; vertical-align:middle; background:#fff }
 .tbl-wrap tbody tr{ min-height:44px; }
-.tbl-wrap .add-line{ color:#6f5aa7; font-weight:700; cursor:default; padding:10px 12px }
-.tbl-wrap .empty-placeholder{ color:#9ca3af; padding:18px; }
+.tbl-wrap .add-line{ display:none; }
+
+/* Centered empty placeholder for better composition */
+.tbl-wrap .empty-placeholder{ color:#6b7280; padding:18px; font-size:14px; display:flex; align-items:center; justify-content:center; text-align:center; }
 
 /* Subtle row hover to indicate clickability */
 .tbl-wrap tbody tr:hover{ background:#fbfbff; }

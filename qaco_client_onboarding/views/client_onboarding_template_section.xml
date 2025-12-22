@@ -29,19 +29,19 @@
                                         <!-- Inline actions: Download the master copy or Upload (attach to onboarding) -->
                                         <button name="action_download" type="object" string="Download" class="btn btn-sm btn-outline-secondary o_tpl_download"/>
                                         <button name="action_attach_to_onboarding" type="object" string="Upload" class="btn btn-sm btn-outline-secondary o_tpl_attach"/>
+
+                                        <!-- Friendly empty state row when no templates exist -->
+                                        <t t-if="not template_library_rel_ids">
+                                            <tr class="empty-placeholder-row">
+                                                <td class="empty-placeholder" colspan="4">No templates available — manage templates in the <strong>Template Library</strong>.</td>
+                                            </tr>
+                                        </t>
                                     </tree>
                                 </field>
                             </div>
                         </div>
 
-                        <!-- MIDDLE COLUMN: Filter / Search -->
-                        <div class="col-md-4">
-                            <div class="mini-card">
-                                <h4>Legal Identity<br/>Templates</h4>
-                                <!-- JS attaches a handler for .o_template_search input to filter the list client-side -->
-                                <input class="search o_template_search" type="search" placeholder="Search template" aria-label="Search template"/>
-                            </div>
-                        </div>
+
 
 
                     </div>

@@ -9,8 +9,7 @@ var _t = core._t;
 
 patch(FormController.prototype, 'qaco_client_onboarding.attach_selected', {
     events: Object.assign({}, FormController.prototype.events, {
-        'click .o_attach_selected': '_onAttachSelected',
-        'input .o_template_search': '_onTemplateSearch'
+        'click .o_attach_selected': '_onAttachSelected'
     }),
 
     _onAttachSelected: function (ev) {
@@ -48,21 +47,5 @@ patch(FormController.prototype, 'qaco_client_onboarding.attach_selected', {
         });
     },
 
-    _onTemplateSearch: function (ev) {
-        var q = (ev.target.value || '').trim().toLowerCase();
-        var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
-        if (!fieldEl) { return; }
-        // find rows (one2many list rows)
-        var rows = fieldEl.querySelectorAll('tr.o_data_row, tr.o_list_record_row');
-        for (var i = 0; i < rows.length; i++) {
-            var row = rows[i];
-            var nameCell = row.querySelector('td[data-field="name"]');
-            if (!nameCell) {
-                // fallback: first cell
-                nameCell = row.querySelector('td');
-            }
-            var text = nameCell ? nameCell.textContent.trim().toLowerCase() : '';
-            row.style.display = q && text.indexOf(q) === -1 ? 'none' : '';
-        }
-    }
+
 });
