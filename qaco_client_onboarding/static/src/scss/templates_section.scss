@@ -41,16 +41,24 @@
 .o_onboarding_sheet .section-title{ font-weight:700; font-size:14px; }
 .o_onboarding_sheet .section-sub{ padding:10px 16px 14px; font-size:13px; color:#6b7280; border-bottom:1px solid #e6e9f0; }
 
-/* Grid */
-.o_onboarding_sheet .grid{ display:grid; grid-template-columns: 1.2fr 1fr; gap:14px; padding:14px; }
+/* Grid: two friendly columns, more breathing room */
+.o_onboarding_sheet .grid{ display:grid; grid-template-columns: 1.15fr 0.9fr; gap:20px; padding:18px; align-items:start; }
 
-/* Buttons */
-.o_onboarding_sheet .btn-col{ display:flex; flex-direction:column; gap:10px; min-width:150px; }
-.o_onboarding_sheet .btn{ display:inline-flex; justify-content:center; align-items:center; padding:10px 12px; border-radius:10px; border:1px solid transparent; background:#6f5aa7; color:#fff; font-weight:700; font-size:13px; box-shadow: 0 6px 18px rgba(111,90,167,.20); }
+/* Block title */
+.o_onboarding_sheet .block-title{ font-size:16px; font-weight:800; margin:0 0 10px 0; color:#111827; }
+
+/* Help text refined */
+.o_onboarding_sheet .help{ margin-top:8px; font-size:13px; color:#4b5563; line-height:1.6; max-width:320px }
+
+/* Subhead spacing */
+.o_onboarding_sheet .subhead{ margin-top:12px; font-weight:800; font-size:14px; color:#111827 }
+
+/* Buttons (some removed in the view; keep for any residual UI) */
+.o_onboarding_sheet .btn-col{ display:flex; flex-direction:column; gap:12px; min-width:140px; }
+.o_onboarding_sheet .btn{ display:inline-flex; justify-content:center; align-items:center; padding:10px 14px; border-radius:10px; border:1px solid transparent; background:#6f5aa7; color:#fff; font-weight:700; font-size:14px; box-shadow: 0 8px 22px rgba(111,90,167,.12); }
 .o_onboarding_sheet .btn:hover{ background:#5f4f98; }
-.o_onboarding_sheet .help{ margin-top:6px; font-size:12px; color:#6b7280; line-height:1.5; max-width:270px }
 
-/* Small outline buttons for inline row actions */
+/* Inline small action buttons */
 .o_onboarding_sheet .btn-outline-secondary{ background:transparent; color:#374151; border:1px solid #e6e9f0; padding:4px 8px; font-size:12px; box-shadow:none; border-radius:6px; }
 .o_onboarding_sheet .btn-outline-secondary:hover{ background:#f8fafc; }
 .o_onboarding_sheet .btn-sm{ padding:4px 8px; font-size:12px; }
@@ -58,21 +66,34 @@
 .o_onboarding_sheet .o_tpl_attach::after{ content: '\1F4E4'; margin-left:6px; opacity:0.8; }
 
 /* Make inline list buttons compact */
-.tbl-wrap td .btn-outline-secondary{ margin-left:6px; }
+.tbl-wrap td .btn-outline-secondary{ margin-left:8px; }
 
-.mini-card{ border:1px solid #e6e9f0; border-radius:12px; padding:12px; background:#fff; }
-.mini-card h4{ margin:0 0 8px 0; font-size:13px; font-weight:800 }
-.mini-card .search{ width:100%; border:1px solid #e6e9f0; border-radius:8px; padding:8px 10px; font-size:13px; background:#fff }
+/* Mini card: lift and clearer search */
+.mini-card{ border:1px solid #eef2ff; border-radius:12px; padding:14px; background:#fff; box-shadow: 0 6px 18px rgba(99,102,241,.06); }
+.mini-card h4{ margin:0 0 10px 0; font-size:14px; font-weight:900; color:#111827 }
+.mini-card .search{ width:100%; border:1px solid #eef2ff; border-radius:10px; padding:12px 12px; font-size:14px; background:#fff; box-shadow:none }
+.mini-card .search::placeholder{ color:#9ca3af }
 
-.tbl-wrap{ margin-top:10px; border:1px solid #e6e9f0; border-radius:12px; overflow:hidden; background:#fff }
-.tbl-wrap table{ width:100%; border-collapse:separate; border-spacing:0; font-size:13px }
-.tbl-wrap thead th{ text-align:left; font-weight:800; font-size:12px; color:#374151; padding:10px; border-bottom:1px solid #e6e9f0; white-space:nowrap; }
-.tbl-wrap tbody td{ padding:10px; border-bottom:1px solid #e6e9f0; vertical-align:middle; background:#fff }
-.tbl-wrap .add-line{ color:#6f5aa7; font-weight:700; cursor:default }
+/* Table: friendlier spacing, fixed min height so empty state looks intentional */
+.tbl-wrap{ margin-top:10px; border:1px solid #e6e9f0; border-radius:12px; overflow:hidden; background:#fff; min-height:170px; display:block; }
+.tbl-wrap table{ width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
+.tbl-wrap thead th{ text-align:left; font-weight:800; font-size:12px; color:#374151; padding:10px 12px; border-bottom:1px solid #e6e9f0; white-space:nowrap; }
+.tbl-wrap tbody td{ padding:10px 12px; border-bottom:1px solid #e6e9f0; vertical-align:middle; background:#fff }
+.tbl-wrap tbody tr{ min-height:44px; }
+.tbl-wrap .add-line{ color:#6f5aa7; font-weight:700; cursor:default; padding:10px 12px }
+.tbl-wrap .empty-placeholder{ color:#9ca3af; padding:18px; }
+
+/* Subtle row hover to indicate clickability */
+.tbl-wrap tbody tr:hover{ background:#fbfbff; }
 
 /* Responsive tweaks */
 @media (max-width: 1100px){
   .o_onboarding_sheet .grid{ grid-template-columns: 1fr; }
   .o_onboarding_sheet .btn-col{ flex-direction:row; }
   .o_onboarding_sheet .btn{ width:100% }
+  .mini-card{ margin-top:6px }
 }
+
+/* Accessibility: focus state for keyboard users */
+.tbl-wrap tbody tr:focus-within{ outline:2px solid rgba(99,102,241,.12); }
+
