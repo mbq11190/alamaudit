@@ -30,7 +30,7 @@ import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 const AUTO_SAVE_INTERVAL = 10000; // 10 seconds
 const DEBOUNCE_DELAY = 1500; // 1.5 seconds after last keystroke
 
-export class OnboardingAutoSaveController extends FormController {
+class OnboardingAutoSaveController extends FormController {
 
     setup() {
         super.setup();
@@ -284,7 +284,7 @@ export class OnboardingAutoSaveController extends FormController {
 }
 
 // Register the custom form view for client onboarding
-export const onboardingAutoSaveFormView = {
+const onboardingAutoSaveFormView = {
     ...formView,
     Controller: OnboardingAutoSaveController,
 };

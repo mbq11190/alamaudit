@@ -9,4 +9,5 @@ ChatbotWidget.prototype = Object.create(Component.prototype);
 ChatbotWidget.prototype.constructor = ChatbotWidget;
 ChatbotWidget.template = 'ai_audit_management.ChatbotWidget';
 
-export default ChatbotWidget;
+// Expose widget as a global for non-module environments
+window.ChatbotWidget = ChatbotWidget;

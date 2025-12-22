@@ -286,7 +286,7 @@ patch(FormController.prototype, {
  * Auto-Save Status Widget Component
  * Shows auto-save status indicator in the form
  */
-export class AutoSaveStatusWidget extends Component {
+class AutoSaveStatusWidget extends Component {
     static template = "qaco_client_onboarding.AutoSaveStatus";
     static props = {
         record: { type: Object },
@@ -355,7 +355,7 @@ export class AutoSaveStatusWidget extends Component {
  * Save & Next Button Widget
  * Custom button that triggers save and navigation
  */
-export class SaveNextButton extends Component {
+class SaveNextButton extends Component {
     static template = "qaco_client_onboarding.SaveNextButton";
     static props = {
         record: { type: Object },
@@ -411,5 +411,4 @@ export class SaveNextButton extends Component {
 registry.category("fields").add("auto_save_status", AutoSaveStatusWidget);
 registry.category("fields").add("save_next_button", SaveNextButton);
 
-// Export for external use
-export { AutoSaveManager };
+// Previously exported AutoSaveManager is now internal to this file (use the .esm.js module if you need it).
