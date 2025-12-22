@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="driver_management_integrity" model="qaco.onboarding.decision.driver">
+        <field name="code">management_integrity</field>
+        <field name="name">Management integrity / governance concerns</field>
+    </record>
+    <record id="driver_independence_threats" model="qaco.onboarding.decision.driver">
+        <field name="code">independence_threats</field>
+        <field name="name">Independence threats / conflicts</field>
+    </record>
+    <record id="driver_complex_estimates" model="qaco.onboarding.decision.driver">
+        <field name="code">complex_estimates</field>
+        <field name="name">Complex accounting / estimates / judgments</field>
+    </record>
+    <record id="driver_going_concern" model="qaco.onboarding.decision.driver">
+        <field name="code">going_concern</field>
+        <field name="name">Going concern / liquidity indicators</field>
+    </record>
+    <record id="driver_fraud_risk" model="qaco.onboarding.decision.driver">
+        <field name="code">fraud_risk</field>
+        <field name="name">Fraud risk factors / related parties complexity</field>
+    </record>
+</odoo>

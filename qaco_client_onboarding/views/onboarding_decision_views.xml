@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_onboarding_decision_tree" model="ir.ui.view">
+        <field name="name">qaco.onboarding.decision.tree</field>
+        <field name="model">qaco.onboarding.decision</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="onboarding_id"/>
+                <field name="version"/>
+                <field name="decision_type"/>
+                <field name="risk_rating"/>
+                <field name="decision_date"/>
+                <field name="decision_by"/>
+                <field name="locked"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_onboarding_decision_form" model="ir.ui.view">
+        <field name="name">qaco.onboarding.decision.form</field>
+        <field name="model">qaco.onboarding.decision</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="onboarding_id"/>
+                        <field name="version" readonly="1"/>
+                        <field name="decision_type"/>
+                        <field name="risk_rating"/>
+                        <field name="risk_driver_ids" widget="many2many_tags"/>
+                    </group>
+                    <group>
+                        <field name="decision_rationale" class="oe_inline"/>
+                    </group>
+                    <group>
+                        <field name="decision_by" readonly="1"/>
+                        <field name="decision_date" readonly="1"/>
+                        <field name="locked"/>
+                    </group>
+                    <group>
+                        <field name="quality_approval_id"/>
+                        <field name="eqcr_partner_id"/>
+                    </group>
+                    <group>
+                        <button name="action_generate_decision_memo" type="object" string="Generate Decision Memo" class="btn-secondary"/>
+                        <button name="action_apply_decision" type="object" string="Apply Decision" class="btn-primary"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_onboarding_decisions" model="ir.actions.act_window">
+        <field name="name">Engagement Decisions</field>
+        <field name="res_model">qaco.onboarding.decision</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_onboarding_decision_tree"/>
+    </record>
+</odoo>

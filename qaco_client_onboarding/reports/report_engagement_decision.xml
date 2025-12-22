@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="report_engagement_decision_template">
+    <t t-call="web.external_layout">
+      <div class="page">
+        <h2>Engagement Decision Memorandum</h2>
+        <p><strong>Client:</strong> <t t-esc="docs[0].client_id.name if docs and docs[0].client_id else ''"/></p>
+        <p><strong>Decision:</strong> <t t-esc="docs[0].decision_type or ''"/></p>
+        <p><strong>Risk rating:</strong> <t t-esc="docs[0].risk_rating or ''"/></p>
+        <h3>Rationale</h3>
+        <div t-raw="docs[0].decision_rationale or ''"/>
+        <h3>Approvals</h3>
+        <p>Approved by: <t t-esc="docs[0].decision_by.name or ''"/> on <t t-esc="docs[0].decision_date and docs[0].decision_date.strftime('%d %b %Y %H:%M') or ''"/></p>
+      </div>
+    </t>
+  </template>
+
+  <report id="report_engagement_decision" string="Engagement Decision" model="qaco.onboarding.decision" report_type="qweb-pdf" name="qaco_client_onboarding.report_engagement_decision_template" file="qaco_client_onboarding.report_engagement_decision_template"/>
+</odoo>

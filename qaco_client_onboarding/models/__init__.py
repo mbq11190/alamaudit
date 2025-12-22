@@ -9,3 +9,4 @@ from . import onboarding_preacceptance
 from . import onboarding_independence
 from . import onboarding_predecessor
 from . import onboarding_final_authorization
+from . import onboarding_decision

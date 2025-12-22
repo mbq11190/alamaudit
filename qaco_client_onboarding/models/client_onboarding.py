@@ -314,6 +314,7 @@ class ClientOnboarding(models.Model):
     # Document Vault relationship
     document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
     document_folder_ids = fields.One2many('qaco.onboarding.document.folder', 'onboarding_id', string='Document Folders')
+    latest_decision_id = fields.Many2one('qaco.onboarding.decision', string='Latest Decision')
 
     def _create_default_document_folders(self):
         """Create a copy of the template folder taxonomy for this onboarding."""

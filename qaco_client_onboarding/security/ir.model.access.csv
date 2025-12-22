@@ -103,3 +103,5 @@ access_qaco_document_history_global,qaco.onboarding.document.history,model_qaco_
 access_qaco_document_audit_global,qaco.onboarding.document.audit,model_qaco_onboarding_document_audit,,1,1,1,1
 access_qaco_final_authorization_global,qaco.onboarding.final.authorization,model_qaco_onboarding_final_authorization,,1,1,1,1
 access_qaco_final_authorization_condition_global,qaco.onboarding.final.authorization.condition,model_qaco_onboarding_final_authorization_condition,,1,1,1,1
+access_qaco_decision_global,qaco.onboarding.decision,model_qaco_onboarding_decision,,1,1,1,1
+access_qaco_decision_driver_global,qaco.onboarding.decision.driver,model_qaco_onboarding_decision_driver,,1,1,1,1
