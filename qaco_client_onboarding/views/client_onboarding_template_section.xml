@@ -48,22 +48,7 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT COLUMN: Onboarding Pack & Tracker -->
-                        <div class="col-md-4">
-                            <h3 class="block-title">1.0B - Onboarding Pack &amp; Tracker</h3>
-                            <div class="block-note">Use the tracker to manage templates attached to this onboarding record. Select a template to prefill the attached file.</div>
 
-                            <div class="tbl-wrap mt-3" aria-label="Onboarding pack tracker table">
-                                <field name="attached_template_ids" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="template_id"/>
-                                        <field name="attached_filename"/>
-                                        <field name="attached_by"/>
-                                        <field name="attached_date"/>
-                                    </tree>
-                                </field>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </xpath>
