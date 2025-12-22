@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
@@ -8,6 +9,8 @@ try:
 except ImportError:  # pragma: no cover - fallback for static analysis or path issues
     from .audit_compliance import ONBOARDING_AREAS  # type: ignore
 import re
+
+_logger = logging.getLogger(__name__)
 
 ENTITY_SELECTION = [
     ('pic', 'Public Interest Company (PIC)'),
@@ -315,7 +318,7 @@ class ClientOnboarding(models.Model):
                             'state': 'received',
                         })
                     except Exception:
-                        pass
+                        _logger.exception('Failed to index binary field "%s" for onboarding %s', field, rec.id)
         return res
 
     engagement_summary = fields.Text(string='Engagement Summary', compute='_compute_engagement_summary', store=True)

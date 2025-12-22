@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from odoo import models, fields, api, _, exceptions
+
+_logger = logging.getLogger(__name__)
 
 
 TEMPLATE_CATEGORY = [
@@ -151,7 +154,7 @@ class OnboardingTemplateDocument(models.Model):
             try:
                 self.env['qaco.onboarding.document'].create(doc_vals)
             except Exception:
-                pass
+                _logger.exception('Failed to index template %s into Document Vault (onboarding %s)', self.name, onboarding.id)
         onboarding.message_post(body=_('Template %s attached by %s') % (self.name, self.env.user.name))
         return {
             'type': 'ir.actions.client',
@@ -214,7 +217,7 @@ class OnboardingTemplateDocument(models.Model):
                         'state': 'received',
                     })
                 except Exception:
-                    pass
+                    _logger.exception('Failed to index attached file for template id %s on onboarding %s', rec.template_id.id if rec.template_id else None, rec.onboarding_id.id)
         return Created
 
 
