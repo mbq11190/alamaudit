@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Professional Clearance Memo (Predecessor Auditor) -->
+    <template id="report_predecessor_clearance_memo_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.4;">
+                        <h2>Professional Clearance Memo</h2>
+                        <p><strong>Client:</strong> <t t-esc="doc.onboarding_id.client_id.name or '—'"/></p>
+                        <p><strong>Predecessor Firm:</strong> <t t-esc="doc.predecessor_firm or '—'"/></p>
+                        <p><strong>Request Sent:</strong> <t t-esc="doc.sent_date and doc.sent_date.strftime('%d %b %Y %H:%M') or '—'"/></p>
+                        <hr/>
+                        <h3>Request Summary</h3>
+                        <p><t t-esc="doc.reason_for_change or '—'"/></p>
+
+                        <h3>Follow-up Attempts</h3>
+                        <t t-if="doc.followup_line_ids">
+                            <table style="width:100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background:#f2f2f2;">
+                                        <th style="padding:6px; text-align:left;">#</th>
+                                        <th style="padding:6px; text-align:left;">Date</th>
+                                        <th style="padding:6px; text-align:left;">Mode</th>
+                                        <th style="padding:6px; text-align:left;">Outcome</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.followup_line_ids" t-as="f">
+                                        <tr>
+                                            <td style="padding:6px;"> <t t-esc="f.attempt_number"/> </td>
+                                            <td style="padding:6px;"> <t t-esc="f.date and f.date.strftime('%d %b %Y %H:%M') or '—'"/> </td>
+                                            <td style="padding:6px;"> <t t-esc="dict([('email','Email'),('courier','Courier'),('hand','Hand delivery'),('portal','Portal'),('phone','Phone')]).get(f.mode,f.mode)"/> </td>
+                                            <td style="padding:6px;"> <t t-esc="f.outcome or '—'"/> </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p><em>No follow-up attempts recorded.</em></p>
+                        </t>
+
+                        <h3>Response & Issues</h3>
+                        <t t-if="doc.response_id">
+                            <p><strong>Response Date:</strong> <t t-esc="doc.response_id.response_date or '—'"/></p>
+                            <p><strong>Summary:</strong> <t t-esc="doc.response_id.response_summary or '—'"/></p>
+                            <p><strong>Issues flagged:</strong>
+                                <ul>
+                                    <t t-if="doc.response_id.issue_fee_dispute"><li>Fee dispute / unpaid fees</li></t>
+                                    <t t-if="doc.response_id.issue_integrity"><li>Management integrity concerns</li></t>
+                                    <t t-if="doc.response_id.issue_disagreements"><li>Disagreements on accounting policies</li></t>
+                                    <t t-if="doc.response_id.issue_scope_limit"><li>Scope limitation / access restriction</li></t>
+                                    <t t-if="doc.response_id.issue_going_concern"><li>Going concern concerns</li></t>
+                                    <t t-if="doc.response_id.issue_related_party"><li>Related parties / fraud indicators</li></t>
+                                    <t t-if="doc.response_id.issue_noclar"><li>NOCLAR indicators</li></t>
+                                    <t t-if="doc.response_id.other_issue"><li><t t-esc="doc.response_id.other_issue"/></li></t>
+                                </ul>
+                            </p>
+                            <p><strong>Impact:</strong> <t t-esc="doc.response_id.impact or '—'"/></p>
+                            <p><strong>Conclusion:</strong> <t t-esc="dict([('proceed','Proceed'),('proceed_safeguards','Proceed with safeguards'),('do_not_proceed','Do Not Proceed')]).get(doc.response_id.conclusion, doc.response_id.conclusion)"/></p>
+                        </t>
+                        <t t-else="">
+                            <p><em>No response recorded yet.</em></p>
+                        </t>
+
+                        <hr/>
+                        <p><strong>Partner Sign-off:</strong> <t t-esc="doc.response_id.partner_signoff and doc.response_id.partner_signoff.name or '—'"/> <strong>Date:</strong> <t t-esc="doc.response_id.partner_signoff_date or '—'"/></p>
+                        <p><strong>Quality Approval:</strong> <t t-esc="doc.response_id.quality_approval and doc.response_id.quality_approval.name or '—'"/> <strong>Date:</strong> <t t-esc="doc.response_id.quality_approval_date or '—'"/></p>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_predecessor_clearance_memo" string="Professional Clearance Memo" model="qaco.onboarding.predecessor.request" report_type="qweb-pdf" name="qaco_client_onboarding.report_predecessor_clearance_memo_template" file="qaco_client_onboarding.report_predecessor_clearance_memo_template"/>
+</odoo>

@@ -95,3 +95,6 @@ access_qaco_independence_threat_global,qaco.onboarding.independence.threat,model
 access_qaco_conflict_global,qaco.onboarding.conflict,model_qaco_onboarding_conflict,,1,1,1,1
 access_qaco_non_audit_service_global,qaco.onboarding.non.audit,model_qaco_onboarding_non_audit,,1,1,1,1
 access_qaco_gift_global,qaco.onboarding.gift,model_qaco_onboarding_gift,,1,1,1,1
+access_qaco_predecessor_request_global,qaco.onboarding.predecessor.request,model_qaco_onboarding_predecessor_request,,1,1,1,1
+access_qaco_predecessor_followup_global,qaco.onboarding.predecessor.followup,model_qaco_onboarding_predecessor_followup,,1,1,1,1
+access_qaco_predecessor_response_global,qaco.onboarding.predecessor.response,model_qaco_onboarding_predecessor_response,,1,1,1,1

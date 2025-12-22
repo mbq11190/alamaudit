@@ -884,6 +884,8 @@ class ClientOnboarding(models.Model):
             record._validate_mandatory_checklist_completion()
             # Independence & Ethics compliance check (1.5)
             record.action_check_independence_before_approval()
+            # Predecessor clearance check (1.6)
+            record.action_check_predecessor_before_approval()
             if record.high_risk_onboarding and not record.engagement_partner_id:
                 raise ValidationError(_('High-risk onboardings require an Engagement Partner before approval.'))
             record.write({'state': 'partner_approved'})

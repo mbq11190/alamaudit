@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Clearance Correspondence Pack (bundle) -->
+    <template id="report_predecessor_clearance_pack_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Clearance Correspondence Pack</h2>
+                        <p><strong>Client:</strong> <t t-esc="doc.onboarding_id.client_id.name or '—'"/></p>
+                        <h3>Request Letter</h3>
+                        <p><strong>To:</strong> <t t-esc="doc.predecessor_firm or '—'"/></p>
+                        <p><strong>Date Sent:</strong> <t t-esc="doc.sent_date and doc.sent_date.strftime('%d %B %Y') or '—'"/></p>
+                        <p><strong>Mode:</strong> <t t-esc="doc.sent_mode or '—'"/></p>
+                        <h3>Follow-up Log</h3>
+                        <t t-if="doc.followup_line_ids">
+                            <table style="width:100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background:#f2f2f2;">
+                                        <th style="padding:6px;">#</th>
+                                        <th style="padding:6px;">Date</th>
+                                        <th style="padding:6px;">Mode</th>
+                                        <th style="padding:6px;">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.followup_line_ids" t-as="f">
+                                        <tr>
+                                            <td style="padding:6px;"><t t-esc="f.attempt_number"/></td>
+                                            <td style="padding:6px;"><t t-esc="f.date and f.date.strftime('%d %b %Y') or '—'"/></td>
+                                            <td style="padding:6px;"><t t-esc="f.mode or '—'"/></td>
+                                            <td style="padding:6px;"><t t-esc="f.notes or f.outcome or '—'"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <h3>Attachments</h3>
+                        <p>Include: Request letter, Authorization documents, Response attachments (if any).</p>
+                        <hr/>
+                        <p>Prepared by: <t t-esc="doc.sent_by.name if doc.sent_by else '—'"/></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_predecessor_clearance_pack" string="Clearance Correspondence Pack" model="qaco.onboarding.predecessor.request" report_type="qweb-pdf" name="qaco_client_onboarding.report_predecessor_clearance_pack_template" file="qaco_client_onboarding.report_predecessor_clearance_pack_template"/>
+</odoo>

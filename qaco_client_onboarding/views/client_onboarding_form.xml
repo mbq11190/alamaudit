@@ -671,15 +671,60 @@
                                     <span class="o_onboarding_card_title">Predecessor Auditor</span>
                                     <span class="o_onboarding_card_ref">ISA 210 / ISA 220</span>
                                 </div>
-                                <group class="o_onboarding_grid">
-                                    <field name="predecessor_auditor_name"/>
-                                    <field name="predecessor_contact"/>
-                                    <field name="pcl_requested"/>
-                                    <field name="pcl_received"/>
-                                    <field name="pcl_document" filename="pcl_document_name" widget="binary"/>
-                                    <field name="pcl_no_outstanding_fees"/>
-                                    <field name="pcl_no_disputes"/>
-                                    <field name="pcl_no_ethics_issues"/>
+                                <notebook class="o_onboarding_subtabs">
+                                    <page name="clearance_request" string="Clearance Request">
+                                        <group string="Predecessor details" class="o_onboarding_grid">
+                                            <field name="predecessor_auditor_name"/>
+                                            <field name="predecessor_contact"/>
+                                            <field name="predecessor_email"/>
+                                            <field name="predecessor_phone"/>
+                                            <field name="predecessor_address"/>
+                                            <field name="regulatory_ref"/>
+                                        </group>
+                                        <group string="Appointment context" class="o_onboarding_grid">
+                                            <field name="engagement_type"/>
+                                            <field name="reporting_period"/>
+                                            <field name="proposed_appointment_date"/>
+                                            <field name="reason_for_change"/>
+                                        </group>
+                                        <group string="Consent & Authority" class="o_onboarding_grid">
+                                            <field name="client_authorization"/>
+                                            <field name="authorization_attachment" widget="binary"/>
+                                        </group>
+                                        <group string="Dispatch & follow-up" class="o_onboarding_grid">
+                                            <field name="predecessor_request_ids">
+                                                <tree editable="bottom">
+                                                    <field name="sent_date"/>
+                                                    <field name="sent_mode"/>
+                                                    <field name="sent_by"/>
+                                                    <field name="followup_count" readonly="1"/>
+                                                    <field name="final_status" readonly="1"/>
+                                                    <field name="final_conclusion" readonly="1"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </page>
+                                    <page name="responses_issues" string="Responses & Issues Log">
+                                        <group string="Responses" class="o_onboarding_grid">
+                                            <field name="predecessor_response_ids">
+                                                <tree editable="bottom">
+                                                    <field name="response_received"/>
+                                                    <field name="response_date"/>
+                                                    <field name="impact"/>
+                                                    <field name="conclusion"/>
+                                                    <field name="partner_signoff"/>
+                                                    <field name="quality_approval"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                        <group string="Issues categorisation" class="o_onboarding_grid">
+                                            <field name="predecessor_escalated" readonly="1"/>
+                                            <field name="predecessor_locked" readonly="1"/>
+                                        </group>
+                                    </page>
+                                </notebook>
+                                <group string="Action" class="o_onboarding_grid">
+                                    <button name="action_generate_predecessor_pack_bundle" type="object" string="Generate Pack Bundle" class="btn-primary"/>
                                 </group>
                                 <group string="Standards &amp; Checklist" class="o_onboarding_grid">
                                     <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','predecessor_auditor') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">

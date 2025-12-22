@@ -56,6 +56,8 @@ Features:
         'reports/report_ethics_independence.xml',
         'reports/report_fraud_business_risk.xml',
         'reports/report_engagement_authorization.xml',
+        'reports/report_predecessor_clearance_memo.xml',
+        'reports/report_predecessor_clearance_pack.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -71,6 +73,9 @@ Features:
     'web.qunit_suite_tests': [
         'qaco_client_onboarding/static/tests/templates_ui_tests.esm.js',
     ],
+    'external_dependencies': {
+        'python': ['pypdf', 'PyPDF2'],
+    },
     # Note: python-docx and weasyprint are optional for Word/PDF generation
     # If not installed, the system falls back to HTML-based downloads
     'installable': True,

@@ -48,4 +48,9 @@
         <field name="value">5000</field>
     </record>
 
+    <record id="pack_attachment_max_kb_param" model="ir.config_parameter">
+        <field name="key">qaco_client_onboarding.pack_attachment_max_kb</field>
+        <field name="value">512</field>
+    </record>
+
 </odoo>

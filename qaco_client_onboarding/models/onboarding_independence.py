@@ -261,12 +261,14 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     gift_auto_decline_threshold = fields.Float(string='Gift Auto-Decline Threshold')
+    pack_attachment_max_kb = fields.Integer(string='Pack attachments max size (KB)', help='Attachments larger than this (KB) will not be merged into the Clearance Pack; they will be referenced instead.')
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         icp = self.env['ir.config_parameter'].sudo()
         res.update(
             gift_auto_decline_threshold=float(icp.get_param('qaco_client_onboarding.gift_auto_decline_threshold', default='0.0')),
+            pack_attachment_max_kb=int(icp.get_param('qaco_client_onboarding.pack_attachment_max_kb', default='512')),
         )
         return res
 
@@ -274,3 +276,4 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         icp = self.env['ir.config_parameter'].sudo()
         icp.set_param('qaco_client_onboarding.gift_auto_decline_threshold', self.gift_auto_decline_threshold or 0.0)
+        icp.set_param('qaco_client_onboarding.pack_attachment_max_kb', int(self.pack_attachment_max_kb or 512))
