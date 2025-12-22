@@ -37,15 +37,21 @@
             <field name="name">Client Onboarding Checklist</field>
             <field name="category_id" ref="template_category_client_onboarding"/>
             <field name="sequence">10</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes_hard_stop</field>
+            <field name="requires_working_paper">1</field>
             <field name="description">Standard checklist for new client onboarding procedures.</field>
             <field name="file_type">docx</field>
         </record>
 
         <record id="template_new_client_acceptance" model="qaco.onboarding.template.document">
-            <field name="name">New Client Acceptance Form</field>
+            <field name="name">New Client Acceptance Form (ISA 210)</field>
             <field name="category_id" ref="template_category_client_onboarding"/>
             <field name="sequence">20</field>
-            <field name="description">Form for documenting new client acceptance decisions.</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes_hard_stop</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Form for documenting new client acceptance decisions per ISA 210.</field>
             <field name="file_type">docx</field>
         </record>
 
@@ -53,15 +59,20 @@
             <field name="name">Client Engagement Setup Sheet</field>
             <field name="category_id" ref="template_category_client_onboarding"/>
             <field name="sequence">30</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
             <field name="description">Engagement setup and administrative details sheet.</field>
             <field name="file_type">docx</field>
         </record>
-
         <!-- B. Professional Clearance & Communication Templates -->
         <record id="template_link_letter" model="qaco.onboarding.template.document">
             <field name="name">Link Letter (Request for Professional Clearance)</field>
             <field name="category_id" ref="template_category_professional_clearance"/>
             <field name="sequence">10</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
             <field name="description">Letter to request professional clearance from predecessor auditor.</field>
             <field name="file_type">docx</field>
         </record>
@@ -70,6 +81,9 @@
             <field name="name">Response to Professional Clearance Request</field>
             <field name="category_id" ref="template_category_professional_clearance"/>
             <field name="sequence">20</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
             <field name="description">Standard response template for professional clearance requests received.</field>
             <field name="file_type">docx</field>
         </record>
@@ -142,10 +156,13 @@
 
         <!-- E. Other Standard Letters & Confirmations Templates -->
         <record id="template_independence_confirmation" model="qaco.onboarding.template.document">
-            <field name="name">Independence Confirmation Letter</field>
+            <field name="name">Independence Declaration (Partner/Team)</field>
             <field name="category_id" ref="template_category_other_letters"/>
             <field name="sequence">10</field>
-            <field name="description">Independence confirmation declaration for engagement team.</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes_hard_stop</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Independence declaration for partner and engagement team.</field>
             <field name="file_type">docx</field>
         </record>
 
@@ -169,7 +186,132 @@
             <field name="name">Document Request List (PBC List)</field>
             <field name="category_id" ref="template_category_other_letters"/>
             <field name="sequence">40</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
             <field name="description">Prepared By Client (PBC) document request checklist.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <!-- Supplemental templates mapping to user request under 1.0 -->
+        <record id="template_client_addresses" model="qaco.onboarding.template.document">
+            <field name="name">Addresses &amp; Branches Register</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">40</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Register of client addresses and branch locations.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_authorized_signatories" model="qaco.onboarding.template.document">
+            <field name="name">Authorized Signatories Confirmation</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">50</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Confirmation of authorized signatories for bank and legal documents.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_ownership_ubo_declaration" model="qaco.onboarding.template.document">
+            <field name="name">Ownership &amp; UBO Declaration</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">50</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Declaration of ownership structure and ultimate beneficial owners.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_board_key_management" model="qaco.onboarding.template.document">
+            <field name="name">Board &amp; Key Management List</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">60</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">List of board members and key management personnel.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_related_parties" model="qaco.onboarding.template.document">
+            <field name="name">Related Parties Declaration (ISA 550)</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">70</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Disclosure of related parties per ISA 550.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_regulatory_licenses" model="qaco.onboarding.template.document">
+            <field name="name">Regulatory Licenses Register</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">80</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">as_applicable</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Register of regulatory licenses and permits.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_statutory_filings" model="qaco.onboarding.template.document">
+            <field name="name">Statutory Filings Tracker</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">90</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Tracker for statutory filings and compliance deadlines.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_litigation" model="qaco.onboarding.template.document">
+            <field name="name">Litigation &amp; Contingencies Summary</field>
+            <field name="category_id" ref="template_category_other_letters"/>
+            <field name="sequence">100</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">yes</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Summary of litigation and contingent liabilities.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_data_access_form" model="qaco.onboarding.template.document">
+            <field name="name">Data Access &amp; IT Consent Form</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">110</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Consent for data access and IT system connectivity.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_nda" model="qaco.onboarding.template.document">
+            <field name="name">NDA / Confidentiality Agreement</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">120</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Non-disclosure/confidentiality agreement with client.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_final_authorization" model="qaco.onboarding.template.document">
+            <field name="name">Final Authorization &amp; Engagement Approval Sheet</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">130</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes_hard_stop</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Final approval sheet for partner authorization and engagement acceptance.</field>
             <field name="file_type">docx</field>
         </record>
     </data>

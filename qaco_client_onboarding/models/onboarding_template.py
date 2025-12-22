@@ -59,6 +59,20 @@ class OnboardingTemplateDocument(models.Model):
         string='File Type',
         default='docx',
     )
+    # Stage indicates when the template is required during onboarding
+    stage = fields.Selection([
+        ('pre_onboarding', 'Pre Onboarding'),
+        ('throughout_onboarding', 'Throughout Onboarding'),
+    ], string='Stage', default='pre_onboarding', required=True)
+    # Mandatory captures whether this document is required and if there is a hard stop
+    mandatory = fields.Selection([
+        ('yes_hard_stop', 'Yes (Hard stop)'),
+        ('yes', 'Yes'),
+        ('conditional', 'Conditional'),
+        ('as_applicable', 'As applicable'),
+    ], string='Mandatory', default='yes')
+    # Whether a working paper / completed PDF is expected to be uploaded
+    requires_working_paper = fields.Boolean(string='Requires Working Paper (PDF)', default=True)
     file_size = fields.Integer(string='File Size (bytes)', compute='_compute_file_size', store=True)
     active = fields.Boolean(string='Active', default=True)
 
@@ -224,3 +238,10 @@ class OnboardingAttachTemplatesWizard(models.TransientModel):
         if attached_templates:
             onboarding.message_post(body=_('Attached templates: %s') % ', '.join(attached_templates))
         return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {'title': _('Done'), 'message': _('Templates attached'), 'type': 'success', 'sticky': False}}
+
+
+    @api.constrains("mandatory")
+    def _check_hard_stop_mandatory(self):
+        for r in self:
+            if r.mandatory == "yes_hard_stop" and r.stage != "pre_onboarding":
+                raise exceptions.ValidationError(_("Hard-stop mandatory templates must be Pre Onboarding"))

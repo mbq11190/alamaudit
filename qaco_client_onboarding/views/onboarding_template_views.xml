@@ -8,7 +8,10 @@
             <tree string="Templates">
                 <field name="name"/>
                 <field name="category_id"/>
+                <field name="stage"/>
+                <field name="mandatory"/>
                 <field name="file_type"/>
+                <field name="requires_working_paper"/>
                 <field name="sequence"/>
                 <field name="active"/>
             </tree>
@@ -28,6 +31,8 @@
                     <group>
                         <field name="name"/>
                         <field name="category_id"/>
+                        <field name="stage"/>
+                        <field name="mandatory"/>
                         <field name="file_type"/>
                         <field name="sequence"/>
                         <field name="description"/>
@@ -35,6 +40,7 @@
                     <group>
                         <field name="template_file" filename="template_filename" widget="binary"/>
                         <field name="template_filename" readonly="1"/>
+                        <field name="requires_working_paper"/>
                     </group>
                 </sheet>
             </form>
