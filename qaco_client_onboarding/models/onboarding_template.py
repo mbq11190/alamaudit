@@ -164,20 +164,11 @@ class OnboardingTemplateDocument(models.Model):
             },
         }
 
-
-class OnboardingAttachedTemplate(models.Model):
-    """Templates attached to a specific onboarding record."""
-    _name = 'qaco.onboarding.attached.template'
-    _description = 'Attached Template to Onboarding'
-    _order = 'create_date desc'
-
-    onboarding_id = fields.Many2one(
-        'qaco.client.onboarding',
-        string='Onboarding',
-        required=True,
-        ondelete='cascade',
-        index=True,
-    )
+    @api.constrains('mandatory')
+    def _check_hard_stop_mandatory(self):
+        for r in self:
+            if r.mandatory == 'yes_hard_stop' and r.stage != 'pre_onboarding':
+                raise exceptions.ValidationError(_("Hard-stop mandatory templates must be Pre Onboarding"))
     template_id = fields.Many2one(
         'qaco.onboarding.template.document',
         string='Template',
@@ -265,10 +256,3 @@ class OnboardingAttachTemplatesWizard(models.TransientModel):
         if attached_templates:
             onboarding.message_post(body=_('Attached templates: %s') % ', '.join(attached_templates))
         return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {'title': _('Done'), 'message': _('Templates attached'), 'type': 'success', 'sticky': False}}
-
-
-    @api.constrains("mandatory")
-    def _check_hard_stop_mandatory(self):
-        for r in self:
-            if r.mandatory == "yes_hard_stop" and r.stage != "pre_onboarding":
-                raise exceptions.ValidationError(_("Hard-stop mandatory templates must be Pre Onboarding"))
