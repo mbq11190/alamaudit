@@ -772,6 +772,12 @@
                                     <field name="managing_partner_id" invisible="not managing_partner_escalation"/>
                                     <field name="managing_partner_signature" invisible="not managing_partner_escalation" widget="binary"/>
                                 </group>
+                                <group string="Final Authorization" class="o_onboarding_grid">
+                                    <field name="team_competence_confirmed"/>
+                                    <field name="resources_timeline_confirmed"/>
+                                    <field name="specialists_required"/>
+                                    <button name="%(action_open_final_authorization_wizard)d" type="action" string="Finalize Authorization" class="btn-primary"/>
+                                </group>
                                 <group string="Standards &amp; Checklist" class="o_onboarding_grid">
                                     <field name="regulator_checklist_line_ids" domain="[('onboarding_area','=','engagement_terms') ]" modifiers="{'readonly': [('state','in',['partner_approved','locked'])]}" create="false" delete="false">
                                         <tree editable="bottom" class="o_onboarding_checklist">

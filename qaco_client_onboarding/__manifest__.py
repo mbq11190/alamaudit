@@ -50,6 +50,7 @@ Features:
         'views/client_onboarding_template_section.xml',
         'views/audit_smart_button.xml',
         'views/notebook_views.xml',
+        'views/final_authorization_views.xml',
         'reports/client_onboarding_report.xml',
         'reports/client_onboarding_report_template.xml',
         'reports/report_acceptance_continuance.xml',

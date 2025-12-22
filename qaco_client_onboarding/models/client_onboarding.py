@@ -383,6 +383,13 @@ class ClientOnboarding(models.Model):
     managing_partner_id = fields.Many2one('res.users', string='Managing Partner', index=True)
     managing_partner_signature = fields.Binary(string='Managing Partner Signature')
 
+    # Final Authorization attestations & flags
+    team_competence_confirmed = fields.Boolean(string='Team competence confirmed')
+    resources_timeline_confirmed = fields.Boolean(string='Resources & timeline confirmed')
+    specialists_required = fields.Boolean(string='Specialists required')
+    specialists_notes = fields.Text(string='Specialists notes')
+    latest_authorization_id = fields.Many2one('qaco.onboarding.final.authorization', string='Latest Authorization')
+
     # compute method removed
 
     def action_open_attach_wizard_with_templates(self, template_ids):
@@ -896,6 +903,109 @@ class ClientOnboarding(models.Model):
         if report:
             return report.report_action(self)
         return {'type': 'ir.actions.act_window_close'}
+
+    def _check_final_authorization_preconditions(self):
+        """Run the set of system controls that must be complete before final authorization.
+
+        Raises ValidationError with a clear message listing blocking items.
+        """
+        for rec in self:
+            errors = []
+            # 1. Profile complete: legal_name, principal_business_address, engagement_type/reporting_period
+            if not rec.legal_name or not rec.principal_business_address:
+                errors.append(_('Client & engagement profile incomplete (legal name or address).'))
+            # reporting period / engagement type
+            if not rec.reporting_period or not rec.engagement_type:
+                errors.append(_('Engagement scope, type or reporting period missing.'))
+            # 2. AML / Fit & Proper
+            if not rec.fit_proper_confirmed:
+                errors.append(_('Fit & proper / AML checks are not completed.'))
+            # 3. Independence status must be compliant
+            if hasattr(rec, 'independence_status') and rec.independence_status != 'compliant':
+                errors.append(_('Independence & ethics status is not compliant.'))
+            # 4. Predecessor check
+            try:
+                rec.action_check_predecessor_before_approval()
+            except ValidationError as e:
+                errors.append(str(e))
+            # 5. Fee and collection risk - ensure proposed fee present and no PCL outstanding fees flagged
+            if not rec.proposed_audit_fee:
+                errors.append(_('Proposed audit fee must be recorded.'))
+            if hasattr(rec, 'pcl_no_outstanding_fees') and rec.pcl_no_outstanding_fees is False:
+                errors.append(_('Predecessor clearance indicates outstanding fees; resolve before authorization.'))
+            # 6. Resources & competence - check attestations or presence of partner assignment
+            if not rec.team_competence_confirmed:
+                errors.append(_('Team competence has not been confirmed (capacity & competence).'))
+            if not rec.engagement_partner_id:
+                errors.append(_('Engagement Partner assignment is required before authorization.'))
+            # 7. High risk flags resolved or declined recorded
+            if rec.high_risk_onboarding and rec.engagement_decision != 'reject' and rec.overall_status != 'green':
+                errors.append(_('High-risk onboarding must be escalated and resolved before authorization.'))
+            if errors:
+                raise ValidationError('\n'.join(errors))
+        return True
+
+    def action_generate_onboarding_summary_pack(self):
+        """Generate a summary pack: merge existing memos and key reports into one bundle.
+
+        Uses the predecessor pack merger approach to merge PDF memos and the client onboarding certificate if present.
+        """
+        self.ensure_one()
+        # Collect candidate attachments: ethics memo, predecessor memo, risk memo, engagement letter (if binary stored)
+        candidates = []
+        # search attachments linked to this onboarding
+        other_attachments = self.env['ir.attachment'].search([('res_model', '=', 'qaco.client.onboarding'), ('res_id', '=', self.id)])
+        for att in other_attachments:
+            if att.mimetype == 'application/pdf':
+                candidates.append(att)
+        # attempt to render the acceptance report/certificate
+        report = self.env.ref('qaco_client_onboarding.report_client_onboarding_pdf', raise_if_not_found=False)
+        try:
+            if report:
+                pdf = report._render_qweb_pdf([self.id])[0]
+            else:
+                pdf = None
+        except Exception:
+            pdf = None
+        # Use PdfMerger from predecessor module if available
+        from .onboarding_predecessor import PdfMerger
+        import io
+        import base64
+        merger = None
+        merged_bytes = None
+        if PdfMerger:
+            merger = PdfMerger()
+            if pdf:
+                merger.append(io.BytesIO(pdf))
+            for att in candidates:
+                try:
+                    data = base64.b64decode(att.datas or att.db_datas or '')
+                    merger.append(io.BytesIO(data))
+                except Exception:
+                    _logger.exception('Failed to append %s to summary pack', att.name)
+            out = io.BytesIO()
+            try:
+                merger.write(out)
+                merged_bytes = out.getvalue()
+            finally:
+                try:
+                    merger.close()
+                except Exception:
+                    pass
+        else:
+            _logger.warning('No PDF merger available; returning base acceptance report if present.')
+            merged_bytes = pdf
+        if merged_bytes:
+            att = self.env['ir.attachment'].create({
+                'name': f'onboarding_summary_pack_{self.id}.pdf',
+                'type': 'binary',
+                'datas': base64.b64encode(merged_bytes).decode('ascii'),
+                'res_model': 'qaco.client.onboarding',
+                'res_id': self.id,
+                'mimetype': 'application/pdf',
+            })
+            return att
+        return False
 
     def action_lock_onboarding(self):
         for record in self:

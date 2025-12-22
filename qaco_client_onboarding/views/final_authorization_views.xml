@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_final_authorization_wizard" model="ir.ui.view">
+        <field name="name">qaco.onboarding.final.authorization.wizard</field>
+        <field name="model">qaco.onboarding.final.authorization.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Finalize Authorization">
+                <sheet>
+                    <group>
+                        <field name="decision"/>
+                        <field name="decision_rationale"/>
+                    </group>
+                    <group>
+                        <field name="eqcr_required"/>
+                        <field name="eqcr_basis"/>
+                        <field name="eqcr_partner_id"/>
+                    </group>
+                    <group>
+                        <field name="team_competence_confirmed"/>
+                        <field name="resources_timeline_confirmed"/>
+                        <field name="specialists_required"/>
+                        <field name="specialists_notes"/>
+                    </group>
+                    <group>
+                        <field name="generate_certificate"/>
+                        <field name="include_summary_pack"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm_authorization" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_final_authorization_wizard" model="ir.actions.act_window">
+        <field name="name">Finalize Authorization</field>
+        <field name="res_model">qaco.onboarding.final.authorization.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_final_authorization_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
