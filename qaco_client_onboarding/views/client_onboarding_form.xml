@@ -38,10 +38,10 @@
                                 <div class="o_onboarding_card_header">
                                     <span class="o_onboarding_card_number">1.1</span>
                                     <span class="o_onboarding_card_title">Legal Identity</span>
-                                    <span class="o_onboarding_card_ref">ISA 210 / ISQM-1</span>
+                                    <span class="o_onboarding_card_ref">ISA 210 / ISQM-1 | Companies Act 2017 (inc. registration obligations) | SECP rules</span>
                                 </div>
                                 <group>
-                                    <span class="text-muted ms-2">Quick shortcut to templates commonly used in Legal Identity (KYC/KYB, Regulatory Licences)</span>
+                                    <span class="text-muted ms-2">Purpose: capture & verify client's legal existence and authorised signatories. Reference: ISA 210, ISQM-1, Companies Act 2017. (Fields under this section drive legal verifications and must be completed during pre-onboarding.)</span>
                                 </group>
                                 <div class="row mb-2">
                                     <div class="col-md-6">
@@ -54,6 +54,9 @@
                                         <group class="o_onboarding_grid">
                                             <field name="legal_name" class="w-100" help="The name exactly as on the Certificate of Incorporation or registration document."/>
                                             <field name="trading_name" class="w-100" help="Enter the trading name if it differs from the legal name."/>
+                                            <field name="incorporation_date" class="w-100"/>
+                                            <field name="incorporation_authority" class="w-100"/>
+                                            <field name="incorporation_authority_other" class="w-100" modifiers="{'invisible':[('incorporation_authority','!=','other')]}"/>
                                         </group>
                                     </div>
                                 </div>
@@ -68,12 +71,16 @@
                                         <group class="o_onboarding_grid">
                                             <field name="primary_regulator" class="w-100" help="Select the principal regulator overseeing this entity."/>
                                             <field name="regulator_other" class="w-100" modifiers="{'invisible':[('primary_regulator','!=','other')]}"/>
+                                            <field name="registered_share_capital" class="w-100"/>
+                                            <field name="financial_year_end" class="w-100"/>
                                         </group>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-4">
                                         <field name="ntn" class="w-100" help="NTN must follow the NNNNNNN-N format for validation."/>
+                                    <field name="withholding_agent" class="w-100"/>
+                                    <field name="other_statutory_registrations" class="w-100"/>
                                     </div>
                                     <div class="col-md-4">
                                         <field name="strn" class="w-100" help="Provide the Sales Tax Registration Number if applicable."/>
@@ -101,9 +108,24 @@
                                         <tree editable="bottom">
                                             <field name="name"/>
                                             <field name="cnic_passport"/>
+                                            <field name="is_restricted"/>
                                             <field name="country_id"/>
                                             <field name="nationality"/>
                                             <field name="ownership_percent"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Authorized Signatories" class="o_onboarding_grid">
+                                    <field name="signatory_ids">
+                                        <tree editable="bottom">
+                                            <field name="name"/>
+                                            <field name="designation"/>
+                                            <field name="id_number"/>
+                                            <field name="authority_scope"/>
+                                            <field name="effective_date"/>
+                                            <field name="expiry_date"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -118,6 +140,31 @@
                                             <field name="completed_on" readonly="1"/>
                                             <field name="standard_ids" widget="many2many_tags" readonly="1"/>
                                             <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Legal Documents Vault" class="o_onboarding_grid">
+                                    <field name="document_ids">
+                                        <tree editable="bottom">
+                                            <field name="name"/>
+                                            <field name="doc_type"/>
+                                            <field name="file_name"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Verification & Controls" class="o_onboarding_grid">
+                                    <field name="verification_performed_by"/>
+                                    <field name="verification_date"/>
+                                    <field name="verification_method"/>
+                                    <field name="verification_exception_ids">
+                                        <tree editable="bottom">
+                                            <field name="field_name"/>
+                                            <field name="expected_value"/>
+                                            <field name="observed_value"/>
+                                            <field name="impact"/>
+                                            <field name="resolution"/>
+                                            <field name="approved_by"/>
                                         </tree>
                                     </field>
                                 </group>

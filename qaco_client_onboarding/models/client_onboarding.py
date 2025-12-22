@@ -161,10 +161,22 @@ class ClientOnboarding(models.Model):
     # Section 1: Legal Identity
     legal_name = fields.Char(string='Legal Name', required=True)
     trading_name = fields.Char(string='Trading Name')
+    incorporation_date = fields.Date(string='Incorporation / Registration Date')
+    incorporation_authority = fields.Selection([
+        ('secp', 'SECP'), ('registrar_of_firms', 'Registrar of Firms'), ('trust', 'Trust/Deed Authority'), ('society', 'Societies Registrar'), ('other', 'Other')
+    ], string='Incorporation / Registration Authority')
+    incorporation_authority_other = fields.Char(string='Other Authority Details')
+    registration_status = fields.Selection([('active','Active'),('inactive','Inactive'),('liquidation','Under liquidation')], string='Status on Register')
+    registration_status_verified_on = fields.Date(string='Status Verified On')
+    registered_share_capital = fields.Monetary(string='Registered Share Capital', currency_field='currency_id')
+    financial_year_end = fields.Date(string='Financial Year End')
+    principal_activities = fields.Text(string='Principal Activities')
     principal_business_address = fields.Char(string='Principal Business Address', required=True)
     branch_location_ids = fields.One2many('qaco.onboarding.branch.location', 'onboarding_id', string='Branch and Office Locations')
     ntn = fields.Char(string='NTN', help='Enter in format 1234567-1')
     strn = fields.Char(string='STRN', help='State the Sales Tax Registration Number if applicable')
+    withholding_agent = fields.Selection([('yes','Yes'),('no','No')], string='Withholding Agent')
+    other_statutory_registrations = fields.Char(string='Other Statutory Registrations (EOBI/Social Security/etc)')
     business_registration_number = fields.Char(string='Business Registration Number', required=True)
     industry_id = fields.Many2one('qaco.onboarding.industry', string='Industry / Sector', index=True)
     primary_regulator = fields.Selection(PRIMARY_REGULATOR_SELECTION, string='Primary Regulator', required=True)
@@ -172,6 +184,24 @@ class ClientOnboarding(models.Model):
     org_chart_attachment = fields.Binary(string='Group Structure / Org Chart')
     org_chart_name = fields.Char(string='Org Chart File Name')
     ubo_ids = fields.One2many('qaco.onboarding.ubo', 'onboarding_id', string='Ultimate Beneficial Owners')
+    # Official contacts
+    primary_contact_name = fields.Char(string='Primary Contact')
+    primary_contact_designation = fields.Char(string='Primary Contact Designation')
+    primary_contact_email = fields.Char(string='Primary Contact Email')
+    primary_contact_phone = fields.Char(string='Primary Contact Phone')
+    finance_head_name = fields.Char(string='Finance Head')
+    finance_head_email = fields.Char(string='Finance Head Email')
+    finance_head_phone = fields.Char(string='Finance Head Phone')
+    company_secretary_name = fields.Char(string='Company Secretary / Legal Focal')
+    it_focal_person = fields.Char(string='IT Focal Person')
+    # Signatories
+    signatory_ids = fields.One2many('qaco.onboarding.signatory', 'onboarding_id', string='Authorized Signatories')
+    signatory_count = fields.Integer(string='Signatory Count', compute='_compute_signatory_count', store=True)
+    # Verification & Controls
+    verification_performed_by = fields.Many2one('res.users', string='Verification Performed By')
+    verification_date = fields.Date(string='Verification Date')
+    verification_method = fields.Selection([('secp','SECP Portal'),('doc_inspection','Document Inspection'),('third_party','Third Party')], string='Verification Method')
+    verification_exception_ids = fields.One2many('qaco.onboarding.verification.exception', 'onboarding_id', string='Verification Exceptions')
 
     # Section 2: Compliance History
     financial_framework = fields.Selection(FINANCIAL_FRAMEWORK_SELECTION, string='Applicable Framework', required=True)
@@ -230,6 +260,58 @@ class ClientOnboarding(models.Model):
 
     # Section 7: Final Authorization
     precondition_line_ids = fields.One2many('qaco.onboarding.precondition.line', 'onboarding_id', string='ISA 210 Preconditions')
+    # Document Vault relationship
+    document_ids = fields.One2many('qaco.onboarding.document', 'onboarding_id', string='Document Vault')
+
+    @api.constrains('state')
+    def _check_company_required_documents_on_approval(self):
+        """Enforce hard validations for company-type entities before partner approval."""
+        company_types = set(['pic','lsc','msc','ssc'])
+        for rec in self:
+            if rec.state in ('partner_approved','locked') and rec.entity_type in company_types:
+                # Check for Memorandum & Articles / governing instrument and Incorporation Certificate
+                doc_env = self.env['qaco.onboarding.document']
+                has_moa = bool(doc_env.search([('onboarding_id','=',rec.id), ('name','ilike','memorandum')], limit=1))
+                has_incorp = bool(doc_env.search([('onboarding_id','=',rec.id), ('name','ilike','incorporation')], limit=1))
+                if not has_moa:
+                    raise ValidationError(_('Memorandum & Articles (MoA/AoA) must be uploaded for company-type entities before partner approval.'))
+                if not has_incorp:
+                    raise ValidationError(_('Incorporation / Registration Certificate must be uploaded for company-type entities before partner approval.'))
+            # Ensure signatory authority evidence exists before final authorization
+            signatories_missing = self.env['qaco.onboarding.signatory'].search([('onboarding_id','=',rec.id), ('authority_evidence_id','=',False)])
+            if signatories_missing:
+                raise ValidationError(_('All authorised signatories must have authority evidence attached before partner approval.'))
+            # Ensure evidence documents are received/accepted
+            for s in rec.signatory_ids:
+                if s.authority_evidence_id and s.authority_evidence_id.state not in ('received','reviewed'):
+                    raise ValidationError(_('Authority evidence for signatory %s must be received/verified before partner approval.') % s.name)
+
+    def write(self, vals):
+        """Index specific uploads into the Document Vault on change."""
+        res = super().write(vals)
+        binary_map = {
+            'org_chart_attachment': 'Organizational Chart',
+            'regulatory_inspection_attachment': 'Regulatory Inspection Document',
+            'pcl_document': 'Professional Clearance Letter (PCL)',
+            'fit_proper_document': 'Fit & Proper Evidence',
+            'enhanced_due_diligence_attachment': 'Enhanced Due Diligence Document',
+        }
+        for rec in self:
+            for field, label in binary_map.items():
+                if field in vals and vals.get(field):
+                    try:
+                        self.env['qaco.onboarding.document'].create({
+                            'onboarding_id': rec.id,
+                            'name': label,
+                            'doc_type': 'legal',
+                            'file': vals.get(field),
+                            'file_name': f"{label}.pdf",
+                            'state': 'received',
+                        })
+                    except Exception:
+                        pass
+        return res
+
     engagement_summary = fields.Text(string='Engagement Summary', compute='_compute_engagement_summary', store=True)
     engagement_decision = fields.Selection(ENGAGEMENT_DECISION_SELECTION, string='Engagement Decision')
     engagement_justification = fields.Text(string='Decision Justification')
@@ -757,6 +839,10 @@ class OnboardingBranchLocation(models.Model):
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='Location', required=True)
     address = fields.Char(string='Address', required=True)
+    function = fields.Char(string='Function / Role', help='e.g., Sales Office, HQ, Warehouse')
+    headcount = fields.Integer(string='Headcount')
+    warehouse_locations = fields.Char(string='Warehouse Locations')
+    key_systems = fields.Char(string='Key Systems (ERP / POS / Payroll / Inventory)')
     city_id = fields.Many2one(
         'qaco.onboarding.city',
         string='City',
@@ -819,6 +905,7 @@ class OnboardingUBO(models.Model):
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
     name = fields.Char(string='UBO Name', required=True)
     cnic_passport = fields.Char(string='CNIC / Passport Number', required=True)
+    is_restricted = fields.Boolean(string='Restricted (ID)', default=True, help='Sensitive identifier - limited access')
     nationality = fields.Char(string='Nationality')
     country_id = fields.Many2one('res.country', string='Country')
     ownership_percent = fields.Float(string='Ownership %', digits=(5, 2))
@@ -828,6 +915,38 @@ class OnboardingUBO(models.Model):
         for record in self:
             if record.country_id:
                 record.nationality = record.country_id.name
+
+
+class OnboardingSignatory(models.Model):
+    _name = 'qaco.onboarding.signatory'
+    _description = 'Authorized Signatory'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    name = fields.Char(string='Full Name', required=True)
+    id_number = fields.Char(string='CNIC / Passport Number')
+    is_restricted = fields.Boolean(string='Restricted (ID)', default=True)
+    designation = fields.Char(string='Designation')
+    authority_scope = fields.Char(string='Authority Scope')
+    effective_date = fields.Date(string='Effective Date')
+    expiry_date = fields.Date(string='Expiry Date')
+    email = fields.Char(string='Email')
+    phone = fields.Char(string='Phone')
+    specimen_signature = fields.Binary(string='Specimen Signature', attachment=True)
+    authority_evidence_id = fields.Many2one('qaco.onboarding.document', string='Authority Evidence')
+
+
+class OnboardingVerificationException(models.Model):
+    _name = 'qaco.onboarding.verification.exception'
+    _description = 'Verification Exception / Mismatch'
+
+    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    field_name = fields.Char(string='Field')
+    expected_value = fields.Char(string='Expected Value')
+    observed_value = fields.Char(string='Observed Value')
+    impact = fields.Char(string='Impact')
+    resolution = fields.Text(string='Resolution')
+    approved_by = fields.Many2one('res.users', string='Approved By')
+    created_on = fields.Datetime(string='Created On', default=fields.Datetime.now)
 
 
 class OnboardingShareholder(models.Model):

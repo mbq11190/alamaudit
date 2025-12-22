@@ -138,6 +138,20 @@ class OnboardingTemplateDocument(models.Model):
             vals['attached_file'] = self.template_file
             vals['attached_filename'] = self.template_filename
         attached = self.env['qaco.onboarding.attached.template'].create(vals)
+        # Index into Document Vault for searchable evidence
+        if attached and attached.attached_file:
+            doc_vals = {
+                'onboarding_id': onboarding.id,
+                'name': f"Attached: {self.name}",
+                'doc_type': 'legal',
+                'file': attached.attached_file,
+                'file_name': attached.attached_filename or self.template_filename,
+                'state': 'received',
+            }
+            try:
+                self.env['qaco.onboarding.document'].create(doc_vals)
+            except Exception:
+                pass
         onboarding.message_post(body=_('Template %s attached by %s') % (self.name, self.env.user.name))
         return {
             'type': 'ir.actions.client',
@@ -187,14 +201,27 @@ class OnboardingAttachedTemplate(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """Auto-populate file from template if not provided."""
-        for vals in vals_list:
-            if vals.get('template_id') and not vals.get('attached_file'):
-                template = self.env['qaco.onboarding.template.document'].browse(vals['template_id'])
-                if template.template_file:
-                    vals['attached_file'] = template.template_file
-                    vals['attached_filename'] = template.template_filename
-        return super().create(vals_list)
+        """Auto-populate file from template if not provided, and index attachments in Document Vault."""
+        Created = super().create(vals_list)
+        for rec in Created:
+            # Populate from template if necessary
+            if rec.template_id and not rec.attached_file and rec.template_id.template_file:
+                rec.attached_file = rec.template_id.template_file
+                rec.attached_filename = rec.template_id.template_filename
+            # Index into Document Vault if file present
+            if rec.attached_file:
+                try:
+                    self.env['qaco.onboarding.document'].create({
+                        'onboarding_id': rec.onboarding_id.id,
+                        'name': f"Attached: {rec.template_id.name if rec.template_id else 'Attachment'}",
+                        'doc_type': 'legal',
+                        'file': rec.attached_file,
+                        'file_name': rec.attached_filename,
+                        'state': 'received',
+                    })
+                except Exception:
+                    pass
+        return Created
 
 
 class OnboardingAttachTemplatesWizard(models.TransientModel):

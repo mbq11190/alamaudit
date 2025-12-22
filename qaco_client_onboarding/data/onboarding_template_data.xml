@@ -44,6 +44,17 @@
             <field name="file_type">docx</field>
         </record>
 
+        <record id="template_legal_identity_info" model="qaco.onboarding.template.document">
+            <field name="name">Legal Identity Information Form</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">11</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">yes_hard_stop</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Captures core profile, statutory numbers, and authorised signatories as per section 1.1.</field>
+            <field name="file_type">docx</field>
+        </record>
+
         <record id="template_new_client_acceptance" model="qaco.onboarding.template.document">
             <field name="name">New Client Acceptance Form (ISA 210)</field>
             <field name="category_id" ref="template_category_client_onboarding"/>
@@ -312,6 +323,28 @@
             <field name="mandatory">yes_hard_stop</field>
             <field name="requires_working_paper">1</field>
             <field name="description">Final approval sheet for partner authorization and engagement acceptance.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_specimen_signature" model="qaco.onboarding.template.document">
+            <field name="name">Specimen Signature Sheet</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">140</field>
+            <field name="stage">pre_onboarding</field>
+            <field name="mandatory">conditional</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Collect specimen signatures for authorised signatories; required when confirmations will be signed.</field>
+            <field name="file_type">docx</field>
+        </record>
+
+        <record id="template_legal_documents_index" model="qaco.onboarding.template.document">
+            <field name="name">Legal Documents Index</field>
+            <field name="category_id" ref="template_category_client_onboarding"/>
+            <field name="sequence">150</field>
+            <field name="stage">throughout_onboarding</field>
+            <field name="mandatory">as_applicable</field>
+            <field name="requires_working_paper">1</field>
+            <field name="description">Index of legal documents uploaded for this onboarding; use to drive completeness % and reminders.</field>
             <field name="file_type">docx</field>
         </record>
     </data>
