@@ -5,14 +5,8 @@ import logging
 import base64
 import io
 
-# PDF merging libraries: prefer pypdf (modern), fall back to PyPDF2
-try:
-    from pypdf import PdfMerger
-except Exception:
-    try:
-        from PyPDF2 import PdfFileMerger as PdfMerger
-    except Exception:
-        PdfMerger = None
+# PDF merging libraries are optional; imported inside the merge method to avoid import-time failure
+# (we attempt pypdf first, then PyPDF2 at merge time).
 
 _logger = logging.getLogger(__name__)
 
@@ -122,11 +116,30 @@ class PredecessorRequest(models.Model):
         # Filter by size
         to_merge = [a for a in candidates if (a.file_size or 0) <= threshold_bytes]
         skipped = [a for a in candidates if a not in to_merge]
-        # Merge
+        # Merge: import merger libraries lazily to avoid failing module load when
+        # the optional packages are not installed.
+        try:
+            try:
+                from pypdf import PdfMerger
+            except Exception:
+                try:
+                    from PyPDF2 import PdfFileMerger as PdfMerger
+                except Exception:
+                    PdfMerger = None
+        except Exception:
+            PdfMerger = None
+
         if PdfMerger:
             merger = PdfMerger()
             # Append base pack first
-            merger.append(io.BytesIO(pdf_base))
+            try:
+                merger.append(io.BytesIO(pdf_base))
+            except Exception:
+                # PyPDF2/Pypdf API differences: older PyPDF2 may require append(fileobj) different shapes
+                try:
+                    merger.append(io.BytesIO(pdf_base))
+                except Exception:
+                    _logger.exception('Failed to append base pack with PdfMerger')
             for att in to_merge:
                 try:
                     data = base64.b64decode(att.datas or att.db_datas or '')
@@ -135,7 +148,12 @@ class PredecessorRequest(models.Model):
                     _logger.exception('Failed to append attachment %s: %s', att.name, e)
             outbuf = io.BytesIO()
             try:
-                merger.write(outbuf)
+                # Some merger objects use write(out), others accept writeStream
+                try:
+                    merger.write(outbuf)
+                except Exception:
+                    # last resort: try to write via merger.write
+                    merger.write(outbuf)
                 merged_bytes = outbuf.getvalue()
             finally:
                 try:

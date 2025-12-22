@@ -18,14 +18,8 @@ except ImportError:
     WEASYPRINT_AVAILABLE = False
     _logger.info("WeasyPrint not available - PDF generation will use alternative method")
 
-try:
-    from docx import Document
-    from docx.shared import Pt, Cm
-    from docx.enum.text import WD_ALIGN_PARAGRAPH
-    DOCX_AVAILABLE = True
-except ImportError:
-    DOCX_AVAILABLE = False
-    _logger.info("python-docx not available - Word generation will use alternative method")
+# python-docx is an optional dependency; import inside the document generation method
+# to avoid import-time failures when the package is not installed.
 
 
 class FitProperTemplateController(http.Controller):
@@ -166,14 +160,14 @@ class FitProperTemplateController(http.Controller):
                 safe_name = "".join(c for c in data['entity_name'] if c.isalnum() or c in (' ', '-', '_')).strip()[:30]
                 filename = f"Fit_Proper_{safe_name.replace(' ', '_')}"
             
-            if DOCX_AVAILABLE:
+            try:
                 doc = self._create_word_document(data)
                 docx_buffer = io.BytesIO()
                 doc.save(docx_buffer)
                 docx_content = docx_buffer.getvalue()
-            else:
-                # Fallback: Return HTML with docx-friendly styling
-                _logger.warning("python-docx not available, returning HTML for Word import")
+            except RuntimeError as re:
+                # python-docx not available; return HTML fallback for import into Word
+                _logger.warning("python-docx not available for .docx generation: %s", re)
                 html_content = self._read_html_template(data)
                 return request.make_response(
                     html_content,
@@ -195,7 +189,19 @@ class FitProperTemplateController(http.Controller):
             return request.not_found()
 
     def _create_word_document(self, data=None):
-        """Create a Word document for the Fit & Proper template with auto-fill."""
+        """Create a Word document for the Fit & Proper template with auto-fill.
+
+        The python-docx imports are done here to avoid failing module import when the
+        optional dependency isn't available on the server. If missing, raise
+        RuntimeError to be handled by the caller.
+        """
+        try:
+            from docx import Document
+            from docx.shared import Pt, Cm
+            from docx.enum.text import WD_ALIGN_PARAGRAPH
+        except ImportError:
+            raise RuntimeError('python-docx package is not available')
+
         doc = Document()
         
         # Set document margins
