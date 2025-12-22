@@ -169,6 +169,9 @@ class OnboardingTemplateDocument(models.Model):
         for r in self:
             if r.mandatory == 'yes_hard_stop' and r.stage != 'pre_onboarding':
                 raise exceptions.ValidationError(_("Hard-stop mandatory templates must be Pre Onboarding"))
+    _name = 'qaco.onboarding.attached.template'
+    _description = 'Attached Template to Onboarding'
+    _order = 'create_date desc'
     template_id = fields.Many2one(
         'qaco.onboarding.template.document',
         string='Template',

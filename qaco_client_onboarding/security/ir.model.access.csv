@@ -8,6 +8,9 @@ access_qaco_branch_location_manager,qaco.onboarding.branch.location,model_qaco_o
 access_qaco_ubo_user,qaco.onboarding.ubo,model_qaco_onboarding_ubo,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_ubo_partner,qaco.onboarding.ubo,model_qaco_onboarding_ubo,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_ubo_manager,qaco.onboarding.ubo,model_qaco_onboarding_ubo,qaco_audit.group_audit_manager,1,1,1,1
+access_qaco_signatory_user,qaco.onboarding.signatory,model_qaco_onboarding_signatory,qaco_audit.group_audit_trainee,1,1,1,1
+access_qaco_signatory_partner,qaco.onboarding.signatory,model_qaco_onboarding_signatory,qaco_audit.group_audit_partner,1,1,1,1
+access_qaco_signatory_manager,qaco.onboarding.signatory,model_qaco_onboarding_signatory,qaco_audit.group_audit_manager,1,1,1,1
 access_qaco_shareholder_user,qaco.onboarding.shareholder,model_qaco_onboarding_shareholder,qaco_audit.group_audit_trainee,1,1,1,1
 access_qaco_shareholder_partner,qaco.onboarding.shareholder,model_qaco_onboarding_shareholder,qaco_audit.group_audit_partner,1,1,1,1
 access_qaco_shareholder_manager,qaco.onboarding.shareholder,model_qaco_onboarding_shareholder,qaco_audit.group_audit_manager,1,1,1,1
