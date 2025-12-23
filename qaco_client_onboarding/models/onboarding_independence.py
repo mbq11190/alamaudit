@@ -90,6 +90,7 @@ class IndependenceThreat(models.Model):
     _description = 'Independence Threat Record'
 
     onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
+    conflict_id = fields.Many2one('qaco.onboarding.conflict', string='Related Conflict', ondelete='cascade', index=True)
     category = fields.Selection(THREAT_CATEGORIES, string='Threat category')
     description = fields.Text(string='Description')
     likelihood = fields.Selection(LIKELIHOOD, string='Likelihood', default='low')
@@ -136,7 +137,7 @@ class IndependenceConflict(models.Model):
     conflict_type = fields.Char(string='Conflict type')
     parties_involved = fields.Char(string='Parties involved')
     description = fields.Text(string='Description')
-    threat_ids = fields.One2many('qaco.onboarding.independence.threat', 'onboarding_id', string='Threats')
+    threat_ids = fields.One2many('qaco.onboarding.independence.threat', 'conflict_id', string='Threats')
     proposed_resolution = fields.Text(string='Proposed resolution and safeguards')
     approver_id = fields.Many2one('res.users', string='Approver')
     status = fields.Selection(CONFLICT_STATUS, default='open')
