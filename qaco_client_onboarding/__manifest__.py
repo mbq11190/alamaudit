@@ -49,6 +49,7 @@ Features:
         "data/decision_drivers.xml",
         "views/final_authorization_views.xml",
         "views/onboarding_decision_views.xml",
+        "views/document_vault_views.xml",
         "views/client_onboarding_form.xml",
         "views/res_config_settings_views.xml",
         "data/decision_menu.xml",
