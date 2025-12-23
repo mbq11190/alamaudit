@@ -94,7 +94,7 @@
                                             <t t-foreach="doc.independence_threat_ids" t-as="threat">
                                                 <tr style="border-bottom: 1px solid #dee2e6;">
                                                     <td style="padding: 12px; font-weight: 600;">
-                                                        <t t-esc="dict([('self_interest', '💰 Self-Interest'), ('self_review', '🔄 Self-Review'), ('advocacy', '📢 Advocacy'), ('familiarity', '🤝 Familiarity'), ('intimidation', '😰 Intimidation')]).get(threat.threat_type, threat.threat_type)"/>
+                                                        <t t-esc="dict([('self_interest', '💰 Self-Interest'), ('self_review', '🔄 Self-Review'), ('advocacy', '📢 Advocacy'), ('familiarity', '🤝 Familiarity'), ('intimidation', '😰 Intimidation')]).get(threat.category, threat.category)"/>
                                                     </td>
                                                     <td style="padding: 12px;"><t t-esc="threat.threat_description or '—'"/></td>
                                                     <td style="padding: 12px;"><t t-esc="threat.safeguards_applied or '—'"/></td>
