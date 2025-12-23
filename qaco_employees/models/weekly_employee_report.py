@@ -1,9 +1,11 @@
-from odoo import models, fields, api
-from datetime import datetime, timedelta
-import pandas as pd
 import logging
+from datetime import timedelta
+
+import pandas as pd
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)  # Logger for debugging
+
 
 class WeeklyEmployeeReport(models.Model):
     _name = "weekly.employee.report"
@@ -19,10 +21,10 @@ class WeeklyEmployeeReport(models.Model):
 
         # Load Employees & Transfers (Only transfers from the last week)
         employees = self.env["hr.employee"].search([])
-        transfers = self.env["hr.employee.transfer"].search([("transfer_date_to", ">=", start_date)])
+        transfers = self.env["hr.employee.transfer"].search(
+            [("transfer_date_to", ">=", start_date)]
+        )
 
-        # Special Clients (to be sorted separately)
-        special_clients = ["UNALLOCATED", "LEAVE", "BAKERTILLY-STATELIFE", "BAKERTILLY-RDF"]
 
         # Department Sorting Order (Used for all clients)
         department_order = {
@@ -38,9 +40,13 @@ class WeeklyEmployeeReport(models.Model):
 
         # Function to get latest client based on transfer history
         def get_latest_client(employee):
-            employee_transfers = transfers.filtered(lambda t: t.employee_id.id == employee.id)
+            employee_transfers = transfers.filtered(
+                lambda t: t.employee_id.id == employee.id
+            )
             if employee_transfers:
-                latest_transfer = employee_transfers.sorted("transfer_date_to", reverse=True)[0]
+                latest_transfer = employee_transfers.sorted(
+                    "transfer_date_to", reverse=True
+                )[0]
                 return latest_transfer.to_client_id.name
             return "UNALLOCATED"
 
@@ -58,7 +64,9 @@ class WeeklyEmployeeReport(models.Model):
             if emp.date_of_joining:
                 experience_years = round((today - emp.date_of_joining).days / 365, 1)
             elif emp.date_of_articles_registration:
-                experience_years = round((today - emp.date_of_articles_registration).days / 365, 1)
+                experience_years = round(
+                    (today - emp.date_of_articles_registration).days / 365, 1
+                )
             else:
                 experience_years = 0
 
@@ -67,27 +75,37 @@ class WeeklyEmployeeReport(models.Model):
                     "No. Of Staff Deputed": 0,
                     "Employees": [],
                     "Client Sorting Priority": (
-                        2 if latest_client == "UNALLOCATED" else
-                        3 if latest_client == "LEAVE" else
-                        4 if latest_client == "BAKERTILLY-STATELIFE" else
-                        5 if latest_client == "BAKERTILLY-RDF" else 1  # Normal clients first
-                    )
+                        2
+                        if latest_client == "UNALLOCATED"
+                        else (
+                            3
+                            if latest_client == "LEAVE"
+                            else (
+                                4
+                                if latest_client == "BAKERTILLY-STATELIFE"
+                                else 5 if latest_client == "BAKERTILLY-RDF" else 1
+                            )
+                        )  # Normal clients first
+                    ),
                 }
 
             # Store employee details as a dictionary (for sorting by department later)
-            client_mapping[latest_client]["Employees"].append({
-                "name": emp.name,
-                "manager": emp.parent_id.name if emp.parent_id else "N/A",
-                "department": department,
-                "department_priority": department_priority,  # Sorting key
-                "experience": experience_years
-            })
+            client_mapping[latest_client]["Employees"].append(
+                {
+                    "name": emp.name,
+                    "manager": emp.parent_id.name if emp.parent_id else "N/A",
+                    "department": department,
+                    "department_priority": department_priority,  # Sorting key
+                    "experience": experience_years,
+                }
+            )
             client_mapping[latest_client]["No. Of Staff Deputed"] += 1  # Increase count
 
         # Sort employees within each client by department priority
         for client in client_mapping:
             client_mapping[client]["Employees"] = sorted(
-                client_mapping[client]["Employees"], key=lambda x: x["department_priority"]
+                client_mapping[client]["Employees"],
+                key=lambda x: x["department_priority"],
             )
 
         # Convert to DataFrame
@@ -95,18 +113,25 @@ class WeeklyEmployeeReport(models.Model):
         df.rename(columns={"index": "Client Name"}, inplace=True)
 
         # Ensure Employees column contains lists, not strings
-        df["Employees"] = df["Employees"].apply(lambda x: eval(x) if isinstance(x, str) else x)
+        df["Employees"] = df["Employees"].apply(
+            lambda x: eval(x) if isinstance(x, str) else x
+        )
 
         # Extract sorted employee data correctly
-        df["Managers"] = df["Employees"].apply(lambda employees: [emp.get("manager", "N/A") for emp in employees])
+        df["Managers"] = df["Employees"].apply(
+            lambda employees: [emp.get("manager", "N/A") for emp in employees]
+        )
         df["Departments"] = df["Employees"].apply(
-            lambda employees: [emp.get("department", "Other") for emp in employees])
-        df["Experiences"] = df["Employees"].apply(lambda employees: [emp.get("experience", 0) for emp in employees])
+            lambda employees: [emp.get("department", "Other") for emp in employees]
+        )
+        df["Experiences"] = df["Employees"].apply(
+            lambda employees: [emp.get("experience", 0) for emp in employees]
+        )
 
         # **Sort all clients (including special ones) by Staff Count and Department Priority**
         df = df.sort_values(
             by=["Client Sorting Priority", "No. Of Staff Deputed"],
-            ascending=[True, False]
+            ascending=[True, False],
         )
 
         # Drop unnecessary sorting columns
@@ -164,7 +189,9 @@ class WeeklyEmployeeReport(models.Model):
             employee_count = len(row["Employees"])
 
             for i in range(employee_count):
-                numbered_employee_name = f"{employee_counter}. {row['Employees'][i]['name']}"
+                numbered_employee_name = (
+                    f"{employee_counter}. {row['Employees'][i]['name']}"
+                )
                 employee_counter += 1  # Keep numbering continuous
 
                 if i == 0:
@@ -193,7 +220,9 @@ class WeeklyEmployeeReport(models.Model):
                     </tr>
                     """
 
-        html += "</table><p>Best Regards,<br><strong>Odoo System</strong></p></body></html>"
+        html += (
+            "</table><p>Best Regards,<br><strong>Odoo System</strong></p></body></html>"
+        )
 
         return html
 
@@ -202,15 +231,25 @@ class WeeklyEmployeeReport(models.Model):
 
         try:
             # Designations to receive the email
-            target_designations = ['HR Manager', 'Admin Manager', 'Assistant Manager', 'Manager', 'Partner']
+            target_designations = [
+                "HR Manager",
+                "Admin Manager",
+                "Assistant Manager",
+                "Manager",
+                "Partner",
+            ]
 
             # Get employees by designation
-            recipient_employees = self.env['hr.employee'].search([
-                ('designation_id.name', 'in', target_designations),
-                ('work_email', '!=', False)
-            ])
+            recipient_employees = self.env["hr.employee"].search(
+                [
+                    ("designation_id.name", "in", target_designations),
+                    ("work_email", "!=", False),
+                ]
+            )
 
-            email_to = list(set(emp.work_email for emp in recipient_employees if emp.work_email))
+            email_to = list(
+                set(emp.work_email for emp in recipient_employees if emp.work_email)
+            )
 
             _logger.info(f"Weekly Report - To: {email_to}")
 

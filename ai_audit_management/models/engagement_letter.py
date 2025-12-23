@@ -1,40 +1,57 @@
-from odoo import fields, models, _
+from odoo import _, fields, models
 
 
 class AuditEngagementLetter(models.Model):
-    _name = 'audit.engagement.letter'
-    _description = 'Engagement Letter'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'audit.ai.helper.mixin', 'audit.collaboration.mixin']
-    _order = 'create_date desc'
+    _name = "audit.engagement.letter"
+    _description = "Engagement Letter"
+    _inherit = [
+        "mail.thread",
+        "mail.activity.mixin",
+        "audit.ai.helper.mixin",
+        "audit.collaboration.mixin",
+    ]
+    _order = "create_date desc"
 
-    name = fields.Char(default=lambda self: _('Engagement Letter'), tracking=True)
-    client_acceptance_id = fields.Many2one('audit.client.acceptance', string='Acceptance', ondelete='set null')
-    client_id = fields.Many2one('res.partner', required=False, tracking=True)
+    name = fields.Char(default=lambda self: _("Engagement Letter"), tracking=True)
+    client_acceptance_id = fields.Many2one(
+        "audit.client.acceptance", string="Acceptance", ondelete="set null"
+    )
+    client_id = fields.Many2one("res.partner", required=False, tracking=True)
     scope_of_audit = fields.Text(tracking=True)
-    laws_applicable = fields.Selection([
-        ('companies_act_2017', 'Companies Act 2017'),
-        ('ifrs', 'IFRS'),
-        ('isa', 'ISA'),
-        ('combined', 'Combined Pakistan Framework'),
-    ], default='isa', tracking=True)
+    laws_applicable = fields.Selection(
+        [
+            ("companies_act_2017", "Companies Act 2017"),
+            ("ifrs", "IFRS"),
+            ("isa", "ISA"),
+            ("combined", "Combined Pakistan Framework"),
+        ],
+        default="isa",
+        tracking=True,
+    )
     fee = fields.Float(tracking=True)
     start_date = fields.Date(tracking=True)
     end_date = fields.Date(tracking=True)
-    approval_status = fields.Selection([
-        ('draft', 'Draft'),
-        ('under_review', 'Under Review'),
-        ('approved', 'Approved'),
-    ], default='draft', tracking=True)
-    generated_pdf = fields.Binary(string='Signed PDF')
+    approval_status = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("under_review", "Under Review"),
+            ("approved", "Approved"),
+        ],
+        default="draft",
+        tracking=True,
+    )
+    generated_pdf = fields.Binary(string="Signed PDF")
     letter_body = fields.Html(sanitize=False)
-    assigned_user_ids = fields.Many2many('res.users', string='Assigned Team', tracking=True)
+    assigned_user_ids = fields.Many2many(
+        "res.users", string="Assigned Team", tracking=True
+    )
 
     def action_submit(self):
-        self.write({'approval_status': 'under_review'})
-        self.schedule_review_activity(_('Engagement letter ready for approval.'))
+        self.write({"approval_status": "under_review"})
+        self.schedule_review_activity(_("Engagement letter ready for approval."))
 
     def action_approve(self):
-        self.write({'approval_status': 'approved'})
+        self.write({"approval_status": "approved"})
 
     def action_ai_draft_letter(self):
         for record in self:
@@ -50,4 +67,6 @@ class AuditEngagementLetter(models.Model):
         return True
 
     def action_print_letter(self):
-        return self.env.ref('ai_audit_management.report_engagement_letter').report_action(self)
+        return self.env.ref(
+            "ai_audit_management.report_engagement_letter"
+        ).report_action(self)

@@ -1,7 +1,8 @@
-from odoo import models, fields
+from odoo import fields, models
+
 
 class QACORegion(models.Model):
-    _name = 'qaco.region'
-    _description = 'QACO Region'
+    _name = "qaco.region"
+    _description = "QACO Region"
 
-    name = fields.Char(string='Area Name', required=True)
+    name = fields.Char(string="Area Name", required=True)

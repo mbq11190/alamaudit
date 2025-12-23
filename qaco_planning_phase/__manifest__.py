@@ -22,7 +22,6 @@
         "views/planning_p3_views.xml",
         "views/planning_p4_views.xml",
         "views/planning_p5_views.xml",
-
         "views/planning_p10_views.xml",
         "views/planning_p11_views.xml",
         "views/planning_p10_related_parties_views.xml",

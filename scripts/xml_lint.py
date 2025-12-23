@@ -1,6 +1,5 @@
 import sys
 import xml.etree.ElementTree as ET
-from pathlib import Path
 
 files = [
     r"c:\Users\ADMIN\Documents\GitHub\alamaudit\qaco_client_onboarding\views\client_onboarding_form.xml",
@@ -21,4 +20,4 @@ for p in files:
 
 if not ok:
     sys.exit(2)
-print('XML lint completed.')
+print("XML lint completed.")

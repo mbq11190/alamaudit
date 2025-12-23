@@ -1,26 +1,39 @@
 import json
 
-from odoo import fields, models, _
+from odoo import _, fields, models
 
 
 class AuditFinalReport(models.Model):
-    _name = 'audit.final.report'
-    _description = 'Audit Report Generation'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'audit.ai.helper.mixin', 'audit.collaboration.mixin']
+    _name = "audit.final.report"
+    _description = "Audit Report Generation"
+    _inherit = [
+        "mail.thread",
+        "mail.activity.mixin",
+        "audit.ai.helper.mixin",
+        "audit.collaboration.mixin",
+    ]
 
-    name = fields.Char(default=lambda self: _('Audit Report'))
-    client_id = fields.Many2one('res.partner', tracking=True)
-    report_type = fields.Selection([
-        ('unmodified', 'Unmodified Opinion'),
-        ('qualified', 'Qualified Opinion'),
-        ('disclaimer', 'Disclaimer'),
-        ('adverse', 'Adverse'),
-    ], default='unmodified', tracking=True)
-    key_audit_matter_ids = fields.One2many('audit.final.report.kam', 'final_report_id', string='Key Audit Matters')
-    final_pdf_report = fields.Binary(string='Signed Report')
+    name = fields.Char(default=lambda self: _("Audit Report"))
+    client_id = fields.Many2one("res.partner", tracking=True)
+    report_type = fields.Selection(
+        [
+            ("unmodified", "Unmodified Opinion"),
+            ("qualified", "Qualified Opinion"),
+            ("disclaimer", "Disclaimer"),
+            ("adverse", "Adverse"),
+        ],
+        default="unmodified",
+        tracking=True,
+    )
+    key_audit_matter_ids = fields.One2many(
+        "audit.final.report.kam", "final_report_id", string="Key Audit Matters"
+    )
+    final_pdf_report = fields.Binary(string="Signed Report")
     opinion_text = fields.Html()
     isa_quality_notes = fields.Text()
-    assigned_user_ids = fields.Many2many('res.users', string='Assigned Team', tracking=True)
+    assigned_user_ids = fields.Many2many(
+        "res.users", string="Assigned Team", tracking=True
+    )
 
     def ai_draft_audit_opinion(self):
         for record in self:
@@ -44,17 +57,29 @@ class AuditFinalReport(models.Model):
             try:
                 kam_payload = json.loads(kam_raw)
             except json.JSONDecodeError:
-                kam_payload = [{'title': _('AI Generated Matter'), 'description': kam_raw, 'response': ''}]
+                kam_payload = [
+                    {
+                        "title": _("AI Generated Matter"),
+                        "description": kam_raw,
+                        "response": "",
+                    }
+                ]
             record.key_audit_matter_ids.unlink()
             vals_list = []
             for kam in kam_payload:
-                vals_list.append((0, 0, {
-                    'name': kam.get('title') or _('Key Matter'),
-                    'description': kam.get('description'),
-                    'response': kam.get('response'),
-                }))
+                vals_list.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "name": kam.get("title") or _("Key Matter"),
+                            "description": kam.get("description"),
+                            "response": kam.get("response"),
+                        },
+                    )
+                )
             if vals_list:
-                record.write({'key_audit_matter_ids': vals_list})
+                record.write({"key_audit_matter_ids": vals_list})
         return True
 
     def ai_quality_check_ISA_compliance(self):
@@ -67,14 +92,16 @@ class AuditFinalReport(models.Model):
         return True
 
     def action_print_report(self):
-        return self.env.ref('ai_audit_management.report_audit_final').report_action(self)
+        return self.env.ref("ai_audit_management.report_audit_final").report_action(
+            self
+        )
 
 
 class AuditFinalReportKAM(models.Model):
-    _name = 'audit.final.report.kam'
-    _description = 'Key Audit Matter'
+    _name = "audit.final.report.kam"
+    _description = "Key Audit Matter"
 
     name = fields.Char(required=True)
     description = fields.Text()
     response = fields.Text()
-    final_report_id = fields.Many2one('audit.final.report', ondelete='cascade')
+    final_report_id = fields.Many2one("audit.final.report", ondelete="cascade")

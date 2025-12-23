@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Sequence, Mapping
+from typing import Any, Sequence
 
 class Model:
     _name: str

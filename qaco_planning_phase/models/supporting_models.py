@@ -11,6 +11,7 @@ from odoo.exceptions import ValidationError
 
 class QacoAssertionTag(models.Model):
     """ISA 315 Financial Statement Assertions"""
+
     _name = "qaco.assertion.tag"
     _description = "Audit Assertion (ISA 315)"
     _order = "category, sequence, name"
@@ -36,6 +37,7 @@ class QacoAssertionTag(models.Model):
 
 class QacoMaterialityBenchmark(models.Model):
     """Materiality benchmark configuration per ISA 320."""
+
     _name = "qaco.materiality.benchmark"
     _description = "Materiality Benchmark (ISA 320)"
     _order = "sequence, name"
@@ -48,7 +50,7 @@ class QacoMaterialityBenchmark(models.Model):
     description = fields.Text(string="Description")
     entity_types = fields.Char(
         string="Applicable Entity Types",
-        help="Comma-separated list: manufacturing,trading,services,financial,public,nonprofit"
+        help="Comma-separated list: manufacturing,trading,services,financial,public,nonprofit",
     )
     isa_guidance = fields.Text(string="ISA Guidance")
     sequence = fields.Integer(default=10)
@@ -61,6 +63,7 @@ class QacoMaterialityBenchmark(models.Model):
 
 class QacoMaterialitySetting(models.Model):
     """Materiality settings for performance materiality and trivial threshold."""
+
     _name = "qaco.materiality.setting"
     _description = "Materiality Setting (ISA 320)"
     _order = "setting_type, name"
@@ -83,6 +86,7 @@ class QacoMaterialitySetting(models.Model):
 
 class QacoPlanningChecklist(models.Model):
     """Planning checklist items template and instance tracking"""
+
     _name = "qaco.planning.checklist"
     _description = "Audit Planning Checklist"
     _order = "planning_main_id, sequence, id"
@@ -102,7 +106,7 @@ class QacoPlanningChecklist(models.Model):
     is_template = fields.Boolean(
         string="Template Item",
         default=False,
-        help="Template rows copied into new plans."
+        help="Template rows copied into new plans.",
     )
     sequence = fields.Integer(default=10)
 
@@ -119,4 +123,6 @@ class QacoPlanningChecklist(models.Model):
     def _check_planning_required(self):
         for rec in self:
             if not rec.is_template and not rec.planning_main_id:
-                raise ValidationError("Checklist rows must belong to a planning phase unless marked as template.")
+                raise ValidationError(
+                    "Checklist rows must belong to a planning phase unless marked as template."
+                )

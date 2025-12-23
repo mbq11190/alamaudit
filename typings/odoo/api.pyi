@@ -1,11 +1,8 @@
-from typing import Any, Callable, Iterable, TypeVar
+from typing import Any, Callable, TypeVar
 
-F = TypeVar('F', bound=Callable[..., Any])
+F = TypeVar("F", bound=Callable[..., Any])
 
 def depends(*names: str) -> Callable[[F], F]: ...
-
 def constrains(*names: str) -> Callable[[F], F]: ...
-
 def model(func: F) -> F: ...
-
 def ondelete(param: str) -> Callable[[F], F]: ...

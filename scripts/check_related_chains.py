@@ -1,9 +1,11 @@
-import ast, glob, re
+import ast
+import glob
+import re
 
 # Build model -> fields mapping
 models = {}  # model_name -> set of field names
-for f in glob.glob('**/models/*.py', recursive=True):
-    text = open(f, encoding='utf-8').read()
+for f in glob.glob("**/models/*.py", recursive=True):
+    text = open(f, encoding="utf-8").read()
     try:
         tree = ast.parse(text)
     except Exception:
@@ -14,12 +16,19 @@ for f in glob.glob('**/models/*.py', recursive=True):
         for node in c.body:
             if isinstance(node, ast.Assign):
                 for target in node.targets:
-                    if isinstance(target, ast.Name) and target.id == '_name':
-                        if isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+                    if isinstance(target, ast.Name) and target.id == "_name":
+                        if isinstance(node.value, ast.Constant) and isinstance(
+                            node.value.value, str
+                        ):
                             model_name = node.value.value
                 # field defs
-                if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
-                    if isinstance(node.value.func.value, ast.Name) and node.value.func.value.id == 'fields':
+                if isinstance(node.value, ast.Call) and isinstance(
+                    node.value.func, ast.Attribute
+                ):
+                    if (
+                        isinstance(node.value.func.value, ast.Name)
+                        and node.value.func.value.id == "fields"
+                    ):
                         for target in node.targets:
                             if isinstance(target, ast.Name):
                                 fields_set.add(target.id)
@@ -28,22 +37,35 @@ for f in glob.glob('**/models/*.py', recursive=True):
 
 # Find related fields
 problems = []
-for f in glob.glob('**/models/*.py', recursive=True):
-    text = open(f, encoding='utf-8').read()
+for f in glob.glob("**/models/*.py", recursive=True):
+    text = open(f, encoding="utf-8").read()
     # find patterns like related='a.b' or related="a.b"
-    for m in re.finditer(r"\b(\w+)\s*=\s*fields\.(?:Many2one|One2many|Many2many|Char|Text|Html|Float|Date|Datetime|Boolean)\([^\)]*related\s*=\s*['\"]([^'\"]+)['\"]", text, re.S):
+    for m in re.finditer(
+        r"\b(\w+)\s*=\s*fields\.(?:Many2one|One2many|Many2many|Char|Text|Html|Float|Date|Datetime|Boolean)\([^\)]*related\s*=\s*['\"]([^'\"]+)['\"]",
+        text,
+        re.S,
+    ):
         field_name = m.group(1)
         chain = m.group(2)
         # try to determine model where this field is defined
         # find enclosing class _name
-        classblock = re.search(r"class\s+([A-Za-z0-9_]+)\s*\(.*?\):[\s\S]*?\b"+re.escape(field_name)+r"\s*=?\s*fields", text)
+        classblock = re.search(
+            r"class\s+([A-Za-z0-9_]+)\s*\(.*?\):[\s\S]*?\b"
+            + re.escape(field_name)
+            + r"\s*=?\s*fields",
+            text,
+        )
         model = None
         if classblock:
             # locate _name in class
             class_name = classblock.group(1)
             # find _name assignment in file for that class
             # crude search
-            cn_re = re.compile(r"class\s+"+re.escape(class_name)+r"[\s\S]*?_name\s*=\s*['\"]([^'\"]+)['\"]")
+            cn_re = re.compile(
+                r"class\s+"
+                + re.escape(class_name)
+                + r"[\s\S]*?_name\s*=\s*['\"]([^'\"]+)['\"]"
+            )
             mcn = cn_re.search(text)
             if mcn:
                 model = mcn.group(1)
@@ -52,7 +74,7 @@ for f in glob.glob('**/models/*.py', recursive=True):
             # find model by checking file for any _name occurrence earlier
             pass
         # validate chain: each step should be a field on the previous model
-        parts = chain.split('.')
+        parts = chain.split(".")
         curr_model = model
         valid = True
         if curr_model is None:
@@ -67,8 +89,8 @@ for f in glob.glob('**/models/*.py', recursive=True):
                 # But we can at least assert the field exists
                 # For deeper check, we'd need to parse field args, a heavier task
         if not valid:
-            problems.append((f, model or 'unknown', field_name, chain))
+            problems.append((f, model or "unknown", field_name, chain))
 
-print('Related chain issues found:', len(problems))
+print("Related chain issues found:", len(problems))
 for p in problems:
     print(p)
