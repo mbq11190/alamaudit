@@ -1,7 +1,11 @@
-"""Faster validator for One2many inverses (improved accuracy).
-Scans code (excluding scripts/docs/diagnostics) and finds One2many('comodel', 'inverse') and
-checks that some file defines `_name = 'comodel'` and within those files there is an assignment
-for the inverse field (e.g., 'inverse = fields.Many2one(' or 'inverse =').
+"""Faster validator for One2many inverses (accurate & fast).
+
+Scans Python files (excluding scripts/docs/diagnostics) and finds One2many('comodel','inverse')
+occurrences, then ensures the comodel defines `_name = 'comodel'` and that the inverse field is
+declared (e.g., `inverse = fields.Many2one(...)` or at least assigned in the comodel file).
+
+This file merges the accuracy of the robust validator with a fast scanning approach for large
+repositories while avoiding scripts/docs files to reduce false positives.
 """
 import re
 from pathlib import Path
@@ -11,12 +15,21 @@ ROOT = Path(__file__).resolve().parents[1]
 
 one2many_pattern = re.compile(r"fields\.One2many\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]", re.I)
 name_pattern = re.compile(r"_name\s*=\s*['\"]([^'\"]+)['\"]")
-inv_assign_template = lambda inv: re.compile(r"^\s*%s\s*=\s*(fields\.Many2one\(|)" % re.escape(inv), re.M)
 
-# Collect files to scan
+# Collect files to scan (exclude tools/docs/diagnostics)
 py_files = [p for p in ROOT.rglob('*.py') if not any(part in ("scripts", "docs", "diagnostics") for part in p.parts)]
 
-# Build comodel map
+# Find files with One2many occurrences
+one2many_files = []
+for p in py_files:
+    try:
+        txt = p.read_text(encoding='utf-8')
+    except Exception:
+        continue
+    if 'One2many' in txt and 'fields.One2many' in txt:
+        one2many_files.append((p, txt))
+
+# Map comodel name -> list of files declaring it
 comodel_files = {}
 for p in py_files:
     try:
@@ -28,11 +41,7 @@ for p in py_files:
         comodel_files.setdefault(name, []).append((p, txt))
 
 issues = []
-for p in py_files:
-    try:
-        txt = p.read_text(encoding='utf-8')
-    except Exception:
-        continue
+for p, txt in one2many_files:
     for m in one2many_pattern.finditer(txt):
         comodel, inverse = m.group(1), m.group(2)
         files = comodel_files.get(comodel)
@@ -40,14 +49,10 @@ for p in py_files:
             issues.append((str(p), comodel, inverse, 'MISSING_MODEL'))
             continue
         ok = False
-        inv_re = inv_assign_template(inverse)
+        # Match either a direct Many2one assignment or any assignment to the inverse name
+        inv_assign_re = re.compile(r"^\s*%s\s*=\s*fields\.Many2one\(|^\s*%s\s*=\s*" % (re.escape(inverse), re.escape(inverse)), re.M)
         for fp, ftxt in files:
-            # Quick check: if inverse field found as name in file
-            if inv_re.search(ftxt):
-                ok = True
-                break
-            # Also check if Many2one to parent exists (e.g., onboarding_id = fields.Many2one('parent'))
-            if re.search(r"^\s*%s\s*=\s*fields\.Many2one\(" % re.escape(inverse), ftxt, re.M):
+            if inv_assign_re.search(ftxt):
                 ok = True
                 break
         if not ok:
