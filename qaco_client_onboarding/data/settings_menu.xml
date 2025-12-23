@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Place the menu under Settings/Administration → Audit → Onboarding - visible to system administrators -->
-    <menuitem id="menu_admin_audit" name="Audit" parent="base.menu_administration" sequence="70" groups="base.group_system" web_icon="qaco_audit,static/description/icon.png"/>
-    <menuitem id="menu_onboarding_settings" name="Onboarding" parent="menu_admin_audit" action="action_onboarding_settings" groups="base.group_system" sequence="5"/>
+    <data>
+        <!-- Place the menu under Settings/Administration → Audit → Onboarding - visible to system administrators -->
+        <menuitem id="menu_admin_audit" name="Audit" parent="base.menu_administration" sequence="70" groups="base.group_system"/>
+        <menuitem id="menu_onboarding_settings" name="Onboarding" parent="menu_admin_audit" action="action_onboarding_settings" groups="base.group_system" sequence="5"/>
+    </data>
 </odoo>
