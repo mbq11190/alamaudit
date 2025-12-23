@@ -594,6 +594,24 @@ class ClientOnboarding(models.Model):
     # Section 6: Predecessor Auditor Communication
     predecessor_auditor_name = fields.Char(string="Predecessor Auditor Name")
     predecessor_contact = fields.Char(string="Predecessor Contact Details")
+    predecessor_request_ids = fields.One2many(
+        "qaco.onboarding.predecessor.request",
+        "onboarding_id",
+        string="Predecessor Clearance Requests",
+    )
+    predecessor_response_ids = fields.One2many(
+        "qaco.onboarding.predecessor.response",
+        "onboarding_id",
+        string="Predecessor Responses",
+    )
+    predecessor_escalated = fields.Boolean(
+        string="Predecessor Issues Escalated",
+        help="Indicates if any predecessor issues have been escalated",
+    )
+    predecessor_locked = fields.Boolean(
+        string="Predecessor Section Locked",
+        help="Indicates if predecessor section is locked for editing",
+    )
     pcl_requested = fields.Date(string="PCL Date Requested")
     pcl_received = fields.Date(string="PCL Date Received")
     pcl_document = fields.Binary(string="Professional Clearance Letter")
