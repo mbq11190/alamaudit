@@ -9,7 +9,7 @@
     </record>
     <record id="folder_client_master" model="qaco.onboarding.document.folder">
         <field name="onboarding_id" eval="False"/>
-        <field name="name">01_Client Master Data & Authorizations</field>
+        <field name="name">01_Client Master Data &amp; Authorizations</field>
         <field name="code">01_01_Client_Master</field>
         <field name="parent_id" ref="folder_onboarding_root"/>
         <field name="client_visible">True</field>
@@ -23,7 +23,7 @@
     </record>
     <record id="folder_independence" model="qaco.onboarding.document.folder">
         <field name="onboarding_id" eval="False"/>
-        <field name="name">03_Independence & Ethics</field>
+        <field name="name">03_Independence &amp; Ethics</field>
         <field name="code">03_Independence</field>
         <field name="parent_id" ref="folder_onboarding_root"/>
     </record>
@@ -35,7 +35,7 @@
     </record>
     <record id="folder_engagement_terms" model="qaco.onboarding.document.folder">
         <field name="onboarding_id" eval="False"/>
-        <field name="name">05_Engagement Letter, Scope & Terms</field>
+        <field name="name">05_Engagement Letter, Scope &amp; Terms</field>
         <field name="code">05_Engagement_Terms</field>
         <field name="parent_id" ref="folder_onboarding_root"/>
     </record>
@@ -47,7 +47,7 @@
     </record>
     <record id="folder_governance" model="qaco.onboarding.document.folder">
         <field name="onboarding_id" eval="False"/>
-        <field name="name">07_Governance & Key Contacts</field>
+        <field name="name">07_Governance &amp; Key Contacts</field>
         <field name="code">07_Governance</field>
         <field name="parent_id" ref="folder_onboarding_root"/>
     </record>
