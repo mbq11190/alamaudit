@@ -390,7 +390,6 @@ class PlanningP6Risk(models.Model):
             if not planning.p2_outputs_ready or not planning.p3_outputs_ready or not planning.p4_outputs_ready:
                 raise UserError("P-6 requires outputs from P-2, P-3, and P-4.")
         return super().create(vals_list)
-        return super().create(vals)
 
 # =============================
 # Child Model: Risk Line
