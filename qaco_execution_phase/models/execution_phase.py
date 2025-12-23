@@ -585,13 +585,18 @@ class ExecutionRiskCoverage(models.Model):
         string="Substantive Procedures",
     )
     coverage_percent = fields.Float(
-        string="Coverage %", compute="_compute_coverage", digits=(3, 2)
+        string="Coverage %", compute="_compute_coverage_percent", digits=(3, 2)
     )
     is_fully_addressed = fields.Boolean(
-        string="Fully Addressed", compute="_compute_coverage", store=True
+        string="Fully Addressed", compute="_compute_is_fully_addressed", store=True
     )
 
-    def _compute_coverage(self):
+    def _compute_coverage_percent(self):
+        for record in self:
+            tests = record.control_test_ids | record.substantive_procedure_ids
+            record.coverage_percent = min(len(tests) * 50.0, 100.0) if tests else 0.0
+
+    def _compute_is_fully_addressed(self):
         for record in self:
             has_control = bool(
                 record.control_test_ids.filtered(lambda t: t.test_status == "green")
@@ -599,8 +604,6 @@ class ExecutionRiskCoverage(models.Model):
             has_substantive = bool(
                 record.substantive_procedure_ids.filtered(lambda s: s.status == "green")
             )
-            tests = record.control_test_ids | record.substantive_procedure_ids
-            record.coverage_percent = min(len(tests) * 50.0, 100.0) if tests else 0.0
             record.is_fully_addressed = bool(has_control and has_substantive)
 
 
