@@ -39,7 +39,7 @@ class Qacoaudit(models.Model):
     qaco_assigning_partner = fields.Many2one(
         "hr.employee",
         string="Assigning Partner",
-        domain="[('designation_id.name', '=', 'Partner')]",
+        # domain="[('designation_id.name', '=', 'Partner')]",  # Temporarily disabled - requires qaco_employees
     )
     documents_info = fields.Char(
         string="Docs More Info/Location",
@@ -76,7 +76,7 @@ class Qacoaudit(models.Model):
     qaco_audit_partner = fields.Many2one(
         "hr.employee",
         string="Audit Partner",
-        domain="[('designation_id.name', '=', 'Partner')]",
+        # domain="[('designation_id.name', '=', 'Partner')]",  # Temporarily disabled - requires qaco_employees
     )
     no_of_persons = fields.Integer(
         string="No of Persons Required",
