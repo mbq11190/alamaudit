@@ -1,0 +1,8 @@
+# Paste the `scripts/orphan_report.txt` produced by the orchestrator (or run orphan checks directly):
+# SQL in scripts/orphan_ir_model_checks.sql
+# Example output lines:
+# ir_cron: id=12 name='Auto Unallocate Employees' model='hr.employee.transfer'
+# ir_actions_server: id=446 name='Transfer Action' model='hr.employee.transfer'
+
+# Insert report text below:
+

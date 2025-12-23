@@ -15,7 +15,7 @@
     "author": "LasLabs, Tecnativa, ITerra, Onestein, "
     "Odoo Community Association (OCA)",
     "license": "LGPL-3",
-    "installable": True,
+    "installable": False,
     "depends": ["web", "mail"],
     "development_status": "Production/Stable",
     "maintainers": ["Yajo", "Tardo", "SplashS"],

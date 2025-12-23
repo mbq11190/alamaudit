@@ -1,0 +1,8 @@
+# Paste the first Python traceback block from your upgrade log here.
+# Use: python scripts/find_first_traceback.py /path/to/upgrade-<DB>.log > scripts/first_traceback.txt
+# If the file is large, paste the first traceback block and ~20 lines context above & below.
+
+Traceback (most recent call last):
+  File "/path/to/odoo/odoo/tools/convert.py", line 123, in convert_file
+    ...
+# End of first traceback block

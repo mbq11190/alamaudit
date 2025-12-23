@@ -58,6 +58,13 @@
               console.warn('missing_module_shim: defining noop for missing module', name);
               window.odoo.define(name, function (require) {
                 // noop stub: return an empty object
+                // Also register name into a global list for later mapping
+                if (!window.__missing_module_definitions) {
+                    window.__missing_module_definitions = [];
+                }
+                if (window.__missing_module_definitions.indexOf(name) === -1) {
+                    window.__missing_module_definitions.push(name);
+                }
                 return {};
               });
             }

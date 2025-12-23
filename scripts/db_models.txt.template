@@ -1,0 +1,8 @@
+# Paste the output of DB model dump here.
+# Use: sudo -u postgres psql -d <db> -c "COPY (SELECT model FROM ir_model ORDER BY model) TO STDOUT;" > scripts/db_models.txt
+# Or run the safe orchestrator: ./scripts/safe_odoo_fix.sh --db <db>
+
+audit.execution
+qaco.audit
+hr.employee.transfer
+... (list continues)

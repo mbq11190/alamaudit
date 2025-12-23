@@ -35,6 +35,7 @@
             "/web_responsive/static/src/legacy/scss/list_sticky_header.scss",
             "/web_responsive/static/src/legacy/js/web_responsive.esm.js",
             "/web_responsive/static/src/legacy/js/missing_module_shim.js",
+            "/web_responsive/static/src/legacy/js/missing_module_definitions.js",
             "/web_responsive/static/src/legacy/xml/form_buttons.xml",
             "/web_responsive/static/src/legacy/xml/custom_favorite_item.xml",
             "/web_responsive/static/src/components/apps_menu_tools.esm.js",
