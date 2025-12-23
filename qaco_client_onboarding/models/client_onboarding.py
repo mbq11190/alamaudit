@@ -1280,7 +1280,7 @@ class ClientOnboarding(models.Model):
             if record.fee_dependency_flag:
                 record.section5_status = "amber"
 
-    @api.depends("independence_declaration_ids.state")
+    @api.depends("independence_declaration_ids.status")
     def _compute_independence_status(self):
         for record in self:
             if not record.independence_declaration_ids:
@@ -1289,7 +1289,7 @@ class ClientOnboarding(models.Model):
                 )
                 continue
             completed = record.independence_declaration_ids.filtered(
-                lambda line: line.state == "confirmed"
+                lambda line: line.status == "approved"
             )
             percent = 0
             if record.independence_declaration_ids:
