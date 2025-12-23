@@ -113,3 +113,15 @@ QUnit.test("clicking a row toggles checkbox selection", async (assert) => {
     const checkbox = el.querySelector('input.o_list_record_selector');
     assert.ok(checkbox.checked, 'checkbox toggled on click');
 });
+
+QUnit.test("_setupTemplateListObserver is safe when DOM is not present", async (assert) => {
+    const controller = {
+        // no el provided
+        env: this.env,
+        model: { get: () => ({ data: { id: 1 } }) },
+        handle: 'root'
+    };
+    // should not throw
+    FormController.prototype._setupTemplateListObserver.call(controller);
+    assert.ok(true, "_setupTemplateListObserver did not throw when el was undefined");
+});

@@ -33,11 +33,24 @@ patch(FormController.prototype, 'qaco_client_onboarding.templates_ui', {
                 return maybe.then(function () { self._setupTemplateListObserver(); });
             }
         }
-        this._setupTemplateListObserver();
+        // Defer DOM-dependent initialization until the view is actually rendered.
+        // If `this.el` is present now, run immediately; otherwise, patch the `start` method to run after render.
+        if (this.el && typeof this.el.querySelector === 'function') {
+            this._setupTemplateListObserver();
+        } else {
+            var origStart = this.start;
+            this.start = function () {
+                try { self._setupTemplateListObserver(); } catch (e) { /* ignore errors */ }
+                return origStart.apply(this, arguments);
+            };
+        }
     },
+
 
     _setupTemplateListObserver: function () {
         var self = this;
+        // ensure DOM is available before querying elements (Odoo's FormController may call willStart before el is rendered)
+        if (!this.el || typeof this.el.querySelector !== 'function') { return; }
         // find the template list container and the placeholder block
         var fieldEl = this.el.querySelector('[data-field="template_library_rel_ids"]');
         var placeholder = this.el.querySelector('.empty-placeholder-container');
