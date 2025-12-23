@@ -23,4 +23,13 @@ Usage
 Notes
 -----
 - The scripts purposefully avoid destructive `DELETE` operations. For candidates that need removal, the scripts suggest archiving or inserting review records for manual assessment.
+
+Quick helper SQL files have been added for conservative, commented actions:
+- `scripts/quick_disable_crons.sql` — suggested `UPDATE` statements to disable crons referencing missing models (commented by default)
+- `scripts/quick_disable_server_actions.sql` — suggested `UPDATE` statements to set server actions to inert `code` or disable them (commented by default)
+
+Use these only after reviewing `scripts/dryrun_suggestions.sql` and `scripts/candidate_patch.sql`.
+
+For DB optimization and quick disable workflow, see `scripts/README_DB_OPTIMIZE.md` and `scripts/db_optimize.sh`.
+
 - Always ensure you have a DB dump and tested rollback plan before applying anything to production.
