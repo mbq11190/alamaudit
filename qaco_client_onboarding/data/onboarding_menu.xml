@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Action for Client Onboarding list (without audit context filter) -->
+        <record id="action_client_onboarding_all" model="ir.actions.act_window">
+            <field name="name">Client Onboarding</field>
+            <field name="res_model">qaco.client.onboarding</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_client_onboarding_tree"/>
+            <field name="target">current</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Client Onboarding Record
+                </p>
+                <p>
+                    Client onboarding records are typically created from Audit records.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu item under Audit (main menu from qaco_audit module) -->
+        <menuitem id="menu_client_onboarding" 
+                  name="Client Onboarding" 
+                  parent="qaco_audit.menu_qaco_audit_root" 
+                  action="action_client_onboarding_all" 
+                  sequence="15"/>
+    </data>
+</odoo>

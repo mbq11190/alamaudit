@@ -53,6 +53,7 @@ Features:
         "views/audit_export_views.xml",
         "views/client_onboarding_form.xml",
         "views/res_config_settings_views.xml",
+        "data/onboarding_menu.xml",
         "data/settings_menu.xml",
         "data/decision_menu.xml",
         "data/document_vault_menu.xml",
