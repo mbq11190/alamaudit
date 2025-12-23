@@ -24,3 +24,11 @@ class ResUsers(models.Model):
         default="milk",
         required=True,
     )
+
+    # Whether the UI should redirect user to their home action on login.
+    # Default true to preserve previous behavior used by views & JS code.
+    is_redirect_home = fields.Boolean(
+        string="Redirect to home on login",
+        default=True,
+        help="If set, the client will redirect to the user's configured home action on login",
+    )
