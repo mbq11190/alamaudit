@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_document_vault" name="Document Vault" parent="menu_admin_audit" action="action_onboarding_documents" sequence="20"/>
-    <menuitem id="menu_audit_exports" name="Audit Exports" parent="menu_admin_audit" action="action_open_audit_export_wizard" sequence="30"/>
-    <menuitem id="menu_audit_trail_index" name="Audit Trail" parent="menu_admin_audit" action="action_open_audit_trail" sequence="31"/>
+    <menuitem id="menu_document_vault" name="Document Vault" parent="qaco_client_onboarding.menu_admin_audit" action="action_onboarding_documents" sequence="20"/>
+    <menuitem id="menu_audit_exports" name="Audit Exports" parent="qaco_client_onboarding.menu_admin_audit" action="action_open_audit_export_wizard" sequence="30"/>
+    <menuitem id="menu_audit_trail_index" name="Audit Trail" parent="qaco_client_onboarding.menu_admin_audit" action="action_open_audit_trail" sequence="31"/>
 </odoo>
