@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_onboarding_decisions" name="Decisions Register" parent="menu_admin_audit" action="action_onboarding_decisions" sequence="25"/>
+    <menuitem id="menu_onboarding_decisions" name="Decisions Register" parent="qaco_client_onboarding.menu_admin_audit" action="action_onboarding_decisions" sequence="25"/>
 </odoo>
