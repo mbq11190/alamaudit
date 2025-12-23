@@ -50,6 +50,7 @@ Features:
         "views/final_authorization_views.xml",
         "views/onboarding_decision_views.xml",
         "views/document_vault_views.xml",
+        "views/audit_export_views.xml",
         "views/client_onboarding_form.xml",
         "views/res_config_settings_views.xml",
         "data/decision_menu.xml",
@@ -67,7 +68,6 @@ Features:
         "reports/report_engagement_decision.xml",
         "reports/report_predecessor_clearance_memo.xml",
         "reports/report_predecessor_clearance_pack.xml",
-        "views/audit_export_views.xml",
         "reports/report_audit_snapshot.xml",
     ],
     "assets": {
