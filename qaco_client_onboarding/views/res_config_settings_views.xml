@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Onboarding Settings">
                 <sheet>
-                    <group string="Independence & Ethics Settings">
+                    <group string="Independence &amp; Ethics Settings">
                         <field name="gift_auto_decline_threshold"/>
                         <field name="pack_attachment_max_kb"/>
                     </group>
