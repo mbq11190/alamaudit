@@ -21,7 +21,7 @@
         <!-- Menu item under Audit (main menu from qaco_audit module) -->
         <menuitem id="menu_client_onboarding" 
                   name="Client Onboarding" 
-                  parent="qaco_audit.menu_qaco_audit_root" 
+                  parent="qaco_audit.menu_root" 
                   action="action_client_onboarding_all" 
                   sequence="15"/>
     </data>
