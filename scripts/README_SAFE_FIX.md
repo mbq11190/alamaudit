@@ -27,6 +27,7 @@ Notes
 Quick helper SQL files have been added for conservative, commented actions:
 - `scripts/quick_disable_crons.sql` — suggested `UPDATE` statements to disable crons referencing missing models (commented by default)
 - `scripts/quick_disable_server_actions.sql` — suggested `UPDATE` statements to set server actions to inert `code` or disable them (commented by default)
+- `scripts/disable_problematic_jobs.sql` — **precise**, audited and commented disable script that contains only the necessary UPDATE statements (commented by default) and UNDO guidance; run verification queries in the header before uncommenting any statements.
 
 Use these only after reviewing `scripts/dryrun_suggestions.sql` and `scripts/candidate_patch.sql`.
 
