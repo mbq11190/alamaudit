@@ -41,7 +41,7 @@
                             <p><em>No follow-up attempts recorded.</em></p>
                         </t>
 
-                        <h3>Response & Issues</h3>
+                        <h3>Response &amp; Issues</h3>
                         <t t-if="doc.response_id">
                             <p><strong>Response Date:</strong> <t t-esc="doc.response_id.response_date or '—'"/></p>
                             <p><strong>Summary:</strong> <t t-esc="doc.response_id.response_summary or '—'"/></p>
