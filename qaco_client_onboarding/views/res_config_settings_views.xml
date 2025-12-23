@@ -27,8 +27,4 @@
         <field name="view_id" ref="view_res_config_settings_onboarding"/>
         <field name="target">new</field>
     </record>
-
-    <!-- Place the menu under Settings/Administration → Audit → Onboarding - visible to system administrators -->
-    <menuitem id="menu_admin_audit" name="Audit" parent="base.menu_administration" sequence="70" groups="base.group_system" web_icon="qaco_audit,static/description/icon.png"/>
-    <menuitem id="menu_onboarding_settings" name="Onboarding" parent="menu_admin_audit" action="action_onboarding_settings" groups="base.group_system" sequence="5"/>
 </odoo>
