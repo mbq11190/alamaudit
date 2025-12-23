@@ -34,7 +34,7 @@ class OnboardingDocumentFolder(models.Model):
     _description = "Onboarding Document Folder"
 
     onboarding_id = fields.Many2one(
-        "qaco.client.onboarding", required=True, ondelete="cascade", index=True
+        "qaco.client.onboarding", required=False, ondelete="cascade", index=True
     )
     name = fields.Char(string="Folder Name", required=True)
     code = fields.Char(string="Folder Code")
