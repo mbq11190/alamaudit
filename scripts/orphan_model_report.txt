@@ -1,0 +1,1349 @@
+Orphan Model References Report
+=================================
+
+Total repo models discovered: 225
+Total referenced models found in XML/CSV: 271
+Total missing (referenced but not defined in code): 236
+
+MISSING MODEL: ai_audit_management.model_audit_ai_settings
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_archival
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_client_acceptance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_completion_review
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_dashboard_metrics
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_engagement_letter
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_evidence_index
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_evidence_index_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_final_report
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_final_report_kam
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_internal_control
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_ocr_document
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_plan
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: ai_audit_management.model_audit_substantive_test
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: annual.audit.stages
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_stages_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_stages_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_stages_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_stages_data.xml
+
+MISSING MODEL: annual.audit.year
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_year_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_year_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_year_data.xml
+
+MISSING MODEL: audit.quarter
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_2025_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_2025_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_2025_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_2025_data.xml
+
+MISSING MODEL: audit.quarter.stages
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_stage_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_stage_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_stage_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_stage_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_quarter_stage_data.xml
+
+MISSING MODEL: hr.employee
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\data\demo_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\data\demo_data.xml
+
+MISSING MODEL: hr_attendance.model_hr_attendance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: ir.actions.act_window
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\web_responsive\views\res_users_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\web_responsive\web_responsive\views\res_users_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\views\quality_review_form.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_dashboard_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_related_parties_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p11_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p11_views_complete.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p12_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p13_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p1_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p2_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p3_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p4_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p5_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p6_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p7_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p7_views_ENHANCED.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p7_views_ENHANCED.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p8_views.xml
+
+MISSING MODEL: ir.actions.report
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\reports\planning_p11_reports.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\reports\planning_p11_reports.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\reports\planning_p11_reports.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\reports\report_actions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\reports\report_actions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\reports\report_actions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\reports\report_actions.xml
+
+MISSING MODEL: ir.actions.server
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_summary_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\views\menu_view.xml
+
+MISSING MODEL: ir.config_parameter
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\independence_seed.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\independence_seed.xml
+
+MISSING MODEL: ir.cron
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_daily_attendance_report.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_email_leave_summary_to_employees.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_geofence_reconcile.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_pending_transfers.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_scheduled_employee_progress_report.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_unallocated_daily_notify.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_unallocated_expiry_employees.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\cron_weekly_employee_report.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_summary_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\auto_create_delete_months.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\auto_create_delete_months.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\auto_create_delete_quarters.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\auto_create_delete_quarters.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\data\ir_cron.xml
+
+MISSING MODEL: ir.module.category
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\security_groups.xml
+
+MISSING MODEL: ir.rule
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\planning_phase_security.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\planning_phase_security.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_rules.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_summary_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_summary_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_summary_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_summary_views.xml
+
+MISSING MODEL: ir.sequence
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\leave_condonation_sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\annual_audit_sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_document_sequences.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\audit_document_sequences.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_internal_audit_sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\qaco_engagement_sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\quarterly_audit_sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\sequence.xml
+
+MISSING MODEL: ir.ui.menu
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\menu_sequence.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\menu_restrictions.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\timeoff_menu_inherit.xml
+
+MISSING MODEL: ir.ui.view
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\web_responsive\views\res_users_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\web_responsive\views\res_users_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\web_responsive\web_responsive\views\res_users_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\views\audit_smart_button.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\views\quality_review_form.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\views\quality_review_form.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\views\quality_review_form.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\audit_smart_button.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_dashboard_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_dashboard_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_related_parties_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_related_parties_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p10_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p11_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p11_views.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p11_views_complete.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\views\planning_p11_views_complete.xml
+
+MISSING MODEL: mail.template
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\data\mail_templates.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\data\mail_templates.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\views\leave_condonation_email_template.xml
+
+MISSING MODEL: model_analytical_procedure_detail
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_assertion
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_attachment
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_done
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_evidence
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_evidence_detail
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_execution
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_execution_master
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_firm_name
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_head_execution
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_onboarding_checklist
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_onboarding_checklist_template
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_procedure
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_procedure_detail
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_procedure_template
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_stages
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_standard_library
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_audit_year
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_daily_attendance_report
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_employee_designation
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_employee_docs
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_employee_experience
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_employee_family_reference
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_execution_analytical_procedure
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_execution_head_details
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_execution_phase
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_hr_employee
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_hr_employee_transfer
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_hr_public_holiday
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_hr_transfer_cc_recipient
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_id:id
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_adjustment
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_adjustment_approval
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_adjustment_reject_wizard
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_allowance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_condonation
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_condonation_approval
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_condonation_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_leave_summary
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_assertion_tag
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_audit
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_audit_auto_follower
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_audit_changelog
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_audit_checklist
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_audit_lock_approval
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_branch_office
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_client_onboarding
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverable_audit_report
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverable_deficiency
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverable_dispatch
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverable_eom
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverable_kam
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverable_other_info
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_deliverables
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_deliverables\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_control_exception
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_control_test
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_evidence_item
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_risk_coverage
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_sampling_request
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_substantive_area
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_substantive_procedure
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_workpaper
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_exec_workpaper_note
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_execution_phase
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_analytics_ratio
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_analytics_variance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_gc_covenant
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_gc_scenario
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_misstatement
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_noncompliance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_regulatory_alert
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_related_party
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_review_note
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_subsequent_event
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_final_subsequent_procedure
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_finalisation_phase
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_finalisation_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_industry
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_law_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_materiality_benchmark
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_materiality_setting
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_non_compliance_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_adverse_media
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_attach_templates_wizard
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_attached_template
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_audit_trail
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_board_member
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_branch_location
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_checklist_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_checklist_template
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_city
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_conditional_acceptance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_conflict
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_decision
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_decision_driver
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_dispute
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_document
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_document_audit
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_document_folder
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_document_history
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_fee_terms
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_filing
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_final_authorization
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_final_authorization_condition
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_gift
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_group_component
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_independence_declaration
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_independence_threat
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_industry
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_kmp
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_license
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_non_audit
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_noncompliance
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_note
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_notebook
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_precondition_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_precondition_template
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_predecessor_followup
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_predecessor_request
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_predecessor_response
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_regulator
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_regulator_contact
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_related_party
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_required_document
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_risk_driver
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_safeguard
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_sanctions_screen
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_sharecapital_movement
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_shareholder
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_signatory
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_template_category
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_template_document
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_ubo
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_onboarding_verification_exception
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_pep
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_change_log
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_checklist
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_checklist_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_main
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p10_related_parties
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p10_related_party_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p11_component
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p11_component_auditor
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p11_component_risk
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p11_group_audit
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p12_strategy
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p13_approval
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p1_engagement
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p1_team_member
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p1_time_budget
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p2_business_risk
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p2_change
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p2_entity
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p3_control_change
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p3_control_deficiency
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p3_controls
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p3_itgc
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p3_key_control
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p3_transaction_cycle
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_analytics
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_budget_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_fraud_indicator
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_fs_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_going_concern
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_non_financial
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_ratio_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p4_trend_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p5_component_materiality
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p5_materiality
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p5_qualitative_item
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p5_revision
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p5_specific_materiality
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p6_risk
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p6_risk_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p7_fraud
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p7_fraud_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p8_going_concern
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p9_law_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_p9_laws
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_phase
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_template
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_planning_template_wizard
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_quality_checklist_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_quality_eqr_scope
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_quality_finding
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_quality_finding_action
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_quality_review
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_quality_review_note
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_quality_review\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_region
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_regulator
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_regulatory_inspection
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_related_party_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_risk_register_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_rpt_transaction_line
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_planning_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_qaco_ubo
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\ir.model.access.csv
+
+MISSING MODEL: model_test_of_controls
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_test_of_controls_detail
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_test_of_details
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_test_of_details_detail
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_execution_phase\security\ir.model.access.csv
+
+MISSING MODEL: model_unallocated_employee_recipient
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: model_weekly_employee_report
+  Referenced in CSV files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\ir.model.access.csv
+
+MISSING MODEL: monthly.audit.month
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_month_data.xml
+
+MISSING MODEL: monthly.audit.stages
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_stages_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_stages_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\data\monthly_audit_stages_data.xml
+
+MISSING MODEL: res.country.state
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\pakistan_location_data.xml
+
+MISSING MODEL: res.groups
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\document_vault_security.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_client_onboarding\data\document_vault_security.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_audit\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\security_groups.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\security\security_groups.xml
+
+MISSING MODEL: res.partner
+  Referenced in XML files:
+    - C:\Users\HP\Documents\GitHub\alamaudit\qaco_employees\data\unallocated_client_data.xml
+    - C:\Users\HP\Documents\GitHub\alamaudit\ai_audit_management\data\demo_data.xml
+
