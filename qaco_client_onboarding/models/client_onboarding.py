@@ -241,6 +241,7 @@ class ClientOnboarding(models.Model):
     regulator_checklist_overview = fields.Html(
         string="Checklist Summary",
         compute="_compute_regulator_checklist_summary",
+        store=False,
         sanitize=False,
     )
 
