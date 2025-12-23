@@ -28,6 +28,18 @@ fi
 echo "Upgrading modules: $MODULES"
 ./odoo-bin -d "$DB" -u ${MODULES} --stop-after-init --log-level=info 2>&1 | tee "$LOGFILE"
 
+# After upgrade, dump DB model list and compare to repo list
+echo "Exporting DB model list to /tmp/db_models_${DB}.txt"
+sudo -u postgres psql -d "$DB" -At -c "SELECT model FROM ir_model ORDER BY model;" > "/tmp/db_models_${DB}.txt" || true
+
+# Generate repo model list
+echo "Generating repo model list"
+python scripts/compare_repo_models.py > "/tmp/repo_models_${DB}.txt"
+
+# Diff the lists and emit summary
+echo "Models present in DB but not in repo:"
+comm -23 "/tmp/db_models_${DB}.txt" "/tmp/repo_models_${DB}.txt" | tee "/tmp/missing_in_repo_${DB}.txt" || true
+
 echo "Checking upgrade logs for critical failures"
 if grep -E "KeyError: 'onboarding_id'|Invalid field 'is_redirect_home'|Missing model" "$LOGFILE" -n ; then
   echo "ERROR: Detected issues in the upgrade log. Please inspect $LOGFILE"
