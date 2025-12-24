@@ -190,6 +190,16 @@ class PlanningP12Strategy(models.Model):
     )
     specialist_details = fields.Html(string="Specialist Engagement Details")
 
+
+class AuditSpecialistType(models.Model):
+    _name = "audit.specialist.type"
+    _description = "Audit Specialist Type"
+
+    name = fields.Char(string="Name", required=True)
+    active = fields.Boolean(string="Active", default=True)
+    sequence = fields.Integer(string="Sequence", default=10)
+    _order = "sequence, name"
+
     group_audit_applicable = fields.Boolean(
         string="Group Audit Considerations Applicable?",
         compute="_compute_group_audit_applicable",
