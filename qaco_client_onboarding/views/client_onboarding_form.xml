@@ -18,27 +18,116 @@
             <form string="Client Onboarding">
                 <header>
                     <field name="overall_status" widget="statusbar"/>
+                    <field name="engagement_decision" widget="statusbar"/>
+                    <field name="progress_percentage" widget="progressbar"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Onboarding Name"/>
+                            <field name="name" placeholder="Onboarding Title"/>
+                            <div class="o_state_container ms-2">
+                                <field name="audit_id"/>
+                            </div>
                         </h1>
+                        <h2 class="mt-1 text-muted" style="font-size:0.9rem;">Engagement: <field name="audit_id" readonly="1"/></h2>
                     </div>
-                    <group>
-                        <group string="Entity Information">
+                    <group col="2">
+                        <group>
+                            <field name="legal_name" readonly="0"/>
+                            <field name="ntn"/>
+                            <field name="business_registration_number"/>
+                            <field name="principal_activities"/>
+                            <field name="financial_framework"/>
                             <field name="entity_type"/>
-                            <field name="legal_name"/>
                         </group>
-                        <group string="Status">
-                            <field name="progress_percentage" widget="percentage"/>
+                        <group>
+                            <field name="client_id" readonly="1"/>
+                            <field name="firm_name" readonly="1"/>
+                            <field name="entity_type_label" readonly="1"/>
+                            <field name="financial_framework_label" readonly="1"/>
+                            <field name="overall_status_label" readonly="1"/>
+                            <field name="progress_percentage" widget="percentage" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Details">
-                            <group>
-                                <field name="business_registration_number"/>
-                                <field name="primary_regulator"/>
+                        <page name="client_basics" string="1. Client & Engagement Basics">
+                            <group col="2">
+                                <group>
+                                    <field name="legal_name"/>
+                                    <field name="ntn"/>
+                                    <field name="strn"/>
+                                    <field name="principal_activities"/>
+                                    <field name="engagement_type"/>
+                                    <field name="financial_framework"/>
+                                </group>
+                                <group>
+                                    <field name="client_id" readonly="1"/>
+                                    <field name="audit_id" readonly="1"/>
+                                    <field name="engagement_status" widget="statusbar" readonly="1"/>
+                                    <field name="progress_percentage" widget="progressbar" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="independence" string="2. Independence & Ethics">
+                            <group col="2">
+                                <group>
+                                    <field name="independence_declaration_ids" widget="one2many_list"/>
+                                    <field name="independence_threat_ids" widget="many2many_tags"/>
+                                    <field name="independence_status_feedback" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="independence_status_feedback" readonly="1"/>
+                                    <field name="independence_declaration_ids"/>
+                                    <field name="independence_threat_ids"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="acceptance" string="3. Acceptance & Risk Assessment">
+                            <group col="2">
+                                <group>
+                                    <field name="engagement_score" readonly="1"/>
+                                    <field name="engagement_risk_rating" readonly="1"/>
+                                    <field name="client_identity_verified"/>
+                                    <field name="ubo_verified"/>
+                                    <field name="aml_applicable"/>
+                                </group>
+                                <group>
+                                    <field name="engagement_decision"/>
+                                    <field name="decision_conditions"/>
+                                    <field name="fee_terms_id"/>
+                                    <field name="safeguards_required"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="documents" string="4. Documents & PBC Status">
+                            <group col="2">
+                                <group>
+                                    <field name="required_document_line_ids" widget="one2many_list"/>
+                                    <field name="org_chart_attachment" widget="binary"/>
+                                </group>
+                                <group>
+                                    <field name="regulator_checklist_completion" widget="progressbar" readonly="1"/>
+                                    <field name="attached_template_ids" widget="one2many_list"/>
+                                    <field name="required_document_line_ids"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="decision" string="5. Engagement Decision">
+                            <group col="2">
+                                <group>
+                                    <field name="engagement_decision"/>
+                                    <field name="decision_conditions"/>
+                                    <field name="partner_approved_by" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="latest_decision_date" readonly="1"/>
+                                    <field name="latest_decision_by" readonly="1"/>
+                                    <field name="latest_decision_rationale" readonly="1"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>

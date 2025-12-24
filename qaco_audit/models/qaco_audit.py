@@ -659,14 +659,23 @@ class Qacoaudit(models.Model):
                     "audit_id": self.id,
                 }
             )
-        return {
+        view = self.env.ref('qaco_client_onboarding.view_client_onboarding_form', raise_if_not_found=False)
+        action = {
             "type": "ir.actions.act_window",
             "name": "Client Onboarding",
             "res_model": "qaco.client.onboarding",
             "res_id": onboarding.id,
             "view_mode": "form",
             "target": "current",
+            "context": {
+                "default_audit_id": self.id,
+                "default_partner_id": self.client_id.id if self.client_id else False,
+                "default_company_id": self.env.company.id,
+            },
         }
+        if view:
+            action["views"] = [(view.id, "form")]
+        return action
 
     def action_open_planning_phase(self):
         """Open or create planning phase record for this audit"""

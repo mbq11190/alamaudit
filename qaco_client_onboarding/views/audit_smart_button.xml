@@ -7,11 +7,12 @@
         <field name="view_mode">form,tree</field>
         <field name="view_id" ref="view_client_onboarding_form"/>
         <field name="target">current</field>
-        <field name="context">{'default_audit_id': active_id}</field>
+        <!-- Pass audit, partner and company defaults when opening from menu -->
+        <field name="context">{'default_audit_id': active_id, 'default_partner_id': client_id, 'default_company_id': company_id}</field>
         <field name="domain">[('audit_id', '=', active_id)]</field>
     </record>
 
-    <!-- Smart button on qaco.audit form -->
+    <!-- Smart button on qaco.audit form (Top tab style) -->
     <record id="view_qaco_audit_form_onboarding_button" model="ir.ui.view">
         <field name="name">qaco.audit.form.onboarding.button</field>
         <field name="model">qaco.audit</field>
@@ -21,7 +22,8 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="object"
                         name="action_open_client_onboarding"
-                        icon="fa-handshake-o">
+                        icon="fa-user-check"
+                        invisible="not (engagement_status == 'draft' or stage_id.name == 'Assign' or stage_id.name == 'Planning')">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Client</span>
                         <span class="o_stat_text">Onboarding</span>

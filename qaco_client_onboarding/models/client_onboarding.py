@@ -638,6 +638,17 @@ class ClientOnboarding(models.Model):
         "qaco.onboarding.decision", string="Latest Decision"
     )
 
+    # Convenience related fields for UI display (read-only)
+    latest_decision_rationale = fields.Text(
+        string="Latest Decision Rationale", related="latest_decision_id.decision_rationale", readonly=True
+    )
+    latest_decision_by = fields.Many2one(
+        "res.users", string="Latest Decision By", related="latest_decision_id.decision_by", readonly=True
+    )
+    latest_decision_date = fields.Datetime(
+        string="Latest Decision Date", related="latest_decision_id.decision_date", readonly=True
+    )
+
     def _create_default_document_folders(self):
         """Create a copy of the template folder taxonomy for this onboarding."""
         Folder = self.env["qaco.onboarding.document.folder"]
