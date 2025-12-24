@@ -19,6 +19,10 @@
         <field name="inherit_id" ref="qaco_audit.qaco_audit_form"/>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
+            <!-- Add the field so it's available for the invisible condition -->
+            <xpath expr="//sheet" position="before">
+                <field name="show_onboarding_tab" invisible="1"/>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <!-- Required by Odoo 17: any field used in modifiers must be present in the view -->
                 <field name="show_onboarding_tab" invisible="1"/>
