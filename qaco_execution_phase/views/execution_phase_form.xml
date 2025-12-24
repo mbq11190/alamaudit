@@ -121,6 +121,10 @@
                                     <span class="o_planning_card_title">Tests of Controls</span>
                                     <span class="o_planning_card_ref">ISA 330 / ISA 265</span>
                                 </div>
+                                <div class="o_planning_card_description">
+                                    <p><strong>Purpose</strong></p>
+                                    <p>To obtain a sufficient understanding of the entity’s internal control relevant to the audit and, where reliance is planned, to evaluate the <strong>design, implementation, and operating effectiveness</strong> of controls through walkthroughs and testing, in order to appropriately respond to assessed risks of material misstatement and reduce audit risk to an acceptably low level, in accordance with <strong>International Standards on Auditing, ethical requirements, and applicable laws and regulations in Pakistan</strong>, including the <strong>Companies Act, 2017</strong>.</p>
+                                </div>
                                 <group class="o_planning_grid">
                                     <field name="checklist_controls_linked" widget="boolean_toggle"/>
                                     <field name="checklist_walkthrough_documented" widget="boolean_toggle"/>
