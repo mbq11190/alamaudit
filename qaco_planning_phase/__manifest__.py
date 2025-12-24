@@ -61,31 +61,5 @@
     "auto_install": True,
     "price": 0,
     "currency": "PKR",
-    "description": """
-Audit Planning Phase - Pakistan (P-1 to P-13)
-==============================================
-
-ISA-Compliant Planning Tabs:
-- P-1: Engagement Setup & Team Assignment (ISA 210/220/ISQM-1)
-- P-2: Entity & Environment Understanding (ISA 315)
-- P-3: Internal Control Understanding (ISA 315)
-- P-4: Preliminary Analytical Review (ISA 520)
-- P-5: Materiality Determination (ISA 320)
-- P-6: Risk of Material Misstatement (ISA 315)
-- P-7: Fraud Risk Considerations (ISA 240)
-- P-8: Going Concern Assessment (ISA 570)
-- P-9: Laws & Regulations Compliance (ISA 250)
-- P-10: Related Party Transactions (ISA 550)
-- P-11: Group Audit Considerations (ISA 600)
-- P-12: Audit Strategy & Plan (ISA 300)
-- P-13: Approval & Planning Lock (ISA 220/ISQM-1)
-
-Features:
-- Status-driven workflow (Not Started → In Progress → Completed → Reviewed → Approved)
-- Maker-checker control (Senior → Manager → Partner)
-- Automatic APM (Audit Planning Memorandum) generation
-- Pakistan-specific compliance (ICAP, SECP, AOB, FBR, SBP, PRA)
-- Quality review integration with EQCR support
-- Complete audit trail via mail.thread
-""",
+    "description": "Audit Planning Phase module covering planning tabs P-1 to P-13 (ISA-aligned).",
 }

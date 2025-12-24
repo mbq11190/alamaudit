@@ -1,10 +1,7 @@
 {
     "name": "AI Audit Management",
     "summary": "ISA-compliant audit suite with OpenAI automation",
-    "description": """
-    Complete Pakistan ISA-aligned audit lifecycle with AI assisted planning,
-    execution, reporting, and archival controls.
-    """,
+    "description": "Complete Pakistan ISA-aligned audit lifecycle with AI assisted planning, execution, reporting, and archival controls.",
     "author": "Prime360 Audit Suite",
     "website": "https://www.example.com",
     "category": "Accounting/Audit",

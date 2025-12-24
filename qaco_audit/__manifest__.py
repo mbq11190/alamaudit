@@ -1,9 +1,7 @@
 {
     "name": "QACO Audit",
     "summary": "Audit Work Management",
-    "description": """
-    Audit Workflow Management of QACO
-    """,
+    "description": "Audit Workflow Management of QACO",
     "author": "QACO",
     "website": "https://www.qaco.com.pk",
     "category": "Uncategorized",

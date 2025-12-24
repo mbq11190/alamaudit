@@ -4,11 +4,10 @@
 {
     "name": "QACO Employees",
     "summary": "QACO Employees Database Management System",
-    "description": """
-QACO Employees Database Management System
-    """,
+    "description": "QACO Employees Database Management System",
     "author": "QACO",
     "website": "https://www.qaco.com.pk",
+
     "category": "Uncategorized",
     "version": "17.0.0.0.10",
     # any module necessary for this one to work correctly

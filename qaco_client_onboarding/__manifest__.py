@@ -1,44 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-<<<<<<< Updated upstream
     "name": "QACO Client Onboarding",
     "version": "17.0.1.7.1",
     "category": "Audit",
     "summary": "Client Onboarding Phase with Auto-Save & Auto-Generated Reports",
-    "description": """
-=======
-    'name': 'QACO Client Onboarding',
-    'version': '17.0.1.7.1',
-    'category': 'Audit',
-    'summary': 'Client Onboarding Phase with Auto-Save & Auto-Generated Reports',
-    'description': """
->>>>>>> Stashed changes
-Client Onboarding Module
-========================
-Client onboarding phase with smart button access from audit.
-
-Features:
-- Comprehensive client acceptance workflow
-- ISA-referenced mandatory documentation
-- AUTO-SAVE functionality (Sections 1.0-1.10):
-  - Auto-save every 10 seconds
-  - Auto-save on field change (debounced)
-  - Respects Partner Approval lock
-  - Full audit trail maintained (ISA 230 / ISQM-1)
-  - Visual "Saved at HH:MM" indicator
-- Auto-generated reports upon Partner Approval:
-  - Client Acceptance & Continuance Report (ISA 220, ISQM-1)
-  - Ethics & Independence Compliance Report (IESBA Code, ISA 220)
-  - Fraud & Business Risk Summary (ISA 240, ISA 315)
-  - Engagement Authorization Memorandum (ISA 210, ISQM-1)
-- ICAP QCR Ready documentation
-- Time-stamped, Partner-signed reports
-- Downloadable Fit & Proper Assessment Template (Word/PDF)
-- Notebooks with Save & Next functionality:
-  - Auto-save every 30 seconds
-  - Draft recovery and session persistence
-  - Sequential note navigation
-    """,
+    "description": "Client onboarding phase with smart button access from audit.",
     "author": "QACO",
     "website": "https://www.qaco.com",
     "depends": ["qaco_audit"],
