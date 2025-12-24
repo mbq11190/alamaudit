@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inject a richer Templates & Docs UI into the Client Onboarding form (section 1.0) -->
+    <record id="view_client_onboarding_form_templates_section" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.form.templates.section</field>
+        <field name="model">qaco.client.onboarding</field>
+        <field name="inherit_id" ref="qaco_client_onboarding.view_client_onboarding_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='o_template_repository']" position="replace">
+                <div class="o_template_repository">
+                    <div class="row">
+                        <!-- LEFT COLUMN: Template Library -->
+                        <div class="col-left">
+                            <div class="panel-head">
+                                <h3 class="block-title">1.0A - Template Library</h3>
+                                <div class="panel-actions">
+                                    <div class="o_form_label filter-toggle"><input type="checkbox" class="o_quick_filter_legal"/> Legal Identity</div>
+                                    <input class="search o_template_search" type="search" placeholder="Search templates" aria-label="Search templates"/>
+                                </div>
+                            </div>
+
+                            <div class="help mb-2">Use filters to narrow templates. Select rows to perform bulk actions.</div>
+
+                            <div class="subhead">Available Templates</div>
+
+                            <div class="tbl-wrap mt-2" aria-label="Available templates table">
+                                <div class="table-controls">
+                                    <button name="action_attach_selected" type="object" class="btn btn-sm btn-outline-secondary o_attach_selected">Attach selected</button>
+                                    <a role="button" class="btn btn-sm btn-outline-secondary o_upload_attach" aria-label="Upload template">Upload</a>
+                                    <button name="action_open_template_library" type="object" class="btn btn-sm btn-outline-secondary" aria-label="Open library">Library</button>
+                                </div>
+
+                                <field name="template_library_rel_ids" nolabel="1" widget="one2many_list">
+                                    <tree string="Available Templates">
+                                        <field name="name"/>
+                                        <field name="file_type"/>
+                                        <field name="template_filename"/>
+                                        <field name="write_date"/>
+                                        <field name="file_size"/>
+                                        <button name="action_download" type="object" string="Download" class="btn btn-sm btn-outline-secondary o_tpl_download"/>
+                                        <button name="action_attach_to_onboarding" type="object" string="Attach" class="btn btn-sm btn-outline-secondary o_tpl_attach"/>
+                                    </tree>
+                                </field>
+
+                                <div class="empty-placeholder-container" role="status" aria-live="polite">
+                                    <div class="empty-placeholder">
+                                        <div>No templates available — <button name="action_open_template_library" type="object" class="btn btn-link" aria-label="Open template library">Open Template Library</button></div>
+                                        <div style="margin-top:10px;">
+                                            <button name="action_open_attach_wizard" type="object" class="btn btn-sm btn-outline-secondary" aria-label="Upload template">Upload a template</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT COLUMN: Preview / Details panel -->
+                        <div class="col-right">
+                            <div class="preview-card">
+                                <div class="preview-empty">Select a template to see details</div>
+                                <div class="preview-content" style="display:none">
+                                    <h4 class="tpl-name"/>
+                                    <p class="tpl-meta"></p>
+                                    <p class="tpl-size"/>
+                                    <div class="preview-actions">
+                                        <a class="btn btn-sm btn-outline-secondary tpl-download" role="button">Download</a>
+                                        <a role="button" class="btn btn-sm btn-outline-secondary tpl-edit">Edit</a>
+                                        <a role="button" class="btn btn-sm btn-outline-secondary tpl-delete">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
