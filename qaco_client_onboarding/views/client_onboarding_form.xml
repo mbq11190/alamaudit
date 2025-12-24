@@ -24,16 +24,14 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="audit_id" readonly="1"/>
-                            <field name="client_id" readonly="1"/>
+                        <group string="Basic Information">
                             <field name="entity_type"/>
                             <field name="legal_name"/>
-                        </group>
-                        <group>
-                            <field name="overall_status"/>
-                            <field name="progress_percentage"/>
                             <field name="business_registration_number"/>
+                        </group>
+                        <group string="Status">
+                            <field name="overall_status" widget="badge"/>
+                            <field name="progress_percentage" widget="progressbar"/>
                             <field name="primary_regulator"/>
                         </group>
                     </group>

@@ -1941,6 +1941,7 @@ class OnboardingBranchLocation(models.Model):
 class OnboardingCity(models.Model):
     _name = "qaco.onboarding.city"
     _description = "Onboarding City Reference"
+    _order = "name"
 
     name = fields.Char(string="City", required=True)
     state_id = fields.Many2one(
