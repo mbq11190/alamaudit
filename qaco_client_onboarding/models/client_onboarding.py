@@ -1465,6 +1465,16 @@ class ClientOnboarding(models.Model):
         self._log_action("Updated onboarding", notes=changed_fields)
         return res
 
+    def read(self, fields=None, load='_classic_read'):
+        """Override read to add debug logging."""
+        _logger.info("=" * 80)
+        _logger.info("CLIENT ONBOARDING READ called for IDs: %s", self.ids)
+        _logger.info("Fields requested: %s", fields)
+        result = super().read(fields=fields, load=load)
+        _logger.info("Read result (first record): %s", result[0] if result else "No records")
+        _logger.info("=" * 80)
+        return result
+
     def _populate_checklist_from_templates(self):
         if not self:
             return
