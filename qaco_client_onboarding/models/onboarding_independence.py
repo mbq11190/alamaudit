@@ -92,7 +92,6 @@ class IndependenceThreat(models.Model):
     _name = "qaco.onboarding.independence.threat"
     _description = "Independence Threat Record"
 
-<<<<<<< Updated upstream
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
     )
@@ -121,21 +120,6 @@ class IndependenceThreat(models.Model):
     override_reason = fields.Text(string="Override rationale")
     resolved = fields.Boolean(string="Resolved", default=False)
     resolution_notes = fields.Text(string="Resolution notes")
-=======
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
-    conflict_id = fields.Many2one('qaco.onboarding.conflict', string='Related Conflict', ondelete='cascade', index=True)
-    category = fields.Selection(THREAT_CATEGORIES, string='Threat category')
-    description = fields.Text(string='Description')
-    likelihood = fields.Selection(LIKELIHOOD, string='Likelihood', default='low')
-    impact = fields.Selection(IMPACT, string='Impact', default='low')
-    overall = fields.Selection(OVERALL_RATING, string='Overall risk', compute='_compute_overall', store=True)
-    safeguards = fields.Many2many('qaco.onboarding.safeguard', 'threat_safeguard_rel', 'threat_id', 'safeguard_id', string='Safeguards')
-    safeguards_applied = fields.Text(string='Safeguards applied (details)')
-    manual_override = fields.Selection(OVERALL_RATING, string='Manual override')
-    override_reason = fields.Text(string='Override rationale')
-    resolved = fields.Boolean(string='Resolved', default=False)
-    resolution_notes = fields.Text(string='Resolution notes')
->>>>>>> Stashed changes
 
     @api.depends("likelihood", "impact", "manual_override")
     def _compute_overall(self):
@@ -167,7 +151,6 @@ class IndependenceConflict(models.Model):
     _name = "qaco.onboarding.conflict"
     _description = "Conflict of Interest Register"
 
-<<<<<<< Updated upstream
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
     )
@@ -181,17 +164,6 @@ class IndependenceConflict(models.Model):
     approver_id = fields.Many2one("res.users", string="Approver")
     status = fields.Selection(CONFLICT_STATUS, default="open")
     evidence_attachment = fields.Many2one("ir.attachment", string="Evidence")
-=======
-    onboarding_id = fields.Many2one('qaco.client.onboarding', required=True, ondelete='cascade', index=True)
-    conflict_type = fields.Char(string='Conflict type')
-    parties_involved = fields.Char(string='Parties involved')
-    description = fields.Text(string='Description')
-    threat_ids = fields.One2many('qaco.onboarding.independence.threat', 'conflict_id', string='Threats')
-    proposed_resolution = fields.Text(string='Proposed resolution and safeguards')
-    approver_id = fields.Many2one('res.users', string='Approver')
-    status = fields.Selection(CONFLICT_STATUS, default='open')
-    evidence_attachment = fields.Many2one('ir.attachment', string='Evidence')
->>>>>>> Stashed changes
 
 
 class OnboardingNonAuditService(models.Model):
