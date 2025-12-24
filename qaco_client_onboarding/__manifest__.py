@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "QACO Client Onboarding",
-    "version": "17.0.1.0.6",
+    "version": "17.0.1.0.7",
     "category": "Audit",
     "summary": "Client Onboarding Phase with Auto-Save & Auto-Generated Reports",
     "description": "Client onboarding phase with smart button access from audit.",
