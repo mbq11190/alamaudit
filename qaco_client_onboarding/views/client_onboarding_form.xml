@@ -50,7 +50,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="client_basics" string="1. Client & Engagement Basics">
+                        <page name="client_basics" string="1. Client &amp; Engagement Basics">
                             <group col="2">
                                 <group>
                                     <field name="legal_name"/>
@@ -69,7 +69,7 @@
                             </group>
                         </page>
 
-                        <page name="independence" string="2. Independence & Ethics">
+                        <page name="independence" string="2. Independence &amp; Ethics">
                             <group col="2">
                                 <group>
                                     <field name="independence_declaration_ids" widget="one2many_list"/>
@@ -84,7 +84,7 @@
                             </group>
                         </page>
 
-                        <page name="acceptance" string="3. Acceptance & Risk Assessment">
+                        <page name="acceptance" string="3. Acceptance &amp; Risk Assessment">
                             <group col="2">
                                 <group>
                                     <field name="engagement_score" readonly="1"/>
@@ -102,7 +102,7 @@
                             </group>
                         </page>
 
-                        <page name="documents" string="4. Documents & PBC Status">
+                        <page name="documents" string="4. Documents &amp; PBC Status">
                             <group col="2">
                                 <group>
                                     <field name="required_document_line_ids" widget="one2many_list"/>
