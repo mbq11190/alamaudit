@@ -16,13 +16,32 @@
         <field name="model">qaco.client.onboarding</field>
         <field name="arch" type="xml">
             <form string="Client Onboarding">
+                <header>
+                    <field name="overall_status" widget="statusbar"/>
+                </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Onboarding Name"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="entity_type"/>
-                        <field name="legal_name"/>
-                        <field name="overall_status"/>
+                        <group string="Entity Information">
+                            <field name="entity_type"/>
+                            <field name="legal_name"/>
+                        </group>
+                        <group string="Status">
+                            <field name="progress_percentage" widget="percentage"/>
+                        </group>
                     </group>
+                    <notebook>
+                        <page string="Details">
+                            <group>
+                                <field name="business_registration_number"/>
+                                <field name="primary_regulator"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
