@@ -22,15 +22,21 @@
                         <h1>
                             <field name="name" readonly="1" placeholder="Onboarding Title"/>
                         </h1>
-                        <div class="o_row">
-                            <label for="audit_id" string="Audit:"/>
-                            <field name="audit_id" readonly="1" nolabel="1"/>
-                            <label for="client_id" string="Client:"/>
-                            <field name="client_id" readonly="1" nolabel="1"/>
-                            <label for="overall_status" string="Status:"/>
-                            <field name="overall_status" readonly="1" nolabel="1"/>
-                        </div>
                     </div>
+                    <group>
+                        <group>
+                            <field name="audit_id" readonly="1"/>
+                            <field name="client_id" readonly="1"/>
+                            <field name="entity_type"/>
+                            <field name="legal_name"/>
+                        </group>
+                        <group>
+                            <field name="overall_status"/>
+                            <field name="progress_percentage"/>
+                            <field name="business_registration_number"/>
+                            <field name="primary_regulator"/>
+                        </group>
+                    </group>
                     <notebook class="o_onboarding_tabs">
                         <page name="section_10" string="1.0 - Templates &amp; Docs" class="o_onboarding_tab_page">
                             <div id="section-1-0" class="o_onboarding_card">
