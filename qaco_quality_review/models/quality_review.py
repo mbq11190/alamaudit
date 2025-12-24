@@ -587,7 +587,7 @@ class QualityReview(models.Model):
                 )
                 record.locking_status_message = False
             else:
-                formatted = "<br/>".join("• %s" % alert for alert in alerts)
+                formatted = "<br/>".join("- %s" % alert for alert in alerts)
                 record.locking_alerts_html = formatted
                 record.locking_status_message = "\n".join(alerts)
 

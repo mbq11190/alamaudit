@@ -630,7 +630,7 @@ class Deliverables(models.Model):
             findings = record._collect_gateway_findings()
             if findings:
                 record.outstanding_items_log = "<br/>".join(
-                    f"• {item}" for item in findings
+                    f"- {item}" for item in findings
                 )
                 raise UserError(
                     _("Pre-issuance gateway blocked. Resolve outstanding items.")

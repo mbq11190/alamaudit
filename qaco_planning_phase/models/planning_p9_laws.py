@@ -743,7 +743,7 @@ class PlanningP9Laws(models.Model):
 
         if errors:
             raise UserError(
-                "Cannot complete P-9. Missing requirements:\n• " + "\n• ".join(errors)
+                "Cannot complete P-9. Missing requirements:\n- " + "\n- ".join(errors)
             )
 
     def action_start_work(self):

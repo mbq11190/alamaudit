@@ -817,7 +817,7 @@ class PlanningP1Engagement(models.Model):
                 )
 
         if errors:
-            raise UserError("P-1 Preconditions Not Met:\n• " + "\n• ".join(errors))
+            raise UserError("P-1 Preconditions Not Met:\n- " + "\n- ".join(errors))
 
     # =========================================================================
     # MANDATORY FIELD VALIDATION FOR COMPLETION
@@ -895,7 +895,7 @@ class PlanningP1Engagement(models.Model):
 
         if errors:
             raise UserError(
-                "Cannot complete P-1. Missing requirements:\n• " + "\n• ".join(errors)
+                "Cannot complete P-1. Missing requirements:\n- " + "\n- ".join(errors)
             )
 
     # =========================================================================

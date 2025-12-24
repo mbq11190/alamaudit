@@ -481,13 +481,13 @@ class FitProperTemplateController(http.Controller):
 
         doc.add_paragraph("I hereby confirm that:").bold = True
         doc.add_paragraph(
-            "• The information provided above is true, complete, and accurate."
+            "- The information provided above is true, complete, and accurate."
         )
         doc.add_paragraph(
-            "• I have disclosed all relevant information, including conflicts of interest and regulatory matters."
+            "- I have disclosed all relevant information, including conflicts of interest and regulatory matters."
         )
         doc.add_paragraph(
-            "• I undertake to immediately inform the Company and auditors of any material change affecting my Fit & Proper status."
+            "- I undertake to immediately inform the Company and auditors of any material change affecting my Fit & Proper status."
         )
         doc.add_paragraph()
         doc.add_paragraph(
@@ -501,10 +501,10 @@ class FitProperTemplateController(http.Controller):
         doc.add_paragraph(
             "We confirm that the Fit & Proper assessment and confirmation has been conducted and reviewed in accordance with:"
         ).bold = True
-        doc.add_paragraph("• Companies Act, 2017")
-        doc.add_paragraph("• ISQM-1")
-        doc.add_paragraph("• IESBA Code of Ethics")
-        doc.add_paragraph("• SECP / SBP / applicable regulatory requirements")
+        doc.add_paragraph("- Companies Act, 2017")
+        doc.add_paragraph("- ISQM-1")
+        doc.add_paragraph("- IESBA Code of Ethics")
+        doc.add_paragraph("- SECP / SBP / applicable regulatory requirements")
         doc.add_paragraph()
         doc.add_paragraph(
             "Engagement Partner: ________________________________     Date: ________________"

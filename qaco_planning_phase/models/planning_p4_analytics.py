@@ -1299,8 +1299,8 @@ and the overall audit strategy.</strong></p>""",
             errors = rec._validate_for_completion()
             if errors:
                 raise UserError(
-                    "Cannot complete P-4. Missing requirements:\n• "
-                    + "\n• ".join(errors)
+                    "Cannot complete P-4. Missing requirements:\n- "
+                    + "\n- ".join(errors)
                 )
             rec.prepared_by_id = self.env.user
             rec.prepared_on = fields.Datetime.now()
@@ -1327,8 +1327,8 @@ and the overall audit strategy.</strong></p>""",
             errors = rec._validate_for_approval()
             if errors:
                 raise UserError(
-                    "Cannot approve P-4. Missing requirements:\n• "
-                    + "\n• ".join(errors)
+                    "Cannot approve P-4. Missing requirements:\n- "
+                    + "\n- ".join(errors)
                 )
             if not rec.partner_comments:
                 raise UserError("Partner comments are mandatory for approval.")

@@ -911,12 +911,12 @@ class FinalisationPhase(models.Model):
                 <p>Date: {date_text}</p>
                 <p>To the auditors of {client_name},</p>
                 <p>This letter accompanies the issuance of an <strong>{record.final_opinion.title()}</strong> opinion on the financial statements.</p>
-                <p>• We acknowledge our responsibility for the fair presentation of the financial statements in accordance with the applicable financial reporting framework.</p>
-                <p>• We confirm that we have disclosed all known instances of fraud, suspected fraud, and non-compliance with laws and regulations that could impact the financial statements.</p>
-                <p>• {going_concern_clause}</p>
-                <p>• Subsequent events up to the audit report date have been evaluated and appropriately adjusted or disclosed.</p>
-                <p>• All related party relationships and transactions have been recorded and disclosed.</p>
-                <p>• We have communicated the qualitative and quantitative evaluation of uncorrected misstatements and confirm our view that they do not individually or cumulatively result in material misstatement.</p>
+                <p>- We acknowledge our responsibility for the fair presentation of the financial statements in accordance with the applicable financial reporting framework.</p>
+                <p>- We confirm that we have disclosed all known instances of fraud, suspected fraud, and non-compliance with laws and regulations that could impact the financial statements.</p>
+                <p>- {going_concern_clause}</p>
+                <p>- Subsequent events up to the audit report date have been evaluated and appropriately adjusted or disclosed.</p>
+                <p>- All related party relationships and transactions have been recorded and disclosed.</p>
+                <p>- We have communicated the qualitative and quantitative evaluation of uncorrected misstatements and confirm our view that they do not individually or cumulatively result in material misstatement.</p>
                 {regulator_section}
                 <p>Signed on behalf of management,</p>
             """
@@ -1012,7 +1012,7 @@ class FinalisationPhase(models.Model):
             record.checklist_compliance_scan = record.compliance_scan_passed
             if findings:
                 record.compliance_scan_log = "<br/>".join(
-                    f"• {finding}" for finding in findings
+                    f"- {finding}" for finding in findings
                 )
                 raise UserError(
                     _("Compliance scan failed. Resolve findings to proceed.")

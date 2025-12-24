@@ -860,7 +860,7 @@ class PlanningP2Entity(models.Model):
                 )
 
         if errors:
-            raise UserError("P-2 Preconditions Not Met:\n• " + "\n• ".join(errors))
+            raise UserError("P-2 Preconditions Not Met:\n- " + "\n- ".join(errors))
 
     # =========================================================================
     # MANDATORY FIELD VALIDATION FOR COMPLETION
@@ -944,7 +944,7 @@ class PlanningP2Entity(models.Model):
 
         if errors:
             raise UserError(
-                "Cannot complete P-2. Missing requirements:\n• " + "\n• ".join(errors)
+                "Cannot complete P-2. Missing requirements:\n- " + "\n- ".join(errors)
             )
 
     # =========================================================================

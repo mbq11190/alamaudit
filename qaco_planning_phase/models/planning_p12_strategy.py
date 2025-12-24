@@ -816,7 +816,7 @@ class PlanningP12Strategy(models.Model):
         if errors:
             raise UserError(
                 _("P-12 Pre-Conditions Not Met:\n\n")
-                + "\n".join(["• " + e for e in errors])
+                + "\n".join(["- " + e for e in errors])
                 + _(
                     "\n\nAll planning phases P-1 through P-11 must be partner-approved and locked before P-12 can be created."
                 )
@@ -964,7 +964,7 @@ class PlanningP12Strategy(models.Model):
         if errors:
             raise UserError(
                 _("Cannot progress P-12. Missing requirements:\n\n")
-                + "\n".join(["• " + e for e in errors])
+                + "\n".join(["- " + e for e in errors])
             )
 
     # ============================================================================

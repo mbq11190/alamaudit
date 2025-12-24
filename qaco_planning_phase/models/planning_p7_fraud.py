@@ -733,7 +733,7 @@ class PlanningP7Fraud(models.Model):
             errors.append("Fraud risk memo is required")
         if errors:
             raise UserError(
-                "Cannot complete P-7. Missing requirements:\n• " + "\n• ".join(errors)
+                "Cannot complete P-7. Missing requirements:\n- " + "\n- ".join(errors)
             )
 
     def action_start_work(self):

@@ -814,7 +814,7 @@ class PlanningP8GoingConcern(models.Model):
             errors.append("Going concern summary is required")
         if errors:
             raise UserError(
-                "Cannot complete P-8. Missing requirements:\n• " + "\n• ".join(errors)
+                "Cannot complete P-8. Missing requirements:\n- " + "\n- ".join(errors)
             )
 
     def action_start_work(self):

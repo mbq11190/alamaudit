@@ -1307,7 +1307,7 @@ class PlanningP3Controls(models.Model):
 
         if errors:
             raise UserError(
-                "Cannot complete P-3. Missing requirements:\n• " + "\n• ".join(errors)
+                "Cannot complete P-3. Missing requirements:\n- " + "\n- ".join(errors)
             )
 
     def _validate_documents(self):
@@ -1320,7 +1320,7 @@ class PlanningP3Controls(models.Model):
             errors.append("Walkthrough documentation must be uploaded")
         if errors:
             raise UserError(
-                "Cannot complete P-3. Missing documents:\n• " + "\n• ".join(errors)
+                "Cannot complete P-3. Missing documents:\n- " + "\n- ".join(errors)
             )
 
     # =========================================================================

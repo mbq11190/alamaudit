@@ -1120,8 +1120,8 @@ quantitative and qualitative factors, and are appropriate for planning and perfo
             errors = rec._validate_for_completion()
             if errors:
                 raise UserError(
-                    "Cannot complete P-5. Missing requirements:\n• "
-                    + "\n• ".join(errors)
+                    "Cannot complete P-5. Missing requirements:\n- "
+                    + "\n- ".join(errors)
                 )
             rec.prepared_by_id = self.env.user
             rec.prepared_on = fields.Datetime.now()
@@ -1148,8 +1148,8 @@ quantitative and qualitative factors, and are appropriate for planning and perfo
             errors = rec._validate_for_approval()
             if errors:
                 raise UserError(
-                    "Cannot approve P-5. Missing requirements:\n• "
-                    + "\n• ".join(errors)
+                    "Cannot approve P-5. Missing requirements:\n- "
+                    + "\n- ".join(errors)
                 )
             if not rec.partner_comments:
                 raise UserError("Partner comments are mandatory for approval.")
