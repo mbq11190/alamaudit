@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "QACO Client Onboarding",
-    "version": "17.0.1.0.7",
+    "version": "17.0.1.0.8",
     "category": "Audit",
     "summary": "Client Onboarding Phase with Auto-Save & Auto-Generated Reports",
     "description": "Client onboarding phase with smart button access from audit.",
@@ -17,7 +17,7 @@
         "data/audit_onboarding_checklist_data.xml",
         "data/onboarding_seed.xml",
         "data/independence_seed.xml",
-        "data/fix_attach_button_override.xml",
+        # "data/fix_attach_button_override.xml",  # Disabled - these placeholder views were causing blank form
         "data/document_vault_security.xml",
         "data/document_vault_taxonomy.xml",
         "data/decision_drivers.xml",
