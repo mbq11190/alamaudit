@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-<<<<<<< Updated upstream
     "name": "QACO Client Onboarding",
     "version": "17.0.1.7.1",
     "category": "Audit",
     "summary": "Client Onboarding Phase with Auto-Save & Auto-Generated Reports",
     "description": """
-=======
-    'name': 'QACO Client Onboarding',
-    'version': '17.0.1.7.1',
-    'category': 'Audit',
-    'summary': 'Client Onboarding Phase with Auto-Save & Auto-Generated Reports',
-    'description': """
->>>>>>> Stashed changes
 Client Onboarding Module
 ========================
 Client onboarding phase with smart button access from audit.
