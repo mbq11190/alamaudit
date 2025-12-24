@@ -342,7 +342,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="UBOs & Beneficial Ownership" class="o_onboarding_grid">
+                                <group string="UBOs &amp; Beneficial Ownership" class="o_onboarding_grid">
                                     <field name="ubo_ids" nolabel="1">
                                         <tree editable="bottom">
                                             <field name="name"/>
@@ -360,7 +360,7 @@
                                     <field name="ubo_identification_method"/>
                                     <field name="ubo_section_complete"/>
                                 </group>
-                                <group string="Group Structure & Components" class="o_onboarding_grid">
+                                <group string="Group Structure &amp; Components" class="o_onboarding_grid">
                                     <field name="group_status"/>
                                     <field name="group_component_ids">
                                         <tree editable="bottom">
@@ -466,7 +466,7 @@
                                     <field name="reason_for_appointment"/>
                                     <field name="deadline_constraints"/>
                                 </group>
-                                <group string="Client integrity & background" class="o_onboarding_grid">
+                                <group string="Client integrity &amp; background" class="o_onboarding_grid">
                                     <field name="integrity_history_noncompliance"/>
                                     <field name="integrity_aggressive_accounting"/>
                                     <field name="integrity_scope_limitations"/>
@@ -547,7 +547,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="Acceptance decision & safeguards" class="o_onboarding_grid">
+                                <group string="Acceptance decision &amp; safeguards" class="o_onboarding_grid">
                                     <field name="engagement_decision"/>
                                     <field name="decision_conditions"/>
                                     <field name="eqcr_required"/>
@@ -606,7 +606,7 @@
                                                 </tree>
                                             </field>
                                         </group>
-                                        <group string="Independence relationships & disclosures" class="o_onboarding_grid">
+                                        <group string="Independence relationships &amp; disclosures" class="o_onboarding_grid">
                                             <field name="fee_dependency_flag" readonly="1"/>
                                             <field name="prior_services_summary" readonly="1"/>
                                             <field name="long_association_years" readonly="1"/>
@@ -687,11 +687,11 @@
                                             <field name="proposed_appointment_date"/>
                                             <field name="reason_for_change"/>
                                         </group>
-                                        <group string="Consent & Authority" class="o_onboarding_grid">
+                                        <group string="Consent &amp; Authority" class="o_onboarding_grid">
                                             <field name="client_authorization"/>
                                             <field name="authorization_attachment" widget="binary"/>
                                         </group>
-                                        <group string="Dispatch & follow-up" class="o_onboarding_grid">
+                                        <group string="Dispatch &amp; follow-up" class="o_onboarding_grid">
                                             <field name="predecessor_request_ids">
                                                 <tree editable="bottom">
                                                     <field name="sent_date"/>
@@ -704,7 +704,7 @@
                                             </field>
                                         </group>
                                     </page>
-                                    <page name="responses_issues" string="Responses & Issues Log">
+                                    <page name="responses_issues" string="Responses &amp; Issues Log">
                                         <group string="Responses" class="o_onboarding_grid">
                                             <field name="predecessor_response_ids">
                                                 <tree editable="bottom">
