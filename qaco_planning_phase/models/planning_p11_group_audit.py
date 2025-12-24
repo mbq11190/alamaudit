@@ -546,8 +546,6 @@ class PlanningP11GroupAudit(models.Model):
             raise UserError(
                 _("P-11 Pre-Conditions Not Met:\n\n")
                 + "\n".join(["- " + e for e in errors])
-            )
-        
         result = super(PlanningP11GroupAudit, self).write(vals)
         if any(key in vals for key in ["state", "partner_approved"]):
             self._log_version(f"Updated: {vals.get('state', 'state change')}")
