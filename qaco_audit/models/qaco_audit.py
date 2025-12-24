@@ -246,6 +246,24 @@ class Qacoaudit(models.Model):
         tracking=True,
     )
 
+    # Computed flag to control visibility of Client Onboarding top tab/button
+    show_onboarding_tab = fields.Boolean(
+        string="Show Onboarding Tab",
+        compute="_compute_show_onboarding_tab",
+        store=True,
+    )
+
+    @api.depends("engagement_status", "stage_id", "stage_id.name")
+    def _compute_show_onboarding_tab(self):
+        """Show the onboarding tab when engagement is in draft OR the audit stage
+        matches assignment/planning stages. Using a computed boolean keeps view
+        logic simple and stable across UI changes."""
+        for rec in self:
+            is_draft_status = rec.engagement_status == "draft"
+            stage_name = (rec.stage_id.name or "").strip().lower() if rec.stage_id else ""
+            is_assign_or_planning = stage_name in ("assign", "planning")
+            rec.show_onboarding_tab = is_draft_status or is_assign_or_planning
+
     lock_reason = fields.Text(string="Lock / Unlock Rationale")
     locked_on = fields.Datetime(string="Locked On")
     locked_by = fields.Many2one("res.users", string="Locked By")

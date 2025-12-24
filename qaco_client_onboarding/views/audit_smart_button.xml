@@ -23,7 +23,7 @@
                 <button class="oe_stat_button" type="object"
                         name="action_open_client_onboarding"
                         icon="fa-user-check"
-                        invisible="not (engagement_status == 'draft' or stage_id.name == 'Assign' or stage_id.name == 'Planning')">
+                        invisible="not show_onboarding_tab">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Client</span>
                         <span class="o_stat_text">Onboarding</span>
