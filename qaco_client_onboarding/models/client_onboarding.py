@@ -129,6 +129,14 @@ class ClientOnboarding(models.Model):
         store=False,
     )
 
+    # Expose audit's Engagement Status on onboarding for UI/statusbar display
+    engagement_status = fields.Selection(
+        related="audit_id.engagement_status",
+        string="Engagement Status",
+        readonly=True,
+        store=False,
+    )
+
     # Section 0: Gateway fields
     entity_type = fields.Selection(
         ENTITY_SELECTION, string="Entity Type", required=True, tracking=True
