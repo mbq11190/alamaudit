@@ -87,15 +87,21 @@
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-4">
-                                        <field name="ntn" class="w-100" help="NTN must follow the NNNNNNN-N format for validation."/>
-                                    <field name="withholding_agent" class="w-100"/>
-                                    <field name="other_statutory_registrations" class="w-100"/>
+                                        <group>
+                                            <field name="ntn" class="w-100" help="NTN must follow the NNNNNNN-N format for validation."/>
+                                            <field name="withholding_agent" class="w-100"/>
+                                            <field name="other_statutory_registrations" class="w-100"/>
+                                        </group>
                                     </div>
                                     <div class="col-md-4">
-                                        <field name="strn" class="w-100" help="Provide the Sales Tax Registration Number if applicable."/>
+                                        <group>
+                                            <field name="strn" class="w-100" help="Provide the Sales Tax Registration Number if applicable."/>
+                                        </group>
                                     </div>
                                     <div class="col-md-4">
-                                        <field name="business_registration_number" class="w-100" help="Enter the number assigned by SECP or relevant authority."/>
+                                        <group>
+                                            <field name="business_registration_number" class="w-100" help="Enter the number assigned by SECP or relevant authority."/>
+                                        </group>
                                     </div>
                                 </div>
                                 <group class="o_onboarding_grid">
