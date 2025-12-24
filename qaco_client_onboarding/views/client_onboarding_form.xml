@@ -52,9 +52,6 @@
                                     <span class="o_onboarding_card_title">Legal Identity</span>
                                     <span class="o_onboarding_card_ref">ISA 210 / ISQM-1 | Companies Act 2017 (inc. registration obligations) | SECP rules</span>
                                 </div>
-                                <group>
-                                    <span class="text-muted ms-2">Purpose: capture &amp; verify client's legal existence and authorised signatories. Reference: ISA 210, ISQM-1, Companies Act 2017. (Fields under this section drive legal verifications and must be completed during pre-onboarding.)</span>
-                                </group>
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
