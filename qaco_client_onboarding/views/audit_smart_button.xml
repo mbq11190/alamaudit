@@ -20,6 +20,8 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
+                <!-- Required by Odoo 17: any field used in modifiers must be present in the view -->
+                <field name="show_onboarding_tab" invisible="1"/>
                 <button class="oe_stat_button" type="object"
                         name="action_open_client_onboarding"
                         icon="fa-user-check"
