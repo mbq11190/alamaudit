@@ -17,17 +17,18 @@
         <field name="model">qaco.client.onboarding</field>
         <field name="arch" type="xml">
             <form string="Client Onboarding" class="o_onboarding_form">
-                <header>
-                    <field name="overall_status" widget="statusbar" options="{'clickable': '1'}"/>
-                </header>
                 <sheet class="o_onboarding_sheet">
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1" placeholder="Onboarding Title"/>
                         </h1>
                         <div class="o_row">
-                            <field name="audit_id" readonly="1"/>
-                            <field name="client_id" readonly="1"/>
+                            <label for="audit_id" string="Audit:"/>
+                            <field name="audit_id" readonly="1" nolabel="1"/>
+                            <label for="client_id" string="Client:"/>
+                            <field name="client_id" readonly="1" nolabel="1"/>
+                            <label for="overall_status" string="Status:"/>
+                            <field name="overall_status" readonly="1" nolabel="1"/>
                         </div>
                     </div>
                     <notebook class="o_onboarding_tabs">
