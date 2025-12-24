@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "QACO Client Onboarding",
-    "version": "17.0.1.0.2",
+    "version": "17.0.1.0.3",
     "category": "Audit",
     "summary": "Client Onboarding Phase with Auto-Save & Auto-Generated Reports",
     "description": "Client onboarding phase with smart button access from audit.",
@@ -32,7 +32,7 @@
         "data/decision_menu.xml",
         "data/document_vault_menu.xml",
         "views/onboarding_attach_wizard_views.xml",
-        "views/client_onboarding_template_section.xml",
+        # "views/client_onboarding_template_section.xml",  # Temporarily disabled - models need _order defined
         "views/audit_smart_button.xml",
         "views/notebook_views.xml",
         "reports/client_onboarding_report.xml",
