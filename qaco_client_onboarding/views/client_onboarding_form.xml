@@ -673,27 +673,19 @@
                                 </div>
                                 <notebook class="o_onboarding_subtabs">
                                     <page name="clearance_request" string="Clearance Request">
-                                        <group string="Predecessor details" class="o_onboarding_grid">
+                                        <group string="Predecessor details (Legacy)" class="o_onboarding_grid">
                                             <field name="predecessor_auditor_name"/>
                                             <field name="predecessor_contact"/>
-                                            <field name="predecessor_email"/>
-                                            <field name="predecessor_phone"/>
-                                            <field name="predecessor_address"/>
-                                            <field name="regulatory_ref"/>
-                                        </group>
-                                        <group string="Appointment context" class="o_onboarding_grid">
-                                            <field name="engagement_type"/>
-                                            <field name="reporting_period"/>
-                                            <field name="proposed_appointment_date"/>
-                                            <field name="reason_for_change"/>
-                                        </group>
-                                        <group string="Consent &amp; Authority" class="o_onboarding_grid">
-                                            <field name="client_authorization"/>
-                                            <field name="authorization_attachment" widget="binary"/>
                                         </group>
                                         <group string="Dispatch &amp; follow-up" class="o_onboarding_grid">
                                             <field name="predecessor_request_ids">
                                                 <tree editable="bottom">
+                                                    <field name="predecessor_firm"/>
+                                                    <field name="predecessor_partner"/>
+                                                    <field name="predecessor_email"/>
+                                                    <field name="predecessor_phone"/>
+                                                    <field name="engagement_type"/>
+                                                    <field name="reporting_period"/>
                                                     <field name="sent_date"/>
                                                     <field name="sent_mode"/>
                                                     <field name="sent_by"/>
