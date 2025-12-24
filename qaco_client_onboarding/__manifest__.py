@@ -58,7 +58,7 @@ Features:
         "data/decision_menu.xml",
         "data/document_vault_menu.xml",
         "views/onboarding_attach_wizard_views.xml",
-        "views/client_onboarding_template_section.xml",
+        # "views/client_onboarding_template_section.xml",  # Temporarily disabled - requires full form structure
         "views/audit_smart_button.xml",
         "views/notebook_views.xml",
         "reports/client_onboarding_report.xml",
