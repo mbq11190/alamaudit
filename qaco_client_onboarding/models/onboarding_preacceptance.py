@@ -44,6 +44,7 @@ RISK_RATING = [
 class OnboardingAdverseMedia(models.Model):
     _name = "qaco.onboarding.adverse.media"
     _description = "Adverse media / reputation evidence"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -57,6 +58,7 @@ class OnboardingAdverseMedia(models.Model):
 class OnboardingSanctionsScreen(models.Model):
     _name = "qaco.onboarding.sanctions.screen"
     _description = "Sanctions / PEP Screening Record"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -89,6 +91,7 @@ class OnboardingSanctionsScreen(models.Model):
 class OnboardingFeeTerms(models.Model):
     _name = "qaco.onboarding.fee.terms"
     _description = "Fee & Collection Terms"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -128,6 +131,7 @@ class OnboardingFeeTerms(models.Model):
 class OnboardingConditionalAcceptance(models.Model):
     _name = "qaco.onboarding.conditional.acceptance"
     _description = "Conditional Acceptance Tracker"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -147,6 +151,7 @@ class OnboardingConditionalAcceptance(models.Model):
 class OnboardingRiskScoreDriver(models.Model):
     _name = "qaco.onboarding.risk.driver"
     _description = "Engagement Risk Driver (scoring)"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True

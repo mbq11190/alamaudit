@@ -1904,6 +1904,7 @@ class ClientOnboarding(models.Model):
 class OnboardingBranchLocation(models.Model):
     _name = "qaco.onboarding.branch.location"
     _description = "Onboarding Branch / Office Location"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -1999,6 +2000,7 @@ class OnboardingCity(models.Model):
 class OnboardingUBO(models.Model):
     _name = "qaco.onboarding.ubo"
     _description = "Ultimate Beneficial Owner"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2059,6 +2061,7 @@ class OnboardingUBO(models.Model):
 class OnboardingSignatory(models.Model):
     _name = "qaco.onboarding.signatory"
     _description = "Authorized Signatory"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2081,6 +2084,7 @@ class OnboardingSignatory(models.Model):
 class OnboardingVerificationException(models.Model):
     _name = "qaco.onboarding.verification.exception"
     _description = "Verification Exception / Mismatch"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2107,6 +2111,7 @@ class OnboardingVerificationException(models.Model):
 class OnboardingShareholder(models.Model):
     _name = "qaco.onboarding.shareholder"
     _description = "Shareholder Pattern"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2139,6 +2144,7 @@ class OnboardingShareholder(models.Model):
 class OnboardingShareCapitalMovement(models.Model):
     _name = "qaco.onboarding.sharecapital.movement"
     _description = "Share Capital Movement"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2167,6 +2173,7 @@ class OnboardingShareCapitalMovement(models.Model):
 class OnboardingGroupComponent(models.Model):
     _name = "qaco.onboarding.group.component"
     _description = "Group Component / Entity"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2207,6 +2214,7 @@ class OnboardingGroupComponent(models.Model):
 class OnboardingRelatedParty(models.Model):
     _name = "qaco.onboarding.related.party"
     _description = "Related Party Master List"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2221,6 +2229,7 @@ class OnboardingRelatedParty(models.Model):
 class OnboardingKMP(models.Model):
     _name = "qaco.onboarding.kmp"
     _description = "Key Management Personnel"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2233,6 +2242,7 @@ class OnboardingKMP(models.Model):
 class OnboardingBoardMember(models.Model):
     _name = "qaco.onboarding.board.member"
     _description = "Board Member or Key Personnel"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2256,6 +2266,7 @@ class OnboardingBoardMember(models.Model):
 class OnboardingIndustry(models.Model):
     _name = "qaco.onboarding.industry"
     _description = "Industry / Sector Reference"
+    _order = "id"
 
     name = fields.Char(string="Industry / Sector", required=True)
     risk_category = fields.Selection(
@@ -2269,6 +2280,7 @@ class OnboardingIndustry(models.Model):
 class OnboardingIndependenceThreat(models.Model):
     _name = "qaco.onboarding.independence.threat"
     _description = "Independence Threat Checklist"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2284,6 +2296,7 @@ class OnboardingIndependenceThreat(models.Model):
 class OnboardingDocument(models.Model):
     _name = "qaco.onboarding.document"
     _description = "Document Vault Entry"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2310,6 +2323,7 @@ class OnboardingDocument(models.Model):
 class OnboardingChecklistTemplate(models.Model):
     _name = "qaco.onboarding.checklist.template"
     _description = "Engagement Partner Decision Template"
+    _order = "id"
 
     question = fields.Char(string="Checklist Question", required=True)
     category = fields.Char(string="Checklist Category")
@@ -2319,6 +2333,7 @@ class OnboardingChecklistTemplate(models.Model):
 class OnboardingChecklistLine(models.Model):
     _name = "qaco.onboarding.checklist.line"
     _description = "Checklist Answer"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2344,6 +2359,7 @@ class OnboardingChecklistLine(models.Model):
 class OnboardingIndependenceDeclaration(models.Model):
     _name = "qaco.onboarding.independence.declaration"
     _description = "Individual Independence Declaration"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2361,6 +2377,7 @@ class OnboardingIndependenceDeclaration(models.Model):
 class OnboardingPreconditionTemplate(models.Model):
     _name = "qaco.onboarding.precondition.template"
     _description = "ISA 210 Precondition Template"
+    _order = "id"
 
     description = fields.Char(string="Precondition", required=True)
 
@@ -2368,6 +2385,7 @@ class OnboardingPreconditionTemplate(models.Model):
 class OnboardingPreconditionLine(models.Model):
     _name = "qaco.onboarding.precondition.line"
     _description = "ISA 210 Precondition Confirmation"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -2382,6 +2400,7 @@ class OnboardingPreconditionLine(models.Model):
 class OnboardingAuditTrail(models.Model):
     _name = "qaco.onboarding.audit.trail"
     _description = "Client Onboarding Audit Trail"
+    _order = "id"
 
     ACTION_TYPES = [
         ("activity", "Activity"),

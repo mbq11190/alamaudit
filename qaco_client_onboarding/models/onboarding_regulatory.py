@@ -57,6 +57,7 @@ class OnboardingRegulator(models.Model):
 
     _name = "qaco.onboarding.regulator"
     _description = "Regulator (Master List)"
+    _order = "id"
 
     name = fields.Char(string="Regulator Name", required=True)
     code = fields.Char(string="Code")
@@ -65,6 +66,7 @@ class OnboardingRegulator(models.Model):
 class OnboardingRegulatorContact(models.Model):
     _name = "qaco.onboarding.regulator.contact"
     _description = "Regulator Contact"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -79,6 +81,7 @@ class OnboardingRegulatorContact(models.Model):
 class OnboardingLicense(models.Model):
     _name = "qaco.onboarding.license"
     _description = "License / Approval"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -131,6 +134,7 @@ class OnboardingLicense(models.Model):
 class OnboardingFiling(models.Model):
     _name = "qaco.onboarding.filing"
     _description = "Statutory Filing"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -198,6 +202,7 @@ class OnboardingFiling(models.Model):
 class OnboardingDispute(models.Model):
     _name = "qaco.onboarding.dispute"
     _description = "Legal matter, litigation or dispute"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -232,6 +237,7 @@ class OnboardingDispute(models.Model):
 class OnboardingNonCompliance(models.Model):
     _name = "qaco.onboarding.noncompliance"
     _description = "Prior non-compliance & remediation"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -275,6 +281,7 @@ class OnboardingNonCompliance(models.Model):
 class OnboardingRequiredDocument(models.Model):
     _name = "qaco.onboarding.required.document"
     _description = "Required document row for Regulatory & Compliance"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True

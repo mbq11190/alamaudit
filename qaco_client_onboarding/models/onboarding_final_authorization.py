@@ -34,6 +34,7 @@ CONDITION_STATUS = [
 class FinalAuthorizationCondition(models.Model):
     _name = "qaco.onboarding.final.authorization.condition"
     _description = "Final authorization condition"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -52,6 +53,7 @@ class FinalAuthorizationCondition(models.Model):
 class FinalAuthorization(models.Model):
     _name = "qaco.onboarding.final.authorization"
     _description = "Final Authorization Record"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True

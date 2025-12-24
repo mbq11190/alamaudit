@@ -32,6 +32,7 @@ FOLDER_STATUS = [
 class OnboardingDocumentFolder(models.Model):
     _name = "qaco.onboarding.document.folder"
     _description = "Onboarding Document Folder"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=False, ondelete="cascade", index=True
@@ -62,6 +63,7 @@ class OnboardingDocumentFolder(models.Model):
 class OnboardingDocumentHistory(models.Model):
     _name = "qaco.onboarding.document.history"
     _description = "Onboarding Document History (versions)"
+    _order = "id"
 
     document_id = fields.Many2one(
         "qaco.onboarding.document", required=True, ondelete="cascade", index=True
@@ -80,6 +82,7 @@ class OnboardingDocumentHistory(models.Model):
 class OnboardingDocumentAudit(models.Model):
     _name = "qaco.onboarding.document.audit"
     _description = "Document Vault Audit Log"
+    _order = "id"
 
     document_id = fields.Many2one(
         "qaco.onboarding.document", required=True, ondelete="cascade", index=True

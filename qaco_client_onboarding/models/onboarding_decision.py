@@ -247,6 +247,7 @@ class OnboardingDecision(models.Model):
 class DecisionDriver(models.Model):
     _name = "qaco.onboarding.decision.driver"
     _description = "Decision Risk Driver"
+    _order = "id"
 
     code = fields.Char(string="Code", required=True)
     name = fields.Char(string="Driver", required=True)

@@ -74,6 +74,7 @@ GIFT_DECISIONS = [
 class IndependenceDeclaration(models.Model):
     _name = "qaco.onboarding.independence.declaration"
     _description = "Independence Declaration (engagement team and firm level)"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -91,6 +92,7 @@ class IndependenceDeclaration(models.Model):
 class IndependenceThreat(models.Model):
     _name = "qaco.onboarding.independence.threat"
     _description = "Independence Threat Record"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -141,6 +143,7 @@ class IndependenceThreat(models.Model):
 class IndependenceSafeguard(models.Model):
     _name = "qaco.onboarding.safeguard"
     _description = "Independence Safeguard master"
+    _order = "id"
 
     code = fields.Char(string="Code", required=True)
     name = fields.Char(string="Safeguard", required=True)
@@ -150,6 +153,7 @@ class IndependenceSafeguard(models.Model):
 class IndependenceConflict(models.Model):
     _name = "qaco.onboarding.conflict"
     _description = "Conflict of Interest Register"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -169,6 +173,7 @@ class IndependenceConflict(models.Model):
 class OnboardingNonAuditService(models.Model):
     _name = "qaco.onboarding.non.audit"
     _description = "Non-Audit Service record"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -191,6 +196,7 @@ class OnboardingNonAuditService(models.Model):
 class OnboardingGiftLog(models.Model):
     _name = "qaco.onboarding.gift"
     _description = "Gifts & Hospitality Log"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True

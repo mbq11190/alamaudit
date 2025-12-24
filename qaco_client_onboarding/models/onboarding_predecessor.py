@@ -41,6 +41,7 @@ IMPACT = [
 class PredecessorRequest(models.Model):
     _name = "qaco.onboarding.predecessor.request"
     _description = "Predecessor clearance request record"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -248,6 +249,7 @@ class PredecessorRequest(models.Model):
 class PredecessorFollowup(models.Model):
     _name = "qaco.onboarding.predecessor.followup"
     _description = "Predecessor follow-up attempt"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
@@ -265,6 +267,7 @@ class PredecessorFollowup(models.Model):
 class PredecessorResponse(models.Model):
     _name = "qaco.onboarding.predecessor.response"
     _description = "Predecessor response / issues log"
+    _order = "id"
 
     onboarding_id = fields.Many2one(
         "qaco.client.onboarding", required=True, ondelete="cascade", index=True
