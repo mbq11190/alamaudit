@@ -70,7 +70,8 @@ if args.db:
         lines.append('-- Suggestion: archive these models into a review table for manual inspection')
         lines.append("-- CREATE TABLE IF NOT EXISTS scripts_ir_model_review (id serial primary key, model text, notes text, created_at timestamptz default now());")
         for m in candidates:
-            lines.append(f"-- INSERT INTO scripts_ir_model_review (model, notes) VALUES ('{m.replace("'","''")}', 'candidate for review by generate_candidate_patch');")
+            safe_m = m.replace("'", "''")
+            lines.append("-- INSERT INTO scripts_ir_model_review (model, notes) VALUES ('" + safe_m + "', 'candidate for review by generate_candidate_patch');")
         lines.append('-- UNDO: DELETE FROM scripts_ir_model_review WHERE model IN (...);\n')
 
     # 2) Crons referencing models not in repo

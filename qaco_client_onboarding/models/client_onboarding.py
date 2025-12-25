@@ -383,6 +383,109 @@ class ClientOnboarding(models.Model):
         for rec in self:
             rec.signatory_count = len(rec.signatory_ids)
 
+    # ------------------------------------------------------------
+    # Auto-save RPC helpers (used by frontend onboarding_autosave.esm.js)
+    # ------------------------------------------------------------
+    @api.model
+    def get_autosave_status(self, ids):
+        """Return a minimal status dict used by the frontend auto-save controller.
+
+        Expected input: a list containing a single record id (e.g. [resId]).
+        Returns: {'is_locked': bool}
+        """
+        if not ids:
+            return {"is_locked": False}
+        rec = self.browse(ids[0])
+        if not rec.exists():
+            return {"is_locked": False}
+        return {"is_locked": rec.state in ("partner_approved", "locked")}
+
+    @api.model
+    def autosave(self, record_id, changes):
+        """Perform a safe, whitelist-based autosave for a given onboarding record.
+
+        Only fields in the whitelist are accepted to avoid accidental or malicious writes.
+        Returns: {"status": "saved"|"locked"|"error", "message": ...}
+        """
+        rec = self.browse(record_id)
+        if not rec.exists():
+            return {"status": "error", "message": "Record not found"}
+
+        if rec.state in ("partner_approved", "locked"):
+            return {"status": "locked"}
+
+        # Whitelist of fields allowed for autosave
+        allowed_fields = {
+            # Notes / narrative fields
+            "notes_10",
+            "notes_11",
+            "notes_12",
+            "notes_13",
+            "notes_14",
+            "notes_15",
+            "notes_16",
+            "notes_17",
+            "notes_18",
+            "notes_19",
+            "notes_110",
+            # Selection / text fields
+            "entity_type",
+            "other_entity_description",
+            "primary_regulator",
+            "other_regulator_description",
+            "financial_framework",
+            "other_framework_description",
+            "management_integrity",
+            "client_acceptance_decision",
+            "engagement_decision",
+            "engagement_justification",
+            "fam_final_decision",
+            "fam_safeguards_imposed",
+            "fam_rejection_reason",
+            # Narrative fields
+            "industry_overview",
+            "regulatory_environment",
+            "fraud_risk_narrative",
+            "going_concern_narrative",
+            "related_party_narrative",
+            "significant_risks_narrative",
+            "it_environment_narrative",
+            "group_audit_narrative",
+            "aml_overall_assessment",
+            "aml_conclusion",
+            "communication_narrative",
+            "resource_plan_narrative",
+            # Risk fields
+            "inherent_risk_assessment",
+            "fraud_risk_level",
+            "going_concern_indicator",
+            "related_party_risk",
+            "aml_country_risk",
+            "aml_customer_risk",
+            "aml_product_risk",
+            # Boolean fields
+            "pcl_no_barrier_conclusion",
+            "partner_signoff_complete",
+            "is_first_year_audit",
+            "is_group_audit",
+            "has_internal_audit",
+            "has_audit_committee",
+        }
+
+        # Filter incoming changes to the whitelist
+        safe_changes = {k: v for k, v in (changes or {}).items() if k in allowed_fields}
+
+        if not safe_changes:
+            return {"status": "saved"}
+
+        try:
+            rec.write(safe_changes)
+            rec.message_post(body=("Auto-saved fields: %s" % ", ".join(safe_changes.keys())))
+            return {"status": "saved"}
+        except Exception as e:  # pragma: no cover - defensive
+            _logger.exception("Auto-save failed for onboarding %s", record_id)
+            return {"status": "error", "message": str(e)}
+
     # Section 2: Compliance History
     financial_framework = fields.Selection(
         FINANCIAL_FRAMEWORK_SELECTION, string="Applicable Framework", required=True

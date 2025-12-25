@@ -151,22 +151,43 @@
                              ═══════════════════════════════════════════════════════════════ -->
                         <page string="A. Entity Profile" name="section_a_entity">
                             <group>
-                                <group string="Legal Details">
-                                    <field name="audit_id" readonly="1"/>
-                                    <field name="planning_phase_id" invisible="1"/>
-                                    <field name="legal_name" readonly="1"/>
-                                    <field name="entity_type" readonly="is_locked"/>
-                                    <field name="date_of_incorporation" readonly="is_locked"/>
-                                    <field name="registration_ntn" readonly="is_locked"/>
-                                </group>
-                                <group string="Location">
-                                    <field name="principal_place_of_business" readonly="is_locked"/>
-                                    <field name="has_branches" readonly="is_locked"/>
-                                    <field name="branches_details" readonly="is_locked"
-                                           invisible="not has_branches"
-                                           placeholder="List all branches and operational locations..."/>
-                                </group>
-                            </group>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <label class="o_form_label">Identifiers</label>
+                                        <div>
+                                            <field name="audit_id" readonly="1"/>
+                                            <field name="planning_phase_id" invisible="1"/>
+                                            <field name="legal_name" readonly="1"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="o_form_label">Classification</label>
+                                        <div>
+                                            <field name="entity_type" readonly="is_locked"/>
+                                            <field name="date_of_incorporation" readonly="is_locked"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="o_form_label">Registration</label>
+                                        <div>
+                                            <field name="registration_ntn" readonly="is_locked"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-8">
+                                        <label class="o_form_label">Principal Place</label>
+                                        <field name="principal_place_of_business" readonly="is_locked" class="w-100"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="o_form_label">Branches</label>
+                                        <div>
+                                            <field name="has_branches" readonly="is_locked"/>
+                                            <field name="branches_details" readonly="is_locked" invisible="not has_branches" placeholder="List branches and operational locations..." class="w-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </group> 
 
                             <group string="Section A Checklist" class="mt-3">
                                 <div class="row">
