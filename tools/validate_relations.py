@@ -59,14 +59,20 @@ def main():
                 model_files[model] = py_file
 
             # Extract relational fields
+            # Support: positional inverse (One2many('comodel', 'inverse')) and keyword inverse_name
             for match in re.finditer(
-                r"(\w+)\s*=\s*fields\.(One2many|Many2one|Many2many)\(\s*['\"]([^'\"]+)['\"](\s*,\s*inverse_name\s*=\s*['\"]([^'\"]+)['\"])?",
-                content
+                r"(\w+)\s*=\s*fields\.(One2many|Many2one|Many2many)\(\s*['\"]([^'\"]+)['\"](?:\s*,\s*['\"]([^'\"]+)['\"])?(?:\s*,\s*inverse_name\s*=\s*['\"]([^'\"]+)['\"])?",
+                content,
             ):
                 field_name = match.group(1)
                 rel_type = match.group(2)
                 comodel = match.group(3)
-                inverse = match.group(5) if match.group(5) else None
+                # Positional inverse is group(4), keyword inverse_name is group(5)
+                inverse = None
+                if match.group(4):
+                    inverse = match.group(4)
+                elif match.group(5):
+                    inverse = match.group(5)
                 relations.append((py_file, field_name, rel_type, comodel, inverse))
 
             # Extract _order
@@ -83,6 +89,7 @@ def main():
 
     # Check relations
     for file_path, field_name, rel_type, comodel, inverse in relations:
+        # Comodel must exist
         if comodel not in declared_models and comodel not in core_whitelist:
             errors.append({
                 'type': 'broken_relation',
@@ -92,6 +99,49 @@ def main():
                 'file': file_path,
                 'cause': 'comodel not registered'
             })
+            continue
+
+        # One2many must specify an inverse field
+        if rel_type == 'One2many' and not inverse:
+            errors.append({
+                'type': 'missing_inverse',
+                'model': None,
+                'field': field_name,
+                'comodel': comodel,
+                'file': file_path,
+                'cause': 'One2many missing inverse field (positional or inverse_name)'
+            })
+            continue
+
+        # If inverse specified and this is a One2many, ensure inverse field exists on comodel
+        if inverse and rel_type == 'One2many':
+            # Skip checking comodel files for core/external models (not declared here)
+            comodel_file = model_files.get(comodel)
+            if not comodel_file:
+                # External/core model - assume valid
+                continue
+            try:
+                comodel_text = comodel_file.read_text(encoding='utf-8')
+            except Exception as e:
+                errors.append({
+                    'type': 'read_error',
+                    'model': comodel,
+                    'field': field_name,
+                    'comodel': comodel,
+                    'file': comodel_file,
+                    'cause': f'cannot read comodel file: {e}'
+                })
+                continue
+            # Check for inverse field definition on comodel
+            if not re.search(rf"\b{re.escape(inverse)}\s*=\s*fields\.", comodel_text):
+                errors.append({
+                    'type': 'inverse_missing',
+                    'model': comodel,
+                    'field': field_name,
+                    'comodel': comodel,
+                    'file': comodel_file,
+                    'cause': f'inverse field "{inverse}" not defined on comodel {comodel}'
+                })
 
     # Check _order for 'id' on non-registered models (but since we have declared, maybe skip)
     # For now, just check if order references fields that might not exist, but that's hard without full field parsing

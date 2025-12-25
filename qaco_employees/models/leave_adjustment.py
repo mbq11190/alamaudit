@@ -65,10 +65,11 @@ class LeaveAdjustment(models.Model):
     )
 
     # History fields for displaying in form
-    leave_history_ids = fields.One2many(
+    # Use computed Many2many fields for dynamic recordsets (no inverse required)
+    leave_history_ids = fields.Many2many(
         "leave.summary", compute="_compute_leave_history", string="Leave History"
     )
-    previous_adjustments_ids = fields.One2many(
+    previous_adjustments_ids = fields.Many2many(
         "leave.adjustment",
         compute="_compute_previous_adjustments",
         string="Previous Adjustments",
