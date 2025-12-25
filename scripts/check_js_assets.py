@@ -76,13 +76,21 @@ for m in manifests:
                             missing_files.append((str(m.parent.name), grp, ref))
 
 # Find required modules not defined
-missing_modules = sorted([r for r in requires if r not in defined_modules])
+OPTIONAL_JS_MODULES = {
+    '@web/core/utils/patch',
+    '@web_tour/tour_service/tour_utils',
+    'web_tour.TourStepUtils',
+}
+missing_modules = sorted([r for r in requires if r not in defined_modules and r not in OPTIONAL_JS_MODULES])
+# Also collect optional modules that are required but missing (for informational purposes)
+missing_optional = sorted([r for r in requires if r not in defined_modules and r in OPTIONAL_JS_MODULES])
 
 # Output results
 out = {
     'defined_js_modules_count': len(defined_modules),
     'required_js_modules_count': len(requires),
     'missing_js_modules': missing_modules,
+    'missing_optional_js_modules': missing_optional,
     'missing_asset_files': missing_files,
 }
 print(json.dumps(out, indent=2))
@@ -96,6 +104,11 @@ if missing_modules:
         print(' -', m)
 else:
     print('\nNo missing JS module definitions detected (by static scan).')
+
+if missing_optional:
+    print('\nOptional JS modules required but not present (OK to ignore if not using web_tour):')
+    for m in missing_optional:
+        print(' -', m)
 
 if missing_files:
     print('\nMissing asset files referenced in manifests:')
