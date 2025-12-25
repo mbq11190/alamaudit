@@ -122,5 +122,20 @@ def migrate(cr, installed_version):
     except Exception:
         pass
 
+    # Run label sanitizer to fix any DB-stored <label> issues that would break view parsing or assets
+    try:
+        from odoo import api, SUPERUSER_ID
+        from odoo.addons.qaco_client_onboarding import hooks as _hooks
+
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        try:
+            _hooks.sanitize_view_labels(cr, env)
+        except Exception:
+            # Log and continue; do not raise to avoid blocking migration
+            cr.execute("INSERT INTO ir_model_data (module, name, model, res_id) VALUES ('qaco_client_onboarding', 'migration_sanitize_labels_failed', 'ir.ui.view', NULL) ON CONFLICT DO NOTHING")
+    except Exception:
+        # best-effort, swallow any error
+        pass
+
     # End of migration
     return
