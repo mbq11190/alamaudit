@@ -61,8 +61,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
-                                            <field name="legal_name" class="w-100" help="The name exactly as on the Certificate of Incorporation or registration document."/>
-                                            <field name="trading_name" class="w-100" help="Enter the trading name if it differs from the legal name."/>
+                                            <field name="legal_name" class="w-100" placeholder="e.g. ABC Private Limited" help="The name exactly as on the Certificate of Incorporation or registration document."/>
+                                            <field name="trading_name" class="w-100" placeholder="e.g. ABC (Trading)" help="Enter the trading name if it differs from the legal name."/>
+                                            <div class="o_hint_text">Example: include suffix (Pvt Ltd) exactly as on incorporation documents.</div>
                                             <field name="incorporation_date" class="w-100"/>
                                             <field name="incorporation_authority" class="w-100"/>
                                             <field name="incorporation_authority_other" class="w-100" modifiers="{'invisible':[('incorporation_authority','!=','other')]}"/>
@@ -72,35 +73,36 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
-                                            <field name="principal_business_address" class="w-100" help="Enter the registered office as stated in legal filings."/>
-                                            <field name="industry_id" class="w-100" help="Select the primary industry; it auto-populates the risk profile."/>
+                                            <field name="principal_business_address" class="w-100" placeholder="e.g. 123 Industrial Zone, Lahore" help="Enter the registered office as stated in legal filings."/>
+                                            <field name="industry_id" class="w-100" placeholder="Select relevant industry" help="Select the primary industry; it auto-populates the risk profile."/>
                                         </group>
                                     </div>
                                     <div class="col-md-6">
                                         <group class="o_onboarding_grid">
-                                            <field name="primary_regulator" class="w-100" help="Select the principal regulator overseeing this entity."/>
-                                            <field name="regulator_other" class="w-100" modifiers="{'invisible':[('primary_regulator','!=','other')]}"/>
-                                            <field name="registered_share_capital" class="w-100"/>
-                                            <field name="financial_year_end" class="w-100"/>
+                                            <field name="primary_regulator" class="w-100" placeholder="Select principal regulator" help="Select the principal regulator overseeing this entity."/>
+                                            <field name="regulator_other" class="w-100" modifiers="{'invisible':[('primary_regulator','!=','other')]}" placeholder="Specify regulator name if 'Other'"/>
+                                            <field name="registered_share_capital" class="w-100" placeholder="e.g. PKR 10,000,000"/>
+                                            <field name="financial_year_end" class="w-100" placeholder="e.g. 30-06"/>
                                         </group>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-4">
                                         <group>
-                                            <field name="ntn" class="w-100" help="NTN must follow the NNNNNNN-N format for validation."/>
-                                            <field name="withholding_agent" class="w-100"/>
-                                            <field name="other_statutory_registrations" class="w-100"/>
+                                            <field name="ntn" class="w-100" placeholder="e.g. 1234567-1" help="NTN must follow the NNNNNNN-N format for validation."/>
+                                            <field name="withholding_agent" class="w-100" placeholder="Yes / No"/>
+                                            <field name="other_statutory_registrations" class="w-100" placeholder="e.g. STRN, Social Security"/>
+                                            <div class="o_hint_text">Format examples: NTN (1234567-1), STRN (07-ABCDE-1234-5).</div>
                                         </group>
                                     </div>
                                     <div class="col-md-4">
                                         <group>
-                                            <field name="strn" class="w-100" help="Provide the Sales Tax Registration Number if applicable."/>
+                                            <field name="strn" class="w-100" placeholder="e.g. 07-ABCDE-1234-5" help="Provide the Sales Tax Registration Number if applicable."/>
                                         </group>
                                     </div>
                                     <div class="col-md-4">
                                         <group>
-                                            <field name="business_registration_number" class="w-100" help="Enter the number assigned by SECP or relevant authority."/>
+                                            <field name="business_registration_number" class="w-100" placeholder="e.g. SECP-123456" help="Enter the number assigned by SECP or relevant authority."/>
                                         </group>
                                     </div>
                                 </div>
@@ -169,9 +171,11 @@
                                     </field>
                                 </group>
                                 <group string="Verification &amp; Controls" class="o_onboarding_grid">
-                                    <field name="verification_performed_by"/>
-                                    <field name="verification_date"/>
-                                    <field name="verification_method"/>
+                                    <label for="verification_method"/>
+                                    <div class="o_hint_text">Examples: Document check, Registrar extract, Bank confirmation</div>
+                                    <field name="verification_performed_by" placeholder="Select verifier (user)"/>
+                                    <field name="verification_date" placeholder="YYYY-MM-DD"/>
+                                    <field name="verification_method" placeholder="e.g. Document check"/>
                                     <field name="verification_exception_ids">
                                         <tree editable="bottom">
                                             <field name="field_name"/>
