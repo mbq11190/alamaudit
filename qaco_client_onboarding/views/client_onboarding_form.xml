@@ -850,7 +850,7 @@
                                             <t t-name="kanban-box">
                                                 <div class="o_kanban_record o_onboarding_file_card">
                                                     <div class="o_onboarding_file_header">
-                                                        <span class="o_onboarding_file_icon fa fa-file-text-o"/>
+                                                        <span class="o_onboarding_file_icon fa fa-file-text-o" title="Onboarding Document"/>
                                                         <strong><field name="name"/></strong>
                                                     </div>
                                                     <div class="o_onboarding_file_meta"><field name="doc_type"/></div>

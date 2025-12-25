@@ -6,7 +6,7 @@
         <field name="model">qaco.client.onboarding</field>
         <field name="inherit_id" ref="qaco_client_onboarding.view_client_onboarding_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='o_template_repository']" position="replace">
+            <xpath expr="//div[hasclass('o_template_repository')]" position="replace">
                 <div class="o_template_repository">
                     <div class="row">
                         <!-- LEFT COLUMN: Template Library -->
