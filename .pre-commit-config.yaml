@@ -7,3 +7,9 @@ repos:
     language: python
     files: '^(qaco_.*|.*\.py)$'
     stages: [commit, push]
+  - id: odoo-unknown-model-guard
+    name: Block _unknown Odoo models
+    entry: python tools/validate_relations.py
+    language: system
+    files: 'qaco_*/models/**/*.py'
+    stages: [commit, push]
