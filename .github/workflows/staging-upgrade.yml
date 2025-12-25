@@ -1,0 +1,65 @@
+name: Staging Upgrade Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  upgrade-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Docker CLI (for running odoo image)
+        run: sudo apt-get update && sudo apt-get install -y docker.io
+
+      - name: Pull Odoo 17 image
+        run: docker pull odoo:17.0 || true
+
+      - name: Run Odoo upgrade
+        env:
+          PGHOST: host.docker.internal
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: postgres
+          ADDONS_PATH: ${{ github.workspace }}
+        run: |
+          # Run odoo container mounting repository as extra-addons and connect to host postgres
+          docker run --rm \
+            -e POSTGRES_HOST=host.docker.internal \
+            -e POSTGRES_PORT=5432 \
+            -e POSTGRES_DB=postgres \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -v "${{ github.workspace }}:/mnt/extra-addons" \
+            odoo:17.0 odoo -d auditwise_test --stop-after-init -u qaco_client_onboarding --addons-path=/mnt/extra-addons 2>&1 | tee odoo_upgrade.log || true
+
+      - name: Check logs for ParseError or SCSS failures
+        run: |
+          if grep -E "ParseError|SCSS compilation failed|A CSS error occurred" odoo_upgrade.log; then
+            echo "ERROR: Parse or asset errors detected"; cat odoo_upgrade.log; exit 1
+          else
+            echo "No parse or asset errors detected in upgrade logs"
+          fi
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odoo-upgrade-log
+          path: odoo_upgrade.log
