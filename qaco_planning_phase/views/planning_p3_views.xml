@@ -315,7 +315,7 @@
                             <span>View Audit</span>
                         </button>
                         <button name="action_generate_ic_memo" type="object" class="oe_stat_button" icon="fa-file-pdf-o"
-                                invisible="state not in ['completed','reviewed','approved','locked']"/>>
+                                invisible="state not in ['completed','reviewed','approved','locked']">
                             <span>IC Memo</span>
                         </button>
                         <button name="action_link_deficiencies_to_p6" type="object" class="oe_stat_button" icon="fa-link"
