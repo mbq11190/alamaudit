@@ -320,7 +320,7 @@ class PlanningTabMixin(models.AbstractModel):
 class PlanningPhaseMain(models.Model):
     """
     Main Planning Phase record that links all P-tabs to an Audit Engagement.
-    Acts as the orchestrator for the P-1 to P-13 tab workflow.
+    Acts as the orchestrator for the P-2 to P-13 tab workflow (P-1 deprecated).
     """
 
     _name = "qaco.planning.main"

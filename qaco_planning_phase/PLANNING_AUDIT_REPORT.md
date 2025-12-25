@@ -78,11 +78,11 @@ can_open = fields.Boolean(
     store=False
 )
 
-@api.depends('planning_main_id.p1_engagement_id.state')
+@api.depends('planning_main_id.p2_entity_id.state')
 def _compute_can_open(self):
-    # Check prior tab approved
+    # Check planning initialized (P-1 deprecated) and prior tab approved
     for rec in self:
-        prior_approved = rec.planning_main_id.p1_engagement_id.state == 'approved'
+        prior_approved = rec.planning_main_id.p2_entity_id.state == 'approved'
         rec.can_open = prior_approved
 ```
 

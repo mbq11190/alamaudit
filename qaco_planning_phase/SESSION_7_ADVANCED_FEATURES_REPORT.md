@@ -361,7 +361,7 @@ def _compute_planning_metrics(self):
         total_tabs = 13
         missing_tabs = []
         
-        for tab_field in ['p1_engagement_id', 'p2_entity_id', ..., 'p13_approval_id']:
+        for tab_field in ['p2_entity_id', 'p3_controls_id', ..., 'p13_approval_id']:
             tab_record = planning[tab_field]
             if tab_record and tab_record.state == 'approved':
                 approved_tabs += 1

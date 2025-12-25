@@ -146,6 +146,7 @@
                                                     <t t-set="tab_name">P-10</t>
                                                     <t t-set="tab_field">p10_related_parties_id</t>
                                                 </t>
+                                            </td>
                                         <!-- Row 3: P-11 to P-12 -->
                                         </tr>
                                         <!-- Row 3: P-11 to P-12 -->

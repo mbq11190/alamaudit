@@ -413,57 +413,42 @@ class PlanningP13Approval(models.Model):
         self.ensure_one()
         main = self.planning_main_id
         if main:
+            # Map checklist flags to actual P-tabs (P-1 deprecated)
             self.checklist_p1_complete = (
-                main.p1_engagement_id.state == "approved"
-                if main.p1_engagement_id
-                else False
-            )
-            self.checklist_p2_complete = (
                 main.p2_entity_id.state == "approved" if main.p2_entity_id else False
             )
+            self.checklist_p2_complete = (
+                main.p3_controls_id.state == "approved" if main.p3_controls_id else False
+            )
             self.checklist_p3_complete = (
-                main.p3_controls_id.state == "approved"
-                if main.p3_controls_id
-                else False
+                main.p4_analytics_id.state == "approved" if main.p4_analytics_id else False
             )
             self.checklist_p4_complete = (
-                main.p4_analytics_id.state == "approved"
-                if main.p4_analytics_id
-                else False
+                main.p5_materiality_id.state == "approved" if main.p5_materiality_id else False
             )
             self.checklist_p5_complete = (
-                main.p5_materiality_id.state == "approved"
-                if main.p5_materiality_id
-                else False
-            )
-            self.checklist_p6_complete = (
                 main.p6_risk_id.state == "approved" if main.p6_risk_id else False
             )
-            self.checklist_p7_complete = (
+            self.checklist_p6_complete = (
                 main.p7_fraud_id.state == "approved" if main.p7_fraud_id else False
             )
-            self.checklist_p8_complete = (
-                main.p8_going_concern_id.state == "approved"
-                if main.p8_going_concern_id
-                else False
+            self.checklist_p7_complete = (
+                main.p8_going_concern_id.state == "approved" if main.p8_going_concern_id else False
             )
-            self.checklist_p9_complete = (
+            self.checklist_p8_complete = (
                 main.p9_laws_id.state == "approved" if main.p9_laws_id else False
             )
+            self.checklist_p9_complete = (
+                main.p10_related_parties_id.state == "approved" if main.p10_related_parties_id else False
+            )
             self.checklist_p10_complete = (
-                main.p10_related_parties_id.state == "approved"
-                if main.p10_related_parties_id
-                else False
+                main.p11_group_audit_id.state == "approved" if main.p11_group_audit_id else False
             )
             self.checklist_p11_complete = (
-                main.p11_group_audit_id.state == "approved"
-                if main.p11_group_audit_id
-                else False
+                main.p12_strategy_id.state == "approved" if main.p12_strategy_id else False
             )
             self.checklist_p12_complete = (
-                main.p12_strategy_id.state == "approved"
-                if main.p12_strategy_id
-                else False
+                main.p13_approval_id.state == "approved" if main.p13_approval_id else False
             )
 
     def action_manager_review(self):

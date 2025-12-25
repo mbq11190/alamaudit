@@ -130,13 +130,13 @@ can_open = fields.Boolean(
     help='Computed based on prior tab approval status'
 )
 
-@api.depends('planning_main_id.p1_engagement_id.state')  # Adjust per tab
+@api.depends('planning_main_id.p2_entity_id.state')  # Adjust per tab
 def _compute_can_open(self):
     """Check if prior planning tab is approved."""
     for rec in self:
-        # P-2 example: Check P-1 approved
-        if rec.planning_main_id and rec.planning_main_id.p1_engagement_id:
-            rec.can_open = rec.planning_main_id.p1_engagement_id.state == 'approved'
+        # P-2 example: Check planning initialized (P-1 deprecated)
+        if rec.planning_main_id and rec.planning_main_id.p2_entity_id:
+            rec.can_open = rec.planning_main_id.p2_entity_id.state == 'approved'
         else:
             rec.can_open = False  # Block if planning not initialized
 ```
