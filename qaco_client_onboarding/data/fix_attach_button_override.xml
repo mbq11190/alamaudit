@@ -21,8 +21,8 @@
         </field>
     </record>
 
-    <record id="view_client_onboarding_fix_attach_button" model="ir.ui.view">
-        <field name="name">qaco.client.onboarding.fix.attach.button.safe</field>
+    <record id="view_client_onboarding_fix_attach_button_placeholder" model="ir.ui.view">
+        <field name="name">qaco.client.onboarding.fix.attach.button.placeholder</field>
         <field name="model">qaco.client.onboarding</field>
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
