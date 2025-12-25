@@ -7,9 +7,11 @@ from . import planning_phase
 from . import planning_template
 
 # Import planning phase modules
-from . import planning_p1_engagement
 from . import planning_p2_entity
 from . import planning_p3_controls
+# NOTE: `planning_p1_engagement` has been deprecated and moved to `models/deprecated/` to avoid circular imports
+# If reintroducing P-1 is required, import it lazily or ensure dependency order prevents cycles.
+
 from . import planning_p4_analytics
 from . import planning_p5_materiality
 from . import planning_p6_risk
