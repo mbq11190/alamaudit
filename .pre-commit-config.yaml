@@ -13,3 +13,9 @@ repos:
     language: system
     files: 'qaco_*/models/**/*.py'
     stages: [commit, push]
+  - id: scss-static-check
+    name: SCSS static checks
+    entry: python scripts/check_scss.py
+    language: system
+    files: '.*\.scss$'
+    stages: [commit, push]
