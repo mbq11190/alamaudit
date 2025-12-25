@@ -174,15 +174,24 @@ class LeaveCondonation(models.Model):
 
         # Search for payroll in that month for this employee
         PayrollLine = self.env["qaco.payroll.line"].sudo()
-        payroll_lines = PayrollLine.search(
-            [
-                ("employee_id", "=", self.employee_id.id),
-                ("payroll_id.date_from", ">=", date_from),
-                ("payroll_id.date_to", "<=", date_to),
-                ("payroll_id.state", "in", ["draft", "submitted", "approved"]),
-                ("leave_deduction_amount", ">", 0),
-            ]
-        )
+        try:
+            payroll_lines = PayrollLine.search(
+                [
+                    ("employee_id", "=", self.employee_id.id),
+                    ("payroll_id.date_from", ">=", date_from),
+                    ("payroll_id.date_to", "<=", date_to),
+                    ("payroll_id.state", "in", ["draft", "submitted", "approved"]),
+                    ("leave_deduction_amount", ">", 0),
+                ]
+            )
+        except Exception as e:
+            # Defensive: Provide a clear error if payroll model/table isn't available yet
+            raise UserError(
+                _(
+                    "Payroll data not available or payroll module not installed: %s"
+                )
+                % e
+            )
 
         if not payroll_lines:
             raise UserError(

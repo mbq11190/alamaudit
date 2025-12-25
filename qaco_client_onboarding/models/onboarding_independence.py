@@ -225,6 +225,7 @@ class OnboardingGiftLog(models.Model):
 # Extend client onboarding with independence relations and computed fields
 class ClientOnboardingIndependence(models.Model):
     _inherit = "qaco.client.onboarding"
+    _description = "Client Onboarding: Independence extensions"
 
     independence_declaration_ids = fields.One2many(
         "qaco.onboarding.independence.declaration",

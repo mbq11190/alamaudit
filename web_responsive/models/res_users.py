@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class ResUsers(models.Model):
     _inherit = "res.users"
+    _description = "UI preference extensions for res.users"
 
     apps_menu_search_type = fields.Selection(
         [

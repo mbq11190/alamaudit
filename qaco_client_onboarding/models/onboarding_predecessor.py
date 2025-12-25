@@ -313,6 +313,7 @@ class PredecessorResponse(models.Model):
 # Methods on qaco.client.onboarding to enforce gates
 class ClientOnboardingPredecessor(models.Model):
     _inherit = "qaco.client.onboarding"
+    _description = "Client Onboarding: Predecessor extensions"
 
     predecessor_request_ids = fields.One2many(
         "qaco.onboarding.predecessor.request",

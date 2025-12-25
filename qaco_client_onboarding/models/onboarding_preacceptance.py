@@ -164,6 +164,7 @@ class OnboardingRiskScoreDriver(models.Model):
 # Extend existing onboarding record with pre-acceptance fields
 class ClientOnboardingPreAcceptance(models.Model):
     _inherit = "qaco.client.onboarding"
+    _description = "Client Onboarding: Pre-acceptance extensions"
 
     engagement_type = fields.Selection(ENGAGEMENT_TYPES, string="Engagement Type")
     reporting_framework = fields.Char(string="Reporting framework")

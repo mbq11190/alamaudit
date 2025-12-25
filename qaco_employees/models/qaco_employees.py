@@ -3,6 +3,7 @@ from odoo import api, fields, models
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
+    _description = "HR Employee extensions for QACO"
 
     # Add new fields
     designation_id = fields.Many2one(

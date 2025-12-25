@@ -390,6 +390,7 @@ class OnboardingRequiredDocument(models.Model):
 # Add helper compute fields on onboarding itself by extending via inheritance
 class ClientOnboardingRegulatory(models.Model):
     _inherit = "qaco.client.onboarding"
+    _description = "Client Onboarding: Regulatory extensions"
 
     regulator_ids = fields.Many2many(
         "qaco.onboarding.regulator", string="Regulators in Scope"

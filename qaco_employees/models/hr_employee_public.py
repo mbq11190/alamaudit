@@ -3,6 +3,7 @@ from odoo import fields, models
 
 class HrEmployeePublic(models.Model):
     _inherit = "hr.employee.public"
+    _description = "Public view of hr.employee with QACO fields"
 
     designation_id = fields.Many2one(
         related="employee_id.designation_id",

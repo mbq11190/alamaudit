@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
+    _description = "HR Employee extensions: absence helpers"
 
     is_absent_today = fields.Boolean(compute="_compute_absent_today", store=True)
     active = fields.Boolean("Active", default=True)

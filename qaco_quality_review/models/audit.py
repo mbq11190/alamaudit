@@ -6,6 +6,7 @@ from odoo import models
 
 class Audit(models.Model):
     _inherit = "qaco.audit"
+    _description = "Quality Review helper on qaco.audit"
 
     def action_open_quality_review(self):
         """Open or lazily create the quality review shell for this audit."""

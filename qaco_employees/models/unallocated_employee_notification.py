@@ -6,6 +6,7 @@ from odoo import api, models
 
 class UnallocatedEmployeeNotification(models.Model):
     _inherit = "hr.employee"
+    _description = "Unallocated employee notification helpers"
 
     @api.model
     def send_unallocated_employee_email(self, custom_recipients=None, include_cc=False):
