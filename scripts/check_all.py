@@ -22,6 +22,23 @@ for p in py_files:
         print("PYTHON SYNTAX ERROR:", p, e)
         errs += 1
 
+# Run SCSS static checks
+try:
+    import scripts.check_scss as scss_check
+    scss_check
+    print('Running SCSS static checks...')
+    from importlib import reload
+
+    reload(scss_check)
+except Exception:
+    print('SCSS check script not importable; running as subprocess instead')
+    import subprocess
+
+    r = subprocess.run(["python", "scripts/check_scss.py"], capture_output=False)
+    if r.returncode != 0:
+        print('SCSS static checks failed')
+        errs += 1
+
 if errs:
     print("Checks failed: errors=", errs)
     sys.exit(2)
