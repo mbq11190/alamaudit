@@ -47,13 +47,20 @@ for mf in manifest_files:
     # crude parse for assets list
     for line in content.splitlines():
         line = line.strip()
+        # skip commented lines
+        if line.startswith('#'):
+            continue
         # match typical asset paths 'module/static/src/..'
         if re.search(r"['\"][\w\-./]+\.scss['\"]", line):
             m = re.search(r"['\"]([\w\-./]+\.scss)['\"]", line)
             if m:
-                path = Path(mf).parent / m.group(1)
-                if not path.exists():
-                    errors.append(f"Manifest {mf} references missing scss asset: {m.group(1)}")
+                asset_path = m.group(1)
+                # Normalize any leading slash and test both relative to manifest and repo root
+                asset_path_norm = asset_path.lstrip('/\\')
+                candidate1 = Path(mf).parent / asset_path_norm
+                candidate2 = Path('.') / asset_path_norm
+                if not candidate1.exists() and not candidate2.exists():
+                    errors.append(f"Manifest {mf} references missing scss asset: {asset_path}")
 
 # Output results
 print(f"SCSS files scanned: {len(scss_files)}")
