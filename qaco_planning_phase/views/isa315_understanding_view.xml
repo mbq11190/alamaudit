@@ -61,7 +61,7 @@
                             </group>
                         </page>
 
-                        <page string="6. Strategy & Risks">
+                        <page string="6. Strategy &amp; Risks">
                             <group>
                                 <field name="business_objectives"/>
                                 <field name="future_plans"/>

@@ -627,25 +627,14 @@
                         <!-- ======================================= -->
                         <page string="J. Risk Linkage" name="section_j">
                             <group>
-                                <div class="row align-items-center mb-2">
-                                    <div class="col-md-4">
-                                        <label class="o_form_label">Auto-Flow Status</label>
-                                        <div>
-                                            <field name="linked_to_p6"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="o_form_label">Linked to P-12</label>
-                                        <div>
-                                            <field name="linked_to_p12"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button name="action_link_deficiencies_to_p6" string="Link Deficiencies to P-6" type="object"
-                                                class="btn-primary" icon="fa-link" invisible="deficiencies_identified == False"/>
-                                    </div>
-                                </div>
-                                <div class="o_hint_text">Auto-flow will propagate relevant deficiencies to P-6 (controls -> risk) and P-12 (strategy) when linked.</div>
+                                <group string="Auto-Flow Status">
+                                    <field name="linked_to_p6"/>
+                                    <field name="linked_to_p12"/>
+                                </group>
+                                <group>
+                                    <button name="action_link_deficiencies_to_p6" string="Link Deficiencies to P-6" type="object"
+                                            class="btn-primary" icon="fa-link" invisible="deficiencies_identified == False"/>
+                                </group>
                             </group>
                             <group string="Risk Linkage Notes">
                                 <field name="risk_linkage_notes" widget="html" nolabel="1"
@@ -658,17 +647,10 @@
                         <!-- ======================================= -->
                         <page string="K. Documents" name="section_k">
                             <group string="Mandatory Attachments">
-                                <div class="row mb-2">
-                                    <div class="col-md-6">
-                                        <label class="o_form_label">Flowcharts Uploaded</label>
-                                        <field name="flowchart_count" readonly="1" class="w-100"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="o_form_label">Walkthrough Docs</label>
-                                        <field name="walkthrough_doc_count" readonly="1" class="w-100"/>
-                                    </div>
-                                </div>
-                                <div class="o_hint_text">Counts update automatically when you link or upload documents below.</div>
+                                <group>
+                                    <field name="flowchart_count"/>
+                                    <field name="walkthrough_doc_count"/>
+                                </group>
                             </group>
                             <group string="Process Flowcharts / Narratives">
                                 <field name="process_flowchart_ids" widget="many2many_binary" nolabel="1"/>
