@@ -343,7 +343,7 @@
                                     <span class="o_onboarding_card_ref">ISA 220</span>
                                 </div>
                                 <group>
-                                    <label string="Shareholding" class="o_form_label"/>
+                                    <label class="o_form_label">Shareholding</label>
                                     <field name="shareholder_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
@@ -354,7 +354,7 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <label string="Board &amp; Key Personnel" class="o_form_label"/>
+                                    <label class="o_form_label">Board &amp; Key Personnel</label>
                                     <field name="board_member_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
@@ -366,7 +366,7 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <label string="UBOs &amp; Beneficial Ownership" class="o_form_label"/>
+                                    <label class="o_form_label">UBOs &amp; Beneficial Ownership</label>
                                     <field name="ubo_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
@@ -385,7 +385,7 @@
                                     <field name="ubo_section_complete"/>
                                 </group>
                                 <group>
-                                    <label string="Group Structure &amp; Components" class="o_form_label"/>
+                                    <label class="o_form_label">Group Structure &amp; Components</label>
                                     <field name="group_component_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="entity_name"/>
@@ -402,7 +402,7 @@
                                     <field name="intercompany_expected"/>
                                 </group>
                                 <group>
-                                    <label string="Share Capital Movements" class="o_form_label"/>
+                                    <label class="o_form_label">Share Capital Movements</label>
                                     <field name="share_capital_movement_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="movement_type"/>
@@ -414,7 +414,7 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <label string="Governance &amp; KMP" class="o_form_label"/>
+                                    <label class="o_form_label">Governance &amp; KMP</label>
                                     <field name="kmp_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
