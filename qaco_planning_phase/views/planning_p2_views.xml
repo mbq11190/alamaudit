@@ -106,18 +106,10 @@
                             <field name="industry_classification" readonly="1"/> |
                             <field name="audit_year" readonly="1"/>
                         </h3>
-                    </div>
-
-                    <!-- Status Summary Cards -->
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <div class="card bg-light">
-                                <div class="card-body text-center py-2">
-                                    <small class="text-muted">Entity Type</small>
-                                    <h6><field name="entity_type"/></h6>
-                                </div>
-                            </div>
+                        <div class="float-end">
+                            <button name="action_open_isa315" type="object" string="Open ISA-315" class="btn-secondary" icon="fa-external-link"/>
                         </div>
+                    </div>
                         <div class="col-md-3">
                             <div class="card bg-light">
                                 <div class="card-body text-center py-2">
@@ -163,21 +155,21 @@
                                     <div class="col-md-4">
                                         <div class="o_form_label fw-bold">Classification</div>
                                         <div>
-                                            <field name="entity_type" readonly="is_locked"/>
-                                            <field name="date_of_incorporation" readonly="is_locked"/>
+                                            <field name="isa315_id.entity_type" readonly="is_locked"/>
+                                            <field name="isa315_id.incorporation_date" readonly="is_locked"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="o_form_label fw-bold">Registration</div>
                                         <div>
-                                            <field name="registration_ntn" readonly="is_locked"/>
+                                            <field name="isa315_id.ntn" readonly="is_locked"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-8">
                                         <div class="o_form_label fw-bold">Principal Place</div>
-                                        <field name="principal_place_of_business" readonly="is_locked" class="w-100"/>
+                                        <field name="isa315_id.group_structure" readonly="is_locked" class="w-100"/>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="o_form_label fw-bold">Branches</div>

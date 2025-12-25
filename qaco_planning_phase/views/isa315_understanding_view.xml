@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_isa315_understanding_form" model="ir.ui.view">
+        <field name="name">isa315.understanding.form</field>
+        <field name="model">qaco.isa315.understanding</field>
+        <field name="arch" type="xml">
+            <form string="ISA 315 – Understanding the Entity &amp; Environment">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="audit_id"/>
+                    </group>
+                    <notebook>
+                        <page string="1. Entity Profile">
+                            <group>
+                                <field name="legal_name"/>
+                                <field name="ntn"/>
+                                <field name="strn"/>
+                                <field name="entity_type"/>
+                                <field name="incorporation_date"/>
+                                <field name="ownership_structure"/>
+                                <field name="group_structure"/>
+                                <field name="board_kmp"/>
+                            </group>
+                        </page>
+
+                        <page string="2. Industry &amp; Regulatory">
+                            <group>
+                                <field name="industry_overview"/>
+                                <field name="competition_level"/>
+                                <field name="regulatory_environment"/>
+                                <field name="economic_factors"/>
+                            </group>
+                        </page>
+
+                        <page string="3. Business Operations">
+                            <group>
+                                <field name="products_services"/>
+                                <field name="revenue_streams"/>
+                                <field name="key_customers_suppliers"/>
+                                <field name="contractual_arrangements"/>
+                                <field name="related_parties"/>
+                            </group>
+                        </page>
+
+                        <page string="4. Governance &amp; Ethics">
+                            <group>
+                                <field name="governance_framework"/>
+                                <field name="ethics_policies"/>
+                                <field name="audit_committee"/>
+                                <field name="past_issues"/>
+                            </group>
+                        </page>
+
+                        <page string="5. Accounting Policies">
+                            <group>
+                                <field name="reporting_framework"/>
+                                <field name="significant_policies"/>
+                                <field name="accounting_estimates"/>
+                                <field name="high_risk_areas"/>
+                            </group>
+                        </page>
+
+                        <page string="6. Strategy & Risks">
+                            <group>
+                                <field name="business_objectives"/>
+                                <field name="future_plans"/>
+                                <field name="business_risks"/>
+                            </group>
+                        </page>
+
+                        <page string="7. Performance Measurement">
+                            <group>
+                                <field name="kpis"/>
+                                <field name="budgeting_process"/>
+                                <field name="performance_metrics"/>
+                            </group>
+                        </page>
+
+                        <page string="8. Internal Controls">
+                            <group>
+                                <field name="control_environment"/>
+                                <field name="entity_level_controls"/>
+                                <field name="segregation_of_duties"/>
+                                <field name="internal_audit"/>
+                            </group>
+                        </page>
+
+                        <page string="9. IT Environment">
+                            <group>
+                                <field name="accounting_system"/>
+                                <field name="it_controls"/>
+                                <field name="cybersecurity"/>
+                            </group>
+                        </page>
+
+                        <page string="10. Legal &amp; Compliance">
+                            <group>
+                                <field name="tax_compliance"/>
+                                <field name="secp_compliance"/>
+                                <field name="labor_laws"/>
+                                <field name="litigation"/>
+                            </group>
+                        </page>
+
+                        <page string="11. Fraud Risk">
+                            <group>
+                                <field name="fraud_incentives"/>
+                                <field name="fraud_opportunities"/>
+                                <field name="fraud_attitude"/>
+                                <field name="fraud_brainstorming"/>
+                            </group>
+                        </page>
+
+                        <page string="12. Prior Audit">
+                            <group>
+                                <field name="prior_audit_issues"/>
+                                <field name="unadjusted_misstatements"/>
+                                <field name="auditor_change"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_isa315_understanding_tree" model="ir.ui.view">
+        <field name="name">isa315.understanding.tree</field>
+        <field name="model">qaco.isa315.understanding</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="audit_id"/>
+                <field name="legal_name"/>
+                <field name="entity_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_isa315_understanding" model="ir.actions.act_window">
+        <field name="name">ISA 315 – Understanding</field>
+        <field name="res_model">qaco.isa315.understanding</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_isa315_root" name="Audit Planning" sequence="10"/>
+    <menuitem id="menu_isa315_understanding" name="ISA 315 – Understanding" parent="menu_isa315_root" action="action_isa315_understanding" sequence="20"/>
+</odoo>

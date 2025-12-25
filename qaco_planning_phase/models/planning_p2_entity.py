@@ -231,6 +231,47 @@ class PlanningP2Entity(models.Model):
         ondelete="cascade",
         index=True,
     )
+
+    # New integration: link to ISA-315 understanding record to avoid duplicate data entry
+    isa315_id = fields.Many2one(
+        "qaco.isa315.understanding",
+        string="ISA 315: Entity Understanding",
+        ondelete="set null",
+        index=True,
+        help="Linked ISA-315 module record (captures Entity & Environment details).",
+    )
+
+    def action_open_isa315(self):
+        """Open or create the linked ISA-315 understanding record in form view."""
+        self.ensure_one()
+        isa = self.isa315_id
+        if not isa:
+            isa_vals = {
+                "audit_id": self.audit_id.id,
+                "planning_main_id": self.planning_phase_id.id if self.planning_phase_id else False,
+                "name": f"ISA315: {self.name or self.audit_id.name or 'Draft'}",
+            }
+            isa = self.env["qaco.isa315.understanding"].create(isa_vals)
+            self.isa315_id = isa.id
+        action = self.env.ref("qaco_planning_phase.action_isa315_understanding").read()[0]
+        action["views"] = [(self.env.ref("qaco_planning_phase.view_isa315_understanding_form").id, "form")]
+        action["res_id"] = isa.id
+        action["target"] = "current"
+        return action
+
+    @api.model
+    def create(self, vals):
+        rec = super().create(vals)
+        # Ensure linked ISA-315 exists for traceability and to prevent duplicate fields
+        if not rec.isa315_id:
+            isa_vals = {
+                "audit_id": rec.audit_id.id,
+                "planning_main_id": rec.planning_phase_id.id if rec.planning_phase_id else False,
+                "name": f"ISA315: {rec.name or rec.audit_id.name or 'Draft'}",
+            }
+            isa = self.env["qaco.isa315.understanding"].create(isa_vals)
+            rec.isa315_id = isa.id
+        return rec
     planning_main_id = fields.Many2one(
         "qaco.planning.main",
         string="Planning Main",
