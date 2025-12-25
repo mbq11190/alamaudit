@@ -26,7 +26,7 @@
                     <button name="action_confirm_heads" type="object" string="Confirm Heads &amp; Start Execution" class="btn-primary" invisible="state != 'draft' or not selected_head_ids"/>
                     <button name="action_mark_review" type="object" string="Send for Review" class="btn-warning" invisible="state != 'in_progress'"/>
                     <button name="action_complete" type="object" string="Complete Execution" class="btn-success" invisible="state != 'under_review'"/>
-                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" invisible="state not in ['in_progress', 'under_review']"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft" class="btn-secondary" attrs="{'invisible':[('state','not in',['in_progress','under_review'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,under_review,completed" clickable="1"/>
                 </header>
                 <sheet>
