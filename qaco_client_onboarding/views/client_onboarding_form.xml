@@ -25,7 +25,7 @@
                         <h1>
                             <field name="name" placeholder="Client Onboarding"/>
                         </h1>
-                        <h2 class="mt-1 text-muted" style="font-size:0.9rem;">
+                        <h2 class="mt-1 text-muted small-muted">
                             Audit: <field name="audit_id" readonly="1" class="oe_inline"/>
                             | Client: <field name="client_id" readonly="1" class="oe_inline"/>
                         </h2>
@@ -171,11 +171,19 @@
                                     </field>
                                 </group>
                                 <group string="Verification &amp; Controls" class="o_onboarding_grid">
-                                    <label for="verification_method"/>
+                                    <label class="o_form_label">Verification &amp; Controls</label>
                                     <div class="o_hint_text">Examples: Document check, Registrar extract, Bank confirmation</div>
-                                    <field name="verification_performed_by" placeholder="Select verifier (user)"/>
-                                    <field name="verification_date" placeholder="YYYY-MM-DD"/>
-                                    <field name="verification_method" placeholder="e.g. Document check"/>
+                                    <div class="o_horizontal_row">
+                                        <div class="o_col">
+                                            <field name="verification_performed_by" placeholder="Select verifier (user)"/>
+                                        </div>
+                                        <div class="o_col">
+                                            <field name="verification_date" placeholder="YYYY-MM-DD"/>
+                                        </div>
+                                        <div class="o_col">
+                                            <field name="verification_method" placeholder="e.g. Document check"/>
+                                        </div>
+                                    </div>
                                     <field name="verification_exception_ids">
                                         <tree editable="bottom">
                                             <field name="field_name"/>
@@ -316,11 +324,19 @@
                                     </field>
                                 </group>
                                 <group string="Verification &amp; Controls" class="o_onboarding_grid">
-                                    <label for="verification_method"/>
+                                    <label class="o_form_label">Verification &amp; Controls</label>
                                     <div class="o_hint_text">Examples: Document check, Registrar extract, Bank confirmation</div>
-                                    <field name="verification_performed_by" placeholder="Select verifier (user)"/>
-                                    <field name="verification_date" placeholder="YYYY-MM-DD"/>
-                                    <field name="verification_method" placeholder="e.g. Document check"/>
+                                    <div class="o_horizontal_row">
+                                        <div class="o_col">
+                                            <field name="verification_performed_by" placeholder="Select verifier (user)"/>
+                                        </div>
+                                        <div class="o_col">
+                                            <field name="verification_date" placeholder="YYYY-MM-DD"/>
+                                        </div>
+                                        <div class="o_col">
+                                            <field name="verification_method" placeholder="e.g. Document check"/>
+                                        </div>
+                                    </div>
                                     <field name="verification_exception_ids">
                                         <tree editable="bottom">
                                             <field name="field_name"/>

@@ -266,6 +266,18 @@ $audit-bg: #f7f8fa;
       .o_input, .o_field_widget {
         font-size: 14px;
       }
+
+      /* Horizontal compact layout helpers */
+      .o_horizontal_row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 6px;
+        align-items: center;
+      }
+      .o_horizontal_row .o_col {
+        flex: 1 1 0;
+        min-width: 160px;
+      }
     }
   }
 
