@@ -443,12 +443,12 @@ class PlanningPhaseMain(models.Model):
         string="Planning Locked", default=False, tracking=True, copy=False
     )
 
-    # Computed status summaries
-    tabs_not_started = fields.Integer(compute="_compute_tab_counts")
-    tabs_in_progress = fields.Integer(compute="_compute_tab_counts")
-    tabs_completed = fields.Integer(compute="_compute_tab_counts")
-    tabs_reviewed = fields.Integer(compute="_compute_tab_counts")
-    tabs_approved = fields.Integer(compute="_compute_tab_counts")
+    # Computed status summaries (store=True for dashboard performance)
+    tabs_not_started = fields.Integer(compute="_compute_tab_counts", store=True)
+    tabs_in_progress = fields.Integer(compute="_compute_tab_counts", store=True)
+    tabs_completed = fields.Integer(compute="_compute_tab_counts", store=True)
+    tabs_reviewed = fields.Integer(compute="_compute_tab_counts", store=True)
+    tabs_approved = fields.Integer(compute="_compute_tab_counts", store=True)
 
     _sql_constraints = [
         (
@@ -522,6 +522,21 @@ class PlanningPhaseMain(models.Model):
                 record.p13_approval_id and record.p13_approval_id.state == "approved"
             )
 
+    @api.depends(
+        "p1_engagement_id.state",
+        "p2_entity_id.state",
+        "p3_controls_id.state",
+        "p4_analytics_id.state",
+        "p5_materiality_id.state",
+        "p6_risk_id.state",
+        "p7_fraud_id.state",
+        "p8_going_concern_id.state",
+        "p9_laws_id.state",
+        "p10_related_parties_id.state",
+        "p11_group_audit_id.state",
+        "p12_strategy_id.state",
+        "p13_approval_id.state",
+    )
     def _compute_tab_counts(self):
         tab_fields = [
             "p1_engagement_id",
