@@ -13,6 +13,7 @@ from . import leave_condonation
 from . import leave_summary
 from . import qaco_absence
 from . import qaco_employees
+from . import qaco_payroll
 from . import qaco_region
 from . import scheduled_employee_progress_report
 from . import transfer_cc_recipient
