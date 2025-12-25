@@ -1,0 +1,45 @@
+name: Odoo Upgrade CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y postgresql-client
+
+      - name: Make helper script executable
+        run: chmod +x ./scripts/ci/run_odoo_upgrade.sh
+
+      - name: Run Odoo upgrade and collect logs
+        run: ./scripts/ci/run_odoo_upgrade.sh
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+
+      - name: Upload logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: odoo-upgrade-logs
+          path: artifacts/**
