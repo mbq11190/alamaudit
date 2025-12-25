@@ -305,7 +305,7 @@
 
                     <!-- Unlocked Confirmation Banner (Session 5A) -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
-                         invisible="not can_open or state != 'not_started'">>
+                         invisible="not can_open or state != 'not_started'">
                         <h4><i class="fa fa-unlock" title="Unlocked" aria-hidden="true"/> P-3 is Unlocked</h4>
                         <p>P-2 (Entity Understanding) has been approved. You may now proceed with P-3 (Internal Control Understanding).</p>
                     </div>
