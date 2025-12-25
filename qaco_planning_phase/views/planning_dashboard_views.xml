@@ -23,8 +23,7 @@
                 <field name="is_planning_complete"/>
                 <field name="is_planning_locked"/>
                 
-                <!-- P-tab states for status badges -->
-                <field name="p1_engagement_id"/>
+                <!-- P-tab states for status badges (P-1 removed) -->
                 <field name="p2_entity_id"/>
                 <field name="p3_controls_id"/>
                 <field name="p4_analytics_id"/>
@@ -83,14 +82,8 @@
                                 <!-- P-Tab Status Grid (3 rows x 5 columns) -->
                                 <table class="table table-sm table-borderless" style="font-size: 11px;">
                                     <tbody>
-                                        <!-- Row 1: P-1 to P-5 -->
+                                        <!-- Row 1: P-2 to P-6 (P-1 removed) -->
                                         <tr>
-                                            <td class="text-center">
-                                                <t t-call="planning_tab_status_badge">
-                                                    <t t-set="tab_name">P-1</t>
-                                                    <t t-set="tab_field">p1_engagement_id</t>
-                                                </t>
-                                            </td>
                                             <td class="text-center">
                                                 <t t-call="planning_tab_status_badge">
                                                     <t t-set="tab_name">P-2</t>
@@ -113,6 +106,12 @@
                                                 <t t-call="planning_tab_status_badge">
                                                     <t t-set="tab_name">P-5</t>
                                                     <t t-set="tab_field">p5_materiality_id</t>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-call="planning_tab_status_badge">
+                                                    <t t-set="tab_name">P-6</t>
+                                                    <t t-set="tab_field">p6_risk_id</t>
                                                 </t>
                                             </td>
                                         </tr>

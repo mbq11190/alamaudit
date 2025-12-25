@@ -353,12 +353,6 @@ class PlanningPhaseMain(models.Model):
     )
 
     # Links to P-tabs (One2One relationship via unique constraint on audit_id)
-    p1_engagement_id = fields.Many2one(
-        "qaco.planning.p1.engagement",
-        string="P-1: Engagement Overview & Planning Control",
-        readonly=True,
-        copy=False,
-    )
     p2_entity_id = fields.Many2one(
         "qaco.planning.p2.entity",
         string="P-2: Understanding the Entity & Environment",
@@ -467,7 +461,6 @@ class PlanningPhaseMain(models.Model):
                 record.name = "Planning Phase - Draft"
 
     @api.depends(
-        "p1_engagement_id.state",
         "p2_entity_id.state",
         "p3_controls_id.state",
         "p4_analytics_id.state",
@@ -491,7 +484,6 @@ class PlanningPhaseMain(models.Model):
             False: 0,
         }
         tab_fields = [
-            "p1_engagement_id",
             "p2_entity_id",
             "p3_controls_id",
             "p4_analytics_id",

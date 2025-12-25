@@ -624,26 +624,25 @@ class QualityReview(models.Model):
 
             # Calculate completion percentage (count approved tabs)
             approved_tabs = 0
-            total_tabs = 13
+            total_tabs = 12
             missing_tabs = []
 
             for tab_field in [
-                "p1_engagement_id",
                 "p2_entity_id",
-                "p3_control_id",
-                "p4_analytical_id",
+                "p3_controls_id",
+                "p4_analytics_id",
                 "p5_materiality_id",
                 "p6_risk_id",
                 "p7_fraud_id",
                 "p8_going_concern_id",
                 "p9_laws_id",
                 "p10_related_parties_id",
-                "p11_group_id",
+                "p11_group_audit_id",
                 "p12_strategy_id",
                 "p13_approval_id",
             ]:
                 tab_record = planning[tab_field]
-                if tab_record and tab_record.state == "approved":
+                if tab_record and getattr(tab_record, 'state', None) == "approved":
                     approved_tabs += 1
                 elif tab_record:
                     tab_name = tab_field.replace("_id", "").replace("_", "-").upper()
