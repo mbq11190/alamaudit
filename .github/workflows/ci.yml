@@ -23,6 +23,9 @@ jobs:
       - name: Run onboarding validation
         run: python scripts/validate_onboarding_relations.py
 
+      - name: Check view labels
+        run: python scripts/check_view_labels.py
+
       - name: Run inverse relations validation
         run: python scripts/validate_inverse_relations.py
 

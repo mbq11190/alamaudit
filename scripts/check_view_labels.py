@@ -1,6 +1,7 @@
 import glob
 import xml.etree.ElementTree as ET
 
+import sys
 problems = []
 files = glob.glob("**/views/*.xml", recursive=True)
 for f in files:
@@ -28,3 +29,7 @@ for f in files:
 print("Problems found:", len(problems))
 for p in problems:
     print(p[0], p[1], p[2])
+
+# Exit non-zero if any problems found so CI fails fast
+if problems:
+    sys.exit(1)
