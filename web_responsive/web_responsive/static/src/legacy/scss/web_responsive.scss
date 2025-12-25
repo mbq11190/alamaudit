@@ -4,6 +4,8 @@
  * Copyright 2023 Taras Shabaranskyi
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
+@use 'web.variables' as *;
+
 $chatter_zone_width: 35% !important;
 
 // Allow sticky header

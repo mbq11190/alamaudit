@@ -3,6 +3,8 @@
  * Copyright 2023 Taras Shabaranskyi
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
+@use 'web.variables' as *;
+
 .o-FileViewerContainer {
     --o-FileViewerContainer-width: #{$o-mail-Chatter-minWidth};
     --o-FileViewerContainer-height: var(--100vh, calc(100vh - #{$o-navbar-height}));

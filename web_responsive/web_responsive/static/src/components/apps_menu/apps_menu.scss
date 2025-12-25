@@ -3,6 +3,8 @@
  * Copyright 2023 Taras Shabaranskyi
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
+@use 'web.variables' as *;
+
 :root {
     .o_grid_apps_menu[data-theme="milk"] {
         --app-menu-background: url("../../img/home-menu-bg-overlay.svg"),
