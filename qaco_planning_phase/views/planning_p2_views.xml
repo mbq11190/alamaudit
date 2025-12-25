@@ -149,6 +149,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <div class="row mb-2">
                                     <div class="col-md-4">
                                         <div class="o_form_label fw-bold">Identifiers</div>
@@ -197,6 +198,8 @@
 >>>>>>> parent of f55470f (11)
 =======
 >>>>>>> parent of f55470f (11)
+=======
+>>>>>>> parent of f55470f (11)
                                 <group string="Legal Details">
                                     <field name="audit_id" readonly="1"/>
                                     <field name="planning_phase_id" invisible="1"/>
@@ -218,6 +221,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of f55470f (11)
+=======
 >>>>>>> parent of f55470f (11)
 =======
 >>>>>>> parent of f55470f (11)
