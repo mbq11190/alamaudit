@@ -515,7 +515,6 @@ class PlanningPhaseMain(models.Model):
             )
 
     @api.depends(
-        "p1_engagement_id.state",
         "p2_entity_id.state",
         "p3_controls_id.state",
         "p4_analytics_id.state",
@@ -531,7 +530,6 @@ class PlanningPhaseMain(models.Model):
     )
     def _compute_tab_counts(self):
         tab_fields = [
-            "p1_engagement_id",
             "p2_entity_id",
             "p3_controls_id",
             "p4_analytics_id",
@@ -566,15 +564,8 @@ class PlanningPhaseMain(models.Model):
             record.tabs_approved = counts["approved"]
 
     def _create_p_tabs(self):
-        """Create all P-tab records for this planning phase."""
+        """Create all P-tab records for this planning phase (P-1 deprecated)."""
         self.ensure_one()
-        if not self.p1_engagement_id:
-            self.p1_engagement_id = self.env["qaco.planning.p1.engagement"].create(
-                {
-                    "audit_id": self.audit_id.id,
-                    "planning_main_id": self.id,
-                }
-            )
         if not self.p2_entity_id:
             self.p2_entity_id = self.env["qaco.planning.p2.entity"].create(
                 {

@@ -194,7 +194,7 @@ class PlanningP2Entity(models.Model):
         string="Can Open This Tab",
         compute="_compute_can_open",
         store=False,
-        help="P-2 can only be opened after P-1 is approved",
+        help="P-2 is the primary planning tab and can be opened once the audit record is created",
     )
 
     @api.depends("state")
@@ -204,16 +204,9 @@ class PlanningP2Entity(models.Model):
 
     @api.depends("audit_id")
     def _compute_can_open(self):
-        """P-2 requires P-1 to be approved."""
+        """P-2 can be opened once the audit record exists (P-1 deprecated)."""
         for rec in self:
-            if not rec.audit_id:
-                rec.can_open = False
-                continue
-            # Find P-1 for this audit
-            p1 = self.env["qaco.planning.p1.engagement"].search(
-                [("audit_id", "=", rec.audit_id.id)], limit=1
-            )
-            rec.can_open = p1.state == "approved" if p1 else False
+            rec.can_open = bool(rec.audit_id)
 
     # =========================================================================
     # CORE LINKS & IDENTIFICATION

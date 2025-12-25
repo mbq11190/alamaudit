@@ -789,14 +789,13 @@ class AuditSpecialistType(models.Model):
     def _check_preconditions(self):
         """
         System-enforced pre-conditions:
-        ALL planning phases P-1 through P-11 must be partner-approved and locked
+        ALL planning phases P-2 through P-11 must be partner-approved and locked (P-1 deprecated)
         """
         self.ensure_one()
         errors = []
 
-        # Check P-1 through P-11 (comprehensive check)
+        # Check P-2 through P-11 (comprehensive check)
         planning_phases = [
-            ("qaco.planning.p1.engagement", "P-1 (Engagement Understanding)"),
             ("qaco.planning.p2.entity", "P-2 (Entity Understanding)"),
             ("qaco.planning.p3.controls", "P-3 (Internal Controls)"),
             ("qaco.planning.p4.analytics", "P-4 (Preliminary Analytics)"),
