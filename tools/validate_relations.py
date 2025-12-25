@@ -151,7 +151,7 @@ def main():
 
     # Report errors
     if errors:
-        print("❌ BROKEN RELATIONS DETECTED", file=sys.stderr)
+        print("BROKEN RELATIONS DETECTED", file=sys.stderr)
         for err in errors:
             print(f"Model: {err.get('model', 'N/A')}", file=sys.stderr)
             print(f"Field: {err.get('field', 'N/A')}", file=sys.stderr)
@@ -161,7 +161,7 @@ def main():
             print("", file=sys.stderr)
         sys.exit(1)
     else:
-        print("✅ All relations validated - no _unknown models detected")
+        print("All relations validated - no _unknown models detected")
         sys.exit(0)
 
 

@@ -39,6 +39,22 @@ except Exception:
         print('SCSS static checks failed')
         errs += 1
 
+# Run accessibility checks for views
+try:
+    import scripts.check_view_accessibility as acc_check
+    acc_check
+    print('Running view accessibility checks...')
+    from importlib import reload
+
+    reload(acc_check)
+except Exception:
+    print('Accessibility check script not importable; running as subprocess instead')
+    import subprocess
+
+    r = subprocess.run(["python", "scripts/check_view_accessibility.py"], capture_output=False)
+    if r.returncode != 0:
+        print('View accessibility checks failed')
+        errs += 1
 if errs:
     print("Checks failed: errors=", errs)
     sys.exit(2)
