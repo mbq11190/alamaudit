@@ -336,25 +336,24 @@ def pre_init_hook(cr):
         # swallow any error: the cleanup is best-effort and must not block upgrades
         _logger.exception("Pre-init hook failed during defensive cleanup (continuing)")
 
+    # Ensure label sanitizer runs during upgrades as well (defensive, non-blocking)
+    try:
+        sanitize_view_labels(cr, env)
+    except Exception:
+        _logger.exception("Pre-init: sanitize_view_labels failed (continuing)")
 
-def post_init_hook(cr, registry=None):
-    """Post-init hook: sanitize any stored views that contain <label string="..."/>
-    elements without either a 'for' attribute or the 'o_form_label' class.
 
-    This fixes views that were stored in the DB before repository fixes, and
-    prevents Odoo 17 view ParseErrors that would otherwise break asset
-    compilation and cause a fallback to old styles.
-
-    The operation is conservative: it only adds a 'o_form_label' class to
-    offending <label/> tags and logs the changes. Errors are swallowed to not
-    block module installation.
+def sanitize_view_labels(cr, env):
+    """Conservative sanitizer that adds `o_form_label` to any stored <label/>
+    elements with a `string` attribute but lacking both `for` and the
+    `o_form_label` class. Designed to be safe for both pre-init and post-init
+    execution contexts.
     """
-    env = api.Environment(cr, SUPERUSER_ID, {})
     try:
         try:
             from lxml import etree
         except Exception:
-            _logger.debug("lxml not available; falling back to ElementTree for post-init label sanitize")
+            _logger.debug("lxml not available; falling back to ElementTree for view label sanitize")
             etree = None
 
         cr.execute("SELECT id, name, module, arch_db FROM ir_ui_view WHERE active = true")
@@ -375,12 +374,10 @@ def post_init_hook(cr, registry=None):
                     labels = root.findall('.//label')
                 changed = False
                 for lbl in labels:
-                    # lxml elements use attrib like ElementTree
                     has_for = "for" in lbl.attrib
                     has_class = "class" in lbl.attrib and "o_form_label" in lbl.attrib.get("class", "")
                     has_string = "string" in lbl.attrib
                     if has_string and not has_for and not has_class:
-                        # add o_form_label class
                         existing = lbl.attrib.get("class", "").strip()
                         if existing:
                             lbl.attrib["class"] = (existing + " o_form_label").strip()
@@ -389,7 +386,6 @@ def post_init_hook(cr, registry=None):
                         changed = True
                 if changed:
                     fixed_views.append((vid, name, module))
-                    # Serialize back to string
                     if etree is not None:
                         new_arch = etree.tostring(root, encoding="unicode")
                     else:
@@ -398,7 +394,6 @@ def post_init_hook(cr, registry=None):
                         view = env["ir.ui.view"].browse(vid)
                         view.write({"arch": new_arch})
                     except Exception:
-                        # If write fails, attempt a direct SQL update as a last resort
                         try:
                             cr.execute(
                                 "UPDATE ir_ui_view SET arch_db = %s WHERE id = %s",
@@ -411,14 +406,22 @@ def post_init_hook(cr, registry=None):
                                 vid,
                             )
             except Exception:
-                # Skip this view if parsing failed for any reason
-                _logger.debug("Failed to parse view id %s during post-init sanitize", vid, exc_info=True)
+                _logger.debug("Failed to parse view id %s during sanitize", vid, exc_info=True)
         if fixed_views:
             _logger.info(
-                "Post-init: sanitized %d views by adding o_form_label to offending labels",
+                "Sanitizer: fixed %d views by adding o_form_label to offending labels",
                 len(fixed_views),
             )
             for vid, name, module in fixed_views:
                 _logger.info(" - view id=%s name=%s module=%s", vid, name, module)
+    except Exception:
+        _logger.exception("sanitize_view_labels encountered an error (continuing)")
+
+
+def post_init_hook(cr, registry=None):
+    """Post-init wrapper that invokes the conservative label sanitizer."""
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    try:
+        sanitize_view_labels(cr, env)
     except Exception:
         _logger.exception("post_init_hook failed during label sanitization (continuing)")
