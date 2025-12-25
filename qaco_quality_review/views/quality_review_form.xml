@@ -391,7 +391,7 @@
                                 
                                 <group string="EQCR Checklist - Planning Phase">
                                     <div class="alert alert-warning" role="alert">
-                                        <strong>⚠️ Required Review:</strong> EQCR must verify that all planning tabs (P-1 through P-13) 
+                                        <strong>⚠️ Required Review:</strong> EQCR must verify that all planning tabs (P-1 through P-12) 
                                         are complete and approved before execution begins per ISA 300.
                                     </div>
                                     <field name="checklist_line_ids" domain="[('checklist_type', '=', 'eqr_completion')]" 

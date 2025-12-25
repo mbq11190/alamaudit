@@ -131,7 +131,7 @@ assert main.p12_strategy_id, "P-12 failed"
 
 ### Medium Priority 🟡
 4. Verify `planning_base.py` computed fields
-5. Test full planning workflow (P-1 → P-13)
+5. Test full planning workflow (P-1 → P-12)
 6. Update smart buttons on audit form
 
 ### Low Priority 🟢

@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-Successfully delivered a **professional-grade hard gating system with comprehensive UI enhancements and lifecycle integration** for the Audit Planning Engine with full ISA 300/220 compliance. The system now enforces sequential P-tab access (P-1→P-2→...→P-13) with regulator-defensible error messages, user-friendly visual feedback, and seamless integration with the broader audit engagement workflow.
+Successfully delivered a **professional-grade hard gating system with comprehensive UI enhancements and lifecycle integration** for the Audit Planning Engine with full ISA 300/220 compliance. The system now enforces sequential P-tab access (P-1→P-2→...→P-12) with regulator-defensible error messages, user-friendly visual feedback, and seamless integration with the broader audit engagement workflow.
 
 **Scope Completed**:
 - ✅ Session 1: Architecture stabilization
@@ -146,7 +146,7 @@ Post Chatter: "Execution Phase Unlocked"
 
 ### Session 5A: Visual Gate Indicators ✅
 
-Added prominent locked/unlocked banners to all 12 P-tabs (P-2 through P-13).
+Added prominent locked/unlocked banners to all 12 P-tabs (P-2 through P-12).
 
 **Banner Types**:
 1. **🔒 Red Alert Banner** (Locked):
@@ -224,7 +224,7 @@ Created kanban-based dashboard showing planning progress across all 13 P-tabs.
 **Features**:
 1. **Overall Progress Bar**: 0-100% completion across all tabs
 2. **Status Summary**: Badge counts for Not Started/In Progress/Completed/Approved
-3. **P-Tab Grid**: 3×5 visual grid showing P-1 to P-13 with color-coded status badges
+3. **P-Tab Grid**: 3×4 visual grid showing P-1 to P-12 with color-coded status badges
 4. **Planning Lock Indicator**: Shows if planning phase is locked
 
 **Status Color Coding**:
@@ -328,7 +328,7 @@ def action_partner_approval(self):
 
 ### Architecture Pattern
 
-Each P-tab (P-2 through P-13) received:
+Each P-tab (P-2 through P-12) received:
 
 1. **`can_open` Computed Field**:
    ```python

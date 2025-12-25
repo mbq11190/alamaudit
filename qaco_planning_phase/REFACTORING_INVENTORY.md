@@ -1,6 +1,6 @@
 # PLANNING PHASE REFACTORING - CODE INVENTORY
 **Date:** December 20, 2025  
-**Purpose:** Complete audit of P-1 to P-13 planning tabs for refactoring
+**Purpose:** Complete audit of P-1 to P-12 planning tabs for refactoring
 
 ---
 

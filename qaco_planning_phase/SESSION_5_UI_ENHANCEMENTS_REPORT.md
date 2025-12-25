@@ -112,7 +112,7 @@ Modified "Start Work" button visibility logic from simple state check to combine
 
 ### Files Modified (Session 5B)
 Same 12 files as Session 5A - combined in one pass for efficiency:
-- Modified "Start Work" button in P-2 through P-13 views
+- Modified "Start Work" button in P-2 through P-12 views
 - P-6 used "Mark Prepared" button (same logic applied)
 
 **Total Lines Modified**: 12 button definitions (1 per P-tab)

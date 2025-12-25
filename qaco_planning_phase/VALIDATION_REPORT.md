@@ -152,7 +152,7 @@ class PlanningPX(models.Model):
 **Verification Result**:
 ⚠️ **DISCREPANCY FOUND**: Most P-tabs use `audit_id` instead of `planning_id`
 
-**Current Pattern** (observed across P-1 through P-13):
+**Current Pattern** (observed across P-1 through P-12):
 ```python
 class PlanningPX(models.Model):
     _name = "qaco.planning.pX.*"

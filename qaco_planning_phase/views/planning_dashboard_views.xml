@@ -2,7 +2,7 @@
 <odoo>
     <!-- ================================================================== -->
     <!-- PLANNING DASHBOARD - Session 5C                                    -->
-    <!-- Visual progress tracking for P-1 through P-13 tabs                 -->
+    <!-- Visual progress tracking for P-1 through P-12 tabs                 -->
     <!-- ================================================================== -->
 
     <!-- Dashboard Kanban View (Main View) -->
@@ -147,9 +147,9 @@
                                                     <t t-set="tab_name">P-10</t>
                                                     <t t-set="tab_field">p10_related_parties_id</t>
                                                 </t>
-                                            </td>
+                                        <!-- Row 3: P-11 to P-12 -->
                                         </tr>
-                                        <!-- Row 3: P-11 to P-13 -->
+                                        <!-- Row 3: P-11 to P-12 -->
                                         <tr>
                                             <td class="text-center">
                                                 <t t-call="planning_tab_status_badge">
@@ -165,7 +165,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <t t-call="planning_tab_status_badge">
-                                                    <t t-set="tab_name">P-13</t>
+                                                    <t t-set="tab_name">P-12</t>
                                                     <t t-set="tab_field">p13_approval_id</t>
                                                 </t>
                                             </td>

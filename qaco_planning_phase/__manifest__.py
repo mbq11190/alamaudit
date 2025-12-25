@@ -1,6 +1,6 @@
 {
     "name": "Audit Planning Phase - Pakistan Statutory Audit",
-    "summary": "Zero-deficiency ISA-compliant planning workflow (P-1 to P-13) for statutory audits in Pakistan",
+    "summary": "Zero-deficiency ISA-compliant planning workflow (P-1 to P-12) for statutory audits in Pakistan",
     "version": "17.0.1.0.0",
     "author": "QACO",
     "website": "https://alamaudit.thinkoptimise.com",
@@ -16,10 +16,10 @@
         # Security
         "security/planning_phase_security.xml",
         "security/ir.model.access.csv",
-        # P-1 to P-13 Views
-        "views/planning_p1_views.xml",
+        # P-1 to P-12 Views (P-1 removed)
         "views/planning_p2_views.xml",
         "views/planning_p3_views.xml",
+        "views/planning_p4_views.xml",
         "views/planning_p4_views.xml",
         "views/planning_p5_views.xml",
         "views/planning_p10_views.xml",
@@ -61,5 +61,5 @@
     "auto_install": True,
     "price": 0,
     "currency": "PKR",
-    "description": "Audit Planning Phase module covering planning tabs P-1 to P-13 (ISA-aligned).",
-}
+    "description": "Audit Planning Phase module covering planning tabs P-1 to P-12 (ISA-aligned).",
+} 

@@ -34,7 +34,7 @@
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'not_started'">
                         <h4><i class="fa fa-lock" title="Locked" aria-hidden="true"/> Sequential Gating Active: P-13 is Locked</h4>
-                        <p><strong>ISA 300 Requirement:</strong> P-13 (APM &amp; Approval) cannot be started until P-12 (Audit Strategy) has been Partner-approved.</p>
+                        <p><strong>ISA 300 Requirement:</strong> The APM &amp; Approval step cannot be started until the Audit Strategy has been Partner-approved.</p>
                         <p><strong>Reason:</strong> Per ISA 300, the Audit Planning Memorandum represents the culmination of all planning work and requires completion of all prior phases to ensure comprehensive documentation.</p>
                         <p><strong>Action Required:</strong> Please complete and obtain Partner approval for P-12 (Audit Strategy) first.</p>
                     </div>
@@ -232,7 +232,7 @@
         <field name="name">qaco.planning.p13.approval.tree</field>
         <field name="model">qaco.planning.p13.approval</field>
         <field name="arch" type="xml">
-            <tree string="P-13: Planning Approval">
+            <tree string="P-12: Planning Approval">
                 <field name="name"/>
                 <field name="client_id"/>
                 <field name="all_tabs_approved" widget="boolean"/>

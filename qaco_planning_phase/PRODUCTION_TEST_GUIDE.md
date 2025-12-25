@@ -9,7 +9,7 @@
 
 - [x] **Syntax Check**: No Python errors detected in modified files
 - [x] **Import Validation**: All `UserError` imports added to P-4, P-5
-- [x] **Files Modified**: 12 models (P-2 through P-13)
+- [x] **Files Modified**: 12 models (P-2 through P-12)
 - [x] **Lines Added**: ~500 (can_open fields + constraints)
 - [x] **ISA Citations**: All error messages include ISA 300/220 references
 
@@ -81,7 +81,7 @@ Watch for:
    Action: Please complete and obtain Partner approval for P-1 first."
    ```
 
-3. **Approve P-1 to Unlock P-2**:
+3. **Prepare initial planning context for P-2 (Entity Understanding)**: 
    ```
    Planning Tabs → P-1: Engagement Setup
    → Click "Start Engagement" (if not started)
@@ -91,7 +91,7 @@ Watch for:
      - Time Budget lines created
    → Click "Manager Sign-Off"
    → Click "Partner Sign-Off"
-   → Verify P-1 state = 'approved'
+   → Verify planning setup (audit record and basic client info) is present
    ```
 
 4. **Test P-2 Unlock** (EXPECTED SUCCESS):
@@ -112,7 +112,7 @@ Watch for:
    ❌ UserError raised citing P-2 must be approved first
    ```
 
-6. **Chain Test P-1 → P-13**:
+6. **Chain Test P-1 → P-12**:
    - Approve each P-tab sequentially
    - Verify next tab unlocks automatically
    - Verify error message quality at each gate
@@ -167,13 +167,13 @@ Watch for:
    return p11.state in ('partner', 'locked')
    ```
 
-3. **P-12 → P-13 Transition** (Partner/Locked):
+3. **P-12 → Planning Approval Transition** (Partner/Locked):
    ```
    Open P-12: Overall Audit Strategy
    → Complete strategy sections
    → Click "Partner Sign-Off" (state → 'partner')
    
-   Open P-13: Planning Approval
+   Open Planning Approval (final sign-off)
    → Click "Start Final Approval"
    
    EXPECTED RESULT:
@@ -308,7 +308,7 @@ Watch for:
    Complete all P-1 through P-12
    → Open P-13: Planning Approval
    → Click "Partner Approval for Planning"
-   → Verify P-13.state = 'partner_approved'
+   → Verify the Planning Approval record has state = 'partner_approved'
    
    Check Audit:
    → audit_id.execution_unlocked = True
@@ -321,7 +321,7 @@ Watch for:
 
 **PASS CRITERIA**:
 - ✅ Immutability preserved after upgrade
-- ✅ P-13 approval triggers execution unlock
+- ✅ Planning Approval triggers execution unlock
 - ✅ Audit trail remains intact
 
 ---
@@ -560,7 +560,7 @@ OVERALL RESULT: [ ] PASS  [ ] FAIL
 **Repository**: `c:\Users\HP\Documents\GitHub\alamaudit`  
 **Module**: `qaco_planning_phase`  
 **Session 2 Completion**: December 20, 2025  
-**Files Modified**: 12 models (P-2 through P-13)  
+**Files Modified**: 12 models (P-2 through P-12)  
 **Lines Added**: ~500 (can_open fields + constraints)
 
 **Audit Trail**:

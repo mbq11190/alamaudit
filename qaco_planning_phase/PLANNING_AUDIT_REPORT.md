@@ -1,6 +1,6 @@
 # PLANNING PHASE AUDIT REPORT
 **Date**: December 20, 2025  
-**Scope**: P-1 to P-13 Complete Stabilization  
+**Scope**: P-1 to P-12 Complete Stabilization  
 **Status**: AUDIT IN PROGRESS
 
 ---

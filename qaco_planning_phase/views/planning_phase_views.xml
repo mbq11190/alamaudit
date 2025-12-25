@@ -516,7 +516,7 @@
 						<page name="section_p13" string="P-13: Planning Review" class="o_planning_tab_page">
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-13.0</span>
+								<span class="o_planning_card_number">P-12.0</span>
 									<span class="o_planning_card_title">Planning Memorandum</span>
 									<span class="o_planning_card_ref">ISA 300</span>
 								</div>
@@ -527,7 +527,7 @@
 							
 							<div class="o_planning_card">
 								<div class="o_planning_card_header">
-									<span class="o_planning_card_number">P-13.1</span>
+								<span class="o_planning_card_number">P-12.1</span>
 									<span class="o_planning_card_title">Regulatory Compliance - Pakistan</span>
 									<span class="o_planning_card_ref">ICAP / SECP / AOB</span>
 								</div>

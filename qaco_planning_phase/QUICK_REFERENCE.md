@@ -54,7 +54,7 @@
 'qaco.planning.p12.sampling.plan'          # Sampling methodology
 'qaco.planning.p12.kam.candidate'          # KAM identification
 
-# P-13: Planning Completion & Sign-Off
+# P-12: Planning Completion & Sign-Off
 'qaco.planning.p13.approval'               # Main model
 'qaco.planning.p13.checklist.line'         # Completion checklist
 'qaco.planning.p13.change.log'             # Planning changes log
