@@ -924,10 +924,12 @@ class PlanningP3Controls(models.Model):
     flowchart_count = fields.Integer(
         compute="_compute_attachment_counts",
         string="Flowcharts Uploaded",
+        store=True,
     )
     walkthrough_doc_count = fields.Integer(
         compute="_compute_attachment_counts",
         string="Walkthrough Docs Uploaded",
+        store=True,
     )
 
     # =========================================================================

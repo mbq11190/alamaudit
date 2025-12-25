@@ -316,11 +316,21 @@
                                     </field>
                                 </group>
                                 <group string="Verification &amp; Controls" class="o_onboarding_grid">
-                                    <label for="verification_method"/>
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <label class="o_form_label">Verification</label>
+                                            <field name="verification_performed_by" placeholder="Select verifier (user)" class="w-100" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="o_form_label">Date</label>
+                                            <field name="verification_date" placeholder="YYYY-MM-DD" class="w-100" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="o_form_label">Method</label>
+                                            <field name="verification_method" placeholder="e.g. Document check" class="w-100" help="Method used to verify the above information, e.g., document review or external confirmation." />
+                                        </div>
+                                    </div>
                                     <div class="o_hint_text">Examples: Document check, Registrar extract, Bank confirmation</div>
-                                    <field name="verification_performed_by" placeholder="Select verifier (user)"/>
-                                    <field name="verification_date" placeholder="YYYY-MM-DD"/>
-                                    <field name="verification_method" placeholder="e.g. Document check"/>
                                     <field name="verification_exception_ids">
                                         <tree editable="bottom">
                                             <field name="field_name"/>
@@ -334,7 +344,6 @@
                                 </group>
                             </div>
                         </page>
-
                         <page name="section_13" string="1.3 - Ownership &amp; Governance" class="o_onboarding_tab_page">
                             <div id="section-1-3" class="o_onboarding_card">
                                 <div class="o_onboarding_card_header">
