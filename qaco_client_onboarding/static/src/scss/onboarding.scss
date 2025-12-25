@@ -200,6 +200,13 @@ $audit-bg: #f7f8fa;
       border-bottom: 1px solid #e5e7eb;
     }
 
+    .o_hint_text {
+      color: #6b7280; /* subtle grey */
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+    }
+
     .o_onboarding_card_number {
       font-weight: 800;
       color: $audit-indigo;
