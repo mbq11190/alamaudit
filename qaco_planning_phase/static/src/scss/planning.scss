@@ -218,9 +218,11 @@ $audit-bg: #f7f8fa;
     }
 
     .o_planning_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
       padding: 14px 16px;
       border-top: 1px solid #f1f5f9;
-      column-gap: 18px;
 
       .o_field_widget input[readonly],
       .o_field_widget textarea[readonly],
@@ -232,6 +234,11 @@ $audit-bg: #f7f8fa;
 
       .o_input, .o_field_widget {
         font-size: 14px;
+      }
+
+      .o_statusbar_status {
+        min-width: 110px;
+        text-align: center;
       }
     }
   }

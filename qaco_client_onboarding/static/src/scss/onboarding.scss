@@ -200,6 +200,13 @@ $audit-bg: #f7f8fa;
       border-bottom: 1px solid #e5e7eb;
     }
 
+    .small-muted {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+
     .o_hint_text {
       color: #6b7280; /* subtle grey */
       font-size: 0.85rem;
@@ -209,6 +216,26 @@ $audit-bg: #f7f8fa;
     .o_onboarding_card_number {
       font-weight: 800;
       color: $audit-indigo;
+    }
+
+    .o_onboarding_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      padding: 14px 16px;
+      border-top: 1px solid #f1f5f9;
+
+      .o_field_widget input[readonly],
+      .o_field_widget textarea[readonly],
+      .o_field_widget.o_readonly_modifier {
+        background: #f8fafc;
+        border-color: #e5e7eb;
+        color: $audit-slate;
+      }
+
+      .o_input, .o_field_widget {
+        font-size: 14px;
+      }
     }
 
     .o_onboarding_card_title {
