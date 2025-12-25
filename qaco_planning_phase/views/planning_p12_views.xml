@@ -9,15 +9,15 @@
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,review,partner,locked"/>
                     <button name="action_mark_complete" string="Mark Complete" type="object" class="btn-primary"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
                     <button name="action_manager_review" string="Manager Review" type="object" class="btn-warning"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}" groups="qaco_audit.group_audit_manager"/>
+                            invisible="state != 'draft'" groups="qaco_audit.group_audit_manager"/>
                     <button name="action_partner_approve" string="Partner Approve" type="object" class="btn-success"
-                            attrs="{'invisible': [('state', '!=', 'review')]}" groups="qaco_audit.group_audit_partner"/>
+                            invisible="state != 'review'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            attrs="{'invisible': [('state', 'not in', ['review', 'partner'])]}"/>
+                            invisible="state not in ['review', 'partner']"/>
                     <button name="action_partner_unlock" string="Unlock" type="object" class="btn-danger"
-                            attrs="{'invisible': [('state', '!=', 'locked')]}" groups="qaco_audit.group_audit_partner"/>
+                            invisible="state != 'locked'" groups="qaco_audit.group_audit_partner"/>
                 </header>
                 <sheet>
                     <field name="can_open" invisible="1"/>
@@ -47,12 +47,12 @@
                         <page string="Strategy" name="strategy">
                             <group string="Audit Approach">
                                 <field name="approach_rationale" widget="html"/>
-                                <field name="interim_audit_details" widget="html" attrs="{'invisible': [('interim_audit_planned', '=', False)]}"/>
+                                <field name="interim_audit_details" widget="html" invisible="not interim_audit_planned"/>
                             </group>
-                            <group string="Specialist Requirements" attrs="{'invisible': [('specialists_required', '=', False)]}">
+                            <group string="Specialist Requirements" invisible="not specialists_required">
                                 <field name="specialist_details" widget="html"/>
                             </group>
-                            <group string="Group Audit Strategy" attrs="{'invisible': [('group_audit_applicable', '=', False)]}">
+                            <group string="Group Audit Strategy" invisible="not group_audit_applicable">
                                 <field name="group_audit_strategy" widget="html"/>
                             </group>
                         </page>
@@ -75,7 +75,7 @@
                             </group>
                             <group string="Fraud Response (ISA 240)">
                                 <field name="unpredictable_procedures_planned"/>
-                                <field name="unpredictable_procedures_details" widget="html" attrs="{'invisible': [('unpredictable_procedures_planned', '=', False)]}"/>
+                                <field name="unpredictable_procedures_details" widget="html" invisible="not unpredictable_procedures_planned"/>
                                 <field name="journal_entry_testing_approach" widget="html"/>
                                 <field name="management_override_procedures" widget="html"/>
                             </group>
@@ -99,7 +99,7 @@
                             <group string="Key Dates">
                                 <group>
                                     <field name="planning_completion_date"/>
-                                    <field name="interim_audit_date" attrs="{'invisible': [('interim_audit_planned', '=', False)]}"/>
+                                    <field name="interim_audit_date" invisible="not interim_audit_planned"/>
                                     <field name="fieldwork_start_date"/>
                                 </group>
                                 <group>
@@ -110,7 +110,7 @@
                             </group>
                             <group string="Quality Control">
                                 <field name="eqcr_required"/>
-                                <field name="eqcr_reviewer_id" attrs="{'invisible': [('eqcr_required', '=', False)]}"/>
+                                <field name="eqcr_reviewer_id" invisible="not eqcr_required"/>
                             </group>
                         </page>
 

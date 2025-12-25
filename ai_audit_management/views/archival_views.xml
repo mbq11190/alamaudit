@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <form string="Audit Archival">
                 <header>
-                    <button name="action_lock" string="Lock" type="object" class="btn-danger" attrs="{'invisible': [('locked_status', '=', True)]}"/>
+                    <button name="action_lock" string="Lock" type="object" class="btn-danger" invisible="locked_status"/>
                     <field name="locked_status" widget="boolean_toggle"/>
                 </header>
                 <sheet>

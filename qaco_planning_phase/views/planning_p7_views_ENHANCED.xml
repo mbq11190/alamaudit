@@ -84,7 +84,7 @@
                     <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
                             invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
+                            invisible="state not in ['completed','reviewed']"/>
                     <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
                             invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
                 </header>
@@ -206,7 +206,7 @@
                                     <field name="attitudes_identified"/>
                                 </group>
                             </group>
-                            <div class="alert alert-warning" role="alert" invisible="not incentives_identified and not opportunities_identified and not attitudes_identified">
+                            <div class="alert alert-warning" role="alert" invisible="not (incentives_identified or opportunities_identified or attitudes_identified)">
                                 <strong>Action Required:</strong> If any fraud risk factor is identified (Yes), you MUST document specific fraud risks in Section D: Fraud Risk Register.
                             </div>
                             <separator string="1. Incentives / Pressures"/>

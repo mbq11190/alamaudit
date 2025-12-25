@@ -318,15 +318,15 @@
                                 <group string="Verification &amp; Controls" class="o_onboarding_grid">
                                     <div class="row mb-2">
                                         <div class="col-md-4">
-                                            <label class="o_form_label">Verification</label>
+                                            <div class="o_form_label fw-bold">Verification</div>
                                             <field name="verification_performed_by" placeholder="Select verifier (user)" class="w-100" />
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="o_form_label">Date</label>
+                                            <div class="o_form_label fw-bold">Date</div>
                                             <field name="verification_date" placeholder="YYYY-MM-DD" class="w-100" />
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="o_form_label">Method</label>
+                                            <div class="o_form_label fw-bold">Method</div>
                                             <field name="verification_method" placeholder="e.g. Document check" class="w-100" help="Method used to verify the above information, e.g., document review or external confirmation." />
                                         </div>
                                     </div>
@@ -352,7 +352,7 @@
                                     <span class="o_onboarding_card_ref">ISA 220</span>
                                 </div>
                                 <group>
-                                    <label class="o_form_label">Shareholding</label>
+                                    <div class="o_form_label fw-bold">Shareholding</div>
                                     <field name="shareholder_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
@@ -363,7 +363,7 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <label class="o_form_label">Board &amp; Key Personnel</label>
+                                    <div class="o_form_label fw-bold">Board &amp; Key Personnel</div>
                                     <field name="board_member_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
@@ -375,7 +375,7 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <label class="o_form_label">UBOs &amp; Beneficial Ownership</label>
+                                    <div class="o_form_label fw-bold">UBOs &amp; Beneficial Ownership</div>
                                     <field name="ubo_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>
@@ -394,7 +394,7 @@
                                     <field name="ubo_section_complete"/>
                                 </group>
                                 <group>
-                                    <label class="o_form_label">Group Structure &amp; Components</label>
+                                    <div class="o_form_label fw-bold">Group Structure &amp; Components</div>
                                     <field name="group_component_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="entity_name"/>
@@ -411,7 +411,7 @@
                                     <field name="intercompany_expected"/>
                                 </group>
                                 <group>
-                                    <label class="o_form_label">Share Capital Movements</label>
+                                    <div class="o_form_label fw-bold">Share Capital Movements</div>
                                     <field name="share_capital_movement_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="movement_type"/>
@@ -423,7 +423,7 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <label class="o_form_label">Governance &amp; KMP</label>
+                                    <div class="o_form_label fw-bold">Governance &amp; KMP</div>
                                     <field name="kmp_ids" nolabel="1" colspan="4">
                                         <tree editable="bottom" create="true" delete="true">
                                             <field name="name"/>

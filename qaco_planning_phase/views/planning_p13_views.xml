@@ -23,7 +23,7 @@
                     <button name="action_approve" string="Partner Approve" type="object" class="btn-success"
                             invisible="state != 'reviewed'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            attrs="{'invisible':[('state','not in',['completed','reviewed'])]}"/>
+                            invisible="state not in ['completed','reviewed']"/>
                     <button name="action_unlock" string="Unlock Planning" type="object" class="btn-danger"
                             invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_lock_planning" string="Lock Planning Phase" type="object" class="btn-primary"
@@ -41,7 +41,7 @@
 
                     <!-- Unlocked Confirmation Banner (Session 5A) -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
-                         invisible="not can_open or state != 'not_started'">
+                         invisible="not (can_open or state != 'not_started')">
                         <h4><i class="fa fa-unlock" title="Unlocked" aria-hidden="true"/> P-13 is Unlocked</h4>
                         <p>P-12 (Audit Strategy) has been approved. You may now proceed with P-13 (APM &amp; Approval).</p>
                     </div>

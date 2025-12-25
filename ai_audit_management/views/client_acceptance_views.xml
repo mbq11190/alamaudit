@@ -21,9 +21,9 @@
         <field name="arch" type="xml">
             <form string="Client Acceptance" create="true" edit="true">
                 <header>
-                    <button name="action_submit" string="Submit" type="object" states="draft" class="btn-primary"/>
-                    <button name="action_approve" string="Approve" type="object" states="pending_review" class="btn-success"/>
-                    <button name="action_reject" string="Reject" type="object" states="pending_review" class="btn-danger"/>
+                    <button name="action_submit" string="Submit" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_approve" string="Approve" type="object" invisible="state != 'pending_review'" class="btn-success"/>
+                    <button name="action_reject" string="Reject" type="object" invisible="state != 'pending_review'" class="btn-danger"/>
                     <button name="action_ai_background_analysis" string="AI Risk Summary" type="object" class="btn-secondary"/>
                     <field name="acceptance_status" widget="statusbar" statusbar_visible="draft,pending_review,approved,rejected"/>
                 </header>

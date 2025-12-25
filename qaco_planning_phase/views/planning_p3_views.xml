@@ -289,9 +289,9 @@
                     <button name="action_lock" string="Lock P-3" type="object" class="btn-dark"
                             invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            attrs="{'invisible':[('state','not in',['completed','reviewed'])]}"/>
+                            invisible="state not in ['completed','reviewed']"/>
                     <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
-                            attrs="{'invisible':[('state','not in',['approved','locked'])]}" groups="qaco_audit.group_audit_partner"/>
+                            invisible="state not in ['approved','locked']" groups="qaco_audit.group_audit_partner"/>
                 </header>
                 <sheet>
                     <!-- Sequential Gating Alert Banner (Session 5A) -->
@@ -305,7 +305,7 @@
 
                     <!-- Unlocked Confirmation Banner (Session 5A) -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
-                         invisible="not can_open or state != 'not_started'">
+                         invisible="not can_open or state != 'not_started'">>
                         <h4><i class="fa fa-unlock" title="Unlocked" aria-hidden="true"/> P-3 is Unlocked</h4>
                         <p>P-2 (Entity Understanding) has been approved. You may now proceed with P-3 (Internal Control Understanding).</p>
                     </div>
@@ -315,7 +315,7 @@
                             <span>View Audit</span>
                         </button>
                         <button name="action_generate_ic_memo" type="object" class="oe_stat_button" icon="fa-file-pdf-o"
-                                invisible="state not in ['completed', 'reviewed', 'approved', 'locked']">
+                                invisible="state not in ['completed','reviewed','approved','locked']"/>>
                             <span>IC Memo</span>
                         </button>
                         <button name="action_link_deficiencies_to_p6" type="object" class="oe_stat_button" icon="fa-link"
@@ -629,13 +629,13 @@
                             <group>
                                 <div class="row align-items-center mb-2">
                                     <div class="col-md-4">
-                                        <label class="o_form_label">Auto-Flow Status</label>
+                                        <div class="o_form_label fw-bold">Auto-Flow Status</div>
                                         <div>
                                             <field name="linked_to_p6"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="o_form_label">Linked to P-12</label>
+                                        <div class="o_form_label fw-bold">Linked to P-12</div>
                                         <div>
                                             <field name="linked_to_p12"/>
                                         </div>
@@ -660,11 +660,11 @@
                             <group string="Mandatory Attachments">
                                 <div class="row mb-2">
                                     <div class="col-md-6">
-                                        <label class="o_form_label">Flowcharts Uploaded</label>
+                                        <div class="o_form_label fw-bold">Flowcharts Uploaded</div>
                                         <field name="flowchart_count" readonly="1" class="w-100"/>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="o_form_label">Walkthrough Docs</label>
+                                        <div class="o_form_label fw-bold">Walkthrough Docs</div>
                                         <field name="walkthrough_doc_count" readonly="1" class="w-100"/>
                                     </div>
                                 </div>

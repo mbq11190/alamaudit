@@ -44,7 +44,7 @@
                             string="Send Back"
                             type="object"
                             class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"
+                            invisible="state not in ['completed','reviewed']"
                             groups="qaco_audit.group_audit_manager"/>
                     <button name="action_lock"
                             string="Lock"
@@ -57,7 +57,7 @@
                             string="Unlock"
                             type="object"
                             class="btn-secondary"
-                            invisible="state not in ['approved', 'locked']"
+                            invisible="state not in ['approved','locked']"
                             confirm="This will unlock P-1 for revision. Continue?"
                             groups="qaco_audit.group_audit_partner"/>
                     <field name="state" widget="statusbar"
@@ -563,7 +563,7 @@
                                     <field name="partner_approved_on" readonly="1"/>
                                 </group>
                                 <group>
-                                    <field name="partner_comments" attrs="{'readonly': [('|', ('is_locked','=', True), ('state','not in', ['reviewed','approved']))]}"
+                                    <field name="partner_comments" readonly="is_locked or state not in ['reviewed','approved']"
                                            placeholder="Partner comments are mandatory for approval..."/>
                                 </group>
                             </group>
@@ -578,7 +578,7 @@
                                 <div class="row text-center">
                                     <div class="col-md-4">
                                         <div class="card"
-                                             invisible="not prepared_by_id">
+                                             invisible="prepared_by_id">
                                             <div class="card-body py-2 bg-success text-white">
                                                 <strong>✓ Prepared</strong><br/>
                                                 <small><field name="prepared_by_id" readonly="1" nolabel="1"/></small><br/>
@@ -594,7 +594,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="card"
-                                             invisible="not reviewed_by_id">
+                                             invisible="reviewed_by_id">
                                             <div class="card-body py-2 bg-success text-white">
                                                 <strong>✓ Reviewed</strong><br/>
                                                 <small><field name="reviewed_by_id" readonly="1" nolabel="1"/></small><br/>
@@ -610,7 +610,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="card"
-                                             invisible="not partner_approved">
+                                             invisible="partner_approved">
                                             <div class="card-body py-2 bg-success text-white">
                                                 <strong>✓ Approved</strong><br/>
                                                 <small><field name="partner_approved_by_id" readonly="1" nolabel="1"/></small><br/>

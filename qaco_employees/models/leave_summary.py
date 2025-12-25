@@ -674,6 +674,7 @@ class LeaveSummary(models.Model):
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
+    _description = "HR Leave extensions: create leave summary events"
 
     def create_leave_summary_event(self):
         today = fields.Date.context_today(self)

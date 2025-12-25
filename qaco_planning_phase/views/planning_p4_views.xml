@@ -196,7 +196,7 @@
                             class="btn-success" invisible="state != 'reviewed'"
                             groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" 
-                            class="btn-secondary" invisible="state not in ['completed', 'reviewed']"/>
+                            class="btn-secondary" invisible="state not in ['completed','reviewed']"/>
                     <button name="action_unlock" string="Unlock" type="object" 
                             class="btn-danger" invisible="state != 'locked'"
                             groups="qaco_audit.group_audit_partner"/>

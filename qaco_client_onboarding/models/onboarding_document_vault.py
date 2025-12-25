@@ -109,6 +109,7 @@ class OnboardingDocumentAudit(models.Model):
 
 class OnboardingDocument(models.Model):
     _inherit = "qaco.onboarding.document"
+    _description = "Extended Onboarding Document (Document Vault enhancements)"
 
     folder_id = fields.Many2one("qaco.onboarding.document.folder", string="Folder")
     sensitivity = fields.Selection(
