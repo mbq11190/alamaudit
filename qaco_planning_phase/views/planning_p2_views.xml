@@ -144,6 +144,7 @@
                         <page string="A. Entity Profile" name="section_a_entity">
                             <group>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <div class="row mb-2">
                                     <div class="col-md-4">
                                         <div class="o_form_label fw-bold">Identifiers</div>
@@ -182,6 +183,8 @@
                                 </div>
                             </group> 
 =======
+=======
+>>>>>>> parent of f55470f (11)
                                 <group string="Legal Details">
                                     <field name="audit_id" readonly="1"/>
                                     <field name="planning_phase_id" invisible="1"/>
@@ -198,6 +201,9 @@
                                            placeholder="List all branches and operational locations..."/>
                                 </group>
                             </group>
+<<<<<<< HEAD
+>>>>>>> parent of f55470f (11)
+=======
 >>>>>>> parent of f55470f (11)
 
                             <group string="Section A Checklist" class="mt-3">
