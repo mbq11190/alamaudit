@@ -492,7 +492,7 @@
 
                     <group string="📊 Accounting Heads Selection" invisible="state != 'draft'">
                         <div class="alert alert-info">
-                            <i class="fa fa-info-circle me-2"></i>
+                            <i class="fa fa-info-circle me-2" title="Information" aria-hidden="true"></i>
                             <strong>Instructions:</strong> Select all accounting heads you want to include in this audit execution. You can select multiple heads.
                         </div>
                         <field name="selected_head_ids" widget="many2many_tags" 
@@ -503,7 +503,7 @@
 
                     <group string="🎯 Head-wise Execution Dashboard" invisible="state == 'draft'">
                         <div class="alert alert-success" invisible="state != 'completed'">
-                            <i class="fa fa-check-circle me-2"></i>
+                            <i class="fa fa-check-circle me-2" title="Completed" aria-hidden="true"></i>
                             <strong>Audit Completed:</strong> All selected accounting heads have been processed and reviewed.
                         </div>
                         
@@ -574,7 +574,7 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 <div class="text-center">
-                    <i class="fa fa-dashboard fa-5x mb-4 text-muted"></i>
+                    <i class="fa fa-dashboard fa-5x mb-4 text-muted" title="Dashboard" aria-hidden="true"></i>
                     <h3>Welcome to Audit Execution Dashboard</h3>
                     <p>Create a new audit execution to begin comprehensive audit procedures with multiple assertions and predefined procedures.</p>
                     <p class="text-muted">🎯 Select accounting heads • 📊 Track progress • 🛡️ Test controls • 🔍 Detailed testing • 📎 Collect evidence</p>

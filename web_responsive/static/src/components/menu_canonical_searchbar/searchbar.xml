@@ -9,7 +9,7 @@
     <t t-name="web_responsive.AppsMenuCanonicalSearchBar">
         <div class="search-container" t-att-class="{'has-results': state.hasResults}">
             <div class="search-input">
-                <i class="fa fa-search search-icon fs-4 my-auto d-none d-sm-flex" />
+                <i class="fa fa-search search-icon fs-4 my-auto d-none d-sm-flex" title="Search" aria-hidden="true" />
                 <input
                     type="search"
                     t-ref="SearchBarInput"

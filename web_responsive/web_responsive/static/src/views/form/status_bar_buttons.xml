@@ -15,7 +15,7 @@
         </xpath>
         <xpath expr="//t[@t-set-slot='toggler']" position="replace">
             <t t-set-slot="toggler">
-                <i class="fa fa-sliders me-1 me-sm-2" />
+                <i class="fa fa-sliders me-1 me-sm-2" title="Settings" aria-hidden="true" />
                 <span class="d-none d-sm-inline">Action</span>
             </t>
         </xpath>

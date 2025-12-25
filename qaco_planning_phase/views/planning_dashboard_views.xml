@@ -67,16 +67,16 @@
                                 <!-- Tab Status Summary -->
                                 <div class="row text-center mb-2">
                                     <div class="col-3">
-                                        <span class="badge bg-secondary"><i class="fa fa-circle"/> <t t-esc="record.tabs_not_started.value"/> Not Started</span>
+                                        <span class="badge bg-secondary"><i class="fa fa-circle" title="Status: not started" aria-hidden="true"/> <t t-esc="record.tabs_not_started.value"/> Not Started</span>
                                     </div>
                                     <div class="col-3">
-                                        <span class="badge bg-primary"><i class="fa fa-play"/> <t t-esc="record.tabs_in_progress.value"/> In Progress</span>
+                                        <span class="badge bg-primary"><i class="fa fa-play" title="Status: in progress" aria-hidden="true"/> <t t-esc="record.tabs_in_progress.value"/> In Progress</span>
                                     </div>
                                     <div class="col-3">
-                                        <span class="badge bg-info"><i class="fa fa-check"/> <t t-esc="record.tabs_completed.value"/> Completed</span>
+                                        <span class="badge bg-info"><i class="fa fa-check" title="Status: completed" aria-hidden="true"/> <t t-esc="record.tabs_completed.value"/> Completed</span>
                                     </div>
                                     <div class="col-3">
-                                        <span class="badge bg-success"><i class="fa fa-check-circle"/> <t t-esc="record.tabs_approved.value"/> Approved</span>
+                                        <span class="badge bg-success"><i class="fa fa-check-circle" title="Status: approved" aria-hidden="true"/> <t t-esc="record.tabs_approved.value"/> Approved</span>
                                     </div>
                                 </div>
                                 
@@ -179,14 +179,14 @@
                                 <div class="text-center mt-2">
                                     <span t-if="record.is_planning_locked.raw_value" 
                                           class="badge bg-dark">
-                                        <i class="fa fa-lock"/> Planning Locked - Execution Phase Active
+                                        <i class="fa fa-lock" title="Planning locked" aria-hidden="true"/> Planning Locked - Execution Phase Active
                                     </span>
                                     <span t-elif="record.is_planning_complete.raw_value" 
                                           class="badge bg-success">
-                                        <i class="fa fa-check-circle"/> Planning Complete - Ready to Lock
+                                        <i class="fa fa-check-circle" title="Planning complete" aria-hidden="true"/> Planning Complete - Ready to Lock
                                     </span>
                                     <span t-else="" class="badge bg-warning text-dark">
-                                        <i class="fa fa-hourglass-half"/> Planning In Progress
+                                        <i class="fa fa-hourglass-half" title="In progress" aria-hidden="true"/> Planning In Progress
                                     </span>
                                 </div>
                             </div>

@@ -33,7 +33,7 @@
                 data-hotkey="m"
                 t-on-click="() => this.toggleComposer('message')"
             >
-                <i class="fa fa-envelope me-sm-1" />
+                <i class="fa fa-envelope me-sm-1" title="Message" aria-hidden="true" />
                 <span class="d-none d-sm-inline">Send message</span>
             </button>
         </xpath>
@@ -49,7 +49,7 @@
                 data-hotkey="shift+m"
                 t-on-click="() => this.toggleComposer('note')"
             >
-                <i class="fa fa-sticky-note me-sm-1" />
+                <i class="fa fa-sticky-note me-sm-1" title="Note" aria-hidden="true" />
                 <span class="d-none d-sm-inline">Log note</span>
             </button>
         </xpath>
@@ -57,7 +57,7 @@
             expr="//button[hasclass('o-mail-Chatter-activity')]/span"
             position="before"
         >
-            <i class="fa fa-clock-o me-sm-1" />
+            <i class="fa fa-clock-o me-sm-1" title="Time" aria-hidden="true" />
         </xpath>
         <xpath
             expr="//button[hasclass('o-mail-Chatter-activity')]/span"

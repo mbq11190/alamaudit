@@ -28,7 +28,7 @@
                     <!-- Sequential Gating Alert Banner -->
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'not_started'">
-                        <h4><i class="fa fa-lock"/> Sequential Gating Active: P-11 is Locked</h4>
+                        <h4><i class="fa fa-lock" title="Locked" aria-hidden="true"/> Sequential Gating Active: P-11 is Locked</h4>
                         <p><strong>ISA 600 Requirement:</strong> P-11 (Group Audit) cannot be started until P-10 (Related Parties) has been approved.</p>
                         <p><strong>Action Required:</strong> Please complete and obtain approval for P-10 first.</p>
                     </div>
@@ -36,7 +36,7 @@
                     <!-- Unlocked Confirmation Banner -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
                          invisible="not can_open or state != 'not_started'">
-                        <h4><i class="fa fa-unlock"/> P-11 is Unlocked</h4>
+                        <h4><i class="fa fa-unlock" title="Unlocked" aria-hidden="true"/> P-11 is Unlocked</h4>
                         <p>P-10 (Related Parties) has been approved. You may now proceed with P-11 (Group Audit).</p>
                     </div>
 

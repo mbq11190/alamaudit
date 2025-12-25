@@ -205,7 +205,7 @@
                     <!-- Sequential Gating Alert Banner (Session 5A) -->
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'not_started'">
-                        <h4><i class="fa fa-lock"/> Sequential Gating Active: P-4 is Locked</h4>
+                        <h4><i class="fa fa-lock" title="Locked" aria-hidden="true"/> Sequential Gating Active: P-4 is Locked</h4>
                         <p><strong>ISA 520 Requirement:</strong> P-4 (Preliminary Analytics) cannot be started until P-3 (Internal Control) has been Partner-approved.</p>
                         <p><strong>Reason:</strong> Per ISA 520, analytical procedures must follow control understanding to ensure variance expectations account for the control environment and relevant data sources are validated.</p>
                         <p><strong>Action Required:</strong> Please complete and obtain Partner approval for P-3 (Internal Control) first.</p>
@@ -214,7 +214,7 @@
                     <!-- Unlocked Confirmation Banner (Session 5A) -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
                          invisible="not can_open or state != 'not_started'">
-                        <h4><i class="fa fa-unlock"/> P-4 is Unlocked</h4>
+                        <h4><i class="fa fa-unlock" title="Unlocked" aria-hidden="true"/> P-4 is Unlocked</h4>
                         <p>P-3 (Internal Control) has been approved. You may now proceed with P-4 (Preliminary Analytics).</p>
                     </div>
 

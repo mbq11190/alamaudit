@@ -31,7 +31,7 @@
                     <!-- Sequential Gating Alert Banner (Session 5A) -->
                     <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;"
                          invisible="can_open or state != 'draft'">
-                        <h4><i class="fa fa-lock"/> Sequential Gating Active: P-6 is Locked</h4>
+                        <h4><i class="fa fa-lock" title="Locked" aria-hidden="true"/> Sequential Gating Active: P-6 is Locked</h4>
                         <p><strong>ISA 315 Requirement:</strong> P-6 (Risk Assessment) cannot be started until P-5 (Materiality), P-2 (Entity), and P-3 (Controls) have all been Partner-approved.</p>
                         <p><strong>Reason:</strong> Per ISA 315, risk assessment requires understanding the entity, control environment, and materiality thresholds to ensure identified risks are properly evaluated and assessed.</p>
                         <p><strong>Action Required:</strong> Please ensure P-2, P-3, and P-5 are all Partner-approved first.</p>
@@ -40,7 +40,7 @@
                     <!-- Unlocked Confirmation Banner (Session 5A) -->
                     <div class="alert alert-success" role="alert" style="margin-bottom: 15px;"
                          invisible="not can_open or state != 'draft'">
-                        <h4><i class="fa fa-unlock"/> P-6 is Unlocked</h4>
+                        <h4><i class="fa fa-unlock" title="Unlocked" aria-hidden="true"/> P-6 is Unlocked</h4>
                         <p>P-2, P-3, and P-5 have been approved. You may now proceed with P-6 (Risk Assessment).</p>
                     </div>
 
