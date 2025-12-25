@@ -30,7 +30,7 @@
                             confirm="Confirm partner approval? This will LOCK P-11 and unlock P-12."/>
                     
                     <button name="action_send_back" string="Send Back" type="object" 
-                            class="btn-secondary" invisible="state not in ['review', 'partner']"
+                            class="btn-secondary" attrs="{'invisible':[('state','not in',['review','partner'])]}"
                             confirm="Send back to draft for corrections?"/>
                     
                     <button name="action_partner_unlock" string="Partner Unlock" type="object" 
@@ -50,14 +50,14 @@
                     </div>
 
                     <!-- Alert: Escalation Required -->
-                    <div class="alert alert-danger" role="alert" invisible="not escalation_required">
+                    <div class="alert alert-danger" role="alert" attrs="{'invisible':[('escalation_required','=', False)]}">
                         <strong>⚠ PARTNER ESCALATION REQUIRED</strong><br/>
                         Component auditor independence or competence issues identified. 
                         Review Component Auditors tab and resolve before approval.
                     </div>
 
                     <!-- Alert: Locked -->
-                    <div class="alert alert-success" role="alert" invisible="not locked">
+                    <div class="alert alert-success" role="alert" attrs="{'invisible':[('locked','=', False)]}">
                         <strong>✓ P-11 LOCKED</strong><br/>
                         Partner-approved and locked. P-12 (Audit Strategy &amp; Plan) is now accessible.
                     </div>
@@ -98,7 +98,7 @@
                             <separator string="Basis for Conclusion (MANDATORY)" invisible="not is_group_audit"/>
                             <field name="basis_for_conclusion" widget="html" 
                                    placeholder="Document the determination that this is a group audit per ISA 600.16-18. Include: (1) Nature of group structure, (2) Consolidation method, (3) Applicable reporting framework, (4) Why group audit considerations apply."
-                                   invisible="not is_group_audit"/>
+                                   attrs="{'invisible':[('is_group_audit','=', False)]}"/>
                             
                             <separator string="Rationale if NOT Group Audit" invisible="is_group_audit"/>
                             <field name="not_applicable_rationale" widget="html"

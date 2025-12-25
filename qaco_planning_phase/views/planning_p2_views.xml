@@ -46,7 +46,7 @@
                             string="Send Back"
                             type="object"
                             class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"
+                            attrs="{'invisible':[('state','not in',['completed','reviewed'])]}"
                             groups="qaco_audit.group_audit_manager"/>
                     <button name="action_lock"
                             string="Lock"
@@ -59,7 +59,7 @@
                             string="Unlock"
                             type="object"
                             class="btn-secondary"
-                            invisible="state not in ['approved', 'locked']"
+                            attrs="{'invisible':[('state','not in',['approved','locked'])]}"
                             confirm="This will unlock P-2 for revision. Continue?"
                             groups="qaco_audit.group_audit_partner"/>
                     <button name="action_transfer_risks_to_p6"
@@ -710,7 +710,7 @@
                                     <field name="reviewed_on" readonly="1"/>
                                 </group>
                                 <group>
-                                    <field name="review_comments" readonly="is_locked or state not in ['completed', 'reviewed']"/>
+                                    <field name="review_comments" attrs="{'readonly': [('|', ('is_locked','=', True), ('state','not in', ['completed','reviewed']))]}"/>
                                 </group>
                             </group>
 
@@ -721,7 +721,7 @@
                                     <field name="partner_approved_on" readonly="1"/>
                                 </group>
                                 <group>
-                                    <field name="partner_comments" readonly="is_locked or state not in ['reviewed', 'approved']"
+                                    <field name="partner_comments" attrs="{'readonly': [('|', ('is_locked','=', True), ('state','not in', ['reviewed','approved']))]}"
                                            placeholder="Partner comments are mandatory for approval..."/>
                                 </group>
                             </group>

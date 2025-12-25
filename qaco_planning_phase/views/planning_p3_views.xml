@@ -289,9 +289,9 @@
                     <button name="action_lock" string="Lock P-3" type="object" class="btn-dark"
                             invisible="state != 'approved'" groups="qaco_audit.group_audit_partner"/>
                     <button name="action_send_back" string="Send Back" type="object" class="btn-secondary"
-                            invisible="state not in ['completed', 'reviewed']"/>
+                            attrs="{'invisible':[('state','not in',['completed','reviewed'])]}"/>
                     <button name="action_unlock" string="Unlock" type="object" class="btn-danger"
-                            invisible="state not in ['approved', 'locked']" groups="qaco_audit.group_audit_partner"/>
+                            attrs="{'invisible':[('state','not in',['approved','locked'])]}" groups="qaco_audit.group_audit_partner"/>
                 </header>
                 <sheet>
                     <!-- Sequential Gating Alert Banner (Session 5A) -->
