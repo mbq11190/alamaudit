@@ -632,6 +632,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <div class="row align-items-center mb-2">
                                     <div class="col-md-4">
                                         <div class="o_form_label fw-bold">Auto-Flow Status</div>
@@ -660,6 +661,8 @@
 >>>>>>> parent of f55470f (11)
 =======
 >>>>>>> parent of f55470f (11)
+=======
+>>>>>>> parent of f55470f (11)
                                 <group string="Auto-Flow Status">
                                     <field name="linked_to_p6"/>
                                     <field name="linked_to_p12"/>
@@ -672,6 +675,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of f55470f (11)
+=======
 >>>>>>> parent of f55470f (11)
 =======
 >>>>>>> parent of f55470f (11)
@@ -698,6 +704,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <div class="o_form_label fw-bold">Flowcharts Uploaded</div>
@@ -718,6 +725,8 @@
 >>>>>>> parent of f55470f (11)
 =======
 >>>>>>> parent of f55470f (11)
+=======
+>>>>>>> parent of f55470f (11)
                                 <group>
                                     <field name="flowchart_count"/>
                                     <field name="walkthrough_doc_count"/>
@@ -726,6 +735,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of f55470f (11)
+=======
 >>>>>>> parent of f55470f (11)
 =======
 >>>>>>> parent of f55470f (11)
